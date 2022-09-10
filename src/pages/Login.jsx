@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Avatar,CssBaseline,TextField,Link,Grid,Box,Typography,Container} from '@mui/material';
+import {Avatar,CssBaseline,TextField,Link,Grid,Box,Typography,Container, CircularProgress} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CustomButton from '../components/Button';
@@ -10,6 +10,7 @@ export default function Login() {
   const [registerForm, setRegisterForm] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
 
   const validateEmail = (email) => {
     return String(email)
@@ -19,14 +20,15 @@ export default function Login() {
       );
   };
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
     validateEmail(email);
+    setLoading(true);
   };
 
   const handleToggleLoginForm = () => {
     setRegisterForm(!registerForm);
+    setLoading(false);
   }
 
   return (
@@ -85,6 +87,7 @@ export default function Login() {
               sx={{ mt: 3, mb: 2 }}
             >
               Register
+              {loading && <CircularProgress color="inherit" size={24} sx={{ ml: 2 }} />}
             </CustomButton>:
             <CustomButton
             type="submit"
@@ -93,6 +96,7 @@ export default function Login() {
             sx={{ mt: 3, mb: 2 }}
           >
             Login 
+            {loading && <CircularProgress color="inherit" size={24} sx={{ ml: 2 }} />}
           </CustomButton>
 
             }
