@@ -1,15 +1,8 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import {Avatar,CssBaseline,TextField,Link,Grid,Box,Typography,Container} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CustomButton from '../components/Button';
 
 const theme = createTheme();
 
@@ -52,7 +45,7 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            {registerForm ? "Register" : "Sign up"}
+            {registerForm ? "Register" : "Login"}
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -65,7 +58,7 @@ export default function Login() {
                   name="email"
                   autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
-                  error={email && validateEmail(email) ===null}
+                  error={(email && validateEmail(email) ===null) ? true : false}
                   helperText={email && validateEmail(email) ===null ? "Incorrect email":""}
                 />
               </Grid>
@@ -80,34 +73,34 @@ export default function Login() {
                   id="password"
                   autoComplete="new-password"
                   onChange={(e) => setPassword(e.target.value)}
-                  error={password && password.length & password.length < 5}
+                  error={(password && password.length & password.length < 5) ? true : false}
                   helperText={password && password.length < 5 ? "Password must be more than 5 characters!" : ""}
                 />
               </Grid>}
             </Grid>
-            {registerForm ? <Button
+            {registerForm ? <CustomButton
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Register
-            </Button>:
-            <Button
+            </CustomButton>:
+            <CustomButton
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign up
-          </Button>
+            Login 
+          </CustomButton>
 
             }
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="#" variant="body2" onClick={handleToggleLoginForm}>
-                {registerForm ? "Don't have an account? Click here to register" :
-                "Already have an account? Click here to login"
+                {registerForm ? 
+                "Already have an account? Click here to login" : "Don't have an account? Click here to register"
                 }
                 </Link>
               </Grid>
