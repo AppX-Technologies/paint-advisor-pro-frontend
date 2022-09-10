@@ -15,13 +15,21 @@ const theme = createTheme();
 
 export default function Login() {
   const [registerForm, setRegisterForm] = React.useState(false);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    validateEmail(email);
   };
 
   const handleToggleLoginForm = () => {
@@ -56,6 +64,9 @@ export default function Login() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  error={email && validateEmail(email) ===null}
+                  helperText={email && validateEmail(email) ===null ? "Incorrect email":""}
                 />
               </Grid>
               {!registerForm && 
@@ -68,6 +79,9 @@ export default function Login() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  error={password && password.length & password.length < 5}
+                  helperText={password && password.length < 5 ? "Password must be more than 5 characters!" : ""}
                 />
               </Grid>}
             </Grid>
