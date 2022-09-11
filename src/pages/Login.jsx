@@ -7,11 +7,13 @@ import ConfirmModal from '../components/Modal';
 import OtpInput from "react-otp-input";
 import { openModal, fillOtp } from '../features/modal/modalSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom'
 
 const theme = createTheme();
 
 export default function Login() {
   const dispatch = useDispatch();
+  const history = useNavigate();
   const {otp} = useSelector((state)=> state.modal);
   const [registerForm, setRegisterForm] = React.useState(false);
   const [email, setEmail] = React.useState('');
@@ -30,6 +32,10 @@ export default function Login() {
     event.preventDefault();
     validateEmail(email);
     setLoading(true);
+    if(email ==="bibs@gmail.com" && password === "abc123"){
+      setLoading(false);
+      history('/dashboard');
+    }
   };
 
   const handleToggleLoginForm = () => {
@@ -86,12 +92,12 @@ export default function Login() {
                 />
               </Grid>}
             </Grid>
-            {registerForm ? <CustomButton
+            {registerForm ? 
+            <CustomButton
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+              sx={{ mt: 3, mb: 2 }}>
               Register
               {loading && <CircularProgress color="inherit" size={24} sx={{ ml: 2 }} />}
             </CustomButton>:
@@ -100,20 +106,22 @@ export default function Login() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-          >
-            Login 
-            {loading && <CircularProgress color="inherit" size={24} sx={{ ml: 2 }} />}
-          </CustomButton>
+            >
+              Login 
+              {loading && <CircularProgress color="inherit" size={24} sx={{ ml: 2 }} />}
+            </CustomButton>
             }
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2" onClick={() => {
-              dispatch(openModal('otp'));
-            }}>
-                  Forgot password?
-                </Link>
-              </Grid>
-            </Grid>
+            {!registerForm &&
+               <Grid container justifyContent="flex-end">
+               <Grid item>
+                 <Link href="#" variant="body2" onClick={() => {
+               dispatch(openModal('otp'));
+             }}>
+                   Forgot password?
+                 </Link>
+               </Grid>
+             </Grid>
+            }
 
             <ConfirmModal modalTitle="Forgot Password?" contentMessage="" type="">
               <TextField
