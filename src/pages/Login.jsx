@@ -3,15 +3,21 @@ import {Avatar,CssBaseline,TextField,Link,Grid,Box,Typography,Container, Circula
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CustomButton from '../components/Button';
+import ConfirmModal from '../components/Modal';
+import OtpInput from "react-otp-input";
+import { openModal, fillOtp } from '../features/modal/modalSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const theme = createTheme();
 
 export default function Login() {
+  const dispatch = useDispatch();
+  const {otp} = useSelector((state)=> state.modal);
   const [registerForm, setRegisterForm] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [loading, setLoading] = React.useState(false);
-
+ 
   const validateEmail = (email) => {
     return String(email)
       .toLowerCase()
@@ -98,8 +104,76 @@ export default function Login() {
             Login 
             {loading && <CircularProgress color="inherit" size={24} sx={{ ml: 2 }} />}
           </CustomButton>
-
             }
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="#" variant="body2" onClick={() => {
+              dispatch(openModal('otp'));
+            }}>
+                  Forgot password?
+                </Link>
+              </Grid>
+            </Grid>
+
+            <ConfirmModal modalTitle="Forgot Password?" contentMessage="" type="">
+              <TextField
+                required
+                fullWidth
+                autoFocus
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                variant="standard"
+                margin="dense"
+              />
+            </ConfirmModal>
+            <ConfirmModal modalTitle="Reset Password?" contentMessage="Enter the OTP sent to your mail and reset the password." type="otp">
+            {/* <Typography variant="p">
+                OTP <span>*</span>
+              </Typography> */}
+            <OtpInput
+              containerStyle={{marginTop:"1rem"}}
+                numInputs={6}
+                value={otp}
+                onChange={(value) => {
+                  dispatch(fillOtp(value))
+                }}
+                separator={
+                  <span>
+                    <strong>-</strong>
+                  </span>
+                }
+                inputStyle={{
+                  width: "3rem",
+                  height: "3rem",
+                  margin: "0 1rem",
+                  fontSize: "2rem",
+                  borderRadius: 4,
+                  border: "1px solid rgba(0,0,0,0.3)"
+                }}
+              />
+              <TextField
+                required
+                fullWidth
+                autoFocus
+                variant="standard"
+                margin="dense"
+                id="email"
+                label="New Password"
+                name="newPassword"
+              />
+              <TextField
+                required
+                fullWidth
+                autoFocus
+                variant="standard"
+                margin="dense"
+                id="confirmPassword"
+                label="Confirm Password"
+                name="confirmPassword"
+              />
+            </ConfirmModal>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="#" variant="body2" onClick={handleToggleLoginForm}>
