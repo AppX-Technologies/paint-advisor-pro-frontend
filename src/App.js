@@ -6,12 +6,14 @@ import PageNotFound from "./components/404";
 import Header from "./components/Header";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import CustomSnackBar from "./components/Snackbar";
 
 function App() {
   return (
     <>
       <Router>
         <Header />
+        <CustomSnackBar/>
         {/* Switch is changes to Routes in react router v6 */}
         <Routes>
           <Route path="/" element={<Counter />} />

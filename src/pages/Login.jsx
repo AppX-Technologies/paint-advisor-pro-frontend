@@ -8,6 +8,7 @@ import OtpInput from "react-otp-input";
 import { openModal, fillOtp } from '../features/modal/modalSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
+import { showMessage} from '../features/snackbar/snackbarSlice';
 
 const theme = createTheme();
 
@@ -32,6 +33,12 @@ export default function Login() {
     event.preventDefault();
     validateEmail(email);
     setLoading(true);
+    if(!email && !password){
+      setLoading(false);
+      dispatch(
+        showMessage({message: 'Please enter email and password', severity: 'error'})
+        );
+    }
     if(email ==="bibs@gmail.com" && password === "abc123"){
       setLoading(false);
       history('/dashboard');
