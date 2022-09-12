@@ -1,9 +1,21 @@
 import axios from "axios";
 
 // reminder to edit this after api is ready
-
-const REGISTER_URL = "/api/v1/auth/users/";
+const endpoint = process.env.API_BASE_URL;
+const REGISTRATION_OTP = `${endpoint}/generateRegistrationOtp`;
+const REGISTER_URL =`${endpoint}/register`;
 const LOGIN_URL = "/api/v1/auth/jwt/create/";
+
+
+const generateRegistrationOtp = async (userData) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const response = await axios.post(REGISTRATION_OTP, userData, config);
+  return response.data;
+};
 
 // Register user
 const register = async (userData) => {
@@ -34,5 +46,5 @@ const login = async (userData) => {
 
 const logout = () => localStorage.removeItem("user");
 
-const authService = { register, login, logout };
+const authService = { register, login, logout ,generateRegistrationOtp};
 export default authService;

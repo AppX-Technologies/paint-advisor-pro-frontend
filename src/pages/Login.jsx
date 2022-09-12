@@ -100,6 +100,7 @@ export default function Login() {
               </Grid>}
             </Grid>
             {registerForm ? 
+            <Link to="/register">
             <CustomButton
               type="submit"
               fullWidth
@@ -107,7 +108,9 @@ export default function Login() {
               sx={{ mt: 3, mb: 2 }}>
               Register
               {loading && <CircularProgress color="inherit" size={24} sx={{ ml: 2 }} />}
-            </CustomButton>:
+            </CustomButton>
+            </Link>
+            :
             <CustomButton
             type="submit"
             fullWidth

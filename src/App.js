@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import CustomSnackBar from "./components/Snackbar";
+import RegisterPage from "./pages/Register";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Counter />} />
           <Route path="login" element={<Login />} />
+          <Route path="register" element={<RegisterPage />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>

@@ -15,6 +15,18 @@ const initialState = {
   message: "",
 };
 
+export const generateRegistrationOtp = createAsyncThunk(
+  "auth/generateRegistrationOtp",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await authService.generateRegistrationOtp(userData);
+      return response;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 //  for register
 
 export const register = createAsyncThunk(
