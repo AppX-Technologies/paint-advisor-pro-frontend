@@ -9,18 +9,28 @@ import { openModal, fillOtp } from '../features/modal/modalSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 import { showMessage} from '../features/snackbar/snackbarSlice';
+import {login} from '../features/auth/authSlice';
 
 const theme = createTheme();
 
 export default function Login() {
   const dispatch = useDispatch();
-  const history = useNavigate();
+  const navigate = useNavigate();
   const {otp} = useSelector((state)=> state.modal);
-  const [registerForm, setRegisterForm] = React.useState(false);
+  const {loading,isSuccess,isError,message}  = useSelector((state)=> state.auth);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
- 
+  
+
+  React.useEffect(()=>{
+    if(isSuccess){
+      navigate('/dashboard');
+    }
+    if(isError){
+      dispatch(showMessage({message: message,severity:"error"}));
+    }
+  },[isSuccess])
+
   const validateEmail = (email) => {
     return String(email)
       .toLowerCase()
@@ -29,26 +39,19 @@ export default function Login() {
       );
   };
 
+
   const handleSubmit = (event) => {
     event.preventDefault();
     validateEmail(email);
-    setLoading(true);
     if(!email && !password){
-      setLoading(false);
       dispatch(
         showMessage({message: 'Please enter email and password', severity: 'error'})
         );
     }
-    if(email ==="bibs@gmail.com" && password === "abc123"){
-      setLoading(false);
-      history('/dashboard');
-    }
+    dispatch(login({email, password}));
   };
 
-  const handleToggleLoginForm = () => {
-    setRegisterForm(!registerForm);
-    setLoading(false);
-  }
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -66,7 +69,7 @@ export default function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            {registerForm ? "Register" : "Login"}
+            Login
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -83,7 +86,6 @@ export default function Login() {
                   helperText={email && validateEmail(email) ===null ? "Incorrect email":""}
                 />
               </Grid>
-              {!registerForm && 
               <Grid item xs={12}>
                 <TextField
                   required
@@ -97,20 +99,8 @@ export default function Login() {
                   error={(password && password.length & password.length < 5) ? true : false}
                   helperText={password && password.length < 5 ? "Password must be more than 5 characters!" : ""}
                 />
-              </Grid>}
+              </Grid>
             </Grid>
-            {registerForm ? 
-            <Link to="/register">
-            <CustomButton
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}>
-              Register
-              {loading && <CircularProgress color="inherit" size={24} sx={{ ml: 2 }} />}
-            </CustomButton>
-            </Link>
-            :
             <CustomButton
             type="submit"
             fullWidth
@@ -120,8 +110,6 @@ export default function Login() {
               Login 
               {loading && <CircularProgress color="inherit" size={24} sx={{ ml: 2 }} />}
             </CustomButton>
-            }
-            {!registerForm &&
                <Grid container justifyContent="flex-end">
                <Grid item>
                  <Link href="#" variant="body2" onClick={() => {
@@ -131,7 +119,6 @@ export default function Login() {
                  </Link>
                </Grid>
              </Grid>
-            }
 
             <ConfirmModal modalTitle="Forgot Password?" contentMessage="" type="">
               <TextField
@@ -194,10 +181,8 @@ export default function Login() {
             </ConfirmModal>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2" onClick={handleToggleLoginForm}>
-                {registerForm ? 
-                "Already have an account? Click here to login" : "Don't have an account? Click here to register"
-                }
+                <Link href="#" variant="body2" onClick={()=> {navigate("/register")}}>
+                Don't have an account? Click here to register
                 </Link>
               </Grid>
             </Grid>

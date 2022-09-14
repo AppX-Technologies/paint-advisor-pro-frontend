@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import CustomSnackBar from "./components/Snackbar";
 import RegisterPage from "./pages/Register";
+import ProtectedRoute from './routing/ProtectedRoute'
 
 function App() {
   return (
@@ -20,7 +21,9 @@ function App() {
           <Route path="/" element={<Counter />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<RegisterPage />} />
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<Dashboard />} />
+          </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Router>

@@ -1,19 +1,13 @@
 import axios from "axios";
 
 // reminder to edit this after api is ready
-const endpoint = process.env.API_BASE_URL;
-const REGISTRATION_OTP = `${endpoint}/generateRegistrationOtp`;
+const endpoint = process.env.REACT_APP_API_BASE_URL;
+const REGISTRATION_OTP = `${endpoint}/generate-registration-otp`;
 const REGISTER_URL =`${endpoint}/register`;
-const LOGIN_URL = "/api/v1/auth/jwt/create/";
-
+const LOGIN_URL = `${endpoint}/login`;
 
 const generateRegistrationOtp = async (userData) => {
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  const response = await axios.post(REGISTRATION_OTP, userData, config);
+  const response = await axios.post(REGISTRATION_OTP, userData);
   return response.data;
 };
 

@@ -1,28 +1,33 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "./authService";
-
-// getting user from local storage
-const user = localStorage.getItem("user");
+import { showMessage, onClose } from "../snackbar/snackbarSlice";
 
 // initial states
 
 const initialState = {
-  user: user ? user : null,
-  userType: user ? user.userType : null,
+  user: null,
+  userType: null,
   isError: false,
   isLoading: false,
   isSuccess: false,
   message: "",
+  registerOtp:null
 };
 
 export const generateRegistrationOtp = createAsyncThunk(
   "auth/generateRegistrationOtp",
-  async (userData, { rejectWithValue }) => {
+  async (userData, thunkAPI) => {
     try {
       const response = await authService.generateRegistrationOtp(userData);
+      console.log(response);
       return response;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -80,6 +85,20 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(generateRegistrationOtp.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(generateRegistrationOtp.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.otp=action.payload.registerOtp;
+        state.message = action.payload.data;
+      })
+      .addCase(generateRegistrationOtp.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
       .addCase(register.pending, (state) => {
         state.isLoading = true;
       })

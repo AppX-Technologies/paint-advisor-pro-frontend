@@ -9,15 +9,17 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './NavItems';
 import TabPanel from '../../components/DashboardTabs';
+import CustomButton from '../../components/Button';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom'
+import { logout} from '../../features/auth/authSlice';
 
 function Copyright(props) {
   return (
@@ -81,10 +83,17 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mdTheme = createTheme();
 
 function DashboardContent() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/', { replace: true });
+  }
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -117,11 +126,14 @@ function DashboardContent() {
             >
               Admin panel
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <CustomButton
+              type="submit"
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick= {handleLogout}
+              >
+              Logout
+            </CustomButton>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
