@@ -19,7 +19,7 @@ import TabPanel from '../../components/DashboardTabs';
 import CustomButton from '../../components/Button';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
-import { logout} from '../../features/auth/authSlice';
+import { logout,reset} from '../../features/auth/authSlice';
 
 function Copyright(props) {
   return (
@@ -92,6 +92,7 @@ function DashboardContent() {
 
   const handleLogout = () => {
     dispatch(logout());
+    dispatch(reset());
     navigate('/', { replace: true });
   }
 

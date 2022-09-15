@@ -11,16 +11,48 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import OtpInput from 'react-otp-input';
 import { Link} from "react-router-dom";
-import {generateRegistrationOtp} from '../features/auth/authSlice';
+import {generateRegistrationOtp,register,reset} from '../features/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-
+import registerReducer from './reducers/registerReducer'
+import { useReducer } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { showMessage } from '../features/snackbar/snackbarSlice';
 const theme = createTheme();
 
+const initialFormState = {
+  name: "",
+  phone: "",
+  password: "",
+  confirmPassword: "",
+  otp: '',
+  };
 export default function RegisterPage() {
   const dispatch = useDispatch();
-  const {isSuccess} = useSelector((state)=> state.auth);
+  const navigate = useNavigate();
+  const {isSuccessOtp,isSuccess} = useSelector((state)=> state.auth);
   const [email , setEmail] = React.useState('');
+  const [formState,dispatchNew] = useReducer(registerReducer,initialFormState)
 
+  const handleTextChange = (e) =>{
+    dispatchNew({
+      type:"HANDLE_INPUT",
+      field:e.target.name,
+      payload:e.target.value
+    });
+  }
+  const handleOtpChange = (otp) =>{
+    dispatchNew({
+      type:"HANDLE_OTP_INPUT",
+      payload:otp
+    });
+  }
+  const requiredStates = {
+    email:email,
+    name:formState.name,
+    phone:formState.phone,
+    password:formState.password,
+    temporaryKey:formState.otp
+  }
   const handleSubmitOtp = (event) => {
     event.preventDefault();
     dispatch(generateRegistrationOtp({email:email}));
@@ -28,13 +60,27 @@ export default function RegisterPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if(formState.password !== formState.confirmPassword){
+      alert("Password and confirm password should be same");
+      return;
+    }
+    dispatch(register(requiredStates));
   };
 
+  React.useEffect(()=>{
+    if(isSuccess){
+      dispatch(showMessage(
+        {message: 'Registration successful', severity: 'success'}
+      ))
+      navigate('/login');
+    }
+    dispatch(reset());
+  },[isSuccess,dispatch])
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        {isSuccess ? 
+        {isSuccessOtp ? 
         <Box
           sx={{
             marginTop: 8,
@@ -46,30 +92,33 @@ export default function RegisterPage() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h6" variant="h6">
+          <Typography component="h6" variant="h6" align="center">
           Creating an account for {email}
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="given-name"
-                  name="Name"
+                  name="name"
                   required
                   fullWidth
                   id="name"
                   label="Name"
                   autoFocus
+                  value={formState.name}
+                  onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
               <Grid item xs={12}>
               <TextField
-                  name="Phone"
+                  name="phone"
                   required
                   fullWidth
                   id="phone"
                   label="Phone Number"
                   autoFocus
+                  value={formState.phone}
+                  onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -80,6 +129,8 @@ export default function RegisterPage() {
                   label="Password"
                   type="password"
                   id="password"
+                  value={formState.password}
+                  onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -90,6 +141,8 @@ export default function RegisterPage() {
                   label="Confirm Password"
                   type="confirmPassword"
                   id="confirmPassword"
+                  value={formState.confirmPassword}
+                  onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -104,6 +157,8 @@ export default function RegisterPage() {
                     <strong>-</strong>
                   </span>
                 }
+                value={formState.otp}
+                onChange={(otp)=>handleOtpChange(otp)}
                 inputStyle={{
                   width: "3rem",
                   height: "3rem",

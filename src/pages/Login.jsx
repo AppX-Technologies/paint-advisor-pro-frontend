@@ -9,7 +9,7 @@ import { openModal, fillOtp } from '../features/modal/modalSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 import { showMessage} from '../features/snackbar/snackbarSlice';
-import {login} from '../features/auth/authSlice';
+import {login,reset} from '../features/auth/authSlice';
 
 const theme = createTheme();
 
@@ -29,7 +29,8 @@ export default function Login() {
     if(isError){
       dispatch(showMessage({message: message,severity:"error"}));
     }
-  },[isSuccess])
+    dispatch(reset());
+  },[isSuccess,isError,message,dispatch])
 
   const validateEmail = (email) => {
     return String(email)

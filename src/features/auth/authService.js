@@ -18,7 +18,7 @@ const register = async (userData) => {
       "Content-Type": "application/json",
     },
   };
-
+  console.log(userData,"userData");
   const response = await axios.post(REGISTER_URL, userData, config);
   return response.data;
 };

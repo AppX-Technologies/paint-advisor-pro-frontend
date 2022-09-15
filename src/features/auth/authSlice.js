@@ -10,8 +10,8 @@ const initialState = {
   isError: false,
   isLoading: false,
   isSuccess: false,
+  isSuccessOtp: false,
   message: "",
-  registerOtp:null
 };
 
 export const generateRegistrationOtp = createAsyncThunk(
@@ -38,7 +38,9 @@ export const register = createAsyncThunk(
   "auth/register",
   async (user, thunkAPI) => {
     try {
-      return await authService.register(user);
+      const response = await authService.register(user);
+      console.log(response);
+      return response;
     } catch (error) {
       const message =
         (error.response &&
@@ -46,7 +48,7 @@ export const register = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-
+      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -80,6 +82,7 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
+      state.isSuccessOtp = false;
       state.message = "";
     },
   },
@@ -90,8 +93,7 @@ export const authSlice = createSlice({
       })
       .addCase(generateRegistrationOtp.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isSuccess = true;
-        state.otp=action.payload.registerOtp;
+        state.isSuccessOtp = true;
         state.message = action.payload.data;
       })
       .addCase(generateRegistrationOtp.rejected, (state, action) => {
