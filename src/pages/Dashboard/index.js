@@ -17,9 +17,12 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems, secondaryListItems } from './NavItems';
 import TabPanel from '../../components/DashboardTabs';
 import CustomButton from '../../components/Button';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 import { logout,reset} from '../../features/auth/authSlice';
+import {fetchOrgs} from '../../features/org/orgSlice';
+import {fetchUsers} from '../../features/users/userSlice';
+import { useEffect } from 'react';
 
 function Copyright(props) {
   return (
@@ -85,7 +88,14 @@ const mdTheme = createTheme();
 function DashboardContent() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [open, setOpen] = React.useState(true);
+  const { user } = useSelector((state) => state.auth);
+  const [open, setOpen] = React.useState(false);
+
+  useEffect(()=>{
+    dispatch(fetchOrgs(user.token));
+    dispatch(fetchUsers(user.token));
+  },[])
+
   const toggleDrawer = () => {
     setOpen(!open);
   };

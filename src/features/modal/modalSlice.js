@@ -3,8 +3,11 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isOpen: false,
   isOtpModal: false,
+  resetEmail:'',
   modalType: null,
   otp: '',
+  newPassword:"",
+  confirmPassword: "",
 };
 
 const modalSlice = createSlice({
@@ -25,12 +28,21 @@ const modalSlice = createSlice({
       state.isOpen = false;
       state.isOtpModal = true;
     },
+    fillEmail: (state, action) => {
+      state.resetEmail = action.payload;
+    },
     fillOtp: (state,action)=>{
       state.otp = action.payload
+    },
+    setNewPassword: (state,action)=>{
+      state.newPassword = action.payload
+    },
+    confirmNewPassword: (state,action)=>{
+      state.confirmPassword = action.payload
     }
   },
 });
 
-export const { openModal, closeModal, otpModal, fillOtp } = modalSlice.actions;
+export const { openModal, closeModal, otpModal, fillOtp,fillEmail,confirmNewPassword,setNewPassword } = modalSlice.actions;
 
 export default modalSlice.reducer;

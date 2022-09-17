@@ -5,7 +5,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CustomButton from '../components/Button';
 import ConfirmModal from '../components/Modal';
 import OtpInput from "react-otp-input";
-import { openModal, fillOtp } from '../features/modal/modalSlice';
+import { openModal, fillOtp,fillEmail,setNewPassword,confirmNewPassword } from '../features/modal/modalSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 import { showMessage} from '../features/snackbar/snackbarSlice';
@@ -16,8 +16,8 @@ const theme = createTheme();
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {otp} = useSelector((state)=> state.modal);
-  const {loading,isSuccess,isError,message}  = useSelector((state)=> state.auth);
+  const {otp,resetEmail,newPassword,confirmPassword} = useSelector((state)=> state.modal);
+  const {isLoading,isSuccess,isError,message}  = useSelector((state)=> state.auth);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   
@@ -109,7 +109,7 @@ export default function Login() {
             sx={{ mt: 3, mb: 2 }}
             >
               Login 
-              {loading && <CircularProgress color="inherit" size={24} sx={{ ml: 2 }} />}
+              {isLoading && <CircularProgress color="inherit" size={24} sx={{ ml: 2 }} />}
             </CustomButton>
                <Grid container justifyContent="flex-end">
                <Grid item>
@@ -132,6 +132,8 @@ export default function Login() {
                 autoComplete="email"
                 variant="standard"
                 margin="dense"
+                value={resetEmail}
+                onChange={(e)=> dispatch(fillEmail(e.target.value))}
               />
             </ConfirmModal>
             <ConfirmModal modalTitle="Reset Password?" contentMessage="Enter the OTP sent to your mail and reset the password." type="otp">
@@ -168,6 +170,8 @@ export default function Login() {
                 id="email"
                 label="New Password"
                 name="newPassword"
+                value={newPassword}
+                onChange={(e)=>dispatch(setNewPassword(e.target.value)) }
               />
               <TextField
                 required
@@ -178,6 +182,8 @@ export default function Login() {
                 id="confirmPassword"
                 label="Confirm Password"
                 name="confirmPassword"
+                value={confirmPassword}
+                onChange={(e)=>dispatch(confirmNewPassword(e.target.value)) }
               />
             </ConfirmModal>
             <Grid container justifyContent="flex-end">

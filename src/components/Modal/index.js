@@ -8,7 +8,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { closeModal , otpModal } from '../../features/modal/modalSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
-
+import {sendForgotPasswordLink,reset,resetPassword} from '../../features/auth/authSlice';
+import { CircularProgress } from '@mui/material';
+import { showMessage } from '../../features/snackbar/snackbarSlice';
 let widthChange = true;
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '&	.MuiDialog-paper':{
@@ -17,9 +19,26 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   }
   )); 
 export default function ConfirmModal({children,modalTitle,contentMessage,type}) {
-  const { isOpen , isOtpModal } = useSelector((store) => store.modal);
+  const { isOpen , isOtpModal, resetEmail,otp,newPassword } = useSelector((store) => store.modal);
   widthChange = isOtpModal ? false : true;
   const dispatch = useDispatch();
+  const {isLoading,isSuccessOtp,isResetSuccess} = useSelector((store)=> store.auth)
+
+  const handleResetEmail = () => {
+    if(type==="otp"){
+      dispatch(resetPassword({email:resetEmail,temporaryKey:otp,password:newPassword}))
+      if(isResetSuccess){
+        dispatch(showMessage({message:"Password reset successfully",variant:"success"}))
+        dispatch(closeModal())
+      }
+    }else{
+      dispatch(sendForgotPasswordLink({email:resetEmail}));
+      if(isSuccessOtp === true){
+        dispatch(showMessage({message:"OTP sent to your email",variant:"success"}))
+        dispatch(otpModal());
+      }
+    }
+  }
   return (
     <div>
       <StyledDialog open={type === "otp" ? isOtpModal : isOpen} onClose={() => {dispatch(closeModal())}}  >
@@ -27,6 +46,7 @@ export default function ConfirmModal({children,modalTitle,contentMessage,type}) 
         <DialogContent>
           <DialogContentText>
             {contentMessage}
+            <CircularProgress style={{display:isLoading ? "block" : "none"}} size={25}/>
           </DialogContentText>
           {children}
         </DialogContent>
@@ -35,9 +55,7 @@ export default function ConfirmModal({children,modalTitle,contentMessage,type}) 
               dispatch(closeModal(type));
             }}>Cancel</Button>
           <Button variant="contained" color="primary" 
-              onClick={() => {
-              dispatch(otpModal());
-            }}>Reset</Button>
+              onClick={handleResetEmail}>{type=== "otp" ? "Reset Password" :"Get reset email"}</Button>
         </DialogActions>
       </StyledDialog>
     </div>
