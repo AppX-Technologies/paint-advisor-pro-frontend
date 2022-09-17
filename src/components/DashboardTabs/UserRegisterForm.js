@@ -29,6 +29,7 @@ export default function CreateUserForm(props) {
   const [formState,dispatchNew] = React.useReducer(formReducer,initialFormState)
   const {open,setOpen} = props;
   const {user} = useSelector((state)=> state.auth);
+  const userDetail = JSON.parse(localStorage.getItem("user"));
   const {isSuccess,isLoading} = useSelector((state)=> state.user);
   const handleTextChange = (e) =>{
     dispatchNew({
@@ -49,12 +50,12 @@ export default function CreateUserForm(props) {
   };
   const formStateWithToken = {
     ...formState,
-    token:user.token
+    token:userDetail.token
   }
   const handleCreate = (e) => {
     e.preventDefault();
     dispatch(createUsers(formStateWithToken));
-    dispatch(fetchUsers(user.token));
+    dispatch(fetchUsers(userDetail.token));
   }
 
   useEffect(()=>{

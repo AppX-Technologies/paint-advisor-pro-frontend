@@ -25,6 +25,7 @@ export default function Edit(props) {
   const [formState,dispatchNew] = React.useReducer(formReducer,initialFormState)
   
   const {user} = useSelector((state)=> state.auth);
+  const userDetail = JSON.parse(localStorage.getItem("user"));
   const {isSuccess,isLoading} = useSelector((state)=> state.user);
 
   useEffect(()=>{
@@ -51,13 +52,13 @@ export default function Edit(props) {
 
   const formStateWithToken = {
     ...formState,
-    token:user.token
+    token:userDetail.token
   }
 
   const handleEdit = (e) => {
     e.preventDefault();
     dispatch(updateUser(formStateWithToken));
-    dispatch(fetchUsers(user.token));
+    dispatch(fetchUsers(userDetail.token));
   }
 
   useEffect(()=>{

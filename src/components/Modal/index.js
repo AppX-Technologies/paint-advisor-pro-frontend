@@ -19,13 +19,17 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   }
   )); 
 export default function ConfirmModal({children,modalTitle,contentMessage,type}) {
-  const { isOpen , isOtpModal, resetEmail,otp,newPassword } = useSelector((store) => store.modal);
+  const { isOpen , isOtpModal, resetEmail,otp,newPassword,confirmPassword } = useSelector((store) => store.modal);
   widthChange = isOtpModal ? false : true;
   const dispatch = useDispatch();
   const {isLoading,isSuccessOtp,isResetSuccess} = useSelector((store)=> store.auth)
 
   const handleResetEmail = () => {
     if(type==="otp"){
+      if(newPassword === confirmPassword){
+        dispatch(showMessage({message:"Password doesn't match",type:"error"}));
+        return;
+      }
       dispatch(resetPassword({email:resetEmail,temporaryKey:otp,password:newPassword}))
       if(isResetSuccess){
         dispatch(showMessage({message:"Password reset successfully",variant:"success"}))

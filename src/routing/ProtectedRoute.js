@@ -2,8 +2,9 @@ import { useSelector } from 'react-redux'
 import { NavLink, Outlet } from 'react-router-dom'
 import { Typography } from '@mui/material'
 const ProtectedRoute = () => {
-  const { user } = useSelector((state) => state.auth)
-  
+  // const { user } = useSelector((state) => state.auth)
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user)
   // show unauthorized screen if no user is found in redux store
   if (!user) {
     return (

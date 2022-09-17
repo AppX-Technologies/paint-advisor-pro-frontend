@@ -25,6 +25,7 @@ export default function FormDialog(props) {
   const [formState,dispatchNew] = React.useReducer(formReducer,initialFormState)
   const {open,setOpen} = props;
   const {user} = useSelector((state)=> state.auth);
+  const userDetail = JSON.parse(localStorage.getItem("user"));
   const {isSuccess,isLoading} = useSelector((state)=> state.org);
   const handleTextChange = (e) =>{
     dispatchNew({
@@ -38,12 +39,12 @@ export default function FormDialog(props) {
   };
   const formStateWithToken = {
     ...formState,
-    token:user.token
+    token:userDetail.token
   }
   const handleCreate = (e) => {
     e.preventDefault();
     dispatch(createOrgs(formStateWithToken));
-    dispatch(fetchOrgs(user.token));
+    dispatch(fetchOrgs(userDetail.token));
   }
 
   useEffect(()=>{

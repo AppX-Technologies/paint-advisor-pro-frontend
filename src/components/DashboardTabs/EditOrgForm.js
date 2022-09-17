@@ -25,6 +25,7 @@ export default function Edit(props) {
   const [formState,dispatchNew] = React.useReducer(formReducer,initialFormState)
   
   const {user} = useSelector((state)=> state.auth);
+  const userDetail = JSON.parse(localStorage.getItem("user"));
   const {isUpdated,isLoading} = useSelector((state)=> state.user);
 
   useEffect(()=>{
@@ -34,7 +35,6 @@ export default function Edit(props) {
     formState.phone = editFormData[4]  ? editFormData[4] : '';
   },[editFormData])
 
-  console.log(formState,"formState")
   const handleTextChange = (e) =>{
     dispatchNew({
       type:"HANDLE_FORM_INPUT",
@@ -52,13 +52,13 @@ export default function Edit(props) {
   const formStateWithToken = {
     ...formState,
     id:editFormData[0],
-    token:user.token
+    token:userDetail.token
   }
 
   const handleEdit = (e) => {
     e.preventDefault();
     dispatch(updateOrg(formStateWithToken));
-    dispatch(fetchOrgs(user.token));
+    dispatch(fetchOrgs(userDetail.token));
   }
 
   useEffect(()=>{

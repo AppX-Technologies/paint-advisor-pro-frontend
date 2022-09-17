@@ -90,10 +90,10 @@ function DashboardContent() {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const [open, setOpen] = React.useState(false);
-
+  const userDetail = JSON.parse(localStorage.getItem("user"));
   useEffect(()=>{
-    dispatch(fetchOrgs(user.token));
-    dispatch(fetchUsers(user.token));
+    dispatch(fetchOrgs(userDetail.token));
+    dispatch(fetchUsers(userDetail.token));
   },[])
 
   const toggleDrawer = () => {
