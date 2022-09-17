@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import MUIDataTable from "mui-datatables";
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import CustomButton from '../Button';
 import FormDialog from './OrgRegisterForm';
-import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import EditOrgForm from './EditOrgForm';
-
+import { useNavigate } from 'react-router-dom'
  
 const Companies = () => {
   const {orgList} = useSelector(state => state.org)
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData,  setEditFormData] = React.useState([]);
 
@@ -84,7 +86,16 @@ const Companies = () => {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
-            <ModeEditOutlineOutlinedIcon style={{cursor:"pointer"}} onClick={() => setOpenEditForm(true)}/>
+            <>
+            <Stack direction="row" spacing={2}>
+            <Button size="small" variant="outlined" startIcon={<EditOutlinedIcon />} onClick={() => setOpenEditForm(true)}>
+              Edit
+            </Button>
+            <Button size="small" variant="contained" endIcon={<RemoveRedEyeOutlinedIcon />} onClick={ navigate('/')}>
+              View
+            </Button>
+          </Stack>
+            </>
           );
         },
        
