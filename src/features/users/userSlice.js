@@ -9,6 +9,7 @@ const initialState = {
   isLoading: false,
   isError: false,
   isSuccess: false,
+  isDeleted: false,
   message:""
 };
 
@@ -73,6 +74,26 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+export const deleteUser = createAsyncThunk(
+  "auth/deleteUser",
+  async (userData, thunkAPI) => {
+    console.log(userData,"data from admin")
+    try {
+      const response = await userService.deleteUser(userData);
+      console.log(response);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+          error.message ||
+        error.toString();
+      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -123,6 +144,21 @@ export const userSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+      .addCase(deleteUser.pending, (state,action) =>{
+        state.isLoading = true;
+      }
+      )
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isDeleted = true;
+        state.message = action.payload;
+      }
+      )
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      });
     }
 });
 

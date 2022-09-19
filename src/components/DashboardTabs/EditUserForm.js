@@ -17,9 +17,9 @@ export default function Edit(props) {
   const dispatch = useDispatch();
   const {openEditForm,setOpenEditForm,editFormData} = props;
   const initialFormState = {
-    name: editFormData[0] ? editFormData[0] : '',
-    email: editFormData[1] ?  editFormData[1] : '',
-    phone: editFormData[2]  ? editFormData[2] : '',
+    name: editFormData[1] ? editFormData[1] : '',
+    email: editFormData[2] ?  editFormData[2] : '',
+    phone: editFormData[3]  ? editFormData[3] : '',
     role:"Admin", 
     };
   const [formState,dispatchNew] = React.useReducer(formReducer,initialFormState)
@@ -29,9 +29,9 @@ export default function Edit(props) {
   const {isSuccess,isLoading} = useSelector((state)=> state.user);
 
   useEffect(()=>{
-    formState.name = editFormData[0] ? editFormData[0] : '';
-    formState.email = editFormData[1] ?  editFormData[1] : '';
-    formState.phone = editFormData[2]  ? editFormData[2] : '';
+    formState.name = editFormData[1] ? editFormData[1] : '';
+    formState.email = editFormData[2] ?  editFormData[2] : '';
+    formState.phone = editFormData[3]  ? editFormData[3] : '';
     formState.role = "Admin"
   },[editFormData])
 
@@ -86,7 +86,7 @@ export default function Edit(props) {
                   id="name"
                   label="Name"
                   autoFocus
-                  value={formState.name ? formState.name : editFormData[0]}
+                  value={formState.name ? formState.name : editFormData[1]}
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
@@ -99,7 +99,7 @@ export default function Edit(props) {
                   id="email"
                   label="Email"
                   autoFocus
-                  value={formState.email ? formState.email : editFormData[1]}
+                  value={formState.email ? formState.email : editFormData[2]}
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
@@ -112,7 +112,7 @@ export default function Edit(props) {
                   id="phone"
                   label="Phone Number"
                   autoFocus
-                  value={formState.phone ? formState.phone : editFormData[2]}
+                  value={formState.phone ? formState.phone : editFormData[3]}
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>

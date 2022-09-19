@@ -10,6 +10,7 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isUpdated: false, 
+  isDeleted: false,
   message:""
 };
 
@@ -76,6 +77,26 @@ export const updateOrg = createAsyncThunk(
   }
 );
 
+export const deleteOrg = createAsyncThunk(
+  "auth/deleteOrg",
+  async (userData, thunkAPI) => {
+    try {
+      const response = await orgService.deleteOrg(userData);
+      console.log(response);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+          error.message ||
+        error.toString();
+      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const orgSlice = createSlice({
   name: "org",
   initialState,
@@ -84,6 +105,7 @@ export const orgSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
+      state.isDeleted = false;
     },
   },
   extraReducers: (builder) => {
@@ -128,7 +150,22 @@ export const orgSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       }
-      );
+      )
+      .addCase(deleteOrg.pending, (state) => {
+        state.isLoading = true;
+      }
+      )
+      .addCase(deleteOrg.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isDeleted = true;
+        state.message = action.payload;
+      }
+      ) 
+      .addCase(deleteOrg.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      });
   },
 });
 

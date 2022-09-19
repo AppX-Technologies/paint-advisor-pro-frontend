@@ -5,6 +5,7 @@ const endpoint = process.env.REACT_APP_API_BASE_URL_USERS;
 const CREATE_USERS = `${endpoint}/`;
 const FETCH_USERS = `${endpoint}/list`;
 const UPDATE_USER = `${endpoint}/update-user-details`;
+const DELETE_USER = `${endpoint}/`;
 
 const fetchUsers = async (userData) => {
   const config = {
@@ -41,5 +42,18 @@ const updateUser = async (userData) => {
   return response.data;
 };
 
-const userService = { fetchUsers, createUsers,updateUser };
+const deleteUser = async (userData) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userData.token}`
+    },
+  };
+  delete userData.token;
+  console.log(userData,"from delete") 
+  const response = await axios.delete(DELETE_USER, userData,config);
+  return response.data;
+};
+
+const userService = { fetchUsers, createUsers,updateUser,deleteUser };
 export default userService;

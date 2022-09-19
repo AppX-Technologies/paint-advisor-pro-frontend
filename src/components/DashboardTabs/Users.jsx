@@ -1,20 +1,40 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import MUIDataTable from "mui-datatables";
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CustomButton from '../Button';
 import CreateUserForm from './UserRegisterForm';
 import EditUserForm from './EditUserForm';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+ import {deleteUser,fetchUsers} from '../../features/users/userSlice'
+ import {showMessage} from '../../features/snackbar/snackbarSlice'
 
- 
 const Users = () => {
-  const {userList} = useSelector(state => state.user)
+  const dispatch = useDispatch();
+  const {userList,isDeleted,isLoading} = useSelector(state => state.user)
   const [open, setOpen] = React.useState(false);
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData,  setEditFormData] = React.useState([]);
-  
+  const userDetail = JSON.parse(localStorage.getItem("user"));
+
+  React.useEffect(() => {
+    if(isDeleted){
+      dispatch(showMessage({message:"User deleted successfully",variant:"success"}))
+      dispatch(fetchUsers(userDetail.token))
+    }
+  } 
+  , [isDeleted]);
+
   const columns = [
+    {
+      name: "",
+      label: "",
+      options: {
+       display: false,
+      }
+     },
     {
      name: "name",
      label: "Name",
@@ -85,17 +105,29 @@ const Users = () => {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
-            <ModeEditOutlineOutlinedIcon style={{cursor:"pointer"}} onClick={() => setOpenEditForm(true)}/>
+            <>
+            <Stack direction="row" spacing={2}>
+            <EditOutlinedIcon style={{cursor:"pointer"}} onClick={() => setOpenEditForm(true)}/>
+            <DeleteOutlineOutlinedIcon style={{cursor:"pointer"}}
+            onClick={
+              () => {
+                dispatch(deleteUser({email:editFormData[2],token:userDetail.token}))
+              }
+            }
+            />
+            </Stack>
+            </>
           );
         },
        
       }
     }
   ];
-
+console.log(editFormData,"users")
   const options = {
     filterType: 'textField',
     print:false,
+    selectableRows: false,
     textLabels: {
      body: {
        noMatch: 
@@ -133,9 +165,15 @@ const Users = () => {
       </CustomButton>
     </Box>
     <MUIDataTable
-    title={"Users List"}
+    title={
+      <>
+    Users List
+    {<CircularProgress color="primary" size={25} style={{display:isLoading ? "block" : "none"}} />}
+    </>
+    }
     data={userList.map((item,index)=>{
       return [
+        item._id,
         item.name,
         item.email,
         item.phone,

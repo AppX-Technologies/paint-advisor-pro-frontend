@@ -6,15 +6,29 @@ import CustomButton from '../Button';
 import FormDialog from './OrgRegisterForm';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOrgForm from './EditOrgForm';
 import { useNavigate } from 'react-router-dom'
- 
+import {deleteOrg,fetchOrgs,reset} from '../../features/org/orgSlice'
+import {showMessage} from '../../features/snackbar/snackbarSlice'
+
 const Companies = () => {
-  const {orgList} = useSelector(state => state.org)
+  const dispatch = useDispatch()
+  const {orgList,isLoading,isDeleted} = useSelector(state => state.org)
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData,  setEditFormData] = React.useState([]);
+  const userDetail = JSON.parse(localStorage.getItem("user"));
+  
+  React.useEffect(() => {
+    if(isDeleted){
+      dispatch(showMessage({message:"Organization deleted successfully",variant:"success"}))
+      dispatch(fetchOrgs(userDetail.token))
+      dispatch(reset())
+    }
+  } 
+  , [isDeleted])
 
   const columns = [
     {
@@ -88,13 +102,13 @@ const Companies = () => {
           return (
             <>
             <Stack direction="row" spacing={2}>
-            <Button size="small" variant="outlined" startIcon={<EditOutlinedIcon />} onClick={() => setOpenEditForm(true)}>
-              Edit
-            </Button>
-            <Button size="small" variant="contained" endIcon={<RemoveRedEyeOutlinedIcon />} >
-              View
-            </Button>
-          </Stack>
+            <EditOutlinedIcon style={{cursor:"pointer"}} onClick={() => setOpenEditForm(true)}/>
+            <RemoveRedEyeOutlinedIcon style={{cursor:"pointer"}} />
+            <DeleteOutlineOutlinedIcon style={{cursor:"pointer"}}
+            onClick={()=> {
+              dispatch(deleteOrg({id:editFormData[0],token:userDetail.token}))}}
+            />
+            </Stack>
             </>
           );
         },
@@ -102,10 +116,11 @@ const Companies = () => {
       }
     }
   ];
-
+  console.log(editFormData[0],"id")
   const options = {
     filterType: 'textField',
     print:false,
+    selectableRows: false,
     textLabels: {
      body: {
        noMatch: 
@@ -131,6 +146,7 @@ const Companies = () => {
        setEditFormData(filteredRowData)
     } 
   }
+  console.log(editFormData,"editFormData")
   return (
     <>
     <Box sx={{ display: 'flex', justifyContent:"flex-end" }}>
@@ -143,7 +159,12 @@ const Companies = () => {
       </CustomButton>
     </Box>
     <MUIDataTable
-    title={"Companies List"}
+    title={
+    <>
+    Companies List
+    {<CircularProgress color="primary" size={25} style={{display:isLoading ? "block" : "none"}} />}
+    </>
+    }
     data={orgList.map((item,index)=>{
       return [
         item._id,
