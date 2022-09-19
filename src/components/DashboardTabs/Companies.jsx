@@ -91,7 +91,7 @@ const Companies = () => {
             <Button size="small" variant="outlined" startIcon={<EditOutlinedIcon />} onClick={() => setOpenEditForm(true)}>
               Edit
             </Button>
-            <Button size="small" variant="contained" endIcon={<RemoveRedEyeOutlinedIcon />} onClick={ navigate('/')}>
+            <Button size="small" variant="contained" endIcon={<RemoveRedEyeOutlinedIcon />} >
               View
             </Button>
           </Stack>
