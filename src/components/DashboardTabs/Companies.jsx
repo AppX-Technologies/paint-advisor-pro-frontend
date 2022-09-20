@@ -29,7 +29,7 @@ const Companies = () => {
   const [userId,setUserId] = React.useState('');
   React.useEffect(() => {
     if(isDeleted){
-      dispatch(showMessage({message:"Organization deleted successfully",variant:"success"}))
+      dispatch(showMessage({message:"Company deleted successfully",variant:"success"}))
       setOpenDeleteModal(false)
       dispatch(fetchOrgs(userDetail.token))
       dispatch(reset())
@@ -118,7 +118,13 @@ const Companies = () => {
               }} 
             editFormData={editFormData}
             />
-            <RemoveRedEyeOutlinedIcon style={{cursor:"pointer"}} />
+            <RemoveRedEyeOutlinedIcon style={{cursor:"pointer"}} 
+            onClick={
+              (e) => {
+                onViewBtnClick(e,getId)
+              }
+            }
+            />
             <DeleteOutlineOutlinedIcon style={{cursor:"pointer"}}
               onClick={
               (e)=> {
@@ -142,6 +148,9 @@ const Companies = () => {
      body: {
        noMatch: 
        <>
+       {isLoading &&
+         <CircularProgress color="primary" style={{display: isLoading ? "flex" : "none", margin:"0 auto"}} />
+         }
        {!isLoading && orgList.length === 0 && 
          <div
            className="flex flex-col justify-center items-center"
@@ -153,8 +162,8 @@ const Companies = () => {
            >
              Sorry, no matching records found.
            </Typography>
-         </div> }
-         <CircularProgress color="primary" style={{display: isLoading ? "block" : "none"}} />
+         </div> 
+         }
         </>
        ,
        toolTip: "Sort",
@@ -168,7 +177,11 @@ const Companies = () => {
     e.stopPropagation();
     setUserId(getId)
   }
-
+  
+  const onViewBtnClick = (e,getId) => {
+    e.stopPropagation();
+    navigate(`/company/${getId}`)
+  }
   function DeleteModal(){
     const handleClose = () => {
       setOpenDeleteModal(false);
@@ -182,14 +195,14 @@ const Companies = () => {
         <DialogTitle>
           <Stack direction="row" spacing={2}>
           <Typography variant="h6">
-          Delete Organization
+          Delete Company
           </Typography>
           {<CircularProgress color="primary" size={25} style={{display:isDeleting ? "block" : "none"}} />}
           </Stack>
           </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this organization?
+            Are you sure you want to delete this Company?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -214,7 +227,7 @@ const Companies = () => {
     </Box>
     <MUIDataTable
     title={
-      "Organizations List"
+      "Companies List"
     }
     data={orgList.map((item,index)=>{
       return [

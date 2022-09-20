@@ -8,16 +8,17 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import CustomButton from '../Button';
-import CreateUserForm from './UserRegisterForm';
-import EditUserForm from './EditUserForm';
+import CustomButton from '../../components/Button';
+// import CreateUserForm from './UserRegisterForm';
+// import EditUserForm from './EditUserForm';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
- import {deleteUser,fetchUsers,reset} from '../../features/users/userSlice'
- import {showMessage} from '../../features/snackbar/snackbarSlice'
+import {fetchUserMadeByCompany,reset} from '../../features/usersFromCompany/usersFromCompanySlice'
+import {showMessage} from '../../features/snackbar/snackbarSlice'
 
-const Users = () => {
+const UsersFromCompany = (props) => {
+  const {getId} = props;
   const dispatch = useDispatch();
-  const {userList,isDeleting,isLoading,isDeleted} = useSelector(state => state.user)
+  const {companyMadeByUsers,isDeleting,isLoading,isDeleted} = useSelector(state => state.usersFromCompany)
   const [open, setOpen] = React.useState(false);
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData,  setEditFormData] = React.useState([]);
@@ -29,7 +30,11 @@ const Users = () => {
     if(isDeleted){
       dispatch(showMessage({message:"User deleted successfully",variant:"success"}))
       setOpenDeleteModal(false)
-      dispatch(fetchUsers(userDetail.token))
+      dispatch(fetchUserMadeByCompany({
+        filter: {
+          role: ["Painter","Estimator","Org Admin"]
+        }
+      }))
       dispatch(reset())
     }
   } 
@@ -68,6 +73,13 @@ const Users = () => {
     {
       name: "role",
       label: "Role",
+      options: {
+       filter: true,
+      }
+     },
+     {
+      name: "company",
+      label: "Company",
       options: {
        filter: true,
       }
@@ -142,7 +154,7 @@ const Users = () => {
         {isLoading &&
           <CircularProgress color="primary" style={{display: isLoading ? "flex" : "none", margin:"0 auto"}} />
           }
-        {!isLoading && userList.length === 0 && 
+        {!isLoading && 
           <div
             className="flex flex-col justify-center items-center"
             style={{ padding: "26px 0", marginTop: "32px" }}
@@ -170,37 +182,37 @@ const Users = () => {
     setEmailId(email)
   }
 
-  function DeleteModal(){
-    const handleClose = () => {
-      setOpenDeleteModal(false);
-    };
-    const handleDelete = () => {
-      dispatch(deleteUser({email:emailId,token:userDetail.token}))
-    }
+  // function DeleteModal(){
+  //   const handleClose = () => {
+  //     setOpenDeleteModal(false);
+  //   };
+  //   const handleDelete = () => {
+  //     dispatch(deleteUser({email:emailId,token:userDetail.token}))
+  //   }
 
-    return (
-      <Dialog open={openDeleteModal} onClose={handleClose}>
-        <DialogTitle>
-          <Stack direction="row" spacing={2}>
-          <Typography variant="h6">
-          Delete user
-          </Typography>
-          {<CircularProgress color="primary" size={25} style={{display:isDeleting ? "block" : "none"}} />}
-          </Stack>
-          </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this user?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleDelete} disabled={isDeleting}>Delete</Button>
-        </DialogActions>
-      </Dialog>
-    )
+  //   return (
+  //     <Dialog open={openDeleteModal} onClose={handleClose}>
+  //       <DialogTitle>
+  //         <Stack direction="row" spacing={2}>
+  //         <Typography variant="h6">
+  //         Delete user
+  //         </Typography>
+  //         {<CircularProgress color="primary" size={25} style={{display:isDeleting ? "block" : "none"}} />}
+  //         </Stack>
+  //         </DialogTitle>
+  //       <DialogContent>
+  //         <DialogContentText>
+  //           Are you sure you want to delete this user?
+  //         </DialogContentText>
+  //       </DialogContent>
+  //       <DialogActions>
+  //         <Button onClick={handleClose}>Cancel</Button>
+  //         <Button onClick={handleDelete} disabled={isDeleting}>Delete</Button>
+  //       </DialogActions>
+  //     </Dialog>
+  //   )
     
-  }
+  // }
   return (
     <>
     <Box sx={{ display: 'flex', justifyContent:"flex-end" }}>
@@ -217,24 +229,25 @@ const Users = () => {
     title={
       "Users List"
     }
-    data={userList.map((item,index)=>{
+    data={companyMadeByUsers.map((item,index)=>{
       return [
         item._id,
         item.name,
         item.email,
         item.phone,
         item.role,
+        item.organization ? item.organization.name : "",
         item.active
       ]
     })}
     columns={columns}
     options={options}
   />
-  <CreateUserForm open={open} setOpen={setOpen}/>
+  {/* <CreateUserForm open={open} setOpen={setOpen}/>
   <EditUserForm editFormData={editFormData} openEditForm={openEditForm}  setOpenEditForm={setOpenEditForm}/>
-  <DeleteModal />
+  <DeleteModal /> */}
   </>
   )
 }
 
-export default Users
+export default UsersFromCompany

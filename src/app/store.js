@@ -4,6 +4,7 @@ import modalReducer from "../features/modal/modalSlice";
 import snackbarReducer from "../features/snackbar/snackbarSlice";
 import orgReducer from "../features/org/orgSlice";
 import userReducer from "../features/users/userSlice";
+import usersFromCompanyReducer from "../features/usersFromCompany/usersFromCompanySlice"
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     snackbar: snackbarReducer,
     org: orgReducer,
     user: userReducer,
+    usersFromCompany: usersFromCompanyReducer,
   },
 });

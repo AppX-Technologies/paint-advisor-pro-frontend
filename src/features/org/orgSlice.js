@@ -6,6 +6,7 @@ import { showMessage, onClose } from "../snackbar/snackbarSlice";
 
 const initialState = {
   orgList:[],
+  org:[],
   isLoading: false,
   isError: false,
   isSuccess: false,
@@ -35,6 +36,22 @@ export const fetchOrgs = createAsyncThunk(
   }
 );
 
+export const fetchSingleOrg = createAsyncThunk(
+  "org/fetchSingleOrg",
+  async (userData, thunkAPI) => {
+    try {
+      const response = await orgService.fetchSingleOrg(userData);
+      return response;
+    } catch (err) {
+      const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 // create organization
 
 export const createOrgs = createAsyncThunk(
@@ -169,7 +186,22 @@ export const orgSlice = createSlice({
         state.isDeleting = false;
         state.isError = true;
         state.message = action.payload;
-      });
+      })
+      .addCase(fetchSingleOrg.pending, (state) => {
+        state.isLoading = true;
+      }
+      )
+      .addCase(fetchSingleOrg.fulfilled, (state, action) => {
+        state.org = action.payload;
+        state.isLoading = false;
+      }
+      )
+      .addCase(fetchSingleOrg.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      }
+      );
   },
 });
 

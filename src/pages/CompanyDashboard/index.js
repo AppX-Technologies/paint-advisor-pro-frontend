@@ -8,23 +8,23 @@ import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NavItems from './NavItems';
-import TabPanel from '../../components/DashboardTabs';
-import CustomButton from '../../components/Button';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'
-import { logout,reset} from '../../features/auth/authSlice';
-import {fetchOrgs} from '../../features/org/orgSlice';
-import {fetchUsers} from '../../features/users/userSlice';
-import { useEffect } from 'react';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import IconButton from '@mui/material/IconButton';
-import { Menu, MenuItem } from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import  MainListItems  from './listItems';
+import { useSelector, useDispatch } from 'react-redux';
+import {fetchSingleOrg} from "../../features/org/orgSlice"
+import { CircularProgress } from '@mui/material';
+import Bids from '../Bids';
+import Processes from '../Processes';
+import UsersFromCompany from './UsersFromCompany';
+import {fetchUserMadeByCompany,reset} from '../../features/usersFromCompany/usersFromCompanySlice'
 
 function Copyright(props) {
   return (
@@ -87,56 +87,26 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const isMenuOpen = Boolean(anchorEl);
-  const { user } = useSelector((state) => state.auth);
-  const [open, setOpen] = React.useState(true);
-  const userDetail = JSON.parse(localStorage.getItem("user"));
-  useEffect(()=>{
-    dispatch(fetchOrgs(userDetail.token));
-    dispatch(fetchUsers(userDetail.token));
-  },[])
 
+function DashboardContent() {
+  const dispatch = useDispatch()
+  const [open, setOpen] = React.useState(true);
+  const [clickedMenu, setClickedMenu] = React.useState("Bids");
+  const {org,isLoading} = useSelector((state) => state.org)
+  const getId = window.location.href.split('/').reverse()[0]
+  
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch(reset());
-    navigate('/', { replace: true });
-  }
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
 
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick= {handleLogout}>Logout</MenuItem>
-    </Menu>
-  );
+  React.useEffect(()=>{
+    dispatch(fetchUserMadeByCompany({
+      filter: {
+        role: ["Painter","Estimator","Org Admin"]
+      }
+    }))
+  },[])
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -160,29 +130,25 @@ function DashboardContent() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
+        
+            {isLoading ? <CircularProgress style={{color:"white"}} size={25} /> :
+              <Typography
               component="h1"
               variant="h6"
               color="inherit"
               noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Admin panel
-            </Typography>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
+              sx={{ flexGrow: 1 }} >
+              {org.name}
+              </Typography>
+            }
+           
+            <IconButton color="inherit">
+              {/* <Badge badgeContent={4} color="secondary">
+                <NotificationsIcon />
+              </Badge> */}
             </IconButton>
           </Toolbar>
         </AppBar>
-        {renderMenu}
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
@@ -198,7 +164,7 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            <NavItems/>
+            <MainListItems setClickedMenu={setClickedMenu}/>
           </List>
         </Drawer>
         <Box
@@ -213,9 +179,16 @@ function DashboardContent() {
             overflow: 'auto',
           }}
         >
+          <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              <TabPanel/>
+              {/* Chart */}
+              <Grid item xs={12} md={12} lg={12}>
+                {/* Company Bids content here */}
+                {clickedMenu === "Bids" && <Bids/>}
+                {clickedMenu === "Processes" && <Processes/>}
+                {clickedMenu === "Users" && <UsersFromCompany getId={getId} />}
+              </Grid> 
             </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>
@@ -225,6 +198,6 @@ function DashboardContent() {
   );
 }
 
-export default function Dashboard() {
+export default function CompanyDashboard() {
   return <DashboardContent />;
 }

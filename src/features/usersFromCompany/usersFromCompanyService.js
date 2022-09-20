@@ -1,0 +1,21 @@
+import axios from "axios";
+
+const endpoint = process.env.REACT_APP_API_BASE_URL_USERS;
+
+const FETCH_USERS_COMPANY = `${endpoint}/list`;
+
+const {token} = JSON.parse(localStorage.getItem("user"));
+
+const fetchUserMadeByCompany = async (userData) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+  };
+  const response = await axios.post(FETCH_USERS_COMPANY, userData ,config);
+  return response.data;
+};
+
+const usersFromCompanyService = { fetchUserMadeByCompany };
+export default usersFromCompanyService;

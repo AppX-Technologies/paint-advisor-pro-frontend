@@ -6,20 +6,26 @@ import {
   Toolbar,
 } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-
+  const userDetail = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
+  const handleLoginRoute = () => {
+    if(userDetail){
+      navigate("/dashboard");
+    } else {
+      navigate("/login");
+    }
+  }
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters style={{display:"flex",justifyContent:"space-between"}}>
           <AdbIcon sx={{ display: {  xs: "flex", md: "flex" }, mr: 1 }} />
-          <Link to="/login">
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" onClick={handleLoginRoute}>
               Login
             </Button>
-          </Link>
         </Toolbar>
       </Container>
     </AppBar>
