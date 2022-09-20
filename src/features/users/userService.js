@@ -51,7 +51,8 @@ const deleteUser = async (userData) => {
   };
   delete userData.token;
   console.log(userData,"from delete") 
-  const response = await axios.delete(DELETE_USER, userData,config);
+  console.log(config,"config")
+  const response = await axios.delete(DELETE_USER, {...config,data:userData});
   return response.data;
 };
 

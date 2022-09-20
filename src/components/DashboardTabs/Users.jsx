@@ -2,27 +2,35 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import MUIDataTable from "mui-datatables";
 import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
-import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CustomButton from '../Button';
 import CreateUserForm from './UserRegisterForm';
 import EditUserForm from './EditUserForm';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
- import {deleteUser,fetchUsers} from '../../features/users/userSlice'
+ import {deleteUser,fetchUsers,reset} from '../../features/users/userSlice'
  import {showMessage} from '../../features/snackbar/snackbarSlice'
 
 const Users = () => {
   const dispatch = useDispatch();
-  const {userList,isDeleted,isLoading} = useSelector(state => state.user)
+  const {userList,isDeleting,isLoading,isDeleted} = useSelector(state => state.user)
   const [open, setOpen] = React.useState(false);
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData,  setEditFormData] = React.useState([]);
   const userDetail = JSON.parse(localStorage.getItem("user"));
+  const [openDeleteModal,setOpenDeleteModal] = React.useState(false);
+  const [emailId,setEmailId] = React.useState('');
 
   React.useEffect(() => {
     if(isDeleted){
       dispatch(showMessage({message:"User deleted successfully",variant:"success"}))
+      setOpenDeleteModal(false)
       dispatch(fetchUsers(userDetail.token))
+      dispatch(reset())
     }
   } 
   , [isDeleted]);
@@ -64,13 +72,6 @@ const Users = () => {
        filter: true,
       }
      },
-     {
-      name:"organization",
-      label:"Organization",
-      options: {
-        filter: true,
-     }
-    },
     {
       name: "active",
       label: "Status",
@@ -104,16 +105,23 @@ const Users = () => {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
+          const getEmail = tableMeta.rowData[2]
           return (
             <>
             <Stack direction="row" spacing={2}>
-            <EditOutlinedIcon style={{cursor:"pointer"}} onClick={() => setOpenEditForm(true)}/>
-            <DeleteOutlineOutlinedIcon style={{cursor:"pointer"}}
+            <EditOutlinedIcon style={{cursor:"pointer"}} 
             onClick={
               () => {
-                dispatch(deleteUser({email:editFormData[2],token:userDetail.token}))
-              }
-            }
+                setEditFormData(tableMeta.rowData)
+                setOpenEditForm(true)
+              }} 
+            editFormData={editFormData}/>
+            <DeleteOutlineOutlinedIcon style={{cursor:"pointer"}}
+              onClick={
+              (e)=> {
+              setOpenDeleteModal(true)
+              onDeleteBtnClick(e,getEmail)
+              }}  
             />
             </Stack>
             </>
@@ -123,7 +131,6 @@ const Users = () => {
       }
     }
   ];
-console.log(editFormData,"users")
   const options = {
     filterType: 'textField',
     print:false,
@@ -148,11 +155,46 @@ console.log(editFormData,"users")
        columnHeaderTooltip: column => `Sort for ${column.label}`
      }
    },
-    onRowClick: (rowData, rowMeta) => {
-        const filteredRowData = rowData.slice(0,5)
-        setEditFormData(filteredRowData)
-    }
+   
   };
+
+  // set email on click
+  const onDeleteBtnClick = (e,email) => {
+    e.stopPropagation();
+    setEmailId(email)
+  }
+
+  function DeleteModal(){
+    const handleClose = () => {
+      setOpenDeleteModal(false);
+    };
+    const handleDelete = () => {
+      dispatch(deleteUser({email:emailId,token:userDetail.token}))
+    }
+
+    return (
+      <Dialog open={openDeleteModal} onClose={handleClose}>
+        <DialogTitle>
+          <Stack direction="row" spacing={2}>
+          <Typography variant="h6">
+          Delete user
+          </Typography>
+          {<CircularProgress color="primary" size={25} style={{display:isDeleting ? "block" : "none"}} />}
+          </Stack>
+          </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this user?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleDelete} disabled={isDeleting}>Delete</Button>
+        </DialogActions>
+      </Dialog>
+    )
+    
+  }
   return (
     <>
     <Box sx={{ display: 'flex', justifyContent:"flex-end" }}>
@@ -160,16 +202,14 @@ console.log(editFormData,"users")
       variant="contained"
       sx={{ mt: 3, mb: 2}}
       onClick={() => setOpen(true)}
+      disabled={isLoading}
       >
         Create
       </CustomButton>
     </Box>
     <MUIDataTable
     title={
-      <>
-    Users List
-    {<CircularProgress color="primary" size={25} style={{display:isLoading ? "block" : "none"}} />}
-    </>
+      "Users List"
     }
     data={userList.map((item,index)=>{
       return [
@@ -178,7 +218,6 @@ console.log(editFormData,"users")
         item.email,
         item.phone,
         item.role,
-        item.organization ? item.organization : "N/A",
         item.active
       ]
     })}
@@ -187,6 +226,7 @@ console.log(editFormData,"users")
   />
   <CreateUserForm open={open} setOpen={setOpen}/>
   <EditUserForm editFormData={editFormData} openEditForm={openEditForm}  setOpenEditForm={setOpenEditForm}/>
+  <DeleteModal />
   </>
   )
 }

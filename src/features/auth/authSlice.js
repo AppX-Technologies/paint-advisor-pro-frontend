@@ -123,6 +123,7 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
+      state.isSuccessOtp = false;
       state.message = "";
     },
   },

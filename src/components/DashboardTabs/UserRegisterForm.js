@@ -11,7 +11,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useDispatch, useSelector } from 'react-redux';
 import formReducer from './reducers/formReducer'
-import { Checkbox, CircularProgress, FormControlLabel, Grid } from '@mui/material';
+import { Checkbox, CircularProgress, FormControlLabel, Grid, Stack, Typography } from '@mui/material';
 import { createUsers, fetchUsers, reset } from '../../features/users/userSlice';
 import { useEffect } from 'react';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
@@ -69,8 +69,12 @@ export default function CreateUserForm(props) {
     <div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          Add New User
-          <CircularProgress style={{display:isLoading ? "block" : "none"}} size={25} />
+        <Stack direction="row" spacing={2}>
+            <Typography variant="h6">
+            Add New User
+            </Typography>
+            {<CircularProgress color="primary" size={25} style={{display:isLoading ? "block" : "none"}} />}
+          </Stack>
           </DialogTitle>
         <DialogContent>
         <Grid container spacing={2}>

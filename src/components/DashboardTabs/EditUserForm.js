@@ -26,7 +26,7 @@ export default function Edit(props) {
   
   const {user} = useSelector((state)=> state.auth);
   const userDetail = JSON.parse(localStorage.getItem("user"));
-  const {isSuccess,isLoading} = useSelector((state)=> state.user);
+  const {isUpdated,isUpdating} = useSelector((state)=> state.user);
 
   useEffect(()=>{
     formState.name = editFormData[1] ? editFormData[1] : '';
@@ -58,22 +58,23 @@ export default function Edit(props) {
   const handleEdit = (e) => {
     e.preventDefault();
     dispatch(updateUser(formStateWithToken));
-    dispatch(fetchUsers(userDetail.token));
+    dispatch(reset());
   }
 
   useEffect(()=>{
-    if(isSuccess){
+    if(isUpdated){
       setOpenEditForm(false);
       dispatch(showMessage({message:"User updated successfully",variant:"success"}));
+      dispatch(fetchUsers(userDetail.token));
       dispatch(reset());
     }
-  },[isSuccess])
+  },[isUpdated])
   return (
     <div>
       <Dialog open={openEditForm} onClose={handleClose}>
         <DialogTitle>
           Edit User
-          <CircularProgress style={{display:isLoading ? "block" : "none"}} size={25} />
+          <CircularProgress style={{display:isUpdating ? "block" : "none"}} size={25} />
           </DialogTitle>
         <DialogContent>
         <Grid container spacing={2}>
@@ -120,7 +121,7 @@ export default function Edit(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" variant="contained" onClick={(e)=>handleEdit(e)}>Update</Button>
+          <Button disabled={isUpdating} type="submit" variant="contained" onClick={(e)=>handleEdit(e)}>Update</Button>
         </DialogActions>
       </Dialog>
     </div>

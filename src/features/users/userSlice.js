@@ -9,7 +9,10 @@ const initialState = {
   isLoading: false,
   isError: false,
   isSuccess: false,
+  isDeleting: false,
   isDeleted: false,
+  isUpdating: false,
+  isUpdated: false,
   message:""
 };
 
@@ -102,6 +105,9 @@ export const userSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
+      state.isDeleting = false;
+      state.isDeleted = false;
+      state.isUpdated = false;
     },
   },
   extraReducers: (builder) => {
@@ -132,30 +138,30 @@ export const userSlice = createSlice({
         state.message = action.payload;
       })
       .addCase(updateUser.pending, (state,action) =>{
-        state.isLoading = true;
+        state.isUpdating = true;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
+        state.isUpdated = true;
+        state.isUpdating = false;
         state.message = action.payload;
       })
       .addCase(updateUser.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isUpdating = false;
         state.isError = true;
         state.message = action.payload;
       })
       .addCase(deleteUser.pending, (state,action) =>{
-        state.isLoading = true;
+        state.isDeleting = true;
       }
       )
       .addCase(deleteUser.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.isDeleting = false;
         state.isDeleted = true;
         state.message = action.payload;
       }
       )
       .addCase(deleteUser.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isDeleting = false;
         state.isError = true;
         state.message = action.payload;
       });

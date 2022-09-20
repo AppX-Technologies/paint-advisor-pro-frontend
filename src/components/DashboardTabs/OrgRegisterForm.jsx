@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useDispatch, useSelector } from 'react-redux';
 import formReducer from './reducers/formReducer'
-import { Checkbox, CircularProgress, FormControlLabel, Grid } from '@mui/material';
+import { Checkbox, CircularProgress, FormControlLabel, Grid, Stack, Typography } from '@mui/material';
 import { createOrgs, fetchOrgs, reset } from '../../features/org/orgSlice';
 import { useEffect } from 'react';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
@@ -58,8 +58,12 @@ export default function FormDialog(props) {
     <div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          Add New Organization
-          <CircularProgress style={{display:isLoading ? "block" : "none"}} size={25} />
+          <Stack direction="row" spacing={2}>
+            <Typography variant="h6">
+            Add New Organization
+            </Typography>
+            {<CircularProgress color="primary" size={25} style={{display:isLoading ? "block" : "none"}} />}
+          </Stack>
           </DialogTitle>
         <DialogContent>
         <Grid container spacing={2}>

@@ -28,6 +28,11 @@ const modalSlice = createSlice({
       state.isOpen = false;
       state.isOtpModal = true;
     },
+    closeOtpModal: (state, action) => {
+      state.isOtpModal = false;
+      state.newPassword = "";
+      state.confirmPassword = "";
+    },
     fillEmail: (state, action) => {
       state.resetEmail = action.payload;
     },

@@ -7,6 +7,11 @@ import FormDialog from './OrgRegisterForm';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import EditOrgForm from './EditOrgForm';
 import { useNavigate } from 'react-router-dom'
 import {deleteOrg,fetchOrgs,reset} from '../../features/org/orgSlice'
@@ -14,16 +19,18 @@ import {showMessage} from '../../features/snackbar/snackbarSlice'
 
 const Companies = () => {
   const dispatch = useDispatch()
-  const {orgList,isLoading,isDeleted} = useSelector(state => state.org)
+  const {orgList,isDeleting,isLoading,isDeleted} = useSelector(state => state.org)
   const [open, setOpen] = React.useState(false);
+  const [openDeleteModal,setOpenDeleteModal] = React.useState(false);
   const navigate = useNavigate();
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData,  setEditFormData] = React.useState([]);
   const userDetail = JSON.parse(localStorage.getItem("user"));
-  
+  const [userId,setUserId] = React.useState('');
   React.useEffect(() => {
     if(isDeleted){
       dispatch(showMessage({message:"Organization deleted successfully",variant:"success"}))
+      setOpenDeleteModal(false)
       dispatch(fetchOrgs(userDetail.token))
       dispatch(reset())
     }
@@ -99,14 +106,25 @@ const Companies = () => {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
+          const getId = tableMeta.rowData[0]
           return (
             <>
             <Stack direction="row" spacing={2}>
-            <EditOutlinedIcon style={{cursor:"pointer"}} onClick={() => setOpenEditForm(true)}/>
+            <EditOutlinedIcon style={{cursor:"pointer"}}
+            onClick={
+              () => {
+                setEditFormData(tableMeta.rowData)
+                setOpenEditForm(true)
+              }} 
+            editFormData={editFormData}
+            />
             <RemoveRedEyeOutlinedIcon style={{cursor:"pointer"}} />
             <DeleteOutlineOutlinedIcon style={{cursor:"pointer"}}
-            onClick={()=> {
-              dispatch(deleteOrg({id:editFormData[0],token:userDetail.token}))}}
+              onClick={
+              (e)=> {
+              setOpenDeleteModal(true)
+              onDeleteBtnClick(e,getId)
+              }}  
             />
             </Stack>
             </>
@@ -116,7 +134,6 @@ const Companies = () => {
       }
     }
   ];
-  console.log(editFormData[0],"id")
   const options = {
     filterType: 'textField',
     print:false,
@@ -141,12 +158,45 @@ const Companies = () => {
        columnHeaderTooltip: column => `Sort for ${column.label}`
      }
    },
-   onRowClick: (rowData, rowMeta) => {
-    const filteredRowData = rowData.slice(0,6)
-       setEditFormData(filteredRowData)
-    } 
   }
-  console.log(editFormData,"editFormData")
+
+   // set email on click
+   const onDeleteBtnClick = (e,getId) => {
+    e.stopPropagation();
+    setUserId(getId)
+  }
+
+  function DeleteModal(){
+    const handleClose = () => {
+      setOpenDeleteModal(false);
+    };
+    const handleDelete = () => {
+      dispatch(deleteOrg({id:userId,token:userDetail.token}))
+    }
+
+    return (
+      <Dialog open={openDeleteModal} onClose={handleClose}>
+        <DialogTitle>
+          <Stack direction="row" spacing={2}>
+          <Typography variant="h6">
+          Delete Organization
+          </Typography>
+          {<CircularProgress color="primary" size={25} style={{display:isDeleting ? "block" : "none"}} />}
+          </Stack>
+          </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this organization?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleDelete} disabled={isDeleting}>Delete</Button>
+        </DialogActions>
+      </Dialog>
+    )
+    
+  }
   return (
     <>
     <Box sx={{ display: 'flex', justifyContent:"flex-end" }}>
@@ -154,16 +204,14 @@ const Companies = () => {
       variant="contained"
       sx={{ mt: 3, mb: 2}}
       onClick={() => setOpen(true)}
+      disabled={isLoading}
       >
         Create
       </CustomButton>
     </Box>
     <MUIDataTable
     title={
-    <>
-    Companies List
-    {<CircularProgress color="primary" size={25} style={{display:isLoading ? "block" : "none"}} />}
-    </>
+      "Organizations List"
     }
     data={orgList.map((item,index)=>{
       return [
@@ -180,6 +228,7 @@ const Companies = () => {
   />
   <FormDialog open={open} setOpen={setOpen}/>
   <EditOrgForm openEditForm={openEditForm} setOpenEditForm={setOpenEditForm} editFormData={editFormData}/>
+  <DeleteModal />
   </>
   )
 }

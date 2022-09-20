@@ -21,27 +21,31 @@ export default function Edit(props) {
     email: editFormData[2] ?  editFormData[2] : '',
     address: editFormData[3]  ? editFormData[3] : '',
     phone: editFormData[4]  ? editFormData[4] : '',
+    active: editFormData[5]  ? editFormData[5] : false,
     };
+ 
   const [formState,dispatchNew] = React.useReducer(formReducer,initialFormState)
-  
   const {user} = useSelector((state)=> state.auth);
   const userDetail = JSON.parse(localStorage.getItem("user"));
-  const {isUpdated,isLoading} = useSelector((state)=> state.user);
+  const {isUpdated,isUpdating} = useSelector((state)=> state.org);
 
   useEffect(()=>{
     formState.name = editFormData[1] ? editFormData[1] : '';
     formState.email = editFormData[2] ?  editFormData[2] : '';
     formState.address = editFormData[3]  ? editFormData[3] : '';
     formState.phone = editFormData[4]  ? editFormData[4] : '';
+    formState.active = editFormData[5]  ? editFormData[5] : false;
   },[editFormData])
-
+console.log(formState,"formstate")
   const handleTextChange = (e) =>{
+    console.log(e.target.checked," e.target")
     dispatchNew({
       type:"HANDLE_FORM_INPUT",
       field:e.target.name,
-      payload:e.target.value
+      payload:e.target.name === "active" ? e.target.checked : e.target.value
     });
   }
+
   const handleClose = () => {
     setOpenEditForm(false);
     Object.keys(formState).forEach((key) => {
@@ -58,13 +62,14 @@ export default function Edit(props) {
   const handleEdit = (e) => {
     e.preventDefault();
     dispatch(updateOrg(formStateWithToken));
-    dispatch(fetchOrgs(userDetail.token));
+    // dispatch(reset());
   }
 
   useEffect(()=>{
     if(isUpdated){
       setOpenEditForm(false);
       dispatch(showMessage({message:"Organization updated successfully",variant:"success"}));
+      dispatch(fetchOrgs(userDetail.token));
       dispatch(reset());
     }
   },[isUpdated])
@@ -72,8 +77,8 @@ export default function Edit(props) {
     <div>
       <Dialog open={openEditForm} onClose={handleClose}>
         <DialogTitle>
-          Edit User
-          <CircularProgress style={{display:isUpdated ? "block" : "none"}} size={25} />
+          Edit Organization
+          <CircularProgress style={{display:isUpdating ? "block" : "none"}} size={25} />
           </DialogTitle>
         <DialogContent>
         <Grid container spacing={2}>
@@ -129,11 +134,17 @@ export default function Edit(props) {
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
+              <Grid item xs={12}>
+              <FormControlLabel control={
+              <Checkbox name="active" checked={formState.active}
+              onChange={(e)=>handleTextChange(e)} />
+              } label="Is organization active?" />
+              </Grid>
             </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" variant="contained" onClick={(e)=>handleEdit(e)}>Update</Button>
+          <Button disabled={isUpdating} type="submit" variant="contained" onClick={(e)=>handleEdit(e)}>Update</Button>
         </DialogActions>
       </Dialog>
     </div>
