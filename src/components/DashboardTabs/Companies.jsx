@@ -141,18 +141,21 @@ const Companies = () => {
     textLabels: {
      body: {
        noMatch: 
-        <CircularProgress color="primary" />
-        //  <div
-        //    className="flex flex-col justify-center items-center"
-        //    style={{ padding: "26px 0", marginTop: "32px" }}
-        //  >
-        //    <Typography
-        //      variant="h6"
-        //      style={{ fontSize: "14px", fontWeight: 600, padding: "17px 0" }}
-        //    >
-        //      You currently have no orgs for this event to view.
-        //    </Typography>
-        //  </div>
+       <>
+       {!isLoading && orgList.length === 0 && 
+         <div
+           className="flex flex-col justify-center items-center"
+           style={{ padding: "26px 0", marginTop: "32px" }}
+         >
+           <Typography
+             variant="h6"
+             style={{ fontSize: "14px", fontWeight: 600, padding: "17px 0" }}
+           >
+             Sorry, no matching records found.
+           </Typography>
+         </div> }
+         <CircularProgress color="primary" style={{display: isLoading ? "block" : "none"}} />
+        </>
        ,
        toolTip: "Sort",
        columnHeaderTooltip: column => `Sort for ${column.label}`

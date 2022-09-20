@@ -44,13 +44,14 @@ export default function FormDialog(props) {
   const handleCreate = (e) => {
     e.preventDefault();
     dispatch(createOrgs(formStateWithToken));
-    dispatch(fetchOrgs(userDetail.token));
+    
   }
 
   useEffect(()=>{
     if(isSuccess){
       setOpen(false);
       dispatch(showMessage({message:"Organization created successfully",variant:"success"}));
+      dispatch(fetchOrgs(userDetail.token));
      dispatch(reset());
     }
   },[isSuccess])

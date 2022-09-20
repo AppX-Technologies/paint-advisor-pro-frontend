@@ -8,6 +8,9 @@ import OtpInput from "react-otp-input";
 import { openModal, fillOtp,fillEmail,setNewPassword,confirmNewPassword } from '../features/modal/modalSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
+import { InputAdornment, IconButton } from "@mui/material";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { showMessage} from '../features/snackbar/snackbarSlice';
 import {login,reset} from '../features/auth/authSlice';
 
@@ -20,7 +23,7 @@ export default function Login() {
   const {isLoading,isSuccess,isError,message}  = useSelector((state)=> state.auth);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  
+  const [showPassword, setShowPassword] = React.useState(false);
 
   React.useEffect(()=>{
     if(isSuccess){
@@ -52,7 +55,8 @@ export default function Login() {
     dispatch(login({email, password}));
   };
 
-
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   return (
     <ThemeProvider theme={theme}>
@@ -171,6 +175,20 @@ export default function Login() {
                 label="New Password"
                 name="newPassword"
                 value={newPassword}
+                type={showPassword ? "text" : "password"}
+                InputProps={{ 
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
                 onChange={(e)=>dispatch(setNewPassword(e.target.value)) }
               />
               <TextField
@@ -183,6 +201,20 @@ export default function Login() {
                 label="Confirm Password"
                 name="confirmPassword"
                 value={confirmPassword}
+                type={showPassword ? "text" : "password"}
+                InputProps={{ 
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
                 onChange={(e)=>dispatch(confirmNewPassword(e.target.value)) }
               />
             </ConfirmModal>

@@ -46,7 +46,6 @@ const sendForgotPasswordLink = async (userData) =>{
   return response.data;
 }
 const resetPassword = async (userData) =>{
-  console.log(userData,"userdata")
   const response = await axios.post(RESET_PASSWORD, userData);
   return response.data;
 }

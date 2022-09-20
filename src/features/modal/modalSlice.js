@@ -48,6 +48,6 @@ const modalSlice = createSlice({
   },
 });
 
-export const { openModal, closeModal, otpModal, fillOtp,fillEmail,confirmNewPassword,setNewPassword } = modalSlice.actions;
+export const { openModal, closeModal, otpModal, fillOtp,fillEmail,confirmNewPassword,setNewPassword ,closeOtpModal} = modalSlice.actions;
 
 export default modalSlice.reducer;
