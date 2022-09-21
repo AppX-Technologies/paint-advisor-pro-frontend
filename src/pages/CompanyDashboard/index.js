@@ -99,6 +99,9 @@ function DashboardContent() {
     setOpen(!open);
   };
 
+  React.useEffect(()=>{
+    dispatch(fetchSingleOrg({_id:getId}))
+  },[])
 
   React.useEffect(()=>{
     dispatch(fetchUserMadeByCompany({
