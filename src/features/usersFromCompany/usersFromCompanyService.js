@@ -17,5 +17,16 @@ const fetchUserMadeByCompany = async (userData) => {
   return response.data;
 };
 
-const usersFromCompanyService = { fetchUserMadeByCompany };
+const createUsersByCompany = async (userData) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+  };
+  const response = await axios.post(endpoint, userData ,config);
+  return response.data;
+};
+
+const usersFromCompanyService = { fetchUserMadeByCompany, createUsersByCompany };
 export default usersFromCompanyService;

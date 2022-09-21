@@ -33,6 +33,23 @@ export const fetchUserMadeByCompany = createAsyncThunk(
   }
 );
 
+export const createUsersByCompany = createAsyncThunk(
+  "usersFromCompany/createUsersByCompany",
+  async (userData, thunkAPI) => {
+    try {
+      const response = await usersFromCompanyService.createUsersByCompany(userData);
+      return response;
+    } catch (err) {
+      const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const usersFromCompanySlice = createSlice({
   name: "usersFromCompany",
   initialState,
@@ -60,6 +77,22 @@ export const usersFromCompanySlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+      .addCase(createUsersByCompany.pending, (state) => {
+        state.isLoading = true;
+      }
+      )
+      .addCase(createUsersByCompany.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = action.payload;
+      }
+      )
+      .addCase(createUsersByCompany.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      }
+      );
   }
 });
 

@@ -9,11 +9,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CustomButton from '../../components/Button';
-// import CreateUserForm from './UserRegisterForm';
 // import EditUserForm from './EditUserForm';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import {fetchUserMadeByCompany,reset} from '../../features/usersFromCompany/usersFromCompanySlice'
 import {showMessage} from '../../features/snackbar/snackbarSlice'
+import CreateUserForm from './CreateUserForm';
 
 const UsersFromCompany = (props) => {
   const {getId} = props;
@@ -243,8 +243,8 @@ const UsersFromCompany = (props) => {
     columns={columns}
     options={options}
   />
-  {/* <CreateUserForm open={open} setOpen={setOpen}/>
-  <EditUserForm editFormData={editFormData} openEditForm={openEditForm}  setOpenEditForm={setOpenEditForm}/>
+  <CreateUserForm open={open} setOpen={setOpen}/>
+  {/* <EditUserForm editFormData={editFormData} openEditForm={openEditForm}  setOpenEditForm={setOpenEditForm}/>
   <DeleteModal /> */}
   </>
   )
