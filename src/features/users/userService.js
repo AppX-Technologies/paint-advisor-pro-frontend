@@ -6,6 +6,7 @@ const CREATE_USERS = `${endpoint}/`;
 const FETCH_USERS = `${endpoint}/list`;
 const UPDATE_USER = `${endpoint}/update-user-details`;
 const DELETE_USER = `${endpoint}/`;
+const {token} = JSON.parse(localStorage.getItem("user"));
 
 const fetchUsers = async (userData) => {
   const config = {
@@ -46,12 +47,9 @@ const deleteUser = async (userData) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${userData.token}`
+      Authorization: `Bearer ${token}`
     },
   };
-  delete userData.token;
-  console.log(userData,"from delete") 
-  console.log(config,"config")
   const response = await axios.delete(DELETE_USER, {...config,data:userData});
   return response.data;
 };

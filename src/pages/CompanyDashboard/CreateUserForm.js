@@ -28,8 +28,6 @@ export default function CreateUserForm(props) {
   const dispatch = useDispatch();
   const [formState,dispatchNew] = React.useReducer(formReducer,initialFormState)
   const {open,setOpen} = props;
-  const {user} = useSelector((state)=> state.auth);
-  const userDetail = JSON.parse(localStorage.getItem("user"));
   const {isSuccess,isLoading} = useSelector((state)=> state.usersFromCompany);
   const getId = window.location.href.split('/').reverse()[0]
 

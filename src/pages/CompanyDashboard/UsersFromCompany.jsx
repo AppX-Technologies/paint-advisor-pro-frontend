@@ -11,7 +11,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CustomButton from '../../components/Button';
 // import EditUserForm from './EditUserForm';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import {fetchUserMadeByCompany,reset} from '../../features/usersFromCompany/usersFromCompanySlice'
+import {fetchUserMadeByCompany,reset,deleteUserByCompany} from '../../features/usersFromCompany/usersFromCompanySlice'
 import {showMessage} from '../../features/snackbar/snackbarSlice'
 import CreateUserForm from './CreateUserForm';
 
@@ -182,37 +182,37 @@ const UsersFromCompany = (props) => {
     setEmailId(email)
   }
 
-  // function DeleteModal(){
-  //   const handleClose = () => {
-  //     setOpenDeleteModal(false);
-  //   };
-  //   const handleDelete = () => {
-  //     dispatch(deleteUser({email:emailId,token:userDetail.token}))
-  //   }
+  function DeleteModal(){
+    const handleClose = () => {
+      setOpenDeleteModal(false);
+    };
+    const handleDelete = () => {
+      dispatch(deleteUserByCompany({email:emailId}))
+    }
 
-  //   return (
-  //     <Dialog open={openDeleteModal} onClose={handleClose}>
-  //       <DialogTitle>
-  //         <Stack direction="row" spacing={2}>
-  //         <Typography variant="h6">
-  //         Delete user
-  //         </Typography>
-  //         {<CircularProgress color="primary" size={25} style={{display:isDeleting ? "block" : "none"}} />}
-  //         </Stack>
-  //         </DialogTitle>
-  //       <DialogContent>
-  //         <DialogContentText>
-  //           Are you sure you want to delete this user?
-  //         </DialogContentText>
-  //       </DialogContent>
-  //       <DialogActions>
-  //         <Button onClick={handleClose}>Cancel</Button>
-  //         <Button onClick={handleDelete} disabled={isDeleting}>Delete</Button>
-  //       </DialogActions>
-  //     </Dialog>
-  //   )
+    return (
+      <Dialog open={openDeleteModal} onClose={handleClose}>
+        <DialogTitle>
+          <Stack direction="row" spacing={2}>
+          <Typography variant="h6">
+          Delete user
+          </Typography>
+          {<CircularProgress color="primary" size={25} style={{display:isDeleting ? "block" : "none"}} />}
+          </Stack>
+          </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this user?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleDelete} disabled={isDeleting}>Delete</Button>
+        </DialogActions>
+      </Dialog>
+    )
     
-  // }
+  }
   return (
     <>
     <Box sx={{ display: 'flex', justifyContent:"flex-end" }}>
@@ -244,8 +244,8 @@ const UsersFromCompany = (props) => {
     options={options}
   />
   <CreateUserForm open={open} setOpen={setOpen}/>
-  {/* <EditUserForm editFormData={editFormData} openEditForm={openEditForm}  setOpenEditForm={setOpenEditForm}/>
-  <DeleteModal /> */}
+  {/* <EditUserForm editFormData={editFormData} openEditForm={openEditForm}  setOpenEditForm={setOpenEditForm}/> */}
+  <DeleteModal />
   </>
   )
 }

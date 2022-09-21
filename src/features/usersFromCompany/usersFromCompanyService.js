@@ -3,6 +3,7 @@ import axios from "axios";
 const endpoint = process.env.REACT_APP_API_BASE_URL_USERS;
 
 const FETCH_USERS_COMPANY = `${endpoint}/list`;
+const DELETE_USER = `${endpoint}/`;
 
 const {token} = JSON.parse(localStorage.getItem("user"));
 
@@ -28,5 +29,16 @@ const createUsersByCompany = async (userData) => {
   return response.data;
 };
 
-const usersFromCompanyService = { fetchUserMadeByCompany, createUsersByCompany };
+const deleteUserByCompany = async (userData) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+  };
+  const response = await axios.delete(DELETE_USER, {...config,data:userData});
+  return response.data;
+};
+
+const usersFromCompanyService = { fetchUserMadeByCompany, createUsersByCompany,deleteUserByCompany };
 export default usersFromCompanyService;

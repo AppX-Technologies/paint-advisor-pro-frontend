@@ -50,6 +50,25 @@ export const createUsersByCompany = createAsyncThunk(
   }
 );
 
+export const deleteUserByCompany = createAsyncThunk(
+  "usersFromCompany/deleteUserByCompany",
+  async (userData, thunkAPI) => {
+    try {
+      const response = await usersFromCompanyService.deleteUserByCompany(userData);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+          error.message ||
+        error.toString();
+      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const usersFromCompanySlice = createSlice({
   name: "usersFromCompany",
   initialState,
@@ -89,6 +108,22 @@ export const usersFromCompanySlice = createSlice({
       )
       .addCase(createUsersByCompany.rejected, (state, action) => {
         state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      }
+      )
+      .addCase(deleteUserByCompany.pending, (state) => {
+        state.isDeleting = true;
+      }
+      )
+      .addCase(deleteUserByCompany.fulfilled, (state, action) => {
+        state.isDeleting = false;
+        state.isDeleted = true;
+        state.message = action.payload;
+      }
+      )
+      .addCase(deleteUserByCompany.rejected, (state, action) => {
+        state.isDeleting = false;
         state.isError = true;
         state.message = action.payload;
       }
