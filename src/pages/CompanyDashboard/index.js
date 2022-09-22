@@ -94,19 +94,18 @@ function DashboardContent() {
   const [clickedMenu, setClickedMenu] = React.useState("Bids");
   const {org,isLoading} = useSelector((state) => state.org)
   const getId = window.location.href.split('/').reverse()[0]
-  
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
   React.useEffect(()=>{
     dispatch(fetchSingleOrg({_id:getId}))
-  },[])
+  },[getId])
 
   React.useEffect(()=>{
     dispatch(fetchUserMadeByCompany({
       filter: {
-        role: ["Painter","Estimator","Org Admin"]
+        role: ["Painter","Estimator","Org Admin"],
+        organization:getId
       }
     }))
   },[])

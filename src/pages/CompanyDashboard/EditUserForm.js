@@ -15,7 +15,7 @@ import {updateUserFromCompany,fetchUserMadeByCompany,reset} from '../../features
 
 export default function Edit(props) {
   const dispatch = useDispatch();
-  const {openEditForm,setOpenEditForm,editFormData} = props;
+  const {openEditForm,setOpenEditForm,editFormData,getId} = props;
   const initialFormState = {
     name: editFormData[1] ? editFormData[1] : '',
     email: editFormData[2] ?  editFormData[2] : '',
@@ -63,7 +63,8 @@ export default function Edit(props) {
       dispatch(showMessage({message:"User updated successfully",variant:"success"}));
       dispatch(fetchUserMadeByCompany({
         filter: {
-          role: ["Painter","Estimator","Org Admin"]
+          role: ["Painter","Estimator","Org Admin"],
+          organization:getId
         }
       }));
       dispatch(reset());

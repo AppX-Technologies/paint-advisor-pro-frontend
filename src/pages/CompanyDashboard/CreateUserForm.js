@@ -63,7 +63,8 @@ export default function CreateUserForm(props) {
       dispatch(showMessage({message:"User created successfully",variant:"success"}));
       dispatch(fetchUserMadeByCompany({
         filter: {
-          role: ["Painter","Estimator","Org Admin"]
+          role: ["Painter","Estimator","Org Admin"],
+          organization:getId
         }
       }));
      dispatch(reset());

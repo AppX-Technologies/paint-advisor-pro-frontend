@@ -243,8 +243,8 @@ const UsersFromCompany = (props) => {
     columns={columns}
     options={options}
   />
-  <CreateUserForm open={open} setOpen={setOpen}/>
-  <EditUserForm editFormData={editFormData} openEditForm={openEditForm}  setOpenEditForm={setOpenEditForm}/>
+  <CreateUserForm open={open} setOpen={setOpen} />
+  <EditUserForm editFormData={editFormData} openEditForm={openEditForm}  setOpenEditForm={setOpenEditForm} getId={getId}/>
   <DeleteModal />
   </>
   )
