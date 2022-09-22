@@ -4,6 +4,7 @@ const endpoint = process.env.REACT_APP_API_BASE_URL_USERS;
 
 const FETCH_USERS_COMPANY = `${endpoint}/list`;
 const DELETE_USER = `${endpoint}/`;
+const UPDATE_USER = `${endpoint}/update-user-details`;
 
 const {token} = JSON.parse(localStorage.getItem("user"));
 
@@ -40,5 +41,17 @@ const deleteUserByCompany = async (userData) => {
   return response.data;
 };
 
-const usersFromCompanyService = { fetchUserMadeByCompany, createUsersByCompany,deleteUserByCompany };
+const updateUserFromCompany = async (userData) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+  };
+  const response = await axios.post(UPDATE_USER, userData,config);
+  return response.data;
+};
+
+const usersFromCompanyService = { fetchUserMadeByCompany, createUsersByCompany,deleteUserByCompany, updateUserFromCompany};
+
 export default usersFromCompanyService;

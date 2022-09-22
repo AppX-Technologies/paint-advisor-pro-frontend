@@ -2,34 +2,38 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useDispatch, useSelector } from 'react-redux';
 import formReducer from '../reducers/registerReducer'
-import { Checkbox, CircularProgress, FormControlLabel, Grid, Stack, Typography } from '@mui/material';
-import { createUsersByCompany, fetchUserMadeByCompany, reset } from '../../features/usersFromCompany/usersFromCompanySlice';
+import { Checkbox, CircularProgress, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select } from '@mui/material';
 import { useEffect } from 'react';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
+import {updateUserFromCompany,fetchUserMadeByCompany,reset} from '../../features/usersFromCompany/usersFromCompanySlice';
 
 
-const initialFormState = {
-  name: "",
-  email: "",
-  phone: "",
-  role:"",
-  };
-
-export default function CreateUserForm(props) {
+export default function Edit(props) {
   const dispatch = useDispatch();
+  const {openEditForm,setOpenEditForm,editFormData} = props;
+  const initialFormState = {
+    name: editFormData[1] ? editFormData[1] : '',
+    email: editFormData[2] ?  editFormData[2] : '',
+    phone: editFormData[3]  ? editFormData[3] : '',
+    role:editFormData[4] ? editFormData[4] : '',
+    };
   const [formState,dispatchNew] = React.useReducer(formReducer,initialFormState)
-  const {open,setOpen} = props;
-  const {isSuccess,isLoading} = useSelector((state)=> state.usersFromCompany);
-  const getId = window.location.href.split('/').reverse()[0]
+  
+  const {user} = useSelector((state)=> state.auth);
+  const userDetail = JSON.parse(localStorage.getItem("user"));
+  const {isUpdated,isUpdating} = useSelector((state)=> state.usersFromCompany);
+
+  useEffect(()=>{
+    formState.name = editFormData[1] ? editFormData[1] : '';
+    formState.email = editFormData[2] ?  editFormData[2] : '';
+    formState.phone = editFormData[3]  ? editFormData[3] : '';
+    formState.role = editFormData[4] ? editFormData[4] : '';
+  },[editFormData])
 
   const handleTextChange = (e) =>{
     dispatchNew({
@@ -39,46 +43,38 @@ export default function CreateUserForm(props) {
     });
   }
   const handleClose = () => {
-    setOpen(false);
-    Object.keys(formState).forEach((key)=>{
-      dispatchNew({
-        type:"HANDLE_INPUT",
-        field:key,
-        payload:""
-      });
-    })  
+    setOpenEditForm(false);
+    Object.keys(formState).forEach((key) => {
+      formState[key] = '';
+    }
+    );
   };
-  const formStateWithCompanyId = {
-    ...formState,
-    organization:getId
-  }
-  const handleCreate = (e) => {
+
+
+  const handleEdit = (e) => {
     e.preventDefault();
-    dispatch(createUsersByCompany(formStateWithCompanyId));
+    dispatch(updateUserFromCompany(formState));
+    dispatch(reset());
   }
 
   useEffect(()=>{
-    if(isSuccess){
-      setOpen(false);
-      dispatch(showMessage({message:"User created successfully",variant:"success"}));
+    if(isUpdated){
+      setOpenEditForm(false);
+      dispatch(showMessage({message:"User updated successfully",variant:"success"}));
       dispatch(fetchUserMadeByCompany({
         filter: {
           role: ["Painter","Estimator","Org Admin"]
         }
       }));
-     dispatch(reset());
+      dispatch(reset());
     }
-  },[isSuccess])
+  },[isUpdated])
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={openEditForm} onClose={handleClose}>
         <DialogTitle>
-        <Stack direction="row" spacing={2}>
-            <Typography variant="h6">
-            Add New User
-            </Typography>
-            {<CircularProgress color="primary" size={25} style={{display:isLoading ? "block" : "none"}} />}
-          </Stack>
+          Edit User
+          <CircularProgress style={{display:isUpdating ? "block" : "none"}} size={25} />
           </DialogTitle>
         <DialogContent>
         <Grid container spacing={2}>
@@ -91,7 +87,7 @@ export default function CreateUserForm(props) {
                   id="name"
                   label="Name"
                   autoFocus
-                  value={formState.name}
+                  value={formState.name ? formState.name : editFormData[1]}
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
@@ -104,7 +100,7 @@ export default function CreateUserForm(props) {
                   id="email"
                   label="Email"
                   autoFocus
-                  value={formState.email}
+                  value={formState.email ? formState.email : editFormData[2]}
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
@@ -117,19 +113,20 @@ export default function CreateUserForm(props) {
                   id="phone"
                   label="Phone Number"
                   autoFocus
-                  value={formState.phone}
+                  value={formState.phone ? formState.phone : editFormData[3]}
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
-              <Grid item xs={12}>
+            </Grid>
+            <Grid item xs={12}>
               <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                 <InputLabel id="demo-simple-select-standard-label">Role</InputLabel>
-                <Select
+                <Select 
                   fullWidth
                   name="role"
                   labelId="demo-simple-select-standard-label"
                   id="demo-simple-select-standard"
-                  value={formState.role}
+                  value={formState.role ? formState.role : editFormData[4]}
                   onChange={(e)=>handleTextChange(e)}
                   label="Role"
                 >
@@ -139,16 +136,10 @@ export default function CreateUserForm(props) {
                 </Select>
               </FormControl>
               </Grid>
-              
-              {/* <Grid item xs={12}>
-              <FormControlLabel control={<Checkbox name="active" checked={formState.active}
-            onChange={(e)=>handleTextChange(e)} />} label="Is organization active?" />
-              </Grid> */}
-            </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" variant="contained" onClick={(e)=>handleCreate(e)}>Create</Button>
+          <Button disabled={isUpdating} type="submit" variant="contained" onClick={(e)=>handleEdit(e)}>Update</Button>
         </DialogActions>
       </Dialog>
     </div>
