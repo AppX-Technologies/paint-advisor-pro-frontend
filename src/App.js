@@ -28,6 +28,7 @@ function App() {
           </Route>
           <Route element={<ProtectedRoute />}>
             <Route path="company" >
+            <Route path="/company" element={<CompanyDashboard orgAdmin />} />
               <Route path=":companyId" element={<CompanyDashboard />} />
             </Route>
           </Route>

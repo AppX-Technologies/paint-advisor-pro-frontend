@@ -29,7 +29,7 @@ export default function Login() {
   React.useEffect(()=>{
     if(isSuccess){
       if(userDetail.role === "Org Admin" || userDetail.role === "Estimator" || userDetail.role === "Painter"){
-        navigate(`/company/${userDetail._id}`, { replace: true });
+        navigate(`/company`, { replace: true });
       }else{
         navigate('/dashboard', { replace: true });
       }

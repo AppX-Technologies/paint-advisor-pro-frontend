@@ -30,12 +30,15 @@ const UsersFromCompany = (props) => {
     if(isDeleted){
       dispatch(showMessage({message:"User deleted successfully",variant:"success"}))
       setOpenDeleteModal(false)
-      dispatch(fetchUserMadeByCompany({
-        filter: {
-          role: ["Painter","Estimator","Org Admin"]
-        },
-        token: JSON.parse(localStorage.getItem("user")).token,
-      }))
+      if(userDetail.role === "Org Admin" || userDetail.role === "Admin"){
+        dispatch(fetchUserMadeByCompany({
+          filter: {
+            role: ["Painter","Estimator","Org Admin"],
+            organization:getId
+          },
+          token: userDetail.token
+        }))
+      }
       dispatch(reset())
     }
   } 

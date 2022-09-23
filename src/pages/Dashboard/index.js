@@ -96,8 +96,11 @@ function DashboardContent() {
   const [open, setOpen] = React.useState(true);
   const userDetail = JSON.parse(localStorage.getItem("user"));
   useEffect(()=>{
-    dispatch(fetchOrgs(userDetail.token));
-    dispatch(fetchUsers(userDetail.token));
+    if(userDetail.role === "Admin"){
+         dispatch(fetchOrgs(userDetail.token));
+         dispatch(fetchUsers(userDetail.token));
+    }
+ 
   },[])
 
   const toggleDrawer = () => {

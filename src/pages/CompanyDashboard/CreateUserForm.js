@@ -30,7 +30,7 @@ export default function CreateUserForm(props) {
   const {open,setOpen} = props;
   const {isSuccess,isLoading} = useSelector((state)=> state.usersFromCompany);
   const getId = window.location.href.split('/').reverse()[0]
-
+  const userDetail = JSON.parse(localStorage.getItem("user"));
   const handleTextChange = (e) =>{
     dispatchNew({
       type:"HANDLE_INPUT",
@@ -62,13 +62,15 @@ export default function CreateUserForm(props) {
     if(isSuccess){
       setOpen(false);
       dispatch(showMessage({message:"User created successfully",variant:"success"}));
-      dispatch(fetchUserMadeByCompany({
-        filter: {
-          role: ["Painter","Estimator","Org Admin"],
-          organization:getId
-        },
-        token: JSON.parse(localStorage.getItem("user")).token
-      }));
+      if(userDetail.role === "Org Admin" || userDetail.role === "Admin"){
+        dispatch(fetchUserMadeByCompany({
+          filter: {
+            role: ["Painter","Estimator","Org Admin"],
+            organization:getId
+          },
+          token: userDetail.token
+        }))
+      }
      dispatch(reset());
     }
   },[isSuccess])

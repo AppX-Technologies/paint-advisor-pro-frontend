@@ -20,11 +20,13 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import  MainListItems  from './listItems';
 import { useSelector, useDispatch } from 'react-redux';
 import {fetchSingleOrg} from "../../features/org/orgSlice"
-import { CircularProgress } from '@mui/material';
+import { Button, CircularProgress, Menu, MenuItem } from '@mui/material';
 import Bids from '../Bids';
 import Processes from '../Processes';
+import { logout} from '../../features/auth/authSlice';
 import UsersFromCompany from './UsersFromCompany';
 import {fetchUserMadeByCompany,reset} from '../../features/usersFromCompany/usersFromCompanySlice'
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -90,7 +92,10 @@ const mdTheme = createTheme();
 
 function DashboardContent() {
   const dispatch = useDispatch()
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const isMenuOpen = Boolean(anchorEl);
   const [clickedMenu, setClickedMenu] = React.useState("Bids");
   const {org,isLoading} = useSelector((state) => state.org)
   const getId = window.location.href.split('/').reverse()[0]
@@ -108,14 +113,48 @@ function DashboardContent() {
   },[getId])
 
   React.useEffect(()=>{
-    dispatch(fetchUserMadeByCompany({
-      filter: {
-        role: ["Painter","Estimator","Org Admin"],
-        organization:getId
-      },
-      token: JSON.parse(localStorage.getItem("user")).token
-    }))
+    if(userDetail.role === "Org Admin" || userDetail.role === "Admin"){
+      dispatch(fetchUserMadeByCompany({
+        filter: {
+          role: ["Painter","Estimator","Org Admin"],
+          organization:getId
+        },
+        token: JSON.parse(localStorage.getItem("user")).token
+      }))
+    }
   },[])
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    // dispatch(reset());
+    navigate('/', { replace: true });
+  }
+
+  const menuId = 'company-page-menu';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick= {handleLogout}>Logout</MenuItem>
+    </Menu>
+  );
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -147,17 +186,12 @@ function DashboardContent() {
               color="inherit"
               noWrap
               sx={{ flexGrow: 1 }} >
-              {org.name}
+              {org ? org.name : userDetail.name}
               </Typography>
             }
-           
-            <IconButton color="inherit">
-              {/* <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge> */}
-            </IconButton>
           </Toolbar>
         </AppBar>
+        
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
