@@ -33,7 +33,8 @@ const UsersFromCompany = (props) => {
       dispatch(fetchUserMadeByCompany({
         filter: {
           role: ["Painter","Estimator","Org Admin"]
-        }
+        },
+        token: JSON.parse(localStorage.getItem("user")).token,
       }))
       dispatch(reset())
     }
@@ -187,7 +188,9 @@ const UsersFromCompany = (props) => {
       setOpenDeleteModal(false);
     };
     const handleDelete = () => {
-      dispatch(deleteUserByCompany({email:emailId}))
+      dispatch(deleteUserByCompany({email:emailId,
+      token:JSON.parse(localStorage.getItem("user")).token
+    }))
     }
 
     return (

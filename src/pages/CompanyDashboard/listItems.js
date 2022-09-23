@@ -8,6 +8,7 @@ import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import HomeRepairServiceOutlinedIcon from '@mui/icons-material/HomeRepairServiceOutlined';
 
 const MainListItems = (props)=>{
+  const userDetail = JSON.parse(localStorage.getItem("user"));
   const {setClickedMenu} = props;
   return(
     <React.Fragment>
@@ -32,12 +33,12 @@ const MainListItems = (props)=>{
       <ListItemText primary="Materials" />
     </ListItemButton>
 
-    <ListItemButton onClick={()=> {setClickedMenu("Users")}}>
+    {userDetail.role === "Org Admin" || "Admin" && <ListItemButton onClick={()=> {setClickedMenu("Users")}}>
       <ListItemIcon>
       <PeopleIcon />
       </ListItemIcon>
       <ListItemText primary="Users" />
-    </ListItemButton>
+    </ListItemButton>}
   </React.Fragment>
   )
 } 

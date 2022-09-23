@@ -24,10 +24,15 @@ export default function Login() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [showPassword, setShowPassword] = React.useState(false);
+  const userDetail = JSON.parse(localStorage.getItem("user"));
 
   React.useEffect(()=>{
     if(isSuccess){
-      navigate('/dashboard');
+      if(userDetail.role === "Org Admin" || userDetail.role === "Estimator" || userDetail.role === "Painter"){
+        navigate(`/company/${userDetail._id}`, { replace: true });
+      }else{
+        navigate('/dashboard', { replace: true });
+      }
     }
     if(isError){
       dispatch(showMessage({message: message,severity:"error"}));

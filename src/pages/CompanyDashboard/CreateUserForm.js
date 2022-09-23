@@ -50,7 +50,8 @@ export default function CreateUserForm(props) {
   };
   const formStateWithCompanyId = {
     ...formState,
-    organization:getId
+    organization:getId,
+    token: JSON.parse(localStorage.getItem("user")).token
   }
   const handleCreate = (e) => {
     e.preventDefault();
@@ -65,7 +66,8 @@ export default function CreateUserForm(props) {
         filter: {
           role: ["Painter","Estimator","Org Admin"],
           organization:getId
-        }
+        },
+        token: JSON.parse(localStorage.getItem("user")).token
       }));
      dispatch(reset());
     }

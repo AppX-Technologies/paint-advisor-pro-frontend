@@ -7,7 +7,7 @@ const FETCH_ORGS = `${endpoint}/search`;
 const UPDATE_ORG = `${endpoint}/`;
 const DELETE_ORG = `${endpoint}/`;
 
-const {token} = JSON.parse(localStorage.getItem("user"));
+// const {token} = JSON.parse(localStorage.getItem("user"));
 
 const fetchOrgs = async (userData) => {
   const config = {
@@ -24,9 +24,10 @@ const fetchSingleOrg = async (userData) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${userData.token}`
     },
   };
+  delete userData.token;
   const response = await axios.post(FETCH_ORGS, userData,config);
   return response.data[0];
 };

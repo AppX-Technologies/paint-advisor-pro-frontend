@@ -94,11 +94,17 @@ function DashboardContent() {
   const [clickedMenu, setClickedMenu] = React.useState("Bids");
   const {org,isLoading} = useSelector((state) => state.org)
   const getId = window.location.href.split('/').reverse()[0]
+  const userDetail = JSON.parse(localStorage.getItem("user"))
   const toggleDrawer = () => {
     setOpen(!open);
   };
   React.useEffect(()=>{
-    dispatch(fetchSingleOrg({_id:getId}))
+    dispatch(fetchSingleOrg({
+      filter:{
+        _id:getId
+      },
+      token:userDetail.token
+    }))
   },[getId])
 
   React.useEffect(()=>{
@@ -106,7 +112,8 @@ function DashboardContent() {
       filter: {
         role: ["Painter","Estimator","Org Admin"],
         organization:getId
-      }
+      },
+      token: JSON.parse(localStorage.getItem("user")).token
     }))
   },[])
 

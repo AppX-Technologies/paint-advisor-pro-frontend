@@ -49,11 +49,14 @@ export default function Edit(props) {
     }
     );
   };
-
+  const formStateWithToken = {
+    ...formState,
+    token: userDetail.token
+  }
 
   const handleEdit = (e) => {
     e.preventDefault();
-    dispatch(updateUserFromCompany(formState));
+    dispatch(updateUserFromCompany(formStateWithToken));
     dispatch(reset());
   }
 

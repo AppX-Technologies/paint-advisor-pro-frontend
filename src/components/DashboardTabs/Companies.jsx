@@ -181,6 +181,7 @@ const Companies = () => {
   const onViewBtnClick = (e,getId) => {
     e.stopPropagation();
     navigate(`/company/${getId}`)
+    
   }
   function DeleteModal(){
     const handleClose = () => {
