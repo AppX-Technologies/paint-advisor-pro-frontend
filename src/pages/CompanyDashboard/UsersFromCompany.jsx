@@ -34,8 +34,8 @@ const UsersFromCompany = (props) => {
         dispatch(fetchUserMadeByCompany({
           filter: {
             role: ["Painter","Estimator","Org Admin"],
-            organization:getId
           },
+          organization:getId,
           token: userDetail.token
         }))
       }

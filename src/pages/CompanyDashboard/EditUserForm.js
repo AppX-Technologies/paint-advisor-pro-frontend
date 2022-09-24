@@ -69,8 +69,8 @@ export default function Edit(props) {
         dispatch(fetchUserMadeByCompany({
           filter: {
             role: ["Painter","Estimator","Org Admin"],
-            organization:getId
           },
+          organization:getId,
           token: JSON.parse(localStorage.getItem("user")).token
         }))
       }

@@ -20,6 +20,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {otp,resetEmail,newPassword,confirmPassword} = useSelector((state)=> state.modal);
+  
   const {isLoading,isSuccess,isError,message}  = useSelector((state)=> state.auth);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -30,6 +31,7 @@ export default function Login() {
     if(isSuccess){
       if(userDetail.role === "Org Admin" || userDetail.role === "Estimator" || userDetail.role === "Painter"){
         navigate(`/company`, { replace: true });
+        
       }else{
         navigate('/dashboard', { replace: true });
       }

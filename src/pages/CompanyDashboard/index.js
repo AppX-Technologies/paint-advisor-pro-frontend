@@ -98,8 +98,10 @@ function DashboardContent() {
   const isMenuOpen = Boolean(anchorEl);
   const [clickedMenu, setClickedMenu] = React.useState("Bids");
   const {org,isLoading} = useSelector((state) => state.org)
-  const getId = window.location.href.split('/').reverse()[0]
   const userDetail = JSON.parse(localStorage.getItem("user"))
+  const param = window.location.href.split('/').reverse()[0]
+  let getId = param === "company" ? userDetail._id : window.location.href.split('/').reverse()[0]
+  
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -117,9 +119,9 @@ function DashboardContent() {
       dispatch(fetchUserMadeByCompany({
         filter: {
           role: ["Painter","Estimator","Org Admin"],
-          organization:getId
         },
-        token: JSON.parse(localStorage.getItem("user")).token
+        organization: "632c2d50b837dd8339b5aa42",
+        token: userDetail.token
       }))
     }
   },[])

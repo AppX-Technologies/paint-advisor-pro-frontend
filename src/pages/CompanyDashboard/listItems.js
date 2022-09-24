@@ -9,6 +9,8 @@ import HomeRepairServiceOutlinedIcon from '@mui/icons-material/HomeRepairService
 import {logout,reset} from "../../features/auth/authSlice";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import LogoutIcon from '@mui/icons-material/Logout';
+
 const MainListItems = (props)=>{
   const userDetail = JSON.parse(localStorage.getItem("user"));
   const navigate= useNavigate();
@@ -43,7 +45,7 @@ const MainListItems = (props)=>{
       <ListItemText primary="Materials" />
     </ListItemButton>
 
-    {userDetail.role === "Org Admin" || "Admin" && <ListItemButton onClick={()=> {setClickedMenu("Users")}}>
+    {(userDetail.role === "Org Admin" || userDetail.role === "Admin") && <ListItemButton onClick={()=> {setClickedMenu("Users")}}>
       <ListItemIcon>
       <PeopleIcon />
       </ListItemIcon>
@@ -52,7 +54,7 @@ const MainListItems = (props)=>{
     
     <ListItemButton onClick={handleLogout}>
       <ListItemIcon>
-      <HomeRepairServiceOutlinedIcon />
+      <LogoutIcon />
       </ListItemIcon>
       <ListItemText primary="Logout" />
     </ListItemButton>

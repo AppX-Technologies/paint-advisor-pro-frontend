@@ -36,7 +36,6 @@ export default function Edit(props) {
     formState.phone = editFormData[4]  ? editFormData[4] : '';
     formState.active = editFormData[5]  ? editFormData[5] : false;
   },[editFormData])
-console.log(formState,"formstate")
   const handleTextChange = (e) =>{
     console.log(e.target.checked," e.target")
     dispatchNew({

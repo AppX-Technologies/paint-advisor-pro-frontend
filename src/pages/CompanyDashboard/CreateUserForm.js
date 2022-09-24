@@ -29,8 +29,9 @@ export default function CreateUserForm(props) {
   const [formState,dispatchNew] = React.useReducer(formReducer,initialFormState)
   const {open,setOpen} = props;
   const {isSuccess,isLoading} = useSelector((state)=> state.usersFromCompany);
-  const getId = window.location.href.split('/').reverse()[0]
   const userDetail = JSON.parse(localStorage.getItem("user"));
+  const param = window.location.href.split('/').reverse()[0]
+  const getId = param === "company" ? userDetail._id : window.location.href.split('/').reverse()[0]
   const handleTextChange = (e) =>{
     dispatchNew({
       type:"HANDLE_INPUT",
@@ -66,8 +67,8 @@ export default function CreateUserForm(props) {
         dispatch(fetchUserMadeByCompany({
           filter: {
             role: ["Painter","Estimator","Org Admin"],
-            organization:getId
           },
+          organization:getId,
           token: userDetail.token
         }))
       }
