@@ -27,7 +27,7 @@ function App() {
               <Route path="register" element={<RegisterPage />} />
             </Route>
             <Route element={<ProtectedRoute />}>
-              <Route path="dashboard" element={(token && role === "Admin") ? <Dashboard /> : <Navigate to="/" /> } />
+              <Route path="dashboard" element={(token && role === "Admin") &&<Dashboard />  } />
             </Route>
             <Route path="*" element={<PageNotFound />} />
           </Route>

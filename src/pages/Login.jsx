@@ -35,7 +35,6 @@ export default function Login() {
         
       }else{
         navigate('/dashboard', { replace: true });
-        dispatch(reset());
       }
     }
     if(isError){
