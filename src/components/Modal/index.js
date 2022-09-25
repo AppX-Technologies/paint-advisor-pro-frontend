@@ -26,7 +26,7 @@ export default function ConfirmModal({children,modalTitle,contentMessage,type}) 
 
   const dispatch = useDispatch();
   const {isLoading,isSuccessOtp,isResetSuccess} = useSelector((store)=> store.auth)
-  console.log(newPassword ,confirmPassword)
+
   const handleResetEmail = () => {
     if(type==="otp"){
       if(newPassword !== confirmPassword){

@@ -10,10 +10,11 @@ import CustomSnackBar from "./components/Snackbar";
 import RegisterPage from "./pages/Register";
 import ProtectedRoute from './routing/ProtectedRoute'
 import CompanyDashboard from "./pages/CompanyDashboard";
+import RestrictedRoutes from "./routing/RestrictedRoute";
 
 function App() {
-  const {token} = JSON.parse(localStorage.getItem("user")) || {token: null};
-  
+  const {token,role} = JSON.parse(localStorage.getItem("user")) || {token: null};
+  console.log(token,role)
   return (
     <>
       <Router>
@@ -21,10 +22,12 @@ function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Counter />} />
-            <Route path="login" element={token ? <Navigate to="/" /> :<Login />} />
-            <Route path="register" element={token ? <Navigate to="/" /> : <RegisterPage />} />
+            <Route element={<RestrictedRoutes />}>
+              <Route path="login" element={<Login /> } />
+              <Route path="register" element={<RegisterPage />} />
+            </Route>
             <Route element={<ProtectedRoute />}>
-              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="dashboard" element={token && role === "Admin" ? <Dashboard /> : <Navigate to="/" /> } />
             </Route>
             <Route path="*" element={<PageNotFound />} />
           </Route>

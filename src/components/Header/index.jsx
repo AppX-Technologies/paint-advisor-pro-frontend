@@ -9,11 +9,15 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const userDetail = JSON.parse(localStorage.getItem("user"));
+  const token = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const handleLoginRoute = () => {
-    if(userDetail){
-      navigate("/dashboard");
+    if(token){
+      if(token.role === "Org Admin" || token.role === "Estimator" || token.role === "Painter"){
+        navigate(`/company`, { replace: true });
+      }else{
+        navigate('/dashboard', { replace: true });
+      }
     } else {
       navigate("/login");
     }

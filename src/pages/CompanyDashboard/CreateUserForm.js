@@ -56,7 +56,15 @@ export default function CreateUserForm(props) {
   }
   const handleCreate = (e) => {
     e.preventDefault();
-    dispatch(createUsersByCompany(formStateWithCompanyId));
+    if(formState.role === ""){
+      dispatch(showMessage({
+        message:"Please select a role",
+        variant:"error"
+      }))
+    }else{
+      dispatch(createUsersByCompany(formStateWithCompanyId));
+      reset();
+    }
   }
 
   useEffect(()=>{
@@ -128,8 +136,8 @@ export default function CreateUserForm(props) {
                 />
               </Grid>
               <Grid item xs={12}>
-              <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-standard-label">Role</InputLabel>
+              <FormControl variant="standard" sx={{ mt: 2, minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-standard-label">Role *</InputLabel>
                 <Select
                   fullWidth
                   name="role"

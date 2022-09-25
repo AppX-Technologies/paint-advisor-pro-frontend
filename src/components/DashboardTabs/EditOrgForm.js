@@ -37,7 +37,6 @@ export default function Edit(props) {
     formState.active = editFormData[5]  ? editFormData[5] : false;
   },[editFormData])
   const handleTextChange = (e) =>{
-    console.log(e.target.checked," e.target")
     dispatchNew({
       type:"HANDLE_FORM_INPUT",
       field:e.target.name,

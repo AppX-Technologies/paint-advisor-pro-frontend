@@ -18,7 +18,6 @@ export default function Edit(props) {
   const {openEditForm,setOpenEditForm,editFormData,getId} = props;
   const initialFormState = {
     name: editFormData[1] ? editFormData[1] : '',
-    email: editFormData[2] ?  editFormData[2] : '',
     phone: editFormData[3]  ? editFormData[3] : '',
     role:editFormData[4] ? editFormData[4] : '',
     };
@@ -30,7 +29,6 @@ export default function Edit(props) {
 
   useEffect(()=>{
     formState.name = editFormData[1] ? editFormData[1] : '';
-    formState.email = editFormData[2] ?  editFormData[2] : '';
     formState.phone = editFormData[3]  ? editFormData[3] : '';
     formState.role = editFormData[4] ? editFormData[4] : '';
   },[editFormData])
@@ -56,8 +54,16 @@ export default function Edit(props) {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    dispatch(updateUserFromCompany(formStateWithToken));
-    dispatch(reset());
+    if(formState.role === ""){
+      dispatch(showMessage({
+        message:"Please select a role",
+        variant:"error"
+      }))
+    } else{
+      dispatch(updateUserFromCompany(formStateWithToken));
+      dispatch(reset());
+    }
+    
   }
 
   useEffect(()=>{
@@ -101,19 +107,6 @@ export default function Edit(props) {
               </Grid>
               <Grid item xs={12}>
               <TextField
-                  name="email"
-                  required
-                  fullWidth
-                  variant="standard"
-                  id="email"
-                  label="Email"
-                  autoFocus
-                  value={formState.email ? formState.email : editFormData[2]}
-                  onChange={(e)=>handleTextChange(e)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-              <TextField
                   name="phone"
                   required
                   fullWidth
@@ -127,8 +120,8 @@ export default function Edit(props) {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-standard-label">Role</InputLabel>
+              <FormControl variant="standard" sx={{ mt: 2, minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-standard-label">Role *</InputLabel>
                 <Select 
                   fullWidth
                   name="role"

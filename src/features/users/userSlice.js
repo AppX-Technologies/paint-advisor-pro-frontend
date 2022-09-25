@@ -80,7 +80,6 @@ export const updateUser = createAsyncThunk(
 export const deleteUser = createAsyncThunk(
   "auth/deleteUser",
   async (userData, thunkAPI) => {
-    console.log(userData,"data from admin")
     try {
       const response = await userService.deleteUser(userData);
       console.log(response);

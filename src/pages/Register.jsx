@@ -139,7 +139,7 @@ export default function RegisterPage() {
                   fullWidth
                   name="confirmPassword"
                   label="Confirm Password"
-                  type="confirmPassword"
+                  type="password"
                   id="confirmPassword"
                   value={formState.confirmPassword}
                   onChange={(e)=>handleTextChange(e)}
