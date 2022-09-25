@@ -93,34 +93,34 @@ export default function Edit(props) {
         <DialogContent>
         <Grid container spacing={2}>
               <Grid item xs={12}>
+                <label>Name *</label>
                 <TextField
                   name="name"
                   required
                   fullWidth
-                  variant="standard"
                   id="name"
-                  label="Name"
                   autoFocus
-                  value={formState.name ? formState.name : editFormData[1]}
+                  placeholder={editFormData[1]}
+                  value={formState.name}
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
               <Grid item xs={12}>
+                <label>Phone Number</label>
               <TextField
                   name="phone"
                   required
                   fullWidth
-                  variant="standard"
                   id="phone"
-                  label="Phone Number"
                   autoFocus
-                  value={formState.phone ? formState.phone : editFormData[3]}
+                  placeholder={editFormData[3]}
+                  value={formState.phone }
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <FormControl variant="standard" sx={{ mt: 2, minWidth: 120 }}>
+              <FormControl  sx={{ mt: 2, minWidth: 120 }}>
                 <InputLabel id="demo-simple-select-standard-label">Role *</InputLabel>
                 <Select 
                   fullWidth

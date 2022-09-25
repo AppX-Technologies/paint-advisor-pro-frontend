@@ -8,13 +8,13 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import CustomSnackBar from "./components/Snackbar";
 import RegisterPage from "./pages/Register";
-import ProtectedRoute from './routing/ProtectedRoute'
+import ProtectedRoute from './routing/ProtectedRoute';
 import CompanyDashboard from "./pages/CompanyDashboard";
 import RestrictedRoutes from "./routing/RestrictedRoute";
 
 function App() {
   const {token,role} = JSON.parse(localStorage.getItem("user")) || {token: null};
-  console.log(token,role)
+  
   return (
     <>
       <Router>
@@ -27,7 +27,7 @@ function App() {
               <Route path="register" element={<RegisterPage />} />
             </Route>
             <Route element={<ProtectedRoute />}>
-              <Route path="dashboard" element={token && role === "Admin" ? <Dashboard /> : <Navigate to="/" /> } />
+              <Route path="dashboard" element={(token && role === "Admin") ? <Dashboard /> : <Navigate to="/" /> } />
             </Route>
             <Route path="*" element={<PageNotFound />} />
           </Route>

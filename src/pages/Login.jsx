@@ -31,15 +31,17 @@ export default function Login() {
     if(isSuccess){
       if(userDetail.role === "Org Admin" || userDetail.role === "Estimator" || userDetail.role === "Painter"){
         navigate(`/company`, { replace: true });
+        dispatch(reset());
         
       }else{
         navigate('/dashboard', { replace: true });
+        dispatch(reset());
       }
     }
     if(isError){
       dispatch(showMessage({message: message,severity:"error"}));
+      dispatch(reset());
     }
-    dispatch(reset());
   },[isSuccess,isError,message,dispatch])
 
   const validateEmail = (email) => {

@@ -81,54 +81,54 @@ export default function Edit(props) {
         <DialogContent>
         <Grid container spacing={2}>
               <Grid item xs={12}>
+                <label>Name</label>
                 <TextField
                   name="name"
                   required
                   fullWidth
-                  variant="standard"
+                  placeholder={editFormData[1]}
                   id="name"
-                  label="Name"
                   autoFocus
-                  value={formState.name ? formState.name : editFormData[1]}
+                  value={formState.name}
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
               <Grid item xs={12}>
+              <label>Email</label>
               <TextField
                   name="email"
                   required
                   fullWidth
-                  variant="standard"
+                  placeholder={editFormData[2]}
                   id="email"
-                  label="Email"
                   autoFocus
-                  value={formState.email ?  formState.email : editFormData[2]}
+                  value={formState.email}
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
               <Grid item xs={12}>
+              <label>Address</label>
               <TextField
                   name="address"
                   required
                   fullWidth
-                  variant="standard"
+                  placeholder={editFormData[3]}
                   id="address"
-                  label="Address"
                   autoFocus
-                  value={formState.address ? formState.address : editFormData[3]}
+                  value={formState.address}
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
               <Grid item xs={12}>
+              <label>Phone</label>
               <TextField
                   name="phone"
                   required
                   fullWidth
-                  variant="standard"
+                  placeholder={editFormData[4]}
                   id="phone"
-                  label="Phone Number"
                   autoFocus
-                  value={formState.phone ? formState.phone : editFormData[4]}
+                  value={formState.phone }
                   onChange={(e)=>handleTextChange(e)}
                 />
               </Grid>
