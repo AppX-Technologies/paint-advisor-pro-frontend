@@ -57,7 +57,7 @@ export default function Edit(props) {
     if(formState.role === ""){
       dispatch(showMessage({
         message:"Please select a role",
-        variant:"error"
+        severity:"error"
       }))
     } else{
       dispatch(updateUserFromCompany(formStateWithToken));

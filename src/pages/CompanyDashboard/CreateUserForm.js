@@ -59,7 +59,7 @@ export default function CreateUserForm(props) {
     if(formState.role === ""){
       dispatch(showMessage({
         message:"Please select a role",
-        variant:"error"
+        severity:"error"
       }))
     }else{
       dispatch(createUsersByCompany(formStateWithCompanyId));
