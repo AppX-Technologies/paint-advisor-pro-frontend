@@ -2,7 +2,6 @@ import * as React from "react";
 import { AppBar, Button, Container, Toolbar } from "@mui/material";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const Header = () => {
   const token = JSON.parse(localStorage.getItem("user"));
@@ -11,7 +10,7 @@ const Header = () => {
     navigate("/login");
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (token) {
       if (
         token.role === "Org Admin" ||
