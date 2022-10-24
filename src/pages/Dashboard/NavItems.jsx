@@ -18,19 +18,19 @@ const NavItems = () => {
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
+      {/* Processes Tab */}
+      <ListItemButton onClick={() => navigate("/processes")}>
+        <ListItemIcon>
+          <FormatListBulletedIcon />
+        </ListItemIcon>
+        <ListItemText primary="Processes" />
+      </ListItemButton>
       {/* Profile Tab */}
       <ListItemButton>
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
         <ListItemText primary="Profile" />
-      </ListItemButton>
-      {/* Processes Tab */}
-      <ListItemButton>
-        <ListItemIcon>
-          <FormatListBulletedIcon />
-        </ListItemIcon>
-        <ListItemText primary="Processes" />
       </ListItemButton>
     </React.Fragment>
   );

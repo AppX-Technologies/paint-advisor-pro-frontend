@@ -2,10 +2,11 @@ import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import Companies from "./Companies";
-import Users from "./Users";
-import { dashboardTabLists } from "../../Common/Constants";
+import Interior from "./Interior";
+import Exterior from "./Exterior";
+import { processesTabLists } from "../../Common/Constants";
 import { TabPanel } from "../../Common/TabPanel";
+
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -28,16 +29,16 @@ export default function BasicTabs() {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          {dashboardTabLists.map((dashboardTab, index) => {
-            return <Tab label={dashboardTab} {...a11yProps(index)} />;
+          {processesTabLists.map((processTab, index) => {
+            return <Tab label={processTab} {...a11yProps(index)} />;
           })}
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <Companies />
+        <Interior />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Users />
+        <Exterior />
       </TabPanel>
     </Box>
   );
