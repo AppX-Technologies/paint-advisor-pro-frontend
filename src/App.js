@@ -44,8 +44,8 @@ function App() {
                 element={token && role === "Admin" && <Processes />}
               />
             </Route>
-            <Route path="*" element={<PageNotFound />} />
           </Route>
+          <Route path="*" element={<PageNotFound />} />
           <Route element={<ProtectedRoute />}>
             <Route path="company">
               <Route path="/company" element={<CompanyDashboard orgAdmin />} />

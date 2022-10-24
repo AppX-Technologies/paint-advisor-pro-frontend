@@ -1,12 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import MUIDataTable from "mui-datatables";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import CustomButton from "../Button";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -35,12 +29,10 @@ const Interior = () => {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const getId = tableMeta.rowData[0];
           return (
             <>
               <Stack direction="row" spacing={2}>
                 <EditOutlinedIcon style={{ cursor: "pointer" }} />
-
                 <DeleteOutlineOutlinedIcon style={{ cursor: "pointer" }} />
               </Stack>
             </>
