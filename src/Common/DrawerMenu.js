@@ -8,49 +8,23 @@ import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import Badge from "@mui/material/Badge";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import MainListItems from "./listItems";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchSingleOrg } from "../../features/org/orgSlice";
-import { Button, CircularProgress, Menu, MenuItem } from "@mui/material";
-import Bids from "../Bids";
-import { Processes } from "../Processes";
-import { logout } from "../../features/auth/authSlice";
-import UsersFromCompany from "./UsersFromCompany";
-import {
-  fetchUserMadeByCompany,
-  reset,
-} from "../../features/usersFromCompany/usersFromCompanySlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="#">
-        Paint Advisor
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { useEffect } from "react";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import IconButton from "@mui/material/IconButton";
+import { Menu, MenuItem } from "@mui/material";
+import { fetchOrgs } from "../features/org/orgSlice";
+import { fetchUsers } from "../features/users/userSlice";
+import { logout, reset } from "../features/auth/authSlice";
+import NavItems from "../pages/Dashboard/NavItems";
+import { Copyright } from "../components/Copyright";
 
 const drawerWidth = 240;
-
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -97,60 +71,38 @@ const Drawer = styled(MuiDrawer, {
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
+export function DrawerMenu({ tabPanel }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
-  const [clickedMenu, setClickedMenu] = React.useState("Bids");
-  const { org, isLoading } = useSelector((state) => state.org);
+  const { user } = useSelector((state) => state.auth);
+  const [open, setOpen] = React.useState(true);
   const userDetail = JSON.parse(localStorage.getItem("user"));
-  const param = window.location.href.split("/").reverse()[0];
-  let getId =
-    param === "company"
-      ? userDetail._id
-      : window.location.href.split("/").reverse()[0];
+  useEffect(() => {
+    if (userDetail.role === "Admin") {
+      dispatch(fetchOrgs(userDetail.token));
+      dispatch(fetchUsers(userDetail.token));
+    }
+  }, []);
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
-  React.useEffect(() => {
-    dispatch(
-      fetchSingleOrg({
-        filter: {
-          _id: getId,
-        },
-        token: userDetail.token,
-      })
-    );
-  }, [getId]);
 
-  React.useEffect(() => {
-    if (userDetail.role === "Org Admin" || userDetail.role === "Admin") {
-      dispatch(
-        fetchUserMadeByCompany({
-          filter: {
-            role: ["Painter", "Estimator", "Org Admin"],
-          },
-          organization: "632c2d50b837dd8339b5aa42",
-          token: userDetail.token,
-        })
-      );
-    }
-  }, []);
-
+  const handleLogout = () => {
+    dispatch(logout());
+    dispatch(reset());
+    navigate("/", { replace: true });
+  };
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-    // dispatch(reset());
-    navigate("/", { replace: true });
-  };
-
-  const menuId = "company-page-menu";
+  const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -194,23 +146,29 @@ function DashboardContent() {
             >
               <MenuIcon />
             </IconButton>
-
-            {isLoading ? (
-              <CircularProgress style={{ color: "white" }} size={25} />
-            ) : (
-              <Typography
-                component="h1"
-                variant="h6"
-                color="inherit"
-                noWrap
-                sx={{ flexGrow: 1 }}
-              >
-                {org ? org.name : userDetail.name}
-              </Typography>
-            )}
+            <Typography
+              component="h1"
+              variant="h6"
+              color="inherit"
+              noWrap
+              sx={{ flexGrow: 1 }}
+            >
+              Admin panel
+            </Typography>
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
           </Toolbar>
         </AppBar>
-
+        {renderMenu}
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
@@ -226,7 +184,7 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            <MainListItems setClickedMenu={setClickedMenu} />
+            <NavItems />
           </List>
         </Drawer>
         <Box
@@ -241,16 +199,9 @@ function DashboardContent() {
             overflow: "auto",
           }}
         >
-          <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={12} lg={12}>
-                {/* Company Bids content here */}
-                {clickedMenu === "Bids" && <Bids />}
-                {clickedMenu === "Processes" && <Processes />}
-                {clickedMenu === "Users" && <UsersFromCompany getId={getId} />}
-              </Grid>
+              {tabPanel}
             </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>
@@ -258,8 +209,4 @@ function DashboardContent() {
       </Box>
     </ThemeProvider>
   );
-}
-
-export default function CompanyDashboard() {
-  return <DashboardContent />;
 }
