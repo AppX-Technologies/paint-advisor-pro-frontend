@@ -30,6 +30,7 @@ import {
   reset,
 } from "../../features/usersFromCompany/usersFromCompanySlice";
 import { useNavigate } from "react-router-dom";
+import ProcessTable from "../../components/ProcessTabs/ProcessTable";
 
 function Copyright(props) {
   return (
@@ -248,7 +249,9 @@ function DashboardContent() {
               <Grid item xs={12} md={12} lg={12}>
                 {/* Company Bids content here */}
                 {clickedMenu === "Bids" && <Bids />}
-                {clickedMenu === "Processes" && <Processes />}
+                {clickedMenu === "Processes" && (
+                  <Processes showDrawerMenu={false} />
+                )}
                 {clickedMenu === "Users" && <UsersFromCompany getId={getId} />}
               </Grid>
             </Grid>

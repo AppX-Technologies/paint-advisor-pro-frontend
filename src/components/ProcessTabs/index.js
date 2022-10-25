@@ -1,14 +1,16 @@
 import React from "react";
 import BasicTabs from "../../Common/BasicTabs";
 import { processesTabLists } from "../../Common/Constants";
-import Exterior from "./Exterior";
-import Interior from "./Interior";
+
+import ProcessTable from "./ProcessTable";
 
 const index = () => {
   return (
     <BasicTabs
       tabList={processesTabLists}
-      categoryLists={[<Interior />, <Exterior />]}
+      categoryLists={processesTabLists.map((processTab) => {
+        return <ProcessTable filterValue={processTab} />;
+      })}
     />
   );
 };

@@ -1,25 +1,22 @@
-import React, { useEffect } from "react";
+import React from "react";
 import MUIDataTable from "mui-datatables";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import CustomButton from "../Button";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-const Exterior = () => {
-  const processList = [
-    "Clean the Wall",
-    "Brush it",
-    "Paint Primer",
-    "Let is Dry",
-    "UV Coating",
-    "Paint Second Coating",
-  ];
-  console.log(processList);
+const ProcessTable = ({ Category, filterValue }) => {
+  console.log(Category);
+  const processList =
+    filterValue === "Interior"
+      ? ["Clean", "Brush", "Paint Primer", "Let is Dry", "Paint Second Coating"]
+      : [
+          "Clean the Wall",
+          "Brush it",
+          "Paint Primer",
+          "Let is Dry",
+          "UV Coating",
+          "Paint Second Coating",
+        ];
   const columns = [
     {
       name: "Description",
@@ -36,12 +33,10 @@ const Exterior = () => {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          const getId = tableMeta.rowData[0];
           return (
             <>
               <Stack direction="row" spacing={2}>
                 <EditOutlinedIcon style={{ cursor: "pointer" }} />
-
                 <DeleteOutlineOutlinedIcon style={{ cursor: "pointer" }} />
               </Stack>
             </>
@@ -54,7 +49,6 @@ const Exterior = () => {
     filterType: "textField",
     print: false,
     selectableRows: false,
-
     textLabels: {
       body: {
         noMatch: (
@@ -110,4 +104,4 @@ const Exterior = () => {
   );
 };
 
-export default Exterior;
+export default ProcessTable;
