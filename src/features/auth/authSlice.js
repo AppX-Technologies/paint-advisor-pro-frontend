@@ -1,18 +1,37 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "./authService";
-
-// getting user from local storage
-const user = JSON.parse(localStorage.getItem("user"));
+import { showMessage, onClose } from "../snackbar/snackbarSlice";
 
 // initial states
 
 const initialState = {
-  user: user ? user : null,
+  user: null,
+  userType: null,
   isError: false,
   isLoading: false,
   isSuccess: false,
+  isSuccessOtp: false,
+  isResetSuccess:false,
   message: "",
 };
+
+export const generateRegistrationOtp = createAsyncThunk(
+  "auth/generateRegistrationOtp",
+  async (userData, thunkAPI) => {
+    try {
+      const response = await authService.generateRegistrationOtp(userData);
+      console.log(response);
+      return response;
+    } catch (err) {
+      const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 //  for register
 
@@ -20,7 +39,9 @@ export const register = createAsyncThunk(
   "auth/register",
   async (user, thunkAPI) => {
     try {
-      return await authService.register(user);
+      const response = await authService.register(user);
+      console.log(response);
+      return response;
     } catch (error) {
       const message =
         (error.response &&
@@ -28,7 +49,7 @@ export const register = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-
+      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -54,6 +75,46 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   authService.logout();
 });
 
+export const sendForgotPasswordLink = createAsyncThunk(
+  "auth/sendForgotPasswordLink",
+  async (user, thunkAPI) => {
+    try {
+      const response = await authService.sendForgotPasswordLink(user);
+      console.log(response);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async (user, thunkAPI) => {
+    try {
+      const response = await authService.resetPassword(user);
+      console.log(response);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      return thunkAPI.rejectWithValue(message);
+        }
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -62,11 +123,25 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
+      state.isSuccessOtp = false;
       state.message = "";
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(generateRegistrationOtp.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(generateRegistrationOtp.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccessOtp = true;
+        state.message = action.payload.data;
+      })
+      .addCase(generateRegistrationOtp.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
       .addCase(register.pending, (state) => {
         state.isLoading = true;
       })
@@ -97,6 +172,35 @@ export const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
+      })
+      .addCase(sendForgotPasswordLink.pending, (state) => {
+        state.isLoading = true;
+      }
+      )
+      .addCase(sendForgotPasswordLink.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccessOtp  = true;
+        state.message = action.payload;
+      })
+      .addCase(sendForgotPasswordLink.rejected, (state,action)=>{
+        state.isLoading= false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(resetPassword.pending, (state) => {
+        state.isLoading = true;
+      }
+      )
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isResetSuccess = true;
+        state.message = action.payload;
+      }
+      )
+      .addCase(resetPassword.rejected, (state,action)=>{
+        state.isLoading= false;
+        state.isError = true;
+        state.message = action.payload;
       });
   },
 });
