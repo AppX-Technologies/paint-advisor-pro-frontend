@@ -13,7 +13,7 @@ import Grid from "@mui/material/Grid";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import IconButton from "@mui/material/IconButton";
@@ -72,6 +72,8 @@ const Drawer = styled(MuiDrawer, {
 const mdTheme = createTheme();
 
 export function DrawerMenu({ tabPanel, showDrawerMenu = true }) {
+  const { pathname } = useLocation();
+  console.log("second");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);

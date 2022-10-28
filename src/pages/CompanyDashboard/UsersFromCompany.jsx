@@ -24,6 +24,8 @@ import {
 } from "../../features/usersFromCompany/usersFromCompanySlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import CreateUserForm from "./CreateUserForm";
+import { companyUserColumns } from "../../Common/tableHead";
+import { tableOptions } from "../../Common/tableOptions";
 
 const UsersFromCompany = (props) => {
   const { getId } = props;
@@ -37,6 +39,7 @@ const UsersFromCompany = (props) => {
   const userDetail = JSON.parse(localStorage.getItem("user"));
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [emailId, setEmailId] = React.useState("");
+  const [options, setOptions] = React.useState({});
 
   React.useEffect(() => {
     if (isDeleted) {
@@ -63,76 +66,7 @@ const UsersFromCompany = (props) => {
   }, [isDeleted]);
 
   const columns = [
-    {
-      name: "",
-      label: "",
-      options: {
-        display: false,
-      },
-    },
-    {
-      name: "name",
-      label: "Name",
-      options: {
-        filter: true,
-        sort: true,
-      },
-    },
-    {
-      name: "email",
-      label: "Email",
-      options: {
-        filter: true,
-      },
-    },
-    {
-      name: "phone",
-      label: "Phone",
-      options: {
-        filter: true,
-      },
-    },
-    {
-      name: "role",
-      label: "Role",
-      options: {
-        filter: true,
-      },
-    },
-    {
-      name: "company",
-      label: "Company",
-      options: {
-        filter: true,
-      },
-    },
-    {
-      name: "active",
-      label: "Status",
-      options: {
-        filter: true,
-
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{
-                fontSize: "12px",
-                textTransform: "none",
-                fontWeight: 700,
-                background: "#1565c0",
-                color: "#fafafa",
-                padding: "4px 8px",
-                textTransform: "capitalize",
-              }}
-            >
-              {value ? "Active" : "Inactive"}
-            </Button>
-          );
-        },
-      },
-    },
+    ...companyUserColumns,
     {
       label: "Action",
       name: "",
@@ -149,7 +83,6 @@ const UsersFromCompany = (props) => {
                     setEditFormData(tableMeta.rowData);
                     setOpenEditForm(true);
                   }}
-                  editFormData={editFormData}
                 />
                 <DeleteOutlineOutlinedIcon
                   style={{ cursor: "pointer" }}
@@ -165,48 +98,9 @@ const UsersFromCompany = (props) => {
       },
     },
   ];
-  const options = {
-    filterType: "textField",
-    print: false,
-    selectableRows: false,
-    textLabels: {
-      body: {
-        noMatch: (
-          <>
-            {isLoading && (
-              <CircularProgress
-                color="primary"
-                style={{
-                  display: isLoading ? "flex" : "none",
-                  margin: "0 auto",
-                }}
-              />
-            )}
-            {!isLoading && (
-              <div
-                className="flex flex-col justify-center items-center"
-                style={{ padding: "26px 0", marginTop: "32px" }}
-              >
-                <Typography
-                  variant="h6"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    padding: "17px 0",
-                  }}
-                >
-                  Sorry, no matching records found.
-                </Typography>
-              </div>
-            )}
-          </>
-        ),
-        toolTip: "Sort",
-        columnHeaderTooltip: (column) => `Sort for ${column.label}`,
-      },
-    },
-  };
-
+  useEffect(() => {
+    setOptions(tableOptions(isLoading, companyMadeByUsers));
+  }, []);
   // set email on click
   const onDeleteBtnClick = (e, email) => {
     e.stopPropagation();
@@ -283,12 +177,14 @@ const UsersFromCompany = (props) => {
         options={options}
       />
       <CreateUserForm open={open} setOpen={setOpen} />
-      <EditUserForm
-        editFormData={editFormData}
-        openEditForm={openEditForm}
-        setOpenEditForm={setOpenEditForm}
-        getId={getId}
-      />
+      {openEditForm && (
+        <EditUserForm
+          editFormData={editFormData}
+          openEditForm={openEditForm}
+          setOpenEditForm={setOpenEditForm}
+          getId={getId}
+        />
+      )}
       <DeleteModal />
     </>
   );

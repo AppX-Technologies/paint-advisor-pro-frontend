@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import MUIDataTable from "mui-datatables";
 import {
   Box,
   Button,
@@ -22,8 +21,11 @@ import EditOrgForm from "./EditOrgForm";
 import { Link, useNavigate } from "react-router-dom";
 import { deleteOrg, fetchOrgs, reset } from "../../features/org/orgSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
-
+import DataTable from "../../Common/DataTable";
+import { companyColumns } from "../../Common/tableHead";
+import { tableOptions } from "../../Common/tableOptions";
 const Companies = () => {
+  console.log("ggfff");
   const dispatch = useDispatch();
   const { orgList, isDeleting, isLoading, isDeleted } = useSelector(
     (state) => state.org
@@ -35,6 +37,7 @@ const Companies = () => {
   const [editFormData, setEditFormData] = React.useState([]);
   const userDetail = JSON.parse(localStorage.getItem("user"));
   const [userId, setUserId] = React.useState("");
+  const [options, setOptions] = React.useState({});
   React.useEffect(() => {
     if (isDeleted) {
       dispatch(
@@ -50,68 +53,7 @@ const Companies = () => {
   }, [isDeleted]);
 
   const columns = [
-    {
-      name: "",
-      label: "",
-      options: {
-        display: false,
-      },
-    },
-    {
-      name: "name",
-      label: "Name",
-      options: {
-        filter: true,
-        sort: true,
-      },
-    },
-    {
-      name: "email",
-      label: "Email",
-      options: {
-        filter: true,
-      },
-    },
-    {
-      name: "address",
-      label: "Address",
-      options: {
-        filter: true,
-      },
-    },
-    {
-      name: "phone",
-      label: "Phone",
-      options: {
-        filter: true,
-      },
-    },
-    {
-      name: "active",
-      label: "Status",
-      options: {
-        filter: true,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{
-                fontSize: "12px",
-                textTransform: "none",
-                fontWeight: 700,
-                background: "#1565c0",
-                color: "#fafafa",
-                padding: "4px 8px",
-                textTransform: "capitalize",
-              }}
-            >
-              {value ? "Active" : "Inactive"}
-            </Button>
-          );
-        },
-      },
-    },
+    ...companyColumns,
     {
       label: "Action",
       name: "",
@@ -149,47 +91,6 @@ const Companies = () => {
       },
     },
   ];
-  const options = {
-    filterType: "textField",
-    print: false,
-    selectableRows: false,
-    textLabels: {
-      body: {
-        noMatch: (
-          <>
-            {isLoading && (
-              <CircularProgress
-                color="primary"
-                style={{
-                  display: isLoading ? "flex" : "none",
-                  margin: "0 auto",
-                }}
-              />
-            )}
-            {!isLoading && orgList.length === 0 && (
-              <div
-                className="flex flex-col justify-center items-center"
-                style={{ padding: "26px 0", marginTop: "32px" }}
-              >
-                <Typography
-                  variant="h6"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    padding: "17px 0",
-                  }}
-                >
-                  Sorry, no matching records found.
-                </Typography>
-              </div>
-            )}
-          </>
-        ),
-        toolTip: "Sort",
-        columnHeaderTooltip: (column) => `Sort for ${column.label}`,
-      },
-    },
-  };
 
   // set email on click
   const onDeleteBtnClick = (e, getId) => {
@@ -201,6 +102,9 @@ const Companies = () => {
   //   e.stopPropagation();
   //   navigate(`);
   // };
+  useEffect(() => {
+    setOptions(tableOptions(isLoading, orgList));
+  }, []);
   function DeleteModal() {
     const handleClose = () => {
       setOpenDeleteModal(false);
@@ -249,20 +153,12 @@ const Companies = () => {
           Create
         </CustomButton>
       </Box>
-      <MUIDataTable
-        title={"Companies List"}
-        data={orgList.map((item, index) => {
-          return [
-            item._id,
-            item.name,
-            item.email,
-            item.address,
-            item.phone,
-            item.active,
-          ];
-        })}
+
+      <DataTable
+        datalist={orgList}
         columns={columns}
         options={options}
+        title={"Companies List"}
       />
       <FormDialog open={open} setOpen={setOpen} />
       <EditOrgForm

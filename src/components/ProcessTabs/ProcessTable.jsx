@@ -4,8 +4,7 @@ import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import CustomButton from "../Button";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-const ProcessTable = ({ Category, filterValue }) => {
-  console.log(Category);
+const ProcessTable = ({ filterValue }) => {
   const processList =
     filterValue === "Interior"
       ? ["Clean", "Brush", "Paint Primer", "Let is Dry", "Paint Second Coating"]

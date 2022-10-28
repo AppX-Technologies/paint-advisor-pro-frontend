@@ -20,6 +20,9 @@ import EditUserForm from "./EditUserForm";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { deleteUser, fetchUsers, reset } from "../../features/users/userSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
+import DataTable from "../../Common/DataTable";
+import { usersColumns } from "../../Common/tableHead";
+import { tableOptions } from "../../Common/tableOptions";
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -32,6 +35,7 @@ const Users = () => {
   const userDetail = JSON.parse(localStorage.getItem("user"));
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [emailId, setEmailId] = React.useState("");
+  const [options, setOptions] = React.useState({});
 
   React.useEffect(() => {
     if (isDeleted) {
@@ -48,63 +52,7 @@ const Users = () => {
   }, [isDeleted]);
 
   const columns = [
-    {
-      name: "",
-      label: "",
-      options: {
-        display: false,
-      },
-    },
-    {
-      name: "name",
-      label: "Name",
-      options: {
-        filter: true,
-        sort: true,
-      },
-    },
-    {
-      name: "email",
-      label: "Email",
-      options: {
-        filter: true,
-      },
-    },
-    {
-      name: "phone",
-      label: "Phone",
-      options: {
-        filter: true,
-      },
-    },
-
-    {
-      name: "active",
-      label: "Status",
-      options: {
-        filter: true,
-
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{
-                fontSize: "12px",
-                textTransform: "none",
-                fontWeight: 700,
-                background: "#1565c0",
-                color: "#fafafa",
-                padding: "4px 8px",
-                textTransform: "capitalize",
-              }}
-            >
-              {value ? "Active" : "Inactive"}
-            </Button>
-          );
-        },
-      },
-    },
+    ...usersColumns,
     {
       label: "Action",
       name: "",
@@ -137,48 +85,10 @@ const Users = () => {
       },
     },
   ];
-  const options = {
-    filterType: "textField",
-    print: false,
-    selectableRows: false,
-    textLabels: {
-      body: {
-        noMatch: (
-          <>
-            {isLoading && (
-              <CircularProgress
-                color="primary"
-                style={{
-                  display: isLoading ? "flex" : "none",
-                  margin: "0 auto",
-                }}
-              />
-            )}
-            {!isLoading && userList.length === 0 && (
-              <div
-                className="flex flex-col justify-center items-center"
-                style={{ padding: "26px 0", marginTop: "32px" }}
-              >
-                <Typography
-                  variant="h6"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    padding: "17px 0",
-                  }}
-                >
-                  Sorry, no matching records found.
-                </Typography>
-              </div>
-            )}
-          </>
-        ),
-        toolTip: "Sort",
-        columnHeaderTooltip: (column) => `Sort for ${column.label}`,
-      },
-    },
-  };
 
+  useEffect(() => {
+    setOptions(tableOptions(isLoading, userList));
+  }, []);
   // set email on click
   const onDeleteBtnClick = (e, email) => {
     e.stopPropagation();
@@ -233,20 +143,11 @@ const Users = () => {
           Create
         </CustomButton>
       </Box>
-      <MUIDataTable
-        title={"Users List"}
-        data={userList.map((item, index) => {
-          return [
-            item._id,
-            item.name,
-            item.email,
-            item.phone,
-            item.role,
-            item.active,
-          ];
-        })}
+      <DataTable
+        datalist={userList}
         columns={columns}
         options={options}
+        title={"User List"}
       />
       <CreateUserForm open={open} setOpen={setOpen} />
       <EditUserForm

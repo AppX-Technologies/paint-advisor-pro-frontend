@@ -12,7 +12,6 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs({ tabList, categoryLists }) {
-  console.log(tabList);
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
