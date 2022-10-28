@@ -102,9 +102,7 @@ const Companies = () => {
   //   e.stopPropagation();
   //   navigate(`);
   // };
-  useEffect(() => {
-    setOptions(tableOptions(isLoading, orgList));
-  }, []);
+
   function DeleteModal() {
     const handleClose = () => {
       setOpenDeleteModal(false);
@@ -141,6 +139,9 @@ const Companies = () => {
       </Dialog>
     );
   }
+  useEffect(() => {
+    setOptions(tableOptions(isLoading, orgList));
+  }, []);
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
