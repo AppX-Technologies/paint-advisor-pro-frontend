@@ -57,13 +57,12 @@ export default function Edit(props) {
     });
   };
 
-  const formStateWithToken = {
-    ...formState,
-    token: userDetail.token,
-  };
-
   const handleEdit = (e) => {
     e.preventDefault();
+    const formStateWithToken = {
+      ...formState,
+      token: userDetail.token,
+    };
     dispatch(updateUser(formStateWithToken));
     dispatch(reset());
   };

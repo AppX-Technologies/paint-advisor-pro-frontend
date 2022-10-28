@@ -29,6 +29,7 @@ export default function Edit(props) {
   const { openEditForm, setOpenEditForm, editFormData, getId } = props;
   const initialFormState = {
     name: editFormData[1] ? editFormData[1] : "",
+    email: editFormData[2] ? editFormData[2] : "",
     phone: editFormData[3] ? editFormData[3] : "",
     role: editFormData[4] ? editFormData[4] : "",
   };
@@ -47,7 +48,6 @@ export default function Edit(props) {
     formState.name = editFormData[1] ? editFormData[1] : "";
     formState.email = editFormData[2] ? editFormData[2] : "";
     formState.phone = editFormData[3] ? editFormData[3] : "";
-
     formState.role = editFormData[4] ? editFormData[4] : "";
   }, [editFormData]);
 
