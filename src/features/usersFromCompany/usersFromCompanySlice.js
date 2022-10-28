@@ -5,7 +5,7 @@ import usersFromCompanyService from "./usersFromCompanyService";
 // initial states
 
 const initialState = {
-  companyMadeByUsers:[],
+  companyMadeByUsers: [],
   isLoading: false,
   isError: false,
   isSuccess: false,
@@ -13,21 +13,23 @@ const initialState = {
   isDeleted: false,
   isUpdating: false,
   isUpdated: false,
-  message:""
+  message: "",
 };
 
 export const fetchUserMadeByCompany = createAsyncThunk(
   "usersFromCompany/fetchUserMadeByCompany",
   async (userData, thunkAPI) => {
     try {
-      const response = await usersFromCompanyService.fetchUserMadeByCompany(userData);
+      const response = await usersFromCompanyService.fetchUserMadeByCompany(
+        userData
+      );
       return response;
     } catch (err) {
       const message =
-      (err.response && err.response.data && err.response.data.message) ||
-      err.message ||
-      err.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+        (err.response && err.response.data && err.response.data.message) ||
+        err.message ||
+        err.toString();
+      thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -37,14 +39,16 @@ export const createUsersByCompany = createAsyncThunk(
   "usersFromCompany/createUsersByCompany",
   async (userData, thunkAPI) => {
     try {
-      const response = await usersFromCompanyService.createUsersByCompany(userData);
+      const response = await usersFromCompanyService.createUsersByCompany(
+        userData
+      );
       return response;
     } catch (err) {
       const message =
-      (err.response && err.response.data && err.response.data.message) ||
-      err.message ||
-      err.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+        (err.response && err.response.data && err.response.data.message) ||
+        err.message ||
+        err.toString();
+      thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -54,16 +58,18 @@ export const deleteUserByCompany = createAsyncThunk(
   "usersFromCompany/deleteUserByCompany",
   async (userData, thunkAPI) => {
     try {
-      const response = await usersFromCompanyService.deleteUserByCompany(userData);
+      const response = await usersFromCompanyService.deleteUserByCompany(
+        userData
+      );
       return response;
     } catch (error) {
       const message =
         (error.response &&
           error.response.data &&
           error.response.data.message) ||
-          error.message ||
+        error.message ||
         error.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -72,7 +78,9 @@ export const updateUserFromCompany = createAsyncThunk(
   "auth/updateUserFromCompany",
   async (userData, thunkAPI) => {
     try {
-      const response = await usersFromCompanyService.updateUserFromCompany(userData);
+      const response = await usersFromCompanyService.updateUserFromCompany(
+        userData
+      );
       console.log(response);
       return response;
     } catch (error) {
@@ -80,9 +88,9 @@ export const updateUserFromCompany = createAsyncThunk(
         (error.response &&
           error.response.data &&
           error.response.data.message) ||
-          error.message ||
+        error.message ||
         error.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -116,55 +124,45 @@ export const usersFromCompanySlice = createSlice({
       })
       .addCase(createUsersByCompany.pending, (state) => {
         state.isLoading = true;
-      }
-      )
+      })
       .addCase(createUsersByCompany.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.message = action.payload;
-      }
-      )
+      })
       .addCase(createUsersByCompany.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-      }
-      )
+      })
       .addCase(deleteUserByCompany.pending, (state) => {
         state.isDeleting = true;
-      }
-      )
+      })
       .addCase(deleteUserByCompany.fulfilled, (state, action) => {
         state.isDeleting = false;
         state.isDeleted = true;
         state.message = action.payload;
-      }
-      )
+      })
       .addCase(deleteUserByCompany.rejected, (state, action) => {
         state.isDeleting = false;
         state.isError = true;
         state.message = action.payload;
-      }
-      )
+      })
       .addCase(updateUserFromCompany.pending, (state) => {
         state.isUpdating = true;
-      }
-      )
+      })
       .addCase(updateUserFromCompany.fulfilled, (state, action) => {
         state.isUpdating = false;
         state.isUpdated = true;
         state.message = action.payload;
-      }
-      )
+      })
       .addCase(updateUserFromCompany.rejected, (state, action) => {
         state.isUpdating = false;
         state.isError = true;
         state.message = action.payload;
-      }
-      );
-  }
+      });
+  },
 });
-
 
 export const { reset } = usersFromCompanySlice.actions;
 
