@@ -86,9 +86,6 @@ const Users = () => {
     },
   ];
 
-  useEffect(() => {
-    setOptions(tableOptions(isLoading, userList));
-  }, []);
   // set email on click
   const onDeleteBtnClick = (e, email) => {
     e.stopPropagation();
@@ -131,6 +128,10 @@ const Users = () => {
       </Dialog>
     );
   }
+
+  useEffect(() => {
+    setOptions(tableOptions(isLoading, userList));
+  }, []);
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
