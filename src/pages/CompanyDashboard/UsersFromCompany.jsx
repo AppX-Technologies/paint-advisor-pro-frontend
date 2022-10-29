@@ -40,7 +40,7 @@ const UsersFromCompany = (props) => {
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [emailId, setEmailId] = React.useState("");
   const [options, setOptions] = React.useState({});
-
+  console.log(getId);
   React.useEffect(() => {
     if (isDeleted) {
       dispatch(
@@ -54,7 +54,7 @@ const UsersFromCompany = (props) => {
         dispatch(
           fetchUserMadeByCompany({
             filter: {
-              role: ["Painter", "Estimator", "Org Admin"],
+              role: ["Painter", "Org Admin"],
               organization: getId,
             },
             token: userDetail.token,
@@ -65,39 +65,6 @@ const UsersFromCompany = (props) => {
     }
   }, [isDeleted]);
 
-  const columns = [
-    ...companyUserColumns,
-    {
-      label: "Action",
-      name: "",
-      options: {
-        filter: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const getEmail = tableMeta.rowData[2];
-          return (
-            <>
-              <Stack direction="row" spacing={2}>
-                <EditOutlinedIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setEditFormData(tableMeta.rowData);
-                    setOpenEditForm(true);
-                  }}
-                />
-                <DeleteOutlineOutlinedIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={(e) => {
-                    setOpenDeleteModal(true);
-                    onDeleteBtnClick(e, getEmail);
-                  }}
-                />
-              </Stack>
-            </>
-          );
-        },
-      },
-    },
-  ];
   useEffect(() => {
     setOptions(tableOptions(isLoading, companyMadeByUsers));
   }, []);
@@ -106,6 +73,13 @@ const UsersFromCompany = (props) => {
     e.stopPropagation();
     setEmailId(email);
   };
+  const columns = companyUserColumns({
+    setEditFormData,
+    setOpenEditForm,
+    setOpenDeleteModal,
+    onDeleteBtnClick,
+    editFormData,
+  });
 
   function DeleteModal() {
     const handleClose = () => {

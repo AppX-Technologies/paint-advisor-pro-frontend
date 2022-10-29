@@ -25,7 +25,6 @@ import DataTable from "../../Common/DataTable";
 import { companyColumns } from "../../Common/tableHead";
 import { tableOptions } from "../../Common/tableOptions";
 const Companies = () => {
-  console.log("ggfff");
   const dispatch = useDispatch();
   const { orgList, isDeleting, isLoading, isDeleted } = useSelector(
     (state) => state.org
@@ -38,6 +37,7 @@ const Companies = () => {
   const userDetail = JSON.parse(localStorage.getItem("user"));
   const [userId, setUserId] = React.useState("");
   const [options, setOptions] = React.useState({});
+  console.log(orgList);
   React.useEffect(() => {
     if (isDeleted) {
       dispatch(
@@ -102,7 +102,9 @@ const Companies = () => {
   //   e.stopPropagation();
   //   navigate(`);
   // };
-
+  useEffect(() => {
+    setOptions(tableOptions(isLoading, orgList));
+  }, []);
   function DeleteModal() {
     const handleClose = () => {
       setOpenDeleteModal(false);
@@ -139,9 +141,6 @@ const Companies = () => {
       </Dialog>
     );
   }
-  useEffect(() => {
-    setOptions(tableOptions(isLoading, orgList));
-  }, []);
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

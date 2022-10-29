@@ -18,7 +18,6 @@ import { showMessage } from "../../features/snackbar/snackbarSlice";
 import { updateUser, fetchUsers, reset } from "../../features/users/userSlice";
 
 export default function Edit(props) {
-  console.log("hello" + props);
   const dispatch = useDispatch();
   const { openEditForm, setOpenEditForm, editFormData } = props;
   const initialFormState = {

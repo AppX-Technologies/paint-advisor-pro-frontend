@@ -21,7 +21,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { deleteUser, fetchUsers, reset } from "../../features/users/userSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import DataTable from "../../Common/DataTable";
-import { usersColumns } from "../../Common/tableHead";
+import { userColumn, usersColumns } from "../../Common/tableHead";
 import { tableOptions } from "../../Common/tableOptions";
 
 const Users = () => {
@@ -36,7 +36,6 @@ const Users = () => {
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [emailId, setEmailId] = React.useState("");
   const [options, setOptions] = React.useState({});
-
   React.useEffect(() => {
     if (isDeleted) {
       dispatch(
@@ -51,47 +50,18 @@ const Users = () => {
     }
   }, [isDeleted]);
 
-  const columns = [
-    ...usersColumns,
-    {
-      label: "Action",
-      name: "",
-      options: {
-        filter: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const getEmail = tableMeta.rowData[2];
-          return (
-            <>
-              <Stack direction="row" spacing={2}>
-                <EditOutlinedIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setEditFormData(tableMeta.rowData);
-                    setOpenEditForm(true);
-                  }}
-                  editFormData={editFormData}
-                />
-                <DeleteOutlineOutlinedIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={(e) => {
-                    setOpenDeleteModal(true);
-                    onDeleteBtnClick(e, getEmail);
-                  }}
-                />
-              </Stack>
-            </>
-          );
-        },
-      },
-    },
-  ];
-
   // set email on click
   const onDeleteBtnClick = (e, email) => {
     e.stopPropagation();
     setEmailId(email);
   };
-
+  const columns = userColumn({
+    setEditFormData,
+    setOpenEditForm,
+    setOpenDeleteModal,
+    onDeleteBtnClick,
+    editFormData,
+  });
   function DeleteModal() {
     const handleClose = () => {
       setOpenDeleteModal(false);
@@ -145,11 +115,21 @@ const Users = () => {
         </CustomButton>
       </Box>
       <DataTable
-        datalist={userList}
+        datalist={userList.map((item, index) => {
+          return [
+            item._id,
+            item.name,
+            item.email,
+            item.phone,
+            item.role,
+            item.active,
+          ];
+        })}
         columns={columns}
         options={options}
         title={"User List"}
       />
+
       <CreateUserForm open={open} setOpen={setOpen} />
       <EditUserForm
         editFormData={editFormData}
