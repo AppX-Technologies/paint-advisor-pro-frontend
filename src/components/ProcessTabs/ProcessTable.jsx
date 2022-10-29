@@ -1,10 +1,13 @@
 import React from "react";
 import MUIDataTable from "mui-datatables";
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import CustomButton from "../Button";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+
+import { processColumn } from "../../Common/tableHead";
+import { tableOptions } from "../../Common/tableOptions";
 const ProcessTable = ({ filterValue }) => {
+  const isLoading = false;
+
   const processList =
     filterValue === "Interior"
       ? ["Clean", "Brush", "Paint Primer", "Let is Dry", "Paint Second Coating"]
@@ -16,71 +19,8 @@ const ProcessTable = ({ filterValue }) => {
           "UV Coating",
           "Paint Second Coating",
         ];
-  const columns = [
-    {
-      name: "Description",
-      label: "Description",
-      options: {
-        filter: true,
-        sort: true,
-      },
-    },
-
-    {
-      label: "Action",
-      name: "",
-      options: {
-        filter: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <>
-              <Stack direction="row" spacing={2}>
-                <EditOutlinedIcon style={{ cursor: "pointer" }} />
-                <DeleteOutlineOutlinedIcon style={{ cursor: "pointer" }} />
-              </Stack>
-            </>
-          );
-        },
-      },
-    },
-  ];
-  const options = {
-    filterType: "textField",
-    print: false,
-    selectableRows: false,
-    textLabels: {
-      body: {
-        noMatch: (
-          <>
-            <CircularProgress
-              color="primary"
-              style={{
-                display: "flex",
-                margin: "0 auto",
-              }}
-            />
-            <div
-              className="flex flex-col justify-center items-center"
-              style={{ padding: "26px 0", marginTop: "32px" }}
-            >
-              <Typography
-                variant="h6"
-                style={{
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  padding: "17px 0",
-                }}
-              >
-                Sorry, no matching records found.
-              </Typography>
-            </div>
-          </>
-        ),
-        toolTip: "Sort",
-        columnHeaderTooltip: (column) => `Sort for ${column.label}`,
-      },
-    },
-  };
+  const columns = processColumn();
+  const options = tableOptions(processList, isLoading);
 
   return (
     <>

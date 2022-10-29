@@ -6,13 +6,7 @@ const DataTable = ({ datalist, title, columns, options }) => {
     <>
       <MUIDataTable
         title={title}
-        data={datalist.map((item, index) => {
-          const columnData = [];
-          for (let itemIndex in item) {
-            columnData.push(item[itemIndex] ? item[itemIndex] : null);
-          }
-          return columnData;
-        })}
+        data={datalist}
         columns={columns}
         options={options}
       />

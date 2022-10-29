@@ -23,7 +23,7 @@ const NavItems = () => {
         <ListItemIcon>
           <FormatListBulletedIcon />
         </ListItemIcon>
-        <ListItemText primary="Processes" />
+        <ListItemText primary="Default Processes" />
       </ListItemButton>
       {/* Profile Tab */}
       <ListItemButton>

@@ -9,16 +9,13 @@ import {
 } from "@mui/material";
 import CustomButton from "../Button";
 import FormDialog from "./OrgRegisterForm";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import EditOrgForm from "./EditOrgForm";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { deleteOrg, fetchOrgs, reset } from "../../features/org/orgSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import DataTable from "../../Common/DataTable";
@@ -31,7 +28,6 @@ const Companies = () => {
   );
   const [open, setOpen] = React.useState(false);
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
-  const navigate = useNavigate();
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData, setEditFormData] = React.useState([]);
   const userDetail = JSON.parse(localStorage.getItem("user"));
@@ -52,56 +48,19 @@ const Companies = () => {
     }
   }, [isDeleted]);
 
-  const columns = [
-    ...companyColumns,
-    {
-      label: "Action",
-      name: "",
-      options: {
-        filter: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const getId = tableMeta.rowData[0];
-          return (
-            <>
-              <Stack direction="row" spacing={2}>
-                <EditOutlinedIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setEditFormData(tableMeta.rowData);
-                    setOpenEditForm(true);
-                  }}
-                  editFormData={editFormData}
-                />
-                <Link to={`/company/${getId}`} target="_blank">
-                  <RemoveRedEyeOutlinedIcon
-                    style={{ cursor: "pointer", color: "black" }}
-                  />
-                </Link>
-                <DeleteOutlineOutlinedIcon
-                  style={{ cursor: "pointer" }}
-                  onClick={(e) => {
-                    setOpenDeleteModal(true);
-                    onDeleteBtnClick(e, getId);
-                  }}
-                />
-              </Stack>
-            </>
-          );
-        },
-      },
-    },
-  ];
-
   // set email on click
   const onDeleteBtnClick = (e, getId) => {
     e.stopPropagation();
     setUserId(getId);
   };
+  const columns = companyColumns({
+    setEditFormData,
+    setOpenEditForm,
+    setOpenDeleteModal,
+    onDeleteBtnClick,
+    editFormData,
+  });
 
-  // const onViewBtnClick = (e, getId) => {
-  //   e.stopPropagation();
-  //   navigate(`);
-  // };
   useEffect(() => {
     setOptions(tableOptions(isLoading, orgList));
   }, []);
@@ -155,7 +114,9 @@ const Companies = () => {
       </Box>
 
       <DataTable
-        datalist={orgList}
+        datalist={orgList.map((org) => {
+          return [org._id, org.name, org.email, org.address, org.phone];
+        })}
         columns={columns}
         options={options}
         title={"Companies List"}

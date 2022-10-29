@@ -15,7 +15,6 @@ import Dashboard from "./pages/Dashboard";
 
 function App() {
   const [userDetails, setUserDetails] = useState();
-
   const { pathname } = useLocation();
   useEffect(() => {
     setUserDetails(

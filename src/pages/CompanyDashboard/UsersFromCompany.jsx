@@ -26,6 +26,7 @@ import { showMessage } from "../../features/snackbar/snackbarSlice";
 import CreateUserForm from "./CreateUserForm";
 import { companyUserColumns } from "../../Common/tableHead";
 import { tableOptions } from "../../Common/tableOptions";
+import DataTable from "../../Common/DataTable";
 
 const UsersFromCompany = (props) => {
   const { getId } = props;
@@ -134,21 +135,21 @@ const UsersFromCompany = (props) => {
           Create
         </CustomButton>
       </Box>
-      <MUIDataTable
-        title={"Users List"}
-        data={companyMadeByUsers.map((item, index) => {
+      <DataTable
+        datalist={companyMadeByUsers.map((org) => {
           return [
-            item._id,
-            item.name,
-            item.email,
-            item.phone,
-            item.role,
-            item.organization ? item.organization.name : "",
-            item.active,
+            org._id,
+            org.name,
+            org.email,
+            org.phone,
+            org.role,
+            org.organization ? org.organization.name : "",
+            org.active,
           ];
         })}
         columns={columns}
         options={options}
+        title={"User List"}
       />
       <CreateUserForm open={open} setOpen={setOpen} />
       {openEditForm && (

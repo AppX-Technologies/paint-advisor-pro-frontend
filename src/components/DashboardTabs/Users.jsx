@@ -115,15 +115,8 @@ const Users = () => {
         </CustomButton>
       </Box>
       <DataTable
-        datalist={userList.map((item, index) => {
-          return [
-            item._id,
-            item.name,
-            item.email,
-            item.phone,
-            item.role,
-            item.active,
-          ];
+        datalist={userList.map((userData) => {
+          return [userData._id, userData.name, userData.email, userData.phone];
         })}
         columns={columns}
         options={options}
