@@ -211,7 +211,7 @@ function DashboardContent() {
             )}
           </Toolbar>
         </AppBar>
-
+        {renderMenu}
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
@@ -243,8 +243,12 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
+          <Container
+            maxWidth="lg"
+            style={{ marginLeft: "-22px" }}
+            sx={{ mt: 0, mb: 4 }}
+          >
+            <Grid container spacing={4}>
               {/* Chart */}
               <Grid item xs={12} md={12} lg={12}>
                 {/* Company Bids content here */}

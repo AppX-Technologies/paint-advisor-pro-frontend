@@ -7,12 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useDispatch, useSelector } from "react-redux";
 import formReducer from "./reducers/formReducer";
-import {
-  Checkbox,
-  CircularProgress,
-  FormControlLabel,
-  Grid,
-} from "@mui/material";
+import { CircularProgress, Grid } from "@mui/material";
 import { useEffect } from "react";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import { updateUser, fetchUsers, reset } from "../../features/users/userSlice";

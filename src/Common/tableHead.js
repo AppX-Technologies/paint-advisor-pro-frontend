@@ -320,11 +320,24 @@ export const companyUserColumns = ({
     },
   ];
 };
-export const processColumn = () => {
+export const processColumn = ({
+  setEditFormData,
+  setOpenEditForm,
+  setOpenDeleteModal,
+  onDeleteBtnClick,
+  editFormData,
+}) => {
   return [
     {
-      name: "Description",
-      label: "Description",
+      name: "",
+      label: "",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "process",
+      label: "Process",
       options: {
         filter: true,
         sort: true,
@@ -337,11 +350,27 @@ export const processColumn = () => {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
+          console.log(tableMeta.rowData);
+          const getId = tableMeta.rowData[0];
+
           return (
             <>
               <Stack direction="row" spacing={2}>
-                <EditOutlinedIcon style={{ cursor: "pointer" }} />
-                <DeleteOutlineOutlinedIcon style={{ cursor: "pointer" }} />
+                <EditOutlinedIcon
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setEditFormData(tableMeta.rowData);
+                    setOpenEditForm(true);
+                  }}
+                  editFormData={editFormData}
+                />
+                <DeleteOutlineOutlinedIcon
+                  style={{ cursor: "pointer" }}
+                  onClick={(e) => {
+                    setOpenDeleteModal(true);
+                    onDeleteBtnClick(e, getId);
+                  }}
+                />
               </Stack>
             </>
           );

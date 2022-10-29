@@ -135,7 +135,7 @@ export function DrawerMenu({ tabPanel, showDrawerMenu = true }) {
             <AppBar position="absolute" open={open}>
               <Toolbar
                 sx={{
-                  pr: "24px", // keep right padding when drawer closed
+                  pr: "10px", // keep right padding when drawer closed
                 }}
               >
                 <IconButton

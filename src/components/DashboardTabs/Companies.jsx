@@ -15,7 +15,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import EditOrgForm from "./EditOrgForm";
-import { useNavigate } from "react-router-dom";
 import { deleteOrg, fetchOrgs, reset } from "../../features/org/orgSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import DataTable from "../../Common/DataTable";
@@ -33,7 +32,6 @@ const Companies = () => {
   const userDetail = JSON.parse(localStorage.getItem("user"));
   const [userId, setUserId] = React.useState("");
   const [options, setOptions] = React.useState({});
-  console.log(orgList);
   React.useEffect(() => {
     if (isDeleted) {
       dispatch(
