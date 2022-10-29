@@ -350,7 +350,6 @@ export const processColumn = ({
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          console.log(tableMeta.rowData);
           const getId = tableMeta.rowData[0];
 
           return (

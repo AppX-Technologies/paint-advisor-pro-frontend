@@ -24,6 +24,7 @@ import {
 import DataTable from "../../Common/DataTable";
 import FormDialog from "./ProcessReg";
 import Edit from "./EditProcessForm";
+import { useParams } from "react-router-dom";
 const ProcessTable = ({ filterValue }) => {
   const dispatch = useDispatch();
   const { processList, isDeleting, isLoading, isDeleted } = useSelector(
@@ -35,6 +36,8 @@ const ProcessTable = ({ filterValue }) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [processId, setProcessId] = useState("");
   const [open, setOpen] = useState(false);
+  // const {companyId} = useParams();
+
   useEffect(() => {
     console.log(isDeleted);
     if (isDeleted) {
@@ -49,7 +52,6 @@ const ProcessTable = ({ filterValue }) => {
     }
     dispatch(fetchProcess(userDetail.token));
   }, [isDeleted]);
-  console.log(isDeleted);
 
   const onDeleteBtnClick = (e, getId) => {
     e.stopPropagation();

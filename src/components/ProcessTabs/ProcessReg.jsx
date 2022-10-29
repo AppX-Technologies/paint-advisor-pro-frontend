@@ -5,7 +5,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   Checkbox,
   CircularProgress,
@@ -14,14 +14,45 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import {
+  createProcess,
+  fetchProcess,
+} from "../../features/process/processSlice";
+import formReducer from "../DashboardTabs/reducers/formReducer";
 
+const initialFormState = {
+  description: "",
+};
 export default function FormDialog(props) {
-  const { open, setOpen } = props;
-  console.log(open);
   const userDetail = JSON.parse(localStorage.getItem("user"));
+  const dispatch = useDispatch();
+  const [formState, dispatchNew] = React.useReducer(
+    formReducer,
+    initialFormState
+  );
+
+  const { open, setOpen } = props;
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleCreate = (e) => {
+    e.preventDefault();
+    const formStateWithToken = {
+      ...formState,
+      token: userDetail.token,
+    };
+    // (dispatch(createProcess(formStateWithToken)));
+    // dispatch(fetchProcess(userDetail.token));
+  };
+
+  const handleTextChange = (e) => {
+    dispatchNew({
+      type: "HANDLE_FORM_INPUT",
+      field: "description",
+      payload: e.target.value,
+    });
   };
 
   return (
@@ -50,13 +81,19 @@ export default function FormDialog(props) {
                 id="process"
                 label="Process"
                 autoFocus
+                value={formState.description}
+                onChange={(e) => handleTextChange(e)}
               />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" variant="contained">
+          <Button
+            type="submit"
+            variant="contained"
+            onClick={(e) => handleCreate(e)}
+          >
             Create
           </Button>
         </DialogActions>

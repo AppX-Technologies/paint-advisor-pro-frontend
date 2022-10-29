@@ -13,7 +13,6 @@ const fetchProcess = async (userData) => {
       Authorization: `Bearer ${userData}`,
     },
   };
-  console.log(endpoint);
   const response = await axios.post(FETCH_PROCESS, {}, config);
   return response.data;
 };

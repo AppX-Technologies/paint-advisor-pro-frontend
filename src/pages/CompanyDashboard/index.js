@@ -31,24 +31,7 @@ import {
 } from "../../features/usersFromCompany/usersFromCompanySlice";
 import { useNavigate } from "react-router-dom";
 import ProcessTable from "../../components/ProcessTabs/ProcessTable";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="#">
-        Paint Advisor
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { Copyright } from "../../components/Copyright";
 
 const drawerWidth = 240;
 
@@ -141,38 +124,6 @@ function DashboardContent() {
     }
   }, []);
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    dispatch(logout());
-    // dispatch(reset());
-    navigate("/", { replace: true });
-  };
-
-  const menuId = "company-page-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleLogout}>Logout</MenuItem>
-    </Menu>
-  );
-
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }}>
@@ -211,7 +162,6 @@ function DashboardContent() {
             )}
           </Toolbar>
         </AppBar>
-        {renderMenu}
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
@@ -259,7 +209,7 @@ function DashboardContent() {
                 {clickedMenu === "Users" && <UsersFromCompany getId={getId} />}
               </Grid>
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
+            {/* <Copyright sx={{ pt: 4 }} /> */}
           </Container>
         </Box>
       </Box>
