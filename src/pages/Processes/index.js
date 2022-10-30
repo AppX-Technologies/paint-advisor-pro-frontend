@@ -8,7 +8,6 @@ export const Processes = ({ showDrawerMenu, showTitle }) => {
       <DrawerMenu
         tabPanel={<ProcessTabPanel />}
         showDrawerMenu={showDrawerMenu}
-        showTitle={showTitle}
       />
     </>
   );

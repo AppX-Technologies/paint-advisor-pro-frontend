@@ -5,6 +5,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import PageNotFound from "./components/404";
 import Layout from "./routing/Layout";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import CustomSnackBar from "./components/Snackbar";
 import RegisterPage from "./pages/Register";
 import ProtectedRoute from "./routing/ProtectedRoute";
@@ -49,6 +50,14 @@ function App() {
                 userDetails &&
                 userDetails.token &&
                 userDetails.role === "Admin" && <Processes />
+              }
+            />{" "}
+            <Route
+              path="profile"
+              element={
+                userDetails &&
+                userDetails.token &&
+                userDetails.role === "Admin" && <Profile />
               }
             />
           </Route>

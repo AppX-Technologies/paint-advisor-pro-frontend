@@ -26,7 +26,7 @@ const NavItems = () => {
         <ListItemText primary="Default Processes" />
       </ListItemButton>
       {/* Profile Tab */}
-      <ListItemButton>
+      <ListItemButton onClick={() => navigate("/profile")}>
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
