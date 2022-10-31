@@ -5,14 +5,14 @@ import { processesTabLists } from "../../Common/Constants";
 import ProcessTable from "./ProcessTable";
 
 const index = () => {
-  return (
-    <BasicTabs
-      tabList={processesTabLists}
-      categoryLists={processesTabLists.map((processTab) => {
-        return <ProcessTable filterValue={processTab} />;
-      })}
-    />
-  );
+	return (
+		<BasicTabs
+			tabList={processesTabLists}
+			categoryLists={processesTabLists.map((processTab) => {
+				return <ProcessTable filterValue={processTab} key={processTab} />;
+			})}
+		/>
+	);
 };
 
 export default index;
