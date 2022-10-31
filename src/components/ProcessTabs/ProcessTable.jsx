@@ -20,6 +20,7 @@ import { deleteProcess, fetchProcess, reset } from "../../features/process/proce
 import DataTable from "../../Common/DataTable";
 import FormDialog from "./ProcessReg";
 import Edit from "./EditProcessForm";
+import { useParams } from "react-router-dom";
 const ProcessTable = ({ filterValue }) => {
 	const dispatch = useDispatch();
 	const { processList, isDeleting, isLoading, isDeleted } = useSelector((state) => state.process);
@@ -29,10 +30,9 @@ const ProcessTable = ({ filterValue }) => {
 	const [openDeleteModal, setOpenDeleteModal] = useState(false);
 	const [processId, setProcessId] = useState("");
 	const [open, setOpen] = useState(false);
-	// const {companyId} = useParams();
+	const { companyId } = useParams();
 
 	useEffect(() => {
-		console.log(isDeleted);
 		if (isDeleted) {
 			dispatch(
 				showMessage({
@@ -43,9 +43,17 @@ const ProcessTable = ({ filterValue }) => {
 			setOpenDeleteModal(false);
 			dispatch(reset());
 		}
-		dispatch(fetchProcess(userDetail.token));
-	}, [isDeleted]);
-	console.log(processList);
+		companyId
+			? dispatch(
+					fetchProcess({
+						token: userDetail.token,
+						bidType: filterValue,
+						id: "635f80693eeae33fdfd5853d"
+					})
+			  )
+			: dispatch(fetchProcess({ token: userDetail.token, bidType: filterValue }));
+	}, [isDeleted, filterValue]);
+
 	const onDeleteBtnClick = (e, getId) => {
 		e.stopPropagation();
 		setProcessId(getId);
