@@ -7,7 +7,7 @@ const UPDATE_PROCESS = `${endpoint}/`;
 const DELETE_PROCESS = `${endpoint}/`;
 
 const fetchProcess = async (userData) => {
-	console.log(userData.bidType, "HHHH");
+	console.log(userData, "HHHH");
 	const config = {
 		headers: {
 			"Content-Type": "application/json",

@@ -21,6 +21,7 @@ import DataTable from "../../Common/DataTable";
 import FormDialog from "./ProcessReg";
 import Edit from "./EditProcessForm";
 import { useParams } from "react-router-dom";
+import { filterProcessByBid } from "../../Helpers/bidFilterHelpers";
 const ProcessTable = ({ filterValue }) => {
 	const dispatch = useDispatch();
 	const { processList, isDeleting, isLoading, isDeleted } = useSelector((state) => state.process);
@@ -28,6 +29,7 @@ const ProcessTable = ({ filterValue }) => {
 	const [openEditForm, setOpenEditForm] = useState(false);
 	const [editFormData, setEditFormData] = useState([]);
 	const [openDeleteModal, setOpenDeleteModal] = useState(false);
+	const [filteredProcesses, setFilteredProcesses] = useState([]);
 	const [processId, setProcessId] = useState("");
 	const [open, setOpen] = useState(false);
 	const { companyId } = useParams();
@@ -104,6 +106,10 @@ const ProcessTable = ({ filterValue }) => {
 			</Dialog>
 		);
 	}
+
+	useEffect(() => {
+		setFilteredProcesses(filterProcessByBid(processList, filterValue));
+	}, [processList, filterValue]);
 	return (
 		<>
 			<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -115,14 +121,19 @@ const ProcessTable = ({ filterValue }) => {
 					Create
 				</CustomButton>
 			</Box>
+			<div style={{ position: "relative" }}></div>
 			<DataTable
-				datalist={processList.map((process) => {
-					return [process._id, process.processes.map((des) => des.description)];
-				})}
+				datalist={
+					filteredProcesses &&
+					filteredProcesses.map((process) => {
+						return [process._id, process.description];
+					})
+				}
 				columns={columns}
 				options={options}
 				title={filterValue + " Process"}
 			/>
+
 			<FormDialog open={open} setOpen={setOpen} />
 			<DeleteModal />
 			<Edit
