@@ -97,14 +97,12 @@ export default function Edit(props) {
 			if (userDetail.role === "Org Admin" || userDetail.role === "Admin") {
 				dispatch(
 					fetchUserMadeByCompany({
-						filter: {
-							role: ["Painter", "Estimator", "Org Admin"]
-						},
-						organization: getId,
-						token: JSON.parse(localStorage.getItem("user")).token
+						token: userDetail.token,
+						orgId: getId
 					})
 				);
 			}
+
 			dispatch(reset());
 		}
 	}, [isUpdated]);
