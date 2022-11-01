@@ -255,6 +255,13 @@ export const companyUserColumns = ({
 			}
 		},
 		{
+			name: "proficiency",
+			label: "Proficiency",
+			options: {
+				filter: true
+			}
+		},
+		{
 			name: "company",
 			label: "Company",
 			options: {

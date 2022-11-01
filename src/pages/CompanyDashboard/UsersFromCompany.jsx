@@ -32,7 +32,6 @@ const UsersFromCompany = (props) => {
 	const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
 	const [emailId, setEmailId] = React.useState("");
 	const [options, setOptions] = React.useState({});
-	console.log(getId);
 	React.useEffect(() => {
 		if (isDeleted) {
 			dispatch(
@@ -43,15 +42,15 @@ const UsersFromCompany = (props) => {
 			);
 			setOpenDeleteModal(false);
 			if (userDetail.role === "Org Admin" || userDetail.role === "Admin") {
-				dispatch(
-					fetchUserMadeByCompany({
-						filter: {
-							role: ["Painter", "Org Admin"],
-							organization: getId
-						},
-						token: userDetail.token
-					})
-				);
+				// dispatch(
+				// 	fetchUserMadeByCompany({
+				// 		filter: {
+				// 			role: ["Painter", "Org Admin", "Estimator"],
+				// 			organization: getId
+				// 		},
+				// 		token: userDetail.token
+				// 	})
+				// );
 			}
 			dispatch(reset());
 		}
@@ -114,6 +113,7 @@ const UsersFromCompany = (props) => {
 			</Dialog>
 		);
 	}
+
 	return (
 		<>
 			<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -134,6 +134,7 @@ const UsersFromCompany = (props) => {
 						org.email,
 						org.phone,
 						org.role,
+						org.proficiency,
 						org.organization ? org.organization.name : "",
 						org.active
 					];

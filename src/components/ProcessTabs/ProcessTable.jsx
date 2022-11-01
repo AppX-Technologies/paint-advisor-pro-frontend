@@ -28,28 +28,15 @@ const ProcessTable = ({ filterValue }) => {
 	const { processList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(
 		(state) => state.process
 	);
+	const { org } = useSelector((state) => state.org);
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const [openEditForm, setOpenEditForm] = useState(false);
 	const [editFormData, setEditFormData] = useState([]);
 	const [openDeleteModal, setOpenDeleteModal] = useState(false);
 	const [filteredProcesses, setFilteredProcesses] = useState([]);
-	const [orgProcessId, setOrgProcessId] = useState("");
 	const [processId, setProcessId] = useState("");
 	const [open, setOpen] = useState(false);
 	const { companyId } = useParams();
-
-	React.useEffect(() => {
-		setOrgProcessId(
-			dispatch(
-				fetchSingleOrg({
-					filter: {
-						_id: companyId
-					},
-					token: userDetail.token
-				})
-			)
-		);
-	}, [companyId]);
 
 	useEffect(() => {
 		if (isDeleted) {
@@ -67,7 +54,7 @@ const ProcessTable = ({ filterValue }) => {
 			? dispatch(
 					fetchProcess({
 						token: userDetail.token,
-						id: "635f99daad6419b4ce22ae43"
+						id: org.processes
 					})
 			  )
 			: dispatch(fetchProcess({ token: userDetail.token }));
@@ -91,7 +78,6 @@ const ProcessTable = ({ filterValue }) => {
 			setOpenDeleteModal(false);
 		}
 	}, [isSuccess]);
-
 	//Delete popup menu
 	function DeleteModal() {
 		const handleClose = () => {
@@ -142,6 +128,18 @@ const ProcessTable = ({ filterValue }) => {
 	useEffect(() => {
 		setFilteredProcesses(filterProcessByBid(processList, filterValue));
 	}, [processList, filterValue]);
+
+	React.useEffect(() => {
+		dispatch(
+			fetchSingleOrg({
+				filter: {
+					_id: companyId
+				},
+				token: userDetail.token
+			})
+		);
+	}, [companyId]);
+
 	return (
 		<>
 			<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -183,6 +181,7 @@ const ProcessTable = ({ filterValue }) => {
 				setOpen={setOpen}
 				bidType={filterValue}
 				filteredProcesses={filteredProcesses}
+				orgProcessId={org.processes}
 			/>
 			<DeleteModal />
 			<Edit

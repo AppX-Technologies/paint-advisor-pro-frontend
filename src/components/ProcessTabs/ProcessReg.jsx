@@ -18,13 +18,12 @@ const initialFormState = {
 };
 export default function FormDialog(props) {
 	const { processList, isSuccess } = useSelector((state) => state.process);
-	console.log(processList);
 	const { companyId } = useParams();
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const dispatch = useDispatch();
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
 
-	const { open, setOpen, bidType, filteredProcesses } = props;
+	const { open, setOpen, bidType, filteredProcesses, orgProcessId } = props;
 
 	const handleClose = () => {
 		setOpen(false);
@@ -74,7 +73,7 @@ export default function FormDialog(props) {
 				? dispatch(
 						fetchProcess({
 							token: userDetail.token,
-							id: "635f99daad6419b4ce22ae43"
+							id: orgProcessId
 						})
 				  )
 				: dispatch(fetchProcess({ token: userDetail.token }));

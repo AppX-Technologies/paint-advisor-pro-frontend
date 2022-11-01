@@ -22,7 +22,6 @@ const initialState = {
 export const fetchProcess = createAsyncThunk("process/fetchProcess", async (userData, thunkAPI) => {
 	try {
 		const response = await processService.fetchProcess(userData);
-		console.log(response, "FUCK");
 		return response;
 	} catch (err) {
 		const message =

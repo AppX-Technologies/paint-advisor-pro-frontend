@@ -78,7 +78,6 @@ function DashboardContent() {
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const param = window.location.href.split("/").reverse()[0];
 	let getId = param === "company" ? userDetail._id : window.location.href.split("/").reverse()[0];
-
 	const toggleDrawer = () => {
 		setOpen(!open);
 	};
@@ -97,11 +96,8 @@ function DashboardContent() {
 		if (userDetail.role === "Org Admin" || userDetail.role === "Admin") {
 			dispatch(
 				fetchUserMadeByCompany({
-					filter: {
-						role: ["Painter", "Estimator", "Org Admin"]
-					},
-					organization: "632c2d50b837dd8339b5aa42",
-					token: userDetail.token
+					token: userDetail.token,
+					orgId: getId
 				})
 			);
 		}
@@ -185,7 +181,7 @@ function DashboardContent() {
 								{clickedMenu === "Processes" && (
 									<Processes showDrawerMenu={false} />
 								)}
-								{clickedMenu === "Users" && <UsersFromCompany getId={getId} />}
+								{clickedMenu === "Users" && <UsersFromCompany getId={org._id} />}
 							</Grid>
 						</Grid>
 						{/* <Copyright sx={{ pt: 4 }} /> */}

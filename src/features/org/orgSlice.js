@@ -36,7 +36,6 @@ export const fetchOrgs = createAsyncThunk("org/fetchOrgs", async (userData, thun
 export const fetchSingleOrg = createAsyncThunk("org/fetchSingleOrg", async (userData, thunkAPI) => {
 	try {
 		const response = await orgService.fetchSingleOrg(userData);
-		console.log(response);
 		return response;
 	} catch (err) {
 		const message =

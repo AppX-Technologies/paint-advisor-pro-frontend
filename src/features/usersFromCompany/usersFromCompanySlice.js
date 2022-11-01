@@ -21,7 +21,10 @@ export const fetchUserMadeByCompany = createAsyncThunk(
 	async (userData, thunkAPI) => {
 		try {
 			const response = await usersFromCompanyService.fetchUserMadeByCompany(userData);
-			return response;
+			console.log(response);
+			return response.filter((org) =>
+				org.organization ? org.organization._id === userData.orgId : null
+			);
 		} catch (err) {
 			const message =
 				(err.response && err.response.data && err.response.data.message) ||
@@ -38,6 +41,7 @@ export const createUsersByCompany = createAsyncThunk(
 	async (userData, thunkAPI) => {
 		try {
 			const response = await usersFromCompanyService.createUsersByCompany(userData);
+			console.log(response);
 			return response;
 		} catch (err) {
 			const message =

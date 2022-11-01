@@ -7,7 +7,16 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useDispatch, useSelector } from "react-redux";
 import formReducer from "../reducers/registerReducer";
-import { CircularProgress, FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+	CircularProgress,
+	FormControl,
+	Grid,
+	InputLabel,
+	MenuItem,
+	Select,
+	Slider,
+	Typography
+} from "@mui/material";
 import { useEffect } from "react";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import {
@@ -95,6 +104,7 @@ export default function Edit(props) {
 			dispatch(reset());
 		}
 	}, [isUpdated]);
+
 	return (
 		<div>
 			<Dialog open={openEditForm} onClose={handleClose}>
@@ -133,24 +143,52 @@ export default function Edit(props) {
 								onChange={(e) => handleTextChange(e)}
 							/>
 						</Grid>
-					</Grid>
-					<Grid item xs={12}>
-						<FormControl sx={{ mt: 2, minWidth: 120 }}>
-							<InputLabel id="demo-simple-select-standard-label">Role *</InputLabel>
-							<Select
-								fullWidth
-								name="role"
-								labelId="demo-simple-select-standard-label"
-								id="demo-simple-select-standard"
-								value={formState.role ? formState.role : editFormData[4]}
-								onChange={(e) => handleTextChange(e)}
-								label="Role"
-							>
-								<MenuItem value="Org Admin">Org Admin</MenuItem>
-								<MenuItem value="Estimator">Estimator</MenuItem>
-								<MenuItem value="Painter">Painter</MenuItem>
-							</Select>
-						</FormControl>
+
+						<Grid item xs={5}>
+							<FormControl variant="standard" sx={{ mt: 2, minWidth: "100%" }}>
+								<InputLabel id="demo-simple-select-standard-label">
+									Role *
+								</InputLabel>
+								<Select
+									fullWidth
+									name="role"
+									labelId="demo-simple-select-standard-label"
+									id="demo-simple-select-standard"
+									value={formState.role ? formState.role : editFormData[4]}
+									onChange={(e) => handleTextChange(e)}
+									label="Role"
+								>
+									<MenuItem value="Org Admin">Org Admin</MenuItem>
+									<MenuItem value="Estimator">Estimator</MenuItem>
+									<MenuItem value="Painter">Painter</MenuItem>
+								</Select>
+							</FormControl>
+						</Grid>
+						<Grid xs={7} sx={{ marginTop: "44px" }}>
+							{formState.role === "Painter" && (
+								<>
+									<Typography
+										variant="h6"
+										sx={{ fontSize: "12px", marginLeft: "25px", color: "gray" }}
+									>
+										Proficiency{" "}
+										{formState.proficiency
+											? `(${formState.proficiency})`
+											: null}
+									</Typography>
+									<Slider
+										sx={{ width: "93%", marginLeft: "25px" }}
+										name="proficiency"
+										aria-label="Default"
+										valueLabelDisplay="auto"
+										min={1}
+										max={5}
+										value={formState.proficiency}
+										onChange={(e) => handleTextChange(e)}
+									/>
+								</>
+							)}
+						</Grid>
 					</Grid>
 				</DialogContent>
 				<DialogActions>
