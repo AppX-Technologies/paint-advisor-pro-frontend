@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -7,32 +8,59 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { CircularProgress, Grid } from "@mui/material";
 import formReducer from "../DashboardTabs/reducers/formReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { createProcess } from "../../features/process/processSlice";
+import { showMessage } from "../../features/snackbar/snackbarSlice";
 
 const initialFormState = {
 	description: ""
 };
 
 export default function Edit(props) {
-	// const userDetail = JSON.parse(localStorage.getItem("user"));
+	const userDetail = JSON.parse(localStorage.getItem("user"));
 
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
+	const { processList } = useSelector((state) => state.process);
 
-	// const dispatch = useDispatch();
-	const { openEditForm, setOpenEditForm, editFormData } = props;
+	const dispatch = useDispatch();
+	const { openEditForm, setOpenEditForm, editFormData, bidType, filteredProcesses } = props;
 
+	console.log(editFormData);
 	const handleClose = () => {
 		setOpenEditForm(false);
 	};
 
 	const handleEdit = (e) => {
 		e.preventDefault();
-		// const formStateWithToken = {
-		// 	...formState,
-		// 	id: editFormData[0],
-		// 	token: userDetail.token
-		// };
-		// dispatch(updateOrg(formStateWithToken));
-		// dispatch(reset());
+		const formStateWithToken = {
+			...formState,
+			ID: processList[0]._id,
+			previousProcesses: processList[0].processes.filter(
+				(previousProcess) => previousProcess._id !== editFormData[0]
+			),
+			bidType,
+			add: true,
+			token: userDetail.token
+		};
+		if (
+			filteredProcesses.some((process) => {
+				return (
+					process.description.toLowerCase().trim() ===
+					formState.description.toLowerCase().trim()
+				);
+			})
+		) {
+			dispatch(
+				showMessage({
+					message: "Process Already Exists",
+					variant: "info",
+					severity: "info"
+				})
+			);
+		} else {
+			dispatch(createProcess(formStateWithToken));
+			setOpenEditForm(false);
+		}
 	};
 
 	const handleTextChange = (e) => {

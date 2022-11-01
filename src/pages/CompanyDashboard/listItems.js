@@ -12,72 +12,72 @@ import { useDispatch } from "react-redux";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 const MainListItems = (props) => {
-  const userDetail = JSON.parse(localStorage.getItem("user"));
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { setClickedMenu } = props;
+	const userDetail = JSON.parse(localStorage.getItem("user"));
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { setClickedMenu } = props;
 
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch(reset());
-    navigate("/", { replace: true });
-  };
-  return (
-    <React.Fragment>
-      <ListItemButton
-        onClick={() => {
-          setClickedMenu("Bids");
-        }}
-      >
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Bids" />
-      </ListItemButton>
+	const handleLogout = () => {
+		dispatch(logout());
+		dispatch(reset());
+		navigate("/", { replace: true });
+	};
+	return (
+		<React.Fragment>
+			<ListItemButton
+				onClick={() => {
+					setClickedMenu("Bids");
+				}}
+			>
+				<ListItemIcon>
+					<DashboardIcon />
+				</ListItemIcon>
+				<ListItemText primary="Bids" />
+			</ListItemButton>
 
-      <ListItemButton
-        onClick={() => {
-          setClickedMenu("Processes");
-        }}
-      >
-        <ListItemIcon>
-          <AccountTreeOutlinedIcon />
-        </ListItemIcon>
-        <ListItemText primary="Processes" />
-      </ListItemButton>
+			<ListItemButton
+				onClick={() => {
+					setClickedMenu("Processes");
+				}}
+			>
+				<ListItemIcon>
+					<AccountTreeOutlinedIcon />
+				</ListItemIcon>
+				<ListItemText primary="Processes" />
+			</ListItemButton>
 
-      <ListItemButton
-        onClick={() => {
-          setClickedMenu("Materials");
-        }}
-      >
-        <ListItemIcon>
-          <HomeRepairServiceOutlinedIcon />
-        </ListItemIcon>
-        <ListItemText primary="Materials" />
-      </ListItemButton>
+			<ListItemButton
+				onClick={() => {
+					setClickedMenu("Materials");
+				}}
+			>
+				<ListItemIcon>
+					<HomeRepairServiceOutlinedIcon />
+				</ListItemIcon>
+				<ListItemText primary="Materials" />
+			</ListItemButton>
 
-      {(userDetail.role === "Org Admin" || userDetail.role === "Admin") && (
-        <ListItemButton
-          onClick={() => {
-            setClickedMenu("Users");
-          }}
-        >
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Users" />
-        </ListItemButton>
-      )}
+			{(userDetail.role === "Org Admin" || userDetail.role === "Admin") && (
+				<ListItemButton
+					onClick={() => {
+						setClickedMenu("Users");
+					}}
+				>
+					<ListItemIcon>
+						<PeopleIcon />
+					</ListItemIcon>
+					<ListItemText primary="Users" />
+				</ListItemButton>
+			)}
 
-      <ListItemButton onClick={handleLogout}>
-        <ListItemIcon>
-          <LogoutIcon />
-        </ListItemIcon>
-        <ListItemText primary="Logout" />
-      </ListItemButton>
-    </React.Fragment>
-  );
+			<ListItemButton onClick={handleLogout}>
+				<ListItemIcon>
+					<LogoutIcon />
+				</ListItemIcon>
+				<ListItemText primary="Logout" />
+			</ListItemButton>
+		</React.Fragment>
+	);
 };
 
 export default MainListItems;
