@@ -4,7 +4,7 @@
 		"node": true,
 		"es2021": true
 	},
-	"extends": ["eslint:recommended", "plugin:react/recommended"],
+	"extends": ["eslint:recommended"],
 	"overrides": [],
 	"parserOptions": {
 		"ecmaVersion": "latest",
@@ -13,6 +13,7 @@
 	"plugins": ["react"],
 	"rules": {
 		"react/prop-types": "off",
-		"no-unused-vars": "warn"
+		"no-unused-vars": "warn",
+		"no-mixed-spaces-and-tabs": "off"
 	}
 }
