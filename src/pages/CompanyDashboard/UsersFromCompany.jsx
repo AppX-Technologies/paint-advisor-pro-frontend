@@ -125,14 +125,13 @@ const UsersFromCompany = (props) => {
 			</Box>
 			<DataTable
 				datalist={companyMadeByUsers.map((org) => {
-					let roleStr = org.role;
-					if (org.proficiency) roleStr += ` (${org.proficiency})`;
 					return [
 						org._id,
 						org.name,
 						org.email,
 						org.phone,
-						roleStr,
+						org.role,
+						org.proficiency,
 						org.organization ? org.organization.name : "",
 						org.active
 					];

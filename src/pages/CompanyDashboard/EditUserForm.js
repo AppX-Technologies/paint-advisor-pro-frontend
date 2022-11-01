@@ -33,7 +33,8 @@ export default function Edit(props) {
 		name: editFormData[1] ? editFormData[1] : "",
 		email: editFormData[2] ? editFormData[2] : "",
 		phone: editFormData[3] ? editFormData[3] : "",
-		role: editFormData[4] ? editFormData[4] : ""
+		role: editFormData[4] ? editFormData[4] : "",
+		proficiency: editFormData[5] ? editFormData[5] : 1
 	};
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
 
