@@ -82,11 +82,8 @@ export default function CreateUserForm(props) {
 			if (userDetail.role === "Org Admin" || userDetail.role === "Admin") {
 				dispatch(
 					fetchUserMadeByCompany({
-						filter: {
-							role: ["Painter", "Estimator", "Org Admin"]
-						},
-						organization: getId,
-						token: userDetail.token
+						token: userDetail.token,
+						orgId: getId
 					})
 				);
 			}
