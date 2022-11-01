@@ -82,8 +82,13 @@ export default function CreateUserForm(props) {
 			if (userDetail.role === "Org Admin" || userDetail.role === "Admin") {
 				dispatch(
 					fetchUserMadeByCompany({
+<<<<<<< HEAD
 						orgId: getId,
 						token: userDetail.token
+=======
+						token: userDetail.token,
+						orgId: getId
+>>>>>>> 48c4a8c118be861bab246fd019459b40f11bf92c
 					})
 				);
 			}
