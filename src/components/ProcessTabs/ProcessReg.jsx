@@ -18,12 +18,13 @@ const initialFormState = {
 };
 export default function FormDialog(props) {
 	const { processList, isSuccess } = useSelector((state) => state.process);
+	console.log(processList);
 	const { companyId } = useParams();
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const dispatch = useDispatch();
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
 
-	const { open, setOpen, bidType } = props;
+	const { open, setOpen, bidType, filteredProcesses } = props;
 
 	const handleClose = () => {
 		setOpen(false);
@@ -39,7 +40,24 @@ export default function FormDialog(props) {
 			add: true,
 			token: userDetail.token
 		};
-		dispatch(createProcess(formStateWithToken));
+		if (
+			filteredProcesses.some((process) => {
+				return (
+					process.description.toLowerCase().trim() ===
+					formState.description.toLowerCase().trim()
+				);
+			})
+		) {
+			dispatch(
+				showMessage({
+					message: "Process Already Exists",
+					variant: "info",
+					severity: "info"
+				})
+			);
+		} else {
+			dispatch(createProcess(formStateWithToken));
+		}
 
 		setOpen(false);
 	};

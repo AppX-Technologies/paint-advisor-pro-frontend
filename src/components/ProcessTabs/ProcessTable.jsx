@@ -56,7 +56,8 @@ const ProcessTable = ({ filterValue }) => {
 			dispatch(
 				showMessage({
 					message: "Process Deleted successfully",
-					variant: "success"
+					variant: "success",
+					severity: "info"
 				})
 			);
 			setOpenDeleteModal(false);
@@ -177,7 +178,12 @@ const ProcessTable = ({ filterValue }) => {
 				title={filterValue + " Process"}
 			/>
 
-			<FormDialog open={open} setOpen={setOpen} bidType={filterValue} />
+			<FormDialog
+				open={open}
+				setOpen={setOpen}
+				bidType={filterValue}
+				filteredProcesses={filteredProcesses}
+			/>
 			<DeleteModal />
 			<Edit
 				openEditForm={openEditForm}
