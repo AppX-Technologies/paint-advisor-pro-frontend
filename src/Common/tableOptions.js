@@ -1,5 +1,4 @@
 import { CircularProgress, Typography } from "@mui/material";
-import React from "react";
 
 export const tableOptions = (isLoading, dataList) => {
 	return {
@@ -10,6 +9,15 @@ export const tableOptions = (isLoading, dataList) => {
 			body: {
 				noMatch: (
 					<>
+						{isLoading && (
+							<CircularProgress
+								color="primary"
+								style={{
+									display: isLoading ? "flex" : "none",
+									margin: "0 auto"
+								}}
+							/>
+						)}
 						<div
 							className="flex flex-col justify-center items-center"
 							style={{ padding: "26px 0", marginTop: "32px" }}

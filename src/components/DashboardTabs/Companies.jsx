@@ -14,6 +14,7 @@ import { showMessage } from "../../features/snackbar/snackbarSlice";
 import DataTable from "../../Common/DataTable";
 import { companyColumns } from "../../Common/tableHead";
 import { tableOptions } from "../../Common/tableOptions";
+
 const Companies = () => {
 	const dispatch = useDispatch();
 	const { orgList, isDeleting, isLoading, isDeleted } = useSelector((state) => state.org);

@@ -14,12 +14,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import IconButton from "@mui/material/IconButton";
 import { Menu, MenuItem } from "@mui/material";
-import { fetchOrgs } from "../features/org/orgSlice";
-import { fetchUsers } from "../features/users/userSlice";
 import { logout, reset } from "../features/auth/authSlice";
 import NavItems from "../pages/Dashboard/NavItems";
 import { Copyright } from "../components/Copyright";
@@ -78,13 +75,6 @@ export function DrawerMenu(props) {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const isMenuOpen = Boolean(anchorEl);
 	const [open, setOpen] = React.useState(true);
-	const userDetail = JSON.parse(localStorage.getItem("user"));
-	useEffect(() => {
-		if (userDetail.role === "Admin") {
-			dispatch(fetchOrgs(userDetail.token));
-			dispatch(fetchUsers(userDetail.token));
-		}
-	}, []);
 
 	const toggleDrawer = () => {
 		setOpen(!open);

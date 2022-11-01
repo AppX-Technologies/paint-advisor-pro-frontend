@@ -153,17 +153,7 @@ const ProcessTable = ({ filterValue }) => {
 				</CustomButton>
 			</Box>
 			<div style={{ position: "relative" }}>
-				<div style={{ position: "absolute", left: "50%", top: "20px" }}>
-					{isLoading && (
-						<CircularProgress
-							color="primary"
-							style={{
-								display: isLoading ? "flex" : "none",
-								margin: "0 auto"
-							}}
-						/>
-					)}
-				</div>
+				<div style={{ position: "absolute", left: "50%", top: "20px" }}></div>
 			</div>
 			<DataTable
 				datalist={

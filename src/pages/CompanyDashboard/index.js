@@ -15,13 +15,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MainListItems from "./listItems";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchSingleOrg } from "../../features/org/orgSlice";
+import { fetchOrgs, fetchSingleOrg } from "../../features/org/orgSlice";
 import { CircularProgress } from "@mui/material";
 import Bids from "../Bids";
 import { Processes } from "../Processes";
 import UsersFromCompany from "./UsersFromCompany";
 import { fetchUserMadeByCompany } from "../../features/usersFromCompany/usersFromCompanySlice";
 import { useParams } from "react-router-dom";
+import { fetchUsers } from "../../features/users/userSlice";
 
 const drawerWidth = 240;
 console.log(JSON.parse(localStorage.getItem("user")));
@@ -84,6 +85,13 @@ function DashboardContent({ isSystemAdmin }) {
 	};
 
 	React.useEffect(() => {
+		if (userDetail.role === "Admin") {
+			dispatch(fetchOrgs(userDetail.token));
+			dispatch(fetchUsers(userDetail.token));
+		}
+	}, []);
+
+	React.useEffect(() => {
 		dispatch(
 			fetchSingleOrg({
 				filter: isSystemAdmin
@@ -131,19 +139,15 @@ function DashboardContent({ isSystemAdmin }) {
 							<MenuIcon />
 						</IconButton>
 
-						{isLoading ? (
-							<CircularProgress style={{ color: "white" }} size={25} />
-						) : (
-							<Typography
-								component="h1"
-								variant="h6"
-								color="inherit"
-								noWrap
-								sx={{ flexGrow: 1 }}
-							>
-								{org ? org.name : userDetail.name}
-							</Typography>
-						)}
+						<Typography
+							component="h1"
+							variant="h6"
+							color="inherit"
+							noWrap
+							sx={{ flexGrow: 1 }}
+						>
+							{(org ? org.name : userDetail.name) || "Painting App"}
+						</Typography>
 					</Toolbar>
 				</AppBar>
 				<Drawer variant="permanent" open={open}>
