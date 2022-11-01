@@ -21,6 +21,7 @@ import Bids from "../Bids";
 import { Processes } from "../Processes";
 import UsersFromCompany from "./UsersFromCompany";
 import { fetchUserMadeByCompany } from "../../features/usersFromCompany/usersFromCompanySlice";
+import { useParams } from "react-router-dom";
 
 const drawerWidth = 240;
 console.log(JSON.parse(localStorage.getItem("user")));
@@ -70,34 +71,38 @@ const Drawer = styled(MuiDrawer, {
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
+function DashboardContent({ isSystemAdmin }) {
 	const dispatch = useDispatch();
 	const [open, setOpen] = React.useState(true);
 	const [clickedMenu, setClickedMenu] = React.useState("Bids");
 	const { org, isLoading } = useSelector((state) => state.org);
 	const userDetail = JSON.parse(localStorage.getItem("user"));
-	const param = window.location.href.split("/").reverse()[0];
-	let getId = param === "company" ? userDetail._id : window.location.href.split("/").reverse()[0];
+	const { companyId } = useParams();
+
 	const toggleDrawer = () => {
 		setOpen(!open);
 	};
+
 	React.useEffect(() => {
 		dispatch(
 			fetchSingleOrg({
-				filter: {
-					_id: getId
-				},
+				filter: isSystemAdmin
+					? {
+							_id: companyId
+					  }
+					: undefined,
 				token: userDetail.token
 			})
 		);
-	}, [getId]);
+	}, []);
+	console.log(org);
 
 	React.useEffect(() => {
 		if (userDetail.role === "Org Admin" || userDetail.role === "Admin") {
 			dispatch(
 				fetchUserMadeByCompany({
 					token: userDetail.token,
-					orgId: getId
+					orgId: companyId
 				})
 			);
 		}
@@ -189,6 +194,6 @@ function DashboardContent() {
 	);
 }
 
-export default function CompanyDashboard() {
-	return <DashboardContent />;
+export default function CompanyDashboard({ isSystemAdmin }) {
+	return <DashboardContent isSystemAdmin={isSystemAdmin} />;
 }

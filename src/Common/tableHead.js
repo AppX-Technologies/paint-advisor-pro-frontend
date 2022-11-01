@@ -91,7 +91,6 @@ export const companyColumns = ({
 										setEditFormData(tableMeta.rowData);
 										setOpenEditForm(true);
 									}}
-									editFormData={editFormData}
 								/>
 								<Link to={`/company/${getId}`} target="_blank">
 									<RemoveRedEyeOutlinedIcon
@@ -262,6 +261,7 @@ export const companyUserColumns = ({
 				filter: true
 			}
 		},
+
 		{
 			name: "company",
 			label: "Company",

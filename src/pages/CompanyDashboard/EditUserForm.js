@@ -33,7 +33,8 @@ export default function Edit(props) {
 		name: editFormData[1] ? editFormData[1] : "",
 		email: editFormData[2] ? editFormData[2] : "",
 		phone: editFormData[3] ? editFormData[3] : "",
-		role: editFormData[4] ? editFormData[4] : ""
+		role: editFormData[4] ? editFormData[4] : "",
+		proficiency: editFormData[5] ? editFormData[5] : 1
 	};
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
 
@@ -41,10 +42,13 @@ export default function Edit(props) {
 	const { isUpdated, isUpdating } = useSelector((state) => state.usersFromCompany);
 
 	useEffect(() => {
-		formState.name = editFormData[1] ? editFormData[1] : "";
-		formState.email = editFormData[2] ? editFormData[2] : "";
-		formState.phone = editFormData[3] ? editFormData[3] : "";
-		formState.role = editFormData[4] ? editFormData[4] : "";
+		["name", "email", "phone", "role"].forEach((h, i) => {
+			dispatchNew({
+				type: "HANDLE_FORM_INPUT",
+				field: h,
+				payload: editFormData[i + 1]
+			});
+		});
 	}, [editFormData]);
 
 	const handleTextChange = (e) => {

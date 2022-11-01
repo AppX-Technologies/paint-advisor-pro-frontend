@@ -25,7 +25,8 @@ const initialFormState = {
 	name: "",
 	email: "",
 	phone: "",
-	role: ""
+	role: "",
+	proficiency: 1
 };
 
 export default function CreateUserForm(props) {
@@ -82,8 +83,8 @@ export default function CreateUserForm(props) {
 			if (userDetail.role === "Org Admin" || userDetail.role === "Admin") {
 				dispatch(
 					fetchUserMadeByCompany({
-						token: userDetail.token,
-						orgId: getId
+						orgId: getId,
+						token: userDetail.token
 					})
 				);
 			}
@@ -175,7 +176,10 @@ export default function CreateUserForm(props) {
 										variant="h6"
 										sx={{ fontSize: "12px", marginLeft: "15px", color: "gray" }}
 									>
-										Proficiency ({formState.proficiency})
+										Proficiency{" "}
+										{formState.proficiency
+											? `(${formState.proficiency})`
+											: null}
 									</Typography>
 									<Slider
 										sx={{ width: "93%", marginLeft: "25px" }}

@@ -12,23 +12,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { createProcess } from "../../features/process/processSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 
-const initialFormState = {
-	description: ""
-};
-
 export default function Edit(props) {
 	const userDetail = JSON.parse(localStorage.getItem("user"));
+	const { openEditForm, setOpenEditForm, editFormData, bidType, filteredProcesses } = props;
 
+	const initialFormState = {
+		description: editFormData[1] ? editFormData[1] : ""
+	};
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
 	const { processList } = useSelector((state) => state.process);
 
 	const dispatch = useDispatch();
-	const { openEditForm, setOpenEditForm, editFormData, bidType, filteredProcesses } = props;
 
-	console.log(editFormData);
 	const handleClose = () => {
 		setOpenEditForm(false);
 	};
+
+	React.useEffect(() => {
+		["description"].forEach((h, i) => {
+			dispatchNew({
+				type: "HANDLE_FORM_INPUT",
+				field: h,
+				payload: editFormData[i + 1]
+			});
+		});
+	}, [editFormData]);
 
 	const handleEdit = (e) => {
 		e.preventDefault();
