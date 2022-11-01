@@ -1,4 +1,5 @@
 import { CircularProgress, Typography } from "@mui/material";
+import React from "react";
 
 export const tableOptions = (isLoading, dataList) => {
 	return {
