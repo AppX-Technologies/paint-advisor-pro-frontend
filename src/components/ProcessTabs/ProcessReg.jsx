@@ -7,16 +7,17 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress, Grid, Stack, Typography } from "@mui/material";
-import { createProcess, fetchProcess } from "../../features/process/processSlice";
+import { createProcess, fetchProcess, reset } from "../../features/process/processSlice";
 import formReducer from "../DashboardTabs/reducers/formReducer";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { showMessage } from "../../features/snackbar/snackbarSlice";
 
 const initialFormState = {
 	description: ""
 };
 export default function FormDialog(props) {
-	const { processList } = useSelector((state) => state.process);
+	const { processList, isSuccess } = useSelector((state) => state.process);
 	const { companyId } = useParams();
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const dispatch = useDispatch();
@@ -39,17 +40,29 @@ export default function FormDialog(props) {
 			token: userDetail.token
 		};
 		dispatch(createProcess(formStateWithToken));
-		companyId
-			? dispatch(
-					fetchProcess({
-						token: userDetail.token,
-						id: "635f99daad6419b4ce22ae43"
-					})
-			  )
-			: dispatch(fetchProcess({ token: userDetail.token }));
+
 		setOpen(false);
 	};
-
+	useEffect(() => {
+		if (isSuccess) {
+			setOpen(false);
+			dispatch(
+				showMessage({
+					message: "Process created successfully",
+					variant: "success"
+				})
+			);
+			companyId
+				? dispatch(
+						fetchProcess({
+							token: userDetail.token,
+							id: "635f99daad6419b4ce22ae43"
+						})
+				  )
+				: dispatch(fetchProcess({ token: userDetail.token }));
+			dispatch(reset());
+		}
+	}, [isSuccess]);
 	const handleTextChange = (e) => {
 		dispatchNew({
 			type: "HANDLE_FORM_INPUT",

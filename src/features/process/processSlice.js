@@ -133,6 +133,18 @@ export const processSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 			})
+			.addCase(createProcess.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(createProcess.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+			})
+			.addCase(createProcess.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+			})
 			.addCase(updateProcess.pending, (state) => {
 				state.isUpdating = true;
 			})
