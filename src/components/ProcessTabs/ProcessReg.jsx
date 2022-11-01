@@ -5,20 +5,24 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress, Grid, Stack, Typography } from "@mui/material";
 import { createProcess, fetchProcess } from "../../features/process/processSlice";
 import formReducer from "../DashboardTabs/reducers/formReducer";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const initialFormState = {
 	description: ""
 };
 export default function FormDialog(props) {
+	const { processList } = useSelector((state) => state.process);
+	const { companyId } = useParams();
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const dispatch = useDispatch();
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
 
-	const { open, setOpen } = props;
+	const { open, setOpen, bidType } = props;
 
 	const handleClose = () => {
 		setOpen(false);
@@ -28,10 +32,22 @@ export default function FormDialog(props) {
 		e.preventDefault();
 		const formStateWithToken = {
 			...formState,
+			ID: processList[0]._id,
+			previousProcesses: processList[0].processes,
+			bidType,
+			resetProcess: companyId ? false : true,
 			token: userDetail.token
 		};
 		dispatch(createProcess(formStateWithToken));
-		dispatch(fetchProcess(userDetail.token));
+		companyId
+			? dispatch(
+					fetchProcess({
+						token: userDetail.token,
+						id: "635f99daad6419b4ce22ae43"
+					})
+			  )
+			: dispatch(fetchProcess({ token: userDetail.token }));
+		setOpen(false);
 	};
 
 	const handleTextChange = (e) => {

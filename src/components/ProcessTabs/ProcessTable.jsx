@@ -22,6 +22,7 @@ import FormDialog from "./ProcessReg";
 import Edit from "./EditProcessForm";
 import { useParams } from "react-router-dom";
 import { filterProcessByBid } from "../../Helpers/bidFilterHelpers";
+import { fetchSingleOrg } from "../../features/org/orgSlice";
 const ProcessTable = ({ filterValue }) => {
 	const dispatch = useDispatch();
 	const { processList, isDeleting, isLoading, isDeleted } = useSelector((state) => state.process);
@@ -30,9 +31,23 @@ const ProcessTable = ({ filterValue }) => {
 	const [editFormData, setEditFormData] = useState([]);
 	const [openDeleteModal, setOpenDeleteModal] = useState(false);
 	const [filteredProcesses, setFilteredProcesses] = useState([]);
+	const [orgProcessId, setOrgProcessId] = useState("");
 	const [processId, setProcessId] = useState("");
 	const [open, setOpen] = useState(false);
 	const { companyId } = useParams();
+
+	React.useEffect(() => {
+		setOrgProcessId(
+			dispatch(
+				fetchSingleOrg({
+					filter: {
+						_id: companyId
+					},
+					token: userDetail.token
+				})
+			)
+		);
+	}, [companyId]);
 
 	useEffect(() => {
 		if (isDeleted) {
@@ -49,11 +64,10 @@ const ProcessTable = ({ filterValue }) => {
 			? dispatch(
 					fetchProcess({
 						token: userDetail.token,
-						bidType: filterValue,
-						id: "635f80693eeae33fdfd5853d"
+						id: "635f99daad6419b4ce22ae43"
 					})
 			  )
-			: dispatch(fetchProcess({ token: userDetail.token, bidType: filterValue }));
+			: dispatch(fetchProcess({ token: userDetail.token }));
 	}, [isDeleted, filterValue]);
 
 	const onDeleteBtnClick = (e, getId) => {
@@ -134,7 +148,7 @@ const ProcessTable = ({ filterValue }) => {
 				title={filterValue + " Process"}
 			/>
 
-			<FormDialog open={open} setOpen={setOpen} />
+			<FormDialog open={open} setOpen={setOpen} bidType={filterValue} />
 			<DeleteModal />
 			<Edit
 				openEditForm={openEditForm}

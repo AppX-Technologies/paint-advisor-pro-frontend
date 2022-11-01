@@ -7,7 +7,6 @@ const UPDATE_PROCESS = `${endpoint}/`;
 const DELETE_PROCESS = `${endpoint}/`;
 
 const fetchProcess = async (userData) => {
-	console.log(userData, "HHHH");
 	const config = {
 		headers: {
 			"Content-Type": "application/json",
@@ -17,9 +16,7 @@ const fetchProcess = async (userData) => {
 	const response = await axios.post(
 		FETCH_PROCESS,
 		{
-			filter: userData.id
-				? { _id: userData.id, bidType: userData.bidType }
-				: { global: true, bidType: userData.bidType }
+			filter: userData.id ? { _id: userData.id } : { global: true }
 		},
 		config
 	);
@@ -39,6 +36,7 @@ const fetchSingleProcess = async (userData) => {
 };
 
 const createProcess = async (userData) => {
+	console.log(userData, "Createajaj");
 	const config = {
 		headers: {
 			"Content-Type": "application/json",
@@ -46,9 +44,14 @@ const createProcess = async (userData) => {
 		}
 	};
 	delete userData.token;
-	const response = await axios.post(
-		CREATE_PROCESS,
-		{ processes: { description: userData.description, bidType: "Interior" } },
+	const response = await axios.put(
+		CREATE_PROCESS + `/${userData.ID}`,
+		{
+			processes: [
+				...userData.previousProcesses,
+				{ description: userData.description, bidType: userData.bidType }
+			]
+		},
 		config
 	);
 	return response.data;

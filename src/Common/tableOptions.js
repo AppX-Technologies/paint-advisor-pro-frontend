@@ -9,32 +9,21 @@ export const tableOptions = (isLoading, dataList) => {
 			body: {
 				noMatch: (
 					<>
-						{!isLoading && (
-							<CircularProgress
-								color="primary"
+						<div
+							className="flex flex-col justify-center items-center"
+							style={{ padding: "26px 0", marginTop: "32px" }}
+						>
+							<Typography
+								variant="h6"
 								style={{
-									display: isLoading ? "flex" : "none",
-									margin: "0 auto"
+									fontSize: "14px",
+									fontWeight: 600,
+									padding: "17px 0"
 								}}
-							/>
-						)}
-						{!isLoading && dataList.length === 0 && (
-							<div
-								className="flex flex-col justify-center items-center"
-								style={{ padding: "26px 0", marginTop: "32px" }}
 							>
-								<Typography
-									variant="h6"
-									style={{
-										fontSize: "14px",
-										fontWeight: 600,
-										padding: "17px 0"
-									}}
-								>
-									Sorry, no matching records found.
-								</Typography>
-							</div>
-						)}
+								Sorry, no matching records found.
+							</Typography>
+						</div>
 					</>
 				),
 				toolTip: "Sort",
