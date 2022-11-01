@@ -36,7 +36,7 @@ export default function FormDialog(props) {
 			ID: processList[0]._id,
 			previousProcesses: processList[0].processes,
 			bidType,
-			resetProcess: companyId ? false : true,
+			add: true,
 			token: userDetail.token
 		};
 		dispatch(createProcess(formStateWithToken));
@@ -48,7 +48,7 @@ export default function FormDialog(props) {
 			setOpen(false);
 			dispatch(
 				showMessage({
-					message: "Process created successfully",
+					message: "Process updated successfully",
 					variant: "success"
 				})
 			);

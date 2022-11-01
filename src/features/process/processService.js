@@ -47,10 +47,14 @@ const createProcess = async (userData) => {
 	const response = await axios.put(
 		CREATE_PROCESS + `/${userData.ID}`,
 		{
-			processes: [
-				...userData.previousProcesses,
-				{ description: userData.description, bidType: userData.bidType }
-			]
+			processes: userData.add
+				? [
+						...userData.previousProcesses,
+						{ description: userData.description, bidType: userData.bidType }
+				  ]
+				: userData.previousProcesses.filter(
+						(previousProcess) => previousProcess._id !== userData.idToBeDeleted
+				  )
 		},
 		config
 	);

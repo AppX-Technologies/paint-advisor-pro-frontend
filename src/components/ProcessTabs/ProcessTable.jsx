@@ -16,7 +16,7 @@ import { processColumn } from "../../Common/tableHead";
 import { tableOptions } from "../../Common/tableOptions";
 import { useDispatch, useSelector } from "react-redux";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
-import { deleteProcess, fetchProcess, reset } from "../../features/process/processSlice";
+import { createProcess, fetchProcess, reset } from "../../features/process/processSlice";
 import DataTable from "../../Common/DataTable";
 import FormDialog from "./ProcessReg";
 import Edit from "./EditProcessForm";
@@ -25,7 +25,9 @@ import { filterProcessByBid } from "../../Helpers/bidFilterHelpers";
 import { fetchSingleOrg } from "../../features/org/orgSlice";
 const ProcessTable = ({ filterValue }) => {
 	const dispatch = useDispatch();
-	const { processList, isDeleting, isLoading, isDeleted } = useSelector((state) => state.process);
+	const { processList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(
+		(state) => state.process
+	);
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const [openEditForm, setOpenEditForm] = useState(false);
 	const [editFormData, setEditFormData] = useState([]);
@@ -83,13 +85,28 @@ const ProcessTable = ({ filterValue }) => {
 	});
 	const options = tableOptions(processList, isLoading);
 
+	useEffect(() => {
+		if (isSuccess) {
+			setOpenDeleteModal(false);
+		}
+	}, [isSuccess]);
+
 	//Delete popup menu
 	function DeleteModal() {
 		const handleClose = () => {
 			setOpenDeleteModal(false);
 		};
 		const handleDelete = () => {
-			dispatch(deleteProcess({ id: processId, token: userDetail.token }));
+			setOpenDeleteModal(false);
+			dispatch(
+				createProcess({
+					ID: processList[0]._id,
+					previousProcesses: processList[0].processes,
+					add: false,
+					token: userDetail.token,
+					idToBeDeleted: processId
+				})
+			);
 		};
 
 		return (
@@ -135,7 +152,19 @@ const ProcessTable = ({ filterValue }) => {
 					Create
 				</CustomButton>
 			</Box>
-			<div style={{ position: "relative" }}></div>
+			<div style={{ position: "relative" }}>
+				<div style={{ position: "absolute", left: "50%", top: "20px" }}>
+					{isLoading && (
+						<CircularProgress
+							color="primary"
+							style={{
+								display: isLoading ? "flex" : "none",
+								margin: "0 auto"
+							}}
+						/>
+					)}
+				</div>
+			</div>
 			<DataTable
 				datalist={
 					filteredProcesses &&
