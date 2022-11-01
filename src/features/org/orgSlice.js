@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import orgService from "./orgService";
 import { showMessage, onClose } from "../snackbar/snackbarSlice";

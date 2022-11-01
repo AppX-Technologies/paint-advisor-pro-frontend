@@ -9,9 +9,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import CustomButton from "../../components/Button";
 import EditUserForm from "./EditUserForm";
 import {
-	fetchUserMadeByCompany,
 	reset,
-	deleteUserByCompany
+	deleteUserByCompany,
+	fetchUserMadeByCompany
 } from "../../features/usersFromCompany/usersFromCompanySlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import CreateUserForm from "./CreateUserForm";
@@ -42,15 +42,12 @@ const UsersFromCompany = (props) => {
 			);
 			setOpenDeleteModal(false);
 			if (userDetail.role === "Org Admin" || userDetail.role === "Admin") {
-				// dispatch(
-				// 	fetchUserMadeByCompany({
-				// 		filter: {
-				// 			role: ["Painter", "Org Admin", "Estimator"],
-				// 			organization: getId
-				// 		},
-				// 		token: userDetail.token
-				// 	})
-				// );
+				dispatch(
+					fetchUserMadeByCompany({
+						token: userDetail.token,
+						orgId: getId
+					})
+				);
 			}
 			dispatch(reset());
 		}
