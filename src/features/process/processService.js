@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from "axios";
 
 const endpoint = "https://painting-app-backend.herokuapp.com/processes";

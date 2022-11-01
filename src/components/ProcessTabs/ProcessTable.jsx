@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from "react";
 import {
 	Box,
@@ -189,6 +190,8 @@ const ProcessTable = ({ filterValue }) => {
 				openEditForm={openEditForm}
 				setOpenEditForm={setOpenEditForm}
 				editFormData={editFormData}
+				bidType={filterValue}
+				filteredProcesses={filteredProcesses}
 			/>
 		</>
 	);

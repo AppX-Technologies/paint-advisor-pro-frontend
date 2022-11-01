@@ -23,7 +23,7 @@ import UsersFromCompany from "./UsersFromCompany";
 import { fetchUserMadeByCompany } from "../../features/usersFromCompany/usersFromCompanySlice";
 
 const drawerWidth = 240;
-
+console.log(JSON.parse(localStorage.getItem("user")));
 const AppBar = styled(MuiAppBar, {
 	shouldForwardProp: (prop) => prop !== "open"
 })(({ theme, open }) => ({
@@ -178,9 +178,7 @@ function DashboardContent() {
 					<Toolbar />
 					<Container maxWidth="lg" style={{ marginLeft: "-22px" }} sx={{ mt: 0, mb: 4 }}>
 						<Grid container spacing={4}>
-							{/* Chart */}
 							<Grid item xs={12} md={12} lg={12}>
-								{/* Company Bids content here */}
 								{clickedMenu === "Bids" && <Bids />}
 								{clickedMenu === "Processes" && (
 									<Processes showDrawerMenu={false} />
@@ -188,7 +186,6 @@ function DashboardContent() {
 								{clickedMenu === "Users" && <UsersFromCompany getId={getId} />}
 							</Grid>
 						</Grid>
-						{/* <Copyright sx={{ pt: 4 }} /> */}
 					</Container>
 				</Box>
 			</Box>

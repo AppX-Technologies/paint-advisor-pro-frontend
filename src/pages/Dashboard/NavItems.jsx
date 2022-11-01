@@ -8,32 +8,32 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { useNavigate } from "react-router-dom";
 
 const NavItems = () => {
-  const navigate = useNavigate();
-  return (
-    <React.Fragment>
-      {/* Dashboard Tab */}
-      <ListItemButton onClick={() => navigate("/dashboard")}>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItemButton>
-      {/* Processes Tab */}
-      <ListItemButton onClick={() => navigate("/processes")}>
-        <ListItemIcon>
-          <FormatListBulletedIcon />
-        </ListItemIcon>
-        <ListItemText primary="Default Processes" />
-      </ListItemButton>
-      {/* Profile Tab */}
-      <ListItemButton onClick={() => navigate("/profile")}>
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Profile" />
-      </ListItemButton>
-    </React.Fragment>
-  );
+	const navigate = useNavigate();
+	return (
+		<React.Fragment>
+			{/* Dashboard Tab */}
+			<ListItemButton onClick={() => navigate("/dashboard")}>
+				<ListItemIcon>
+					<DashboardIcon />
+				</ListItemIcon>
+				<ListItemText primary="Dashboard" />
+			</ListItemButton>
+			{/* Processes Tab */}
+			<ListItemButton onClick={() => navigate("/processes")}>
+				<ListItemIcon>
+					<FormatListBulletedIcon />
+				</ListItemIcon>
+				<ListItemText primary="Default Processes" />
+			</ListItemButton>
+			{/* Profile Tab */}
+			<ListItemButton onClick={() => navigate("/profile")}>
+				<ListItemIcon>
+					<PeopleIcon />
+				</ListItemIcon>
+				<ListItemText primary="Profile" />
+			</ListItemButton>
+		</React.Fragment>
+	);
 };
 
 export default NavItems;
