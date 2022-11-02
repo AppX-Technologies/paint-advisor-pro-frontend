@@ -10,11 +10,11 @@ const StageTab = ({ stage, onTabChange }) => {
 				sx={{
 					width: "90%",
 					bgcolor: "background.paper",
-					margin: "10px 8px 0 0",
+					margin: "0 8px 0 0",
 					borderRadius: "5px"
 				}}
 			>
-				<Tabs value={stage} onChange={onTabChange} centered>
+				<Tabs value={stage} onChange={onTabChange}>
 					<Tab label="Presentation" />
 					<Tab label="Painting" />
 					<Tab label="Cleanup" />

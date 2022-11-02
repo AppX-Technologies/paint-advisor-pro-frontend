@@ -349,7 +349,8 @@ export const processColumn = ({
 			label: "Stage",
 			options: {
 				filter: false,
-				sort: true
+				sort: true,
+				setCellProps: () => ({ style: { width: "200px" } })
 			}
 		},
 		{
@@ -357,7 +358,8 @@ export const processColumn = ({
 			label: "Process Description",
 			options: {
 				filter: false,
-				sort: true
+				sort: true,
+				setCellProps: () => ({ style: { maxWidth: "300px" } })
 			}
 		},
 
@@ -366,6 +368,7 @@ export const processColumn = ({
 			name: "",
 			options: {
 				filter: false,
+				setCellProps: () => ({ style: { maxWidth: "200px" } }),
 				customBodyRender: (value, tableMeta, updateValue) => {
 					const getId = tableMeta.rowData[0];
 					console.log(tableMeta.tableState.filterList[1][0]);

@@ -10,16 +10,14 @@ import {
 	DialogTitle,
 	Stack,
 	Typography,
-	Button,
-	Grid
+	Button
 } from "@mui/material";
 
 import CustomButton from "../Button";
 import { processColumn } from "../../Common/tableHead";
 import { tableOptions } from "../../Common/tableOptions";
 import { useDispatch, useSelector } from "react-redux";
-import { showMessage } from "../../features/snackbar/snackbarSlice";
-import { createProcess, fetchProcess, reset } from "../../features/process/processSlice";
+import { createProcess } from "../../features/process/processSlice";
 import DataTable from "../../Common/DataTable";
 import FormDialog from "./ProcessReg";
 import Edit from "./EditProcessForm";
@@ -27,7 +25,7 @@ import { useParams } from "react-router-dom";
 import { filterProcessByBid } from "../../Helpers/bidFilterHelpers";
 import { fetchSingleOrg } from "../../features/org/orgSlice";
 import StageTab from "./StageTab";
-const ProcessTable = ({ filterValue }) => {
+const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 	const dispatch = useDispatch();
 	const { processList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(
 		(state) => state.process
@@ -41,33 +39,9 @@ const ProcessTable = ({ filterValue }) => {
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const [openEditForm, setOpenEditForm] = useState(false);
 	const [editFormData, setEditFormData] = useState([]);
-	const [openDeleteModal, setOpenDeleteModal] = useState(false);
 	const [filteredProcesses, setFilteredProcesses] = useState([]);
 	const [processId, setProcessId] = useState("");
 	const [open, setOpen] = useState(false);
-	const { companyId } = useParams();
-
-	useEffect(() => {
-		if (isDeleted) {
-			dispatch(
-				showMessage({
-					message: "Process Deleted successfully",
-					variant: "success",
-					severity: "info"
-				})
-			);
-			setOpenDeleteModal(false);
-			dispatch(reset());
-		}
-		companyId
-			? dispatch(
-					fetchProcess({
-						token: userDetail.token,
-						id: org.processes
-					})
-			  )
-			: dispatch(fetchProcess({ token: userDetail.token }));
-	}, [isDeleted, filterValue]);
 
 	const onDeleteBtnClick = (e, getId) => {
 		e.stopPropagation();
@@ -80,7 +54,8 @@ const ProcessTable = ({ filterValue }) => {
 		onDeleteBtnClick,
 		editFormData
 	});
-	const options = tableOptions(processList, isLoading);
+
+	const options = tableOptions(isLoading, processList);
 
 	useEffect(() => {
 		if (isSuccess) {
@@ -145,16 +120,6 @@ const ProcessTable = ({ filterValue }) => {
 		}
 	}, [processList, filterValue, stage]);
 
-	React.useEffect(() => {
-		dispatch(
-			fetchSingleOrg({
-				filter: {
-					_id: companyId
-				},
-				token: userDetail.token
-			})
-		);
-	}, [companyId]);
 	return (
 		<>
 			<Box
@@ -166,7 +131,7 @@ const ProcessTable = ({ filterValue }) => {
 				}}
 			>
 				<StageTab stage={stage} onTabChange={handleChange} />
-				<Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: "9px" }}>
+				<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
 					<CustomButton
 						variant="contained"
 						onClick={() => setOpen(true)}
@@ -176,9 +141,7 @@ const ProcessTable = ({ filterValue }) => {
 					</CustomButton>
 				</Box>
 			</Box>
-			<div style={{ position: "relative" }}>
-				<div style={{ zIndex: "100", position: "absolute", left: "18%", top: "0px" }}></div>
-			</div>
+
 			<DataTable
 				datalist={
 					filteredProcesses &&
@@ -189,6 +152,7 @@ const ProcessTable = ({ filterValue }) => {
 				columns={columns}
 				options={options}
 				title={filterValue + " Process"}
+				isLoading={isLoading}
 			/>
 
 			<FormDialog
