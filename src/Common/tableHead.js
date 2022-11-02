@@ -345,16 +345,16 @@ export const processColumn = ({
 			}
 		},
 		{
-			name: "process",
-			label: "Process",
+			name: "stage",
+			label: "Stage",
 			options: {
-				filter: true,
+				filter: false,
 				sort: true
 			}
 		},
 		{
-			name: "category",
-			label: "Category",
+			name: "process",
+			label: "Process Description",
 			options: {
 				filter: false,
 				sort: true
