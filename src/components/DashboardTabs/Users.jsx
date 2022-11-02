@@ -11,9 +11,9 @@ import CreateUserForm from "./UserRegisterForm";
 import EditUserForm from "./EditUserForm";
 import { deleteUser, fetchUsers, reset } from "../../features/users/userSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
-import DataTable from "../../Common/DataTable";
-import { userColumn } from "../../Common/tableHead";
-import { tableOptions } from "../../Common/tableOptions";
+import DataTable from "../../common/DataTable";
+import { userColumn } from "../../common/tableHead";
+import { tableOptions } from "../../common/tableOptions";
 
 const Users = () => {
 	const dispatch = useDispatch();
