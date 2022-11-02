@@ -137,7 +137,7 @@ const UsersFromCompany = (props) => {
 						org.email,
 						org.phone,
 						org.role,
-						profVal,
+						org.proficiency,
 						org.organization ? org.organization.name : "",
 						org.active
 					];

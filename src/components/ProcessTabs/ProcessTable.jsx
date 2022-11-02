@@ -183,7 +183,7 @@ const ProcessTable = ({ filterValue }) => {
 				datalist={
 					filteredProcesses &&
 					filteredProcesses.map((process) => {
-						return [process._id, process.stage, process.description];
+						return [process._id, process.stage, process.description, process.bidType];
 					})
 				}
 				columns={columns}
@@ -194,6 +194,7 @@ const ProcessTable = ({ filterValue }) => {
 			<FormDialog
 				open={open}
 				setOpen={setOpen}
+				stageType={stage}
 				bidType={filterValue}
 				filteredProcesses={filteredProcesses}
 				orgProcessId={org.processes}

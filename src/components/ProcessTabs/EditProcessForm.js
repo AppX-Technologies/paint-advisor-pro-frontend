@@ -10,7 +10,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { CircularProgress, Grid } from "@mui/material";
+import { CircularProgress, Grid, TextareaAutosize } from "@mui/material";
 import formReducer from "../DashboardTabs/reducers/formReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { createProcess } from "../../features/process/processSlice";
@@ -22,7 +22,8 @@ export default function Edit(props) {
 
 	const initialFormState = {
 		stage: editFormData[1] ? editFormData[1] : "",
-		description: editFormData[2] ? editFormData[2] : ""
+		description: editFormData[2] ? editFormData[2] : "",
+		bidType: editFormData[2] ? editFormData[2] : ""
 	};
 
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
@@ -31,7 +32,7 @@ export default function Edit(props) {
 	const dispatch = useDispatch();
 
 	React.useEffect(() => {
-		["stage", "description"].forEach((h, i) => {
+		["stage", "description", "bidType"].forEach((h, i) => {
 			dispatchNew({
 				type: "HANDLE_FORM_INPUT",
 				field: h,
@@ -61,7 +62,7 @@ export default function Edit(props) {
 			previousProcesses: processList[0].processes.filter(
 				(previousProcess) => previousProcess._id !== editFormData[0]
 			),
-			bidType,
+
 			add: true,
 			token: userDetail.token
 		};
@@ -72,15 +73,36 @@ export default function Edit(props) {
 
 	return (
 		<div>
-			<Dialog open={openEditForm} onClose={handleClose}>
+			<Dialog open={openEditForm} onClose={handleClose} PaperProps={{ sx: { width: "40%" } }}>
 				<DialogTitle>
 					Edit Process
 					<CircularProgress style={{ display: "none" }} size={25} />
 				</DialogTitle>
 				<DialogContent>
-					<Grid container spacing={2}>
-						<Grid item xs={12} md={12}>
-							<FormControl sx={{ m: 0, minWidth: 200, maxHeight: 30 }} size="small">
+					<Grid item xs={12}>
+						<InputLabel id="demo-simple-select-standard-label">Description</InputLabel>
+						<TextareaAutosize
+							name="description"
+							required
+							fullWidth
+							aria-label="minimum height"
+							minRows={3}
+							variant="standard"
+							id="process"
+							label="Description"
+							autoFocus
+							placeholder={editFormData[2]}
+							value={formState.description}
+							onChange={(e) => handleTextChange(e)}
+							style={{ width: "100%" }}
+						/>
+					</Grid>
+					<Grid container spacing={2} sx={{ marginBottom: "13px" }}>
+						<Grid item xs={6} md={6}>
+							<FormControl
+								sx={{ m: 0, minWidth: 235, maxHeight: 30, marginTop: 3 }}
+								size="small"
+							>
 								<InputLabel id="demo-select-small">stage</InputLabel>
 								<Select
 									labelId="demo-select-small"
@@ -96,18 +118,24 @@ export default function Edit(props) {
 								</Select>
 							</FormControl>
 						</Grid>
-						<Grid item xs={12}>
-							<label>Process</label>
-							<TextField
-								name="description"
-								required
-								fullWidth
-								placeholder={editFormData[2]}
-								id="process"
-								autoFocus
-								value={formState.description}
-								onChange={(e) => handleTextChange(e)}
-							/>
+						<Grid item xs={6} md={6}>
+							<FormControl
+								sx={{ m: 0, minWidth: 235, maxHeight: 30, marginTop: 3 }}
+								size="small"
+							>
+								<InputLabel id="demo-select-small">stage</InputLabel>
+								<Select
+									labelId="demo-select-small"
+									id="demo-select-small"
+									name="bidType"
+									value={formState.bidType ? formState.bidType : editFormData[3]}
+									label="Bid Type"
+									onChange={(e) => handleTextChange(e)}
+								>
+									<MenuItem value="Interior">Interior</MenuItem>
+									<MenuItem value="Exterior">Exterior</MenuItem>
+								</Select>
+							</FormControl>
 						</Grid>
 					</Grid>
 				</DialogContent>
