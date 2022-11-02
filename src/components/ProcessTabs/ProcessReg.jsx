@@ -35,7 +35,7 @@ export default function FormDialog(props) {
 	const handleClose = () => {
 		setOpen(false);
 	};
-
+	const stage = "Clean up";
 	const handleCreate = (e) => {
 		e.preventDefault();
 		const formStateWithToken = {
@@ -43,6 +43,7 @@ export default function FormDialog(props) {
 			ID: processList[0]._id,
 			previousProcesses: processList[0].processes,
 			bidType,
+			stage,
 			add: true,
 			token: userDetail.token
 		};
@@ -72,7 +73,7 @@ export default function FormDialog(props) {
 			setOpen(false);
 			dispatch(
 				showMessage({
-					message: "Process updated successfully",
+					message: "Process Created successfully",
 					variant: "success"
 				})
 			);

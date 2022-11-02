@@ -158,7 +158,7 @@ const ProcessTable = ({ filterValue }) => {
 				datalist={
 					filteredProcesses &&
 					filteredProcesses.map((process) => {
-						return [process._id, process.description];
+						return [process._id, process.stage, process.description];
 					})
 				}
 				columns={columns}

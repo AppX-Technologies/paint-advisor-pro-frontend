@@ -51,7 +51,11 @@ const createProcess = async (userData) => {
 			processes: userData.add
 				? [
 						...userData.previousProcesses,
-						{ description: userData.description, bidType: userData.bidType }
+						{
+							description: userData.description,
+							bidType: userData.bidType,
+							stage: userData.stage
+						}
 				  ]
 				: userData.previousProcesses.filter(
 						(previousProcess) => previousProcess._id !== userData.idToBeDeleted
