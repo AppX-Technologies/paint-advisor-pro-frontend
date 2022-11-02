@@ -99,6 +99,7 @@ const Companies = () => {
 	}
 	return (
 		<>
+			{isLoading && <h1>Loading</h1>}
 			<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
 				<CustomButton
 					variant="contained"

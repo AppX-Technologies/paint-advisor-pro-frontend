@@ -3,7 +3,7 @@ import React from "react";
 
 export const tableOptions = (isLoading, dataList) => {
 	return {
-		filterType: "textField",
+		filterType: "dropdown",
 		print: false,
 		selectableRows: false,
 		textLabels: {

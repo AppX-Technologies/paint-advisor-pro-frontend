@@ -19,6 +19,7 @@ import MainListItems from "./listItems";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchOrgs, fetchSingleOrg } from "../../features/org/orgSlice";
 import Bids from "../Bids";
+import Materials from "../Materials";
 import { Processes } from "../Processes";
 import UsersFromCompany from "./UsersFromCompany";
 import { fetchUserMadeByCompany } from "../../features/usersFromCompany/usersFromCompanySlice";
@@ -178,6 +179,7 @@ function DashboardContent({ isSystemAdmin }) {
 						<Grid container spacing={4}>
 							<Grid item xs={12} md={12} lg={12}>
 								{clickedMenu === "Bids" && <Bids />}
+								{clickedMenu === "Materials" && <Materials />}
 								{clickedMenu === "Processes" && (
 									<Processes showDrawerMenu={false} />
 								)}

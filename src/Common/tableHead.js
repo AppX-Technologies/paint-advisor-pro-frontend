@@ -340,7 +340,8 @@ export const processColumn = ({
 			name: "",
 			label: "",
 			options: {
-				display: false
+				display: false,
+				filter: false
 			}
 		},
 		{
@@ -348,6 +349,14 @@ export const processColumn = ({
 			label: "Process",
 			options: {
 				filter: true,
+				sort: true
+			}
+		},
+		{
+			name: "category",
+			label: "Category",
+			options: {
+				filter: false,
 				sort: true
 			}
 		},
@@ -359,6 +368,7 @@ export const processColumn = ({
 				filter: false,
 				customBodyRender: (value, tableMeta, updateValue) => {
 					const getId = tableMeta.rowData[0];
+					console.log(tableMeta.tableState.filterList[1][0]);
 
 					return (
 						<>
