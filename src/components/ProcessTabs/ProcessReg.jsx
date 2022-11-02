@@ -22,7 +22,7 @@ const initialFormState = {
 	description: ""
 };
 export default function FormDialog(props) {
-	const { processList, isSuccess } = useSelector((state) => state.process);
+	const { processList } = useSelector((state) => state.process);
 	const { companyId } = useParams();
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const dispatch = useDispatch();
@@ -67,26 +67,7 @@ export default function FormDialog(props) {
 
 		setOpen(false);
 	};
-	useEffect(() => {
-		if (isSuccess) {
-			setOpen(false);
-			dispatch(
-				showMessage({
-					message: "Process updated successfully",
-					variant: "success"
-				})
-			);
-			companyId
-				? dispatch(
-						fetchProcess({
-							token: userDetail.token,
-							id: orgProcessId
-						})
-				  )
-				: dispatch(fetchProcess({ token: userDetail.token }));
-			dispatch(reset());
-		}
-	}, [isSuccess]);
+
 	const handleChange = (event) => {
 		setCategory(event.target.value);
 	};

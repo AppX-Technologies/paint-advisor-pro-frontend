@@ -59,7 +59,22 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 
 	useEffect(() => {
 		if (isSuccess) {
+			
+		}
+	}, [isSuccess]);
+
+	useEffect(() => {
+		if (isSuccess) {
+			setOpen(false);
 			setOpenDeleteModal(false);
+			dispatch(
+				showMessage({
+					message: "Process list updated successfully",
+					variant: "success"
+				})
+			);
+
+			dispatch(reset());
 		}
 	}, [isSuccess]);
 
@@ -151,7 +166,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 				}
 				columns={columns}
 				options={options}
-				title={filterValue + " Process"}
+				title={filterValue + " Processes"}
 				isLoading={isLoading}
 			/>
 

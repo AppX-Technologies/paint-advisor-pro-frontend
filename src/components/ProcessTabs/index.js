@@ -30,6 +30,9 @@ const index = () => {
 			setOpenDeleteModal(false);
 			dispatch(reset());
 		}
+	}, [isDeleted]);
+
+	useEffect(() => {
 		companyId
 			? dispatch(
 					fetchProcess({
@@ -38,7 +41,7 @@ const index = () => {
 					})
 			  )
 			: dispatch(fetchProcess({ token: userDetail.token }));
-	}, [isDeleted]);
+	}, []);
 	useEffect(() => {
 		dispatch(
 			fetchSingleOrg({
