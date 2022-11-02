@@ -19,12 +19,11 @@ import { useEffect } from "react";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 
 export default function FormDialog(props) {
-	const { processList } = useSelector((state) => state.process);
+	const { processList, isSuccess } = useSelector((state) => state.process);
 	const { companyId } = useParams();
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const dispatch = useDispatch();
 	const { open, setOpen, bidType, filteredProcesses, stageType, orgProcessId } = props;
-
 	let stageCategory;
 	if (stageType === 0) {
 		stageCategory = "Presentation";
@@ -36,7 +35,7 @@ export default function FormDialog(props) {
 	const initialFormState = {
 		description: "",
 		stage: stageCategory,
-		bidtype: bidType
+		bidType: bidType
 	};
 	console.log(initialFormState);
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
@@ -71,7 +70,6 @@ export default function FormDialog(props) {
 				})
 			);
 		} else {
-			console.log(formStateWithToken, "valuessss");
 			dispatch(createProcess(formStateWithToken));
 		}
 
@@ -98,15 +96,6 @@ export default function FormDialog(props) {
 		}
 	}, [isSuccess]);
 
-	useEffect(() => {
-		["stage", "description"].forEach((h, i) => {
-			dispatchNew({
-				type: "HANDLE_FORM_INPUT",
-				field: h,
-				payload: h === "stage" ? stageCategory : ""
-			});
-		});
-	}, [stageType]);
 	const handleTextChange = (e) => {
 		dispatchNew({
 			type: "HANDLE_FORM_INPUT",
@@ -114,16 +103,6 @@ export default function FormDialog(props) {
 			payload: e.target.value
 		});
 	};
-	// React.useEffect(() => {
-	// 	["stage", "description"].forEach((h, i) => {
-	// 		dispatchNew({
-	// 			type: "HANDLE_FORM_INPUT",
-	// 			field: h,
-	// 			payload: editFormData[i + 1]
-	// 		});
-	// 	});
-	// }, [editFormData]);
-
 	return (
 		<div>
 			<Dialog open={open} onClose={handleClose} PaperProps={{ sx: { width: "40%" } }}>
@@ -158,7 +137,7 @@ export default function FormDialog(props) {
 								sx={{ m: 0, minWidth: 240, maxHeight: 30, marginTop: 3 }}
 								size="small"
 							>
-								<InputLabel id="demo-select-small">stage</InputLabel>
+								<InputLabel id="demo-select-small">Stage</InputLabel>
 								<Select
 									labelId="demo-select-small"
 									id="demo-select-small"
@@ -166,6 +145,7 @@ export default function FormDialog(props) {
 									value={formState.stage}
 									label="stage"
 									onChange={(e) => handleTextChange(e)}
+									required
 								>
 									<MenuItem value="Presentation">Presentation</MenuItem>
 									<MenuItem value="Painting">Painting</MenuItem>
@@ -178,7 +158,7 @@ export default function FormDialog(props) {
 								sx={{ m: 0, minWidth: 240, maxHeight: 30, marginTop: 3 }}
 								size="small"
 							>
-								<InputLabel id="demo-select-small">stage</InputLabel>
+								<InputLabel id="demo-select-small">Bid Type</InputLabel>
 								<Select
 									labelId="demo-select-small"
 									id="demo-select-small"

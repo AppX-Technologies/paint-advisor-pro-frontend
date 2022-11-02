@@ -114,6 +114,7 @@ const Users = () => {
 				columns={columns}
 				options={options}
 				title={"User List"}
+				isLoading={isLoading}
 			/>
 
 			<CreateUserForm open={open} setOpen={setOpen} />

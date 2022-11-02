@@ -117,6 +117,7 @@ const Companies = () => {
 				columns={columns}
 				options={options}
 				title={"Companies List"}
+				isLoading={isLoading}
 			/>
 			<FormDialog open={open} setOpen={setOpen} />
 			<EditOrgForm

@@ -125,12 +125,6 @@ const UsersFromCompany = (props) => {
 			</Box>
 			<DataTable
 				datalist={companyMadeByUsers.map((org) => {
-					let profVal;
-					if (org.role !== "Painter") {
-						profVal = "-";
-					} else {
-						profVal = org.proficiency;
-					}
 					return [
 						org._id,
 						org.name,
@@ -145,6 +139,7 @@ const UsersFromCompany = (props) => {
 				columns={columns}
 				options={options}
 				title={"User List"}
+				isLoading={isLoading}
 			/>
 			<CreateUserForm open={open} setOpen={setOpen} />
 			{openEditForm && (
