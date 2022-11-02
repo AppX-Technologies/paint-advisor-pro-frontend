@@ -2,6 +2,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import processService from "./processService";
 import { showMessage } from "../snackbar/snackbarSlice";
+import { addOrUpdateItemInArray } from "../../Helpers/addRemoveUpdateListHelper";
 
 // initial states
 
@@ -15,7 +16,9 @@ const initialState = {
 	isDeleted: false,
 	isUpdating: false,
 	isUpdated: false,
-	message: ""
+	message: "",
+	response: null,
+	deletedId: ""
 };
 
 // get
@@ -57,7 +60,6 @@ export const createProcess = createAsyncThunk(
 	async (userData, thunkAPI) => {
 		try {
 			const response = await processService.createProcess(userData);
-			console.log(response);
 			return response;
 		} catch (error) {
 			const message =
@@ -136,9 +138,10 @@ export const processSlice = createSlice({
 			.addCase(createProcess.pending, (state) => {
 				state.isLoading = true;
 			})
-			.addCase(createProcess.fulfilled, (state, action) => {
+			.addCase(createProcess.fulfilled, (state, { payload }) => {
 				state.isLoading = false;
 				state.isSuccess = true;
+				state.response = addOrUpdateItemInArray(state.processList, payload);
 			})
 			.addCase(createProcess.rejected, (state, action) => {
 				state.isLoading = false;
@@ -152,6 +155,7 @@ export const processSlice = createSlice({
 				state.isUpdated = true;
 				state.isUpdating = false;
 				state.message = action.payload;
+				state.response = addOrUpdateItemInArray(state.processList, action.payload);
 			})
 			.addCase(updateProcess.rejected, (state, action) => {
 				state.isUpdating = false;
@@ -164,7 +168,7 @@ export const processSlice = createSlice({
 			.addCase(deleteProcess.fulfilled, (state, action) => {
 				state.isDeleting = false;
 				state.isDeleted = true;
-				state.message = action.payload;
+				state.response = addOrUpdateItemInArray(state.processList, action.payload);
 			})
 			.addCase(deleteProcess.rejected, (state, action) => {
 				state.isDeleting = false;

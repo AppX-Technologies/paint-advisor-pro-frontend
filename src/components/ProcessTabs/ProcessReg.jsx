@@ -19,7 +19,7 @@ import { useEffect } from "react";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 
 export default function FormDialog(props) {
-	const { processList, isSuccess } = useSelector((state) => state.process);
+	const { processList } = useSelector((state) => state.process);
 	const { companyId } = useParams();
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const dispatch = useDispatch();
