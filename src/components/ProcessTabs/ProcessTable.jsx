@@ -144,11 +144,7 @@ const ProcessTable = ({ filterValue }) => {
 	return (
 		<>
 			<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-				<CustomButton
-					variant="contained"
-					sx={{ mt: 3, mb: 2 }}
-					onClick={() => setOpen(true)}
-				>
+				<CustomButton variant="contained" sx={{ mb: 2 }} onClick={() => setOpen(true)}>
 					Create
 				</CustomButton>
 			</Box>

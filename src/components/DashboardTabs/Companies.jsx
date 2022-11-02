@@ -25,6 +25,11 @@ const Companies = () => {
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const [userId, setUserId] = React.useState("");
 	const [options, setOptions] = React.useState({});
+
+	React.useEffect(() => {
+		dispatch(fetchOrgs(userDetail.token));
+	}, []);
+
 	React.useEffect(() => {
 		if (isDeleted) {
 			dispatch(
@@ -55,6 +60,7 @@ const Companies = () => {
 	useEffect(() => {
 		setOptions(tableOptions(isLoading, orgList));
 	}, []);
+
 	function DeleteModal() {
 		const handleClose = () => {
 			setOpenDeleteModal(false);
@@ -96,7 +102,7 @@ const Companies = () => {
 			<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
 				<CustomButton
 					variant="contained"
-					sx={{ mt: 3, mb: 2 }}
+					sx={{ mb: 2 }}
 					onClick={() => setOpen(true)}
 					disabled={isLoading}
 				>

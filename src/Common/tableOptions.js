@@ -1,4 +1,5 @@
 import { CircularProgress, Typography } from "@mui/material";
+import React from "react";
 
 export const tableOptions = (isLoading, dataList) => {
 	return {
@@ -18,21 +19,24 @@ export const tableOptions = (isLoading, dataList) => {
 								}}
 							/>
 						)}
-						<div
-							className="flex flex-col justify-center items-center"
-							style={{ padding: "26px 0", marginTop: "32px" }}
-						>
-							<Typography
-								variant="h6"
-								style={{
-									fontSize: "14px",
-									fontWeight: 600,
-									padding: "17px 0"
-								}}
+
+						{/* {dataList.length === 0 && (
+							<div
+								className="flex flex-col justify-center items-center"
+								style={{ padding: "26px 0", marginTop: "32px" }}
 							>
-								Sorry, no matching records found.
-							</Typography>
-						</div>
+								<Typography
+									variant="h6"
+									style={{
+										fontSize: "14px",
+										fontWeight: 600,
+										padding: "17px 0"
+									}}
+								>
+									Sorry, no matching records found.
+								</Typography>
+							</div>
+						)} */}
 					</>
 				),
 				toolTip: "Sort",
