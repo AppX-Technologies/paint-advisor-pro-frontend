@@ -10,7 +10,8 @@ import {
 	DialogTitle,
 	Stack,
 	Typography,
-	Button
+	Button,
+	Grid
 } from "@mui/material";
 
 import CustomButton from "../Button";
@@ -25,11 +26,17 @@ import Edit from "./EditProcessForm";
 import { useParams } from "react-router-dom";
 import { filterProcessByBid } from "../../Helpers/bidFilterHelpers";
 import { fetchSingleOrg } from "../../features/org/orgSlice";
+import StageTab from "./StageTab";
 const ProcessTable = ({ filterValue }) => {
 	const dispatch = useDispatch();
 	const { processList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(
 		(state) => state.process
 	);
+	const [stage, setStage] = React.useState(0);
+
+	const handleChange = (event, newValue) => {
+		setStage(newValue);
+	};
 	const { org } = useSelector((state) => state.org);
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const [openEditForm, setOpenEditForm] = useState(false);
@@ -38,7 +45,6 @@ const ProcessTable = ({ filterValue }) => {
 	const [filteredProcesses, setFilteredProcesses] = useState([]);
 	const [processId, setProcessId] = useState("");
 	const [open, setOpen] = useState(false);
-	const [category, setCategory] = useState("");
 	const { companyId } = useParams();
 
 	useEffect(() => {
@@ -130,8 +136,14 @@ const ProcessTable = ({ filterValue }) => {
 	}
 
 	useEffect(() => {
-		setFilteredProcesses(filterProcessByBid(processList, filterValue));
-	}, [processList, filterValue]);
+		if (stage === 0) {
+			setFilteredProcesses(filterProcessByBid(processList, filterValue, "Presentation"));
+		} else if (stage === 1) {
+			setFilteredProcesses(filterProcessByBid(processList, filterValue, "Painting"));
+		} else if (stage === 2) {
+			setFilteredProcesses(filterProcessByBid(processList, filterValue, "Clean up"));
+		}
+	}, [processList, filterValue, stage]);
 
 	React.useEffect(() => {
 		dispatch(
@@ -143,13 +155,26 @@ const ProcessTable = ({ filterValue }) => {
 			})
 		);
 	}, [companyId]);
-
 	return (
 		<>
-			<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-				<CustomButton variant="contained" sx={{ mb: 2 }} onClick={() => setOpen(true)}>
-					Create
-				</CustomButton>
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "space-evenly",
+					alignItems: "center",
+					margin: "0 0 20px 0"
+				}}
+			>
+				<StageTab stage={stage} onTabChange={handleChange} />
+				<Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: "9px" }}>
+					<CustomButton
+						variant="contained"
+						onClick={() => setOpen(true)}
+						sx={{ height: "47px" }}
+					>
+						Create
+					</CustomButton>
+				</Box>
 			</Box>
 			<div style={{ position: "relative" }}>
 				<div style={{ zIndex: "100", position: "absolute", left: "18%", top: "0px" }}></div>
@@ -158,7 +183,7 @@ const ProcessTable = ({ filterValue }) => {
 				datalist={
 					filteredProcesses &&
 					filteredProcesses.map((process) => {
-						return [process._id, process.description];
+						return [process._id, process.stage, process.description];
 					})
 				}
 				columns={columns}

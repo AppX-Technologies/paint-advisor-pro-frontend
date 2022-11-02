@@ -3,19 +3,21 @@ import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
-const StageTab = () => {
-	const [stage, setStage] = React.useState(0);
-
-	const handleChange = (event, newValue) => {
-		setStage(newValue);
-	};
+const StageTab = ({ stage, onTabChange }) => {
 	return (
 		<>
-			<Box sx={{ width: "100%", bgcolor: "background.paper" }}>
-				<Tabs value={stage} onChange={handleChange} centered>
-					<Tab label="Stage One" />
-					<Tab label="Stage Two" />
-					<Tab label="Stage Three" />
+			<Box
+				sx={{
+					width: "90%",
+					bgcolor: "background.paper",
+					margin: "10px 8px 0 0",
+					borderRadius: "5px"
+				}}
+			>
+				<Tabs value={stage} onChange={onTabChange} centered>
+					<Tab label="Presentation" />
+					<Tab label="Painting" />
+					<Tab label="Cleanup" />
 				</Tabs>
 			</Box>
 		</>
