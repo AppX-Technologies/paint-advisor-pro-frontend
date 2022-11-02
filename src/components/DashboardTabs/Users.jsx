@@ -26,6 +26,10 @@ const Users = () => {
 	const [emailId, setEmailId] = React.useState("");
 	const [options, setOptions] = React.useState({});
 	React.useEffect(() => {
+		dispatch(fetchUsers(userDetail.token));
+	}, []);
+
+	React.useEffect(() => {
 		if (isDeleted) {
 			dispatch(
 				showMessage({
@@ -96,7 +100,7 @@ const Users = () => {
 			<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
 				<CustomButton
 					variant="contained"
-					sx={{ mt: 3, mb: 2 }}
+					sx={{ mb: 2 }}
 					onClick={() => setOpen(true)}
 					disabled={isLoading}
 				>

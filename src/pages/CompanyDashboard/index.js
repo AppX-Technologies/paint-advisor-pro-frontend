@@ -1,3 +1,5 @@
+/*eslint-disable*/
+
 import * as React from "react";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,8 +18,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MainListItems from "./listItems";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchOrgs, fetchSingleOrg } from "../../features/org/orgSlice";
-import { CircularProgress } from "@mui/material";
 import Bids from "../Bids";
+import Materials from "../Materials";
 import { Processes } from "../Processes";
 import UsersFromCompany from "./UsersFromCompany";
 import { fetchUserMadeByCompany } from "../../features/usersFromCompany/usersFromCompanySlice";
@@ -177,6 +179,7 @@ function DashboardContent({ isSystemAdmin }) {
 						<Grid container spacing={4}>
 							<Grid item xs={12} md={12} lg={12}>
 								{clickedMenu === "Bids" && <Bids />}
+								{clickedMenu === "Materials" && <Materials />}
 								{clickedMenu === "Processes" && (
 									<Processes showDrawerMenu={false} />
 								)}

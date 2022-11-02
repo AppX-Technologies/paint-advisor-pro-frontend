@@ -6,13 +6,13 @@ import Dialog from "@mui/material/Dialog";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useDispatch, useSelector } from "react-redux";
 import formReducer from "../reducers/registerReducer";
-import { CircularProgress, Grid, Slider, Stack, Typography } from "@mui/material";
+import { CircularProgress, Grid, Stack, Typography } from "@mui/material";
 import {
 	createUsersByCompany,
 	fetchUserMadeByCompany,
@@ -26,7 +26,7 @@ const initialFormState = {
 	email: "",
 	phone: "",
 	role: "",
-	proficiency: 1
+	proficiency: "Beginner"
 };
 
 export default function CreateUserForm(props) {
@@ -149,8 +149,8 @@ export default function CreateUserForm(props) {
 							/>
 						</Grid>
 
-						<Grid item xs={5}>
-							<FormControl variant="standard" sx={{ mt: 2, minWidth: "100%" }}>
+						<Grid item xs={6}>
+							<FormControl variant="standard" sx={{ mt: 2, minWidth: "98%" }}>
 								<InputLabel id="demo-simple-select-standard-label">
 									Role *
 								</InputLabel>
@@ -169,28 +169,27 @@ export default function CreateUserForm(props) {
 								</Select>
 							</FormControl>
 						</Grid>
-						<Grid xs={7} sx={{ marginTop: "47px" }}>
+						<Grid xs={6} sx={{ marginTop: "24px" }}>
 							{formState.role === "Painter" && (
 								<>
-									<Typography
-										variant="h6"
-										sx={{ fontSize: "12px", marginLeft: "15px", color: "gray" }}
-									>
-										Proficiency{" "}
-										{formState.proficiency
-											? `(${formState.proficiency})`
-											: null}
-									</Typography>
-									<Slider
-										sx={{ width: "93%", marginLeft: "25px" }}
-										name="proficiency"
-										aria-label="Default"
-										valueLabelDisplay="auto"
-										min={1}
-										max={5}
-										value={formState.proficiency}
-										onChange={(e) => handleTextChange(e)}
-									/>
+									<FormControl variant="standard" sx={{ mt: 2, minWidth: "98%" }}>
+										<InputLabel id="demo-simple-select-standard-label">
+											Proficiency *
+										</InputLabel>
+										<Select
+											fullWidth
+											name="proficiency"
+											labelId="demo-simple-select-standard-label"
+											id="demo-simple-select-standard"
+											value={formState.proficiency}
+											onChange={(e) => handleTextChange(e)}
+											label="Role"
+										>
+											<MenuItem value="Beginner">Beginner</MenuItem>
+											<MenuItem value="Intermediate">Intermediate</MenuItem>
+											<MenuItem value="Expert">Expert</MenuItem>
+										</Select>
+									</FormControl>
 								</>
 							)}
 						</Grid>
