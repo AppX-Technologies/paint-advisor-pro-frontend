@@ -23,7 +23,6 @@ import { Processes } from "../Processes";
 import UsersFromCompany from "./UsersFromCompany";
 import { fetchUserMadeByCompany } from "../../features/usersFromCompany/usersFromCompanySlice";
 import { useParams } from "react-router-dom";
-import { fetchUsers } from "../../features/users/userSlice";
 
 const drawerWidth = 240;
 console.log(JSON.parse(localStorage.getItem("user")));
@@ -84,13 +83,6 @@ function DashboardContent({ isSystemAdmin }) {
 	const toggleDrawer = () => {
 		setOpen(!open);
 	};
-
-	React.useEffect(() => {
-		if (userDetail.role === "Admin") {
-			dispatch(fetchOrgs(userDetail.token));
-			dispatch(fetchUsers(userDetail.token));
-		}
-	}, []);
 
 	React.useEffect(() => {
 		dispatch(
