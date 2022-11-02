@@ -12,6 +12,7 @@ import {
 	Typography,
 	Button
 } from "@mui/material";
+
 import CustomButton from "../Button";
 import { processColumn } from "../../Common/tableHead";
 import { tableOptions } from "../../Common/tableOptions";
@@ -37,6 +38,7 @@ const ProcessTable = ({ filterValue }) => {
 	const [filteredProcesses, setFilteredProcesses] = useState([]);
 	const [processId, setProcessId] = useState("");
 	const [open, setOpen] = useState(false);
+	const [category, setCategory] = useState("");
 	const { companyId } = useParams();
 
 	useEffect(() => {
@@ -79,6 +81,7 @@ const ProcessTable = ({ filterValue }) => {
 			setOpenDeleteModal(false);
 		}
 	}, [isSuccess]);
+
 	//Delete popup menu
 	function DeleteModal() {
 		const handleClose = () => {
@@ -153,7 +156,7 @@ const ProcessTable = ({ filterValue }) => {
 				</CustomButton>
 			</Box>
 			<div style={{ position: "relative" }}>
-				<div style={{ position: "absolute", left: "50%", top: "20px" }}></div>
+				<div style={{ zIndex: "100", position: "absolute", left: "18%", top: "0px" }}></div>
 			</div>
 			<DataTable
 				datalist={

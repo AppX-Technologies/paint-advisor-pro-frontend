@@ -5,6 +5,9 @@ export const tableOptions = (isLoading, dataList) => {
 		filterType: "textField",
 		print: false,
 		selectableRows: false,
+		responsive: "standard",
+		resizableColumns: true,
+
 		textLabels: {
 			body: {
 				noMatch: (
