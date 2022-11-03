@@ -123,7 +123,7 @@ export default function Edit(props) {
 								sx={{ m: 0, minWidth: 235, maxHeight: 30, marginTop: 3 }}
 								size="small"
 							>
-								<InputLabel id="demo-select-small">stage</InputLabel>
+								<InputLabel id="demo-select-small">Bid Type</InputLabel>
 								<Select
 									labelId="demo-select-small"
 									id="demo-select-small"

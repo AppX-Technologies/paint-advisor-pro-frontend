@@ -1,5 +1,5 @@
 import React from "react";
-import { DrawerMenu } from "../../common/DrawerMenu";
+import { DrawerMenu } from "../../Common/DrawerMenu";
 import ProcessTabPanel from "../../components/ProcessTabs/index";
 
 export const Processes = ({ showDrawerMenu }) => {

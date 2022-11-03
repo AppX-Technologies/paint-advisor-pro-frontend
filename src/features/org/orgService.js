@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const endpoint = process.env.REACT_APP_API_BASE_URL_ORGS;
+const endpoint = "https://painting-app-backend.herokuapp.com/organizations";
 
 const CREATE_ORGS = `${endpoint}/`;
 const FETCH_ORGS = `${endpoint}/search`;

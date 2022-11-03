@@ -14,15 +14,15 @@ import {
 } from "@mui/material";
 
 import CustomButton from "../Button";
-import { processColumn } from "../../common/tableHead";
-import { tableOptions } from "../../common/tableOptions";
+import { processColumn } from "../../Common/tableHead";
+import { tableOptions } from "../../Common/tableOptions";
 import { useDispatch, useSelector } from "react-redux";
 import { createProcess, reset } from "../../features/process/processSlice";
-import DataTable from "../../common/DataTable";
+import DataTable from "../../Common/DataTable";
 import FormDialog from "./ProcessReg";
 import Edit from "./EditProcessForm";
 import { useParams } from "react-router-dom";
-import { filterProcessByBid } from "../../helpers/bidFilterHelpers";
+import { filterProcessByBid } from "../../Helpers/bidFilterHelpers";
 import { fetchSingleOrg } from "../../features/org/orgSlice";
 import StageTab from "./StageTab";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
