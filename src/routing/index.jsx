@@ -42,8 +42,8 @@ const AppRoutes = () => {
           <Route path='company'>
             <Route path='' element={<CompanyDashboard />} />
           </Route>
-          <Route path='*' element={<PageNotFound />} />
         </Route>
+        <Route path='*' element={<PageNotFound />} />
       </Route>
     </Routes>
   );
