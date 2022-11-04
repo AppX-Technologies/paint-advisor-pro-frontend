@@ -15,9 +15,9 @@ import {
 } from "../../features/usersFromCompany/usersFromCompanySlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import CreateUserForm from "./CreateUserForm";
-import { companyUserColumns } from "../../Common/tableHead";
-import { tableOptions } from "../../Common/tableOptions";
-import DataTable from "../../Common/DataTable";
+import { companyUserColumns } from "../../common/tableHead";
+import { tableOptions } from "../../common/tableOptions";
+import DataTable from "../../common/DataTable";
 
 const UsersFromCompany = (props) => {
 	const { getId } = props;

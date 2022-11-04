@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 
 import CustomButton from "../Button";
-import { processColumn } from "../../Common/tableHead";
+import { processColumn } from "../../common/tableHead";
 import { useDispatch, useSelector } from "react-redux";
 import { createProcess, reset } from "../../features/process/processSlice";
 import FormDialog from "./ProcessReg";
@@ -23,7 +23,7 @@ import { useParams } from "react-router-dom";
 import { filterProcessByBid } from "../../Helpers/bidFilterHelpers";
 import StageTab from "./StageTab";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
-import { DraggableDataTable } from "../../Common/DraggableDataTable";
+import { DraggableDataTable } from "../../common/DraggableDataTable";
 const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 	const dispatch = useDispatch();
 	const { processList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(

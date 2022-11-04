@@ -1,5 +1,5 @@
 import React from "react";
-import { DrawerMenu } from "../../Common/DrawerMenu";
+import { DrawerMenu } from "../../common/DrawerMenu";
 import Profile from "../../components/ProfileTab/index";
 
 const index = () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { DraggableDataTable } from "../../Common/DraggableDataTable";
+import { DraggableDataTable } from "../../common/DraggableDataTable";
 const Profile = () => {
 	return (
 		<>
