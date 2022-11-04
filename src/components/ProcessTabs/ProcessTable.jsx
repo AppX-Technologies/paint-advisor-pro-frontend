@@ -15,7 +15,6 @@ import {
 
 import CustomButton from "../Button";
 import { processColumn } from "../../Common/tableHead";
-import { tableOptions } from "../../Common/tableOptions";
 import { useDispatch, useSelector } from "react-redux";
 import { createProcess, reset } from "../../features/process/processSlice";
 import DataTable from "../../Common/DataTable";
@@ -39,18 +38,28 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 	};
 	const { org } = useSelector((state) => state.org);
 	const userDetail = JSON.parse(localStorage.getItem("user"));
+	const [dataList, setDataList] = useState([]);
 	const [openEditForm, setOpenEditForm] = useState(false);
 	const [editFormData, setEditFormData] = useState([]);
 	const [filteredProcesses, setFilteredProcesses] = useState([]);
 	const [processId, setProcessId] = useState("");
 	const [open, setOpen] = useState(false);
-	const [dataList, setDataList] = useState([]);
 
 	const onDeleteBtnClick = (e, getId) => {
 		e.stopPropagation();
 		setProcessId(getId);
 	};
 	const columns = processColumn();
+	const initialDataList =
+		filteredProcesses &&
+		filteredProcesses.map((process) => {
+			return {
+				id: process._id,
+				stage: process.stage,
+				description: process.description,
+				bidType: process.bidType
+			};
+		});
 
 	useEffect(() => {
 		if (isSuccess) {
@@ -162,30 +171,8 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 				</Box>
 			</Box>
 
-			{/* <DataTable
-				datalist={
-					filteredProcesses &&
-					filteredProcesses.map((process) => {
-						return [process._id, process.stage, process.description, process.bidType];
-					})
-				}
-				columns={columns}
-				options={options}
-				title={filterValue + " Processes"}
-				isLoading={isLoading}
-			/> */}
 			<DraggableDataTable
-				initialDataList={
-					filteredProcesses &&
-					filteredProcesses.map((process) => {
-						return {
-							id: process._id,
-							stage: process.stage,
-							description: process.description,
-							bidType: process.bidType
-						};
-					})
-				}
+				initialDataList={initialDataList}
 				isLoading={isLoading}
 				columns={columns}
 				dataList={dataList}

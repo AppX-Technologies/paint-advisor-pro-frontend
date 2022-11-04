@@ -28,7 +28,7 @@ export default function Edit(props) {
 
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
 	const { processList } = useSelector((state) => state.process);
-	console.log(editFormData);
+
 	const dispatch = useDispatch();
 
 	React.useEffect(() => {

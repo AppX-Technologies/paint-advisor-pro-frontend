@@ -12,7 +12,6 @@ import Paper from "@mui/material/Paper";
 import SwapVerticalCircleIcon from "@mui/icons-material/SwapVerticalCircle";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import { useEffect } from "react";
 import { CircularProgress, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
@@ -43,7 +42,6 @@ export const DraggableDataTable = ({
 	const [dataList, setDataList] = useState(initialDataList);
 
 	useEffect(() => {
-		console.log("first");
 		setDataList(initialDataList);
 	}, [initialDataList]);
 	const onDragEnd = (result) => {

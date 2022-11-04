@@ -77,7 +77,6 @@ export const updateProcess = createAsyncThunk(
 	async (userData, thunkAPI) => {
 		try {
 			const response = await processService.updateProcess(userData);
-			console.log(response);
 			return response;
 		} catch (error) {
 			const message =
