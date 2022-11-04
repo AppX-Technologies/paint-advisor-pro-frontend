@@ -1,8 +1,7 @@
-import React from "react";
-import styles from "./Counter.module.css";
+import React from 'react';
+import styles from './Counter.module.css';
 
 export function Counter() {
-
   return (
     <div>
       {/* <div className={styles.row}>
@@ -49,7 +48,7 @@ export function Counter() {
         </button>
       </div> */}
       <div className={styles.row}>
-        <img src="/assets/images/uc.jpg" alt="uc" />
+        <img src='/assets/images/uc.jpg' alt='uc' />
       </div>
     </div>
   );

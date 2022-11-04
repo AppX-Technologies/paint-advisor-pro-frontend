@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   open: false,
   message: '',
-  severity: '',
+  severity: ''
 };
 
 const snackbarSlice = createSlice({
@@ -20,7 +20,7 @@ const snackbarSlice = createSlice({
       state.message = '';
       state.severity = '';
     }
-  },
+  }
 });
 
 export const { showMessage, onClose } = snackbarSlice.actions;

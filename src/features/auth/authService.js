@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 // reminder to edit this after api is ready
 const endpoint = process.env.REACT_APP_API_BASE_URL_USERS;
@@ -14,8 +14,8 @@ const generateRegistrationOtp = async (userData) => {
 };
 export const getUserDetail = () => {
   return (
-    JSON.parse(localStorage.getItem("user")) || {
-      token: null,
+    JSON.parse(localStorage.getItem('user')) || {
+      token: null
     }
   );
 };
@@ -24,8 +24,8 @@ export const getUserDetail = () => {
 const register = async (userData) => {
   const config = {
     headers: {
-      "Content-Type": "application/json",
-    },
+      'Content-Type': 'application/json'
+    }
   };
   const response = await axios.post(REGISTER_URL, userData, config);
   return response.data;
@@ -36,17 +36,17 @@ const register = async (userData) => {
 const login = async (userData) => {
   const config = {
     headers: {
-      "Content-Type": "application/json",
-    },
+      'Content-Type': 'application/json'
+    }
   };
   const response = await axios.post(LOGIN_URL, userData, config);
   if (response.data) {
-    localStorage.setItem("user", JSON.stringify(response.data));
+    localStorage.setItem('user', JSON.stringify(response.data));
   }
   return response.data;
 };
 
-const logout = () => localStorage.removeItem("user");
+const logout = () => localStorage.removeItem('user');
 
 const sendForgotPasswordLink = async (userData) => {
   const response = await axios.post(FORGOT_PASSWORD_OTP, userData);
@@ -63,6 +63,6 @@ const authService = {
   logout,
   generateRegistrationOtp,
   sendForgotPasswordLink,
-  resetPassword,
+  resetPassword
 };
 export default authService;
