@@ -37,7 +37,7 @@ export default function FormDialog(props) {
 		stage: stageCategory,
 		bidType: bidType
 	};
-	console.log(initialFormState);
+
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
 
 	const handleClose = () => {

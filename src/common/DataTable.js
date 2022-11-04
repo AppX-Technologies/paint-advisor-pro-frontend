@@ -1,6 +1,6 @@
 import React from "react";
 import MUIDataTable from "mui-datatables";
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 
 const DataTable = ({ datalist, title, columns, options, isLoading }) => {
 	return (

@@ -17,12 +17,10 @@ import CustomButton from "../Button";
 import { processColumn } from "../../Common/tableHead";
 import { useDispatch, useSelector } from "react-redux";
 import { createProcess, reset } from "../../features/process/processSlice";
-import DataTable from "../../Common/DataTable";
 import FormDialog from "./ProcessReg";
 import Edit from "./EditProcessForm";
 import { useParams } from "react-router-dom";
 import { filterProcessByBid } from "../../Helpers/bidFilterHelpers";
-import { fetchSingleOrg } from "../../features/org/orgSlice";
 import StageTab from "./StageTab";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import { DraggableDataTable } from "../../Common/DraggableDataTable";
@@ -44,27 +42,35 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 	const [filteredProcesses, setFilteredProcesses] = useState([]);
 	const [processId, setProcessId] = useState("");
 	const [open, setOpen] = useState(false);
+	const { companyId } = useParams();
 
 	const onDeleteBtnClick = (e, getId) => {
 		e.stopPropagation();
 		setProcessId(getId);
 	};
 	const columns = processColumn();
-	const initialDataList =
-		filteredProcesses &&
-		filteredProcesses.map((process) => {
-			return {
-				id: process._id,
-				stage: process.stage,
-				description: process.description,
-				bidType: process.bidType
-			};
-		});
 
-	useEffect(() => {
-		if (isSuccess) {
-		}
-	}, [isSuccess]);
+	const resortProcesses = (sortedList, originalProcessList) => {
+		if (!sortedList.length) return originalProcessList;
+		const { bidType, stage } = sortedList[0];
+		const currentBidTypeAndStageRemoved = originalProcessList.filter(
+			(item) => item.bidType !== bidType && item.stage !== stage
+		);
+		return [...currentBidTypeAndStageRemoved, ...sortedList];
+	};
+
+	const onListSort = (dataList) => {
+		const formState = {};
+		const formStateWithToken = {
+			...formState,
+			ID: processList[0]._id,
+			previousProcesses: resortProcesses(dataList, processList[0].processes),
+			add: true,
+			token: userDetail.token
+		};
+		dispatch(createProcess(formStateWithToken));
+		setFilteredProcesses(dataList);
+	};
 
 	useEffect(() => {
 		if (isSuccess) {
@@ -98,7 +104,6 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 				})
 			);
 		};
-		console.log(editFormData);
 
 		return (
 			<Dialog open={openDeleteModal} onClose={handleClose}>
@@ -150,16 +155,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 				}}
 			>
 				<StageTab stage={stage} onTabChange={handleChange} />
-				<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-					<CustomButton
-						variant="contained"
-						onClick={() => setOpen(true)}
-						disabled={true}
-						sx={{ height: "47px", marginRight: "10px" }}
-					>
-						Sort
-					</CustomButton>
-				</Box>
+
 				<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
 					<CustomButton
 						variant="contained"
@@ -172,7 +168,17 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 			</Box>
 
 			<DraggableDataTable
-				initialDataList={initialDataList}
+				initialDataList={
+					filteredProcesses &&
+					filteredProcesses.map((process) => {
+						return {
+							_id: process._id,
+							stage: process.stage,
+							description: process.description,
+							bidType: process.bidType
+						};
+					})
+				}
 				isLoading={isLoading}
 				columns={columns}
 				dataList={dataList}
@@ -182,6 +188,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 				setOpenEditForm={setOpenEditForm}
 				setOpenDeleteModal={setOpenDeleteModal}
 				onDeleteBtnClick={onDeleteBtnClick}
+				onListSort={onListSort}
 			/>
 
 			<FormDialog

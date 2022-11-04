@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Table from "@mui/material/Table";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import MoreVertIcon from "@mui/icons-material/DragHandleOutlined";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -12,7 +12,6 @@ import Paper from "@mui/material/Paper";
 import SwapVerticalCircleIcon from "@mui/icons-material/SwapVerticalCircle";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { useEffect } from "react";
 import { CircularProgress, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { extractElement } from "../Helpers/extractElementsFromObj";
@@ -37,23 +36,19 @@ export const DraggableDataTable = ({
 	setOpenEditForm,
 	setOpenDeleteModal,
 	onDeleteBtnClick,
-	setEditFormData
+	setEditFormData,
+	onListSort,
+	draggable = false
 }) => {
-	const [dataList, setDataList] = useState(initialDataList);
-
-	useEffect(() => {
-		setDataList(initialDataList);
-	}, [initialDataList]);
+	console.log(initialDataList);
 	const onDragEnd = (result) => {
-		console.log(result);
 		if (!result.destination) {
 			return;
 		}
-		let movedItems = reorder(dataList, result.source.index, result.destination.index);
-
-		setDataList(movedItems);
+		let movedItems = reorder(initialDataList, result.source.index, result.destination.index);
+		onListSort(movedItems);
 	};
-	console.log(dataList);
+
 	return (
 		<TableContainer component={Paper}>
 			<Typography
@@ -74,26 +69,26 @@ export const DraggableDataTable = ({
 						alignItems: "center"
 					}}
 				>
-					<Typography
-						sx={{
-							flex: "1 1 100%",
-							margin: "5px 0px -10px 10px",
-							fontSize: "18px",
-							fontWeight: "700"
-						}}
-						color="inherit"
-						variant="subtitle1"
-						component="div"
-					>
-						{title}
-					</Typography>
-					<div style={{ marginLeft: "10px" }}>
+					<div style={{ marginLeft: "10px", display: "flex", alignItems: "center" }}>
+						<Typography
+							sx={{
+								flex: "1 1 100%",
+								margin: "5px 0px -10px 10px",
+								fontSize: "18px",
+								fontWeight: "700"
+							}}
+							color="inherit"
+							variant="subtitle1"
+							component="div"
+						>
+							{title}
+						</Typography>
 						{isLoading && (
 							<CircularProgress
 								color="primary"
 								style={{
 									display: isLoading ? "flex" : "none",
-									margin: "0 auto",
+									marginLeft: "10px",
 									width: "30px",
 									height: "30px"
 								}}
@@ -105,9 +100,9 @@ export const DraggableDataTable = ({
 			<Table aria-label="simple table">
 				<TableHead>
 					<TableRow>
-						<TableCell sx={{ fontSize: "16px", fontWeight: "550" }}>
-							<SwapVerticalCircleIcon />
-						</TableCell>
+						{draggable && (
+							<TableCell sx={{ fontSize: "16px", fontWeight: "550" }}></TableCell>
+						)}
 						{columns.map((column) => {
 							return (
 								<TableCell
@@ -121,14 +116,15 @@ export const DraggableDataTable = ({
 				</TableHead>
 				{/* <TableBody> */}
 				<DragDropContext onDragEnd={onDragEnd}>
-					<Droppable droppableId="droppable">
+					<Droppable is isDropDisabled={!draggable} droppableId="droppable">
 						{(provided, snapshot) => (
 							<TableBody {...provided.droppableProps} ref={provided.innerRef}>
-								{dataList &&
-									dataList.map((rowItem, index) => (
+								{initialDataList &&
+									initialDataList.map((rowItem, index) => (
 										<Draggable
-											key={rowItem.id}
-											draggableId={"q-" + rowItem.id}
+											isDragDisabled={!draggable}
+											key={rowItem._id}
+											draggableId={"q-" + rowItem._id}
 											index={index}
 										>
 											{(provided, snapshot) => (
@@ -141,13 +137,15 @@ export const DraggableDataTable = ({
 														provided.draggableProps.style
 													)}
 												>
-													<TableCell
-														component="th"
-														scope="row"
-														style={{ width: "5%" }}
-													>
-														<MoreVertIcon />
-													</TableCell>
+													{draggable && (
+														<TableCell
+															component="th"
+															scope="row"
+															style={{ width: "5%" }}
+														>
+															<MoreVertIcon />
+														</TableCell>
+													)}
 													<TableCell
 														component="th"
 														scope="row"
@@ -173,7 +171,10 @@ export const DraggableDataTable = ({
 																style={{ cursor: "pointer" }}
 																onClick={(e) => {
 																	setOpenDeleteModal(true);
-																	onDeleteBtnClick(e, rowItem.id);
+																	onDeleteBtnClick(
+																		e,
+																		rowItem._id
+																	);
 																}}
 															/>
 														</Stack>
