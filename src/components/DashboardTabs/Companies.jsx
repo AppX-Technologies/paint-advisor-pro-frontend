@@ -11,9 +11,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import EditOrgForm from "./EditOrgForm";
 import { deleteOrg, fetchOrgs, reset } from "../../features/org/orgSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
-import DataTable from "../../Common/DataTable";
-import { companyColumns } from "../../Common/tableHead";
-import { tableOptions } from "../../Common/tableOptions";
+import DataTable from "../../common/DataTable";
+import { companyColumns } from "../../common/tableHead";
+import { tableOptions } from "../../common/tableOptions";
 
 const Companies = () => {
 	const dispatch = useDispatch();

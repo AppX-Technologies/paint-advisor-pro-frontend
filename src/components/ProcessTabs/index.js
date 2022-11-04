@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import BasicTabs from "../../Common/BasicTabs";
-import { processesTabLists } from "../../Common/Constants";
+import BasicTabs from "../../common/BasicTabs";
+import { processesTabLists } from "../../common/Constants";
 import { fetchSingleOrg } from "../../features/org/orgSlice";
 import { fetchProcess } from "../../features/process/processSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";

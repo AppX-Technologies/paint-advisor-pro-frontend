@@ -2,7 +2,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import processService from "./processService";
 import { showMessage } from "../snackbar/snackbarSlice";
-import { addOrUpdateItemInArray } from "../../Helpers/addRemoveUpdateListHelper";
+import { addOrUpdateItemInArray } from "../../helpers/addRemoveUpdateListHelper";
 
 // initial states
 
