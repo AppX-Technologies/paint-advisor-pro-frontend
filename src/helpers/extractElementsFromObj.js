@@ -3,6 +3,5 @@ export const extractElement = (obj) => {
 	for (let key in obj) {
 		arrayOfElements.push(obj[key]);
 	}
-	//test push
 	return arrayOfElements;
 };
