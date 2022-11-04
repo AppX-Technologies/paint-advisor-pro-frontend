@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -11,8 +10,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { CircularProgress, Grid, TextareaAutosize } from '@mui/material';
-import formReducer from '../DashboardTabs/reducers/formReducer';
 import { useDispatch, useSelector } from 'react-redux';
+import formReducer from '../DashboardTabs/reducers/formReducer';
 import { createProcess } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 
@@ -107,8 +106,7 @@ export default function Edit(props) {
                   name='stage'
                   value={formState.stage ? formState.stage : editFormData[1]}
                   label='stage'
-                  onChange={(e) => handleTextChange(e)}
-                >
+                  onChange={(e) => handleTextChange(e)}>
                   <MenuItem value='Presentation'>Preparation</MenuItem>
                   <MenuItem value='Painting'>Painting</MenuItem>
                   <MenuItem value='Clean up'>Clean up</MenuItem>
@@ -124,8 +122,7 @@ export default function Edit(props) {
                   name='bidType'
                   value={formState.bidType ? formState.bidType : editFormData[3]}
                   label='Bid Type'
-                  onChange={(e) => handleTextChange(e)}
-                >
+                  onChange={(e) => handleTextChange(e)}>
                   <MenuItem value='Interior'>Interior</MenuItem>
                   <MenuItem value='Exterior'>Exterior</MenuItem>
                 </Select>

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
@@ -141,8 +140,7 @@ export default function FormDialog(props) {
                   value={formState.stage}
                   label='stage'
                   onChange={(e) => handleTextChange(e)}
-                  required
-                >
+                  required>
                   <MenuItem value='Presentation'>Presentation</MenuItem>
                   <MenuItem value='Painting'>Painting</MenuItem>
                   <MenuItem value='Clean up'>Clean up</MenuItem>
@@ -158,8 +156,7 @@ export default function FormDialog(props) {
                   name='bidType'
                   value={formState.bidType}
                   label='Bid Type'
-                  onChange={(e) => handleTextChange(e)}
-                >
+                  onChange={(e) => handleTextChange(e)}>
                   <MenuItem value='Interior'>Interior</MenuItem>
                   <MenuItem value='Exterior'>Exterior</MenuItem>
                 </Select>

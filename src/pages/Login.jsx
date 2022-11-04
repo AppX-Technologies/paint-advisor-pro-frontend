@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as React from 'react';
 import {
   Avatar,
@@ -89,8 +88,7 @@ export default function Login() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center'
-        }}
-      >
+        }}>
         <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
@@ -140,8 +138,7 @@ export default function Login() {
                 variant='body2'
                 onClick={() => {
                   dispatch(openModal('otp'));
-                }}
-              >
+                }}>
                 Forgot password?
               </Link>
             </Grid>
@@ -165,8 +162,7 @@ export default function Login() {
           <ConfirmModal
             modalTitle='Reset Password?'
             contentMessage='Enter the OTP sent to your mail and reset the password.'
-            type='otp'
-          >
+            type='otp'>
             {/* <Typography variant="p">
                 OTP <span>*</span>
               </Typography> */}
@@ -208,8 +204,7 @@ export default function Login() {
                     <IconButton
                       aria-label='toggle password visibility'
                       onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
+                      onMouseDown={handleMouseDownPassword}>
                       {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                     </IconButton>
                   </InputAdornment>
@@ -234,8 +229,7 @@ export default function Login() {
                     <IconButton
                       aria-label='toggle password visibility'
                       onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
+                      onMouseDown={handleMouseDownPassword}>
                       {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                     </IconButton>
                   </InputAdornment>
@@ -251,8 +245,7 @@ export default function Login() {
                 variant='body2'
                 onClick={() => {
                   navigate('/register');
-                }}
-              >
+                }}>
                 Don't have an account? Click here to register
               </Link>
             </Grid>

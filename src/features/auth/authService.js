@@ -57,12 +57,24 @@ const resetPassword = async (userData) => {
   return response.data;
 };
 
+const getLoggedInUser = () => {
+  const user = localStorage.getItem('user');
+  if (!user) return;
+
+  try {
+    return JSON.parse(user);
+  } catch (e) {
+    // no user
+  }
+};
+
 const authService = {
   register,
   login,
   logout,
   generateRegistrationOtp,
   sendForgotPasswordLink,
-  resetPassword
+  resetPassword,
+  getLoggedInUser
 };
 export default authService;

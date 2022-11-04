@@ -4,13 +4,13 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  const token = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
+
   const handleLoginRoute = () => {
     navigate('/login');
   };
 
-  React.useEffect(() => {
+  /*   React.useEffect(() => {
     if (token) {
       if (token.role === 'Org Admin' || token.role === 'Estimator' || token.role === 'Painter') {
         navigate(`/company`, { replace: true });
@@ -18,7 +18,7 @@ const Header = () => {
         navigate('/dashboard', { replace: true });
       }
     }
-  }, []);
+  }, []); */
 
   return (
     <AppBar position='static'>

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -6,11 +5,11 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { closeModal, otpModal, closeOtpModal } from '../../features/modal/modalSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
-import { sendForgotPasswordLink, reset, resetPassword } from '../../features/auth/authSlice';
 import { CircularProgress, Stack, Typography } from '@mui/material';
+import { sendForgotPasswordLink, reset, resetPassword } from '../../features/auth/authSlice';
+import { closeModal, otpModal, closeOtpModal } from '../../features/modal/modalSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 
 let widthChange = true;
@@ -24,7 +23,7 @@ export default function ConfirmModal({ children, modalTitle, contentMessage, typ
     (store) => store.modal
   );
 
-  widthChange = isOtpModal ? false : true;
+  widthChange = !isOtpModal;
 
   const dispatch = useDispatch();
   const { isLoading, isSuccessOtp, isResetSuccess } = useSelector((store) => store.auth);
@@ -35,7 +34,7 @@ export default function ConfirmModal({ children, modalTitle, contentMessage, typ
         dispatch(showMessage({ message: "Password doesn't match", type: 'error' }));
         return;
       }
-      dispatch(resetPassword({ email: resetEmail, temporaryKey: otp, newPassword: newPassword }));
+      dispatch(resetPassword({ email: resetEmail, temporaryKey: otp, newPassword }));
     } else {
       dispatch(sendForgotPasswordLink({ email: resetEmail }));
     }
@@ -60,8 +59,7 @@ export default function ConfirmModal({ children, modalTitle, contentMessage, typ
         open={type === 'otp' ? isOtpModal : isOpen}
         onClose={() => {
           dispatch(closeModal());
-        }}
-      >
+        }}>
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>{modalTitle}</Typography>
@@ -76,8 +74,7 @@ export default function ConfirmModal({ children, modalTitle, contentMessage, typ
           <Button
             onClick={() => {
               dispatch(closeModal(type));
-            }}
-          >
+            }}>
             Cancel
           </Button>
           <Button variant='contained' color='primary' onClick={handleResetEmail}>

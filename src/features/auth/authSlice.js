@@ -5,8 +5,7 @@ import { showMessage } from '../snackbar/snackbarSlice';
 // initial states
 
 const initialState = {
-  user: null,
-  userType: null,
+  user: authService.getLoggedInUser(),
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -191,5 +190,5 @@ export const authSlice = createSlice({
 });
 
 export const { reset } = authSlice.actions;
-
+export const authSelector = (state) => state.auth;
 export default authSlice.reducer;

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import {
   Box,
@@ -141,8 +140,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
           justifyContent: 'space-evenly',
           alignItems: 'center',
           margin: '0 0 20px 0'
-        }}
-      >
+        }}>
         <StageTab stage={stage} onTabChange={handleChange} />
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <CustomButton variant='contained' onClick={() => setOpen(true)} sx={{ height: '47px' }}>

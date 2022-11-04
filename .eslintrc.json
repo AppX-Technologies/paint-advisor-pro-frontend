@@ -21,7 +21,8 @@
     "no-unused-vars": "warn",
     "react/react-in-jsx-scope": "off",
     "jsx-a11y/label-has-associated-control": "warn",
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "consistent-return": "off"
   },
   "globals": {
     "window": true,

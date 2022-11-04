@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -11,7 +10,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useDispatch, useSelector } from 'react-redux';
-import formReducer from './reducers/formReducer';
 import {
   Checkbox,
   CircularProgress,
@@ -22,8 +20,9 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-import { createUsers, fetchUsers, reset } from '../../features/users/userSlice';
 import { useEffect } from 'react';
+import formReducer from './reducers/formReducer';
+import { createUsers, fetchUsers, reset } from '../../features/users/userSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 
 const initialFormState = {
@@ -84,13 +83,11 @@ export default function CreateUserForm(props) {
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New User</Typography>
-            {
-              <CircularProgress
+            <CircularProgress
                 color='primary'
                 size={25}
                 style={{ display: isLoading ? 'block' : 'none' }}
               />
-            }
           </Stack>
         </DialogTitle>
         <DialogContent>
