@@ -1,33 +1,21 @@
-import * as React from 'react';
-import {
-  Avatar,
-  CssBaseline,
-  TextField,
-  Link,
-  Grid,
-  Box,
-  Typography,
-  Container,
-  CircularProgress
-} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import CustomButton from '../components/Button';
-import ConfirmModal from '../components/Modal';
-import OtpInput from 'react-otp-input';
-import {
-  openModal,
-  fillOtp,
-  fillEmail,
-  setNewPassword,
-  confirmNewPassword
-} from '../features/modal/modalSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { InputAdornment, IconButton } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { showMessage } from '../features/snackbar/snackbarSlice';
+import {
+  Avatar, Box, CircularProgress, Container, CssBaseline, Grid, IconButton, InputAdornment, TextField, Typography
+} from '@mui/material';
+import * as React from 'react';
+import OtpInput from 'react-otp-input';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
+import ConfirmModal from '../components/Modal';
 import { login, reset } from '../features/auth/authSlice';
+import {
+  confirmNewPassword, fillEmail, fillOtp, openModal, setNewPassword
+} from '../features/modal/modalSlice';
+import { showMessage } from '../features/snackbar/snackbarSlice';
+import { validateEmail } from '../helpers/utlis';
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -54,18 +42,12 @@ export default function Login() {
       }
     }
     if (isError) {
-      dispatch(showMessage({ message: message, severity: 'error' }));
+      dispatch(showMessage({ message, severity: 'error' }));
       dispatch(reset());
     }
   }, [isSuccess, isError, message, dispatch]);
 
-  const validateEmail = (email) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  };
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -106,7 +88,7 @@ export default function Login() {
                 name='email'
                 autoComplete='email'
                 onChange={(e) => setEmail(e.target.value)}
-                error={email && validateEmail(email) === null ? true : false}
+                error={!!(email && validateEmail(email) === null)}
                 helperText={email && validateEmail(email) === null ? 'Incorrect email' : ''}
               />
             </Grid>
@@ -120,27 +102,26 @@ export default function Login() {
                 id='password'
                 autoComplete='new-password'
                 onChange={(e) => setPassword(e.target.value)}
-                error={password && password.length & (password.length < 5) ? true : false}
+                error={(password && password.length && (password.length < 5))}
                 helperText={
                   password && password.length < 5 ? 'Password must be more than 5 characters!' : ''
                 }
               />
             </Grid>
           </Grid>
-          <CustomButton type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
+          <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
             Login
             {isLoading && <CircularProgress color='inherit' size={24} sx={{ ml: 2 }} />}
-          </CustomButton>
+          </Button>
           <Grid container justifyContent='flex-end'>
             <Grid item>
-              <Link
-                href='#'
+              <Button
                 variant='body2'
                 onClick={() => {
                   dispatch(openModal('otp'));
                 }}>
                 Forgot password?
-              </Link>
+              </Button>
             </Grid>
           </Grid>
 
@@ -240,14 +221,13 @@ export default function Login() {
           </ConfirmModal>
           <Grid container justifyContent='flex-end'>
             <Grid item>
-              <Link
-                href='#'
+              <Button
                 variant='body2'
                 onClick={() => {
                   navigate('/register');
                 }}>
-                Don't have an account? Click here to register
-              </Link>
+                {`Don't have an account? Click here to register`}
+              </Button>
             </Grid>
           </Grid>
         </Box>

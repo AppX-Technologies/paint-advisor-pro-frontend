@@ -1,22 +1,20 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import OtpInput from 'react-otp-input';
-import { Link } from 'react-router-dom';
-import { generateRegistrationOtp, register, reset } from '../features/auth/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import registerReducer from './reducers/registerReducer';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
 import { useReducer } from 'react';
-import { useNavigate } from 'react-router-dom';
+import OtpInput from 'react-otp-input';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { generateRegistrationOtp, register, reset } from '../features/auth/authSlice';
 import { showMessage } from '../features/snackbar/snackbarSlice';
+import registerReducer from './reducers/registerReducer';
 
 const initialFormState = {
   name: '',
@@ -47,7 +45,7 @@ export default function RegisterPage() {
     });
   };
   const requiredStates = {
-    email: email,
+    email,
     name: formState.name,
     phone: formState.phone,
     password: formState.password,
@@ -55,13 +53,13 @@ export default function RegisterPage() {
   };
   const handleSubmitOtp = (event) => {
     event.preventDefault();
-    dispatch(generateRegistrationOtp({ email: email }));
+    dispatch(generateRegistrationOtp({ email }));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (formState.password !== formState.confirmPassword) {
-      alert('Password and confirm password should be same');
+      dispatch(showMessage({message: 'Password and confirm password should be same', severity: 'error'}));
       return;
     }
     dispatch(register(requiredStates));
