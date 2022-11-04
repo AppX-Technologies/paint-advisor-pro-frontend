@@ -4,9 +4,7 @@ import Profile from '../../components/ProfileTab/index';
 
 const index = () => {
   return (
-    <>
-      <DrawerMenu tabPanel={<Profile />} showDrawerMenu={true} />
-    </>
+    <DrawerMenu tabPanel={<Profile />} showDrawerMenu />
   );
 };
 
