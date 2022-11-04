@@ -20,7 +20,7 @@ import { createProcess, reset } from "../../features/process/processSlice";
 import FormDialog from "./ProcessReg";
 import Edit from "./EditProcessForm";
 import { useParams } from "react-router-dom";
-import { filterProcessByBid } from "../../Helpers/bidFilterHelpers";
+import { filterProcessByBid } from "../../helpers/bidFilterHelpers";
 import StageTab from "./StageTab";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import { DraggableDataTable } from "../../common/DraggableDataTable";

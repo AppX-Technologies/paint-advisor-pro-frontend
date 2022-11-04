@@ -14,7 +14,7 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { CircularProgress, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import { extractElement } from "../Helpers/extractElementsFromObj";
+import { extractElement } from "../helpers/extractElementsFromObj";
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
