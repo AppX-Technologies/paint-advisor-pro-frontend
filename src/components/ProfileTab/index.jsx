@@ -1,7 +1,11 @@
 import React from "react";
-
+import { DraggableDataTable } from "../../Common/DraggableDataTable";
 const Profile = () => {
-  return <div>Profile Page</div>;
+	return (
+		<>
+			<DraggableDataTable />
+		</>
+	);
 };
 
 export default Profile;

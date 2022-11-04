@@ -66,7 +66,7 @@ export default function Edit(props) {
 			add: true,
 			token: userDetail.token
 		};
-
+		console.log(formStateWithToken);
 		dispatch(createProcess(formStateWithToken));
 		setOpenEditForm(false);
 	};

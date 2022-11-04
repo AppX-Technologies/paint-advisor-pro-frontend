@@ -82,6 +82,7 @@ export const companyColumns = ({
 				filter: false,
 				customBodyRender: (value, tableMeta, updateValue) => {
 					const getId = tableMeta.rowData[0];
+
 					return (
 						<>
 							<Stack direction="row" spacing={2}>
@@ -328,74 +329,20 @@ export const companyUserColumns = ({
 		}
 	];
 };
-export const processColumn = ({
-	setEditFormData,
-	setOpenEditForm,
-	setOpenDeleteModal,
-	onDeleteBtnClick,
-	editFormData
-}) => {
+export const processColumn = () => {
 	return [
 		{
-			name: "",
-			label: "",
-			options: {
-				display: false,
-				filter: false
-			}
-		},
-		{
 			name: "stage",
-			label: "Stage",
-			options: {
-				filter: false,
-				sort: true,
-				setCellProps: () => ({ style: { width: "200px" } })
-			}
+			label: "Stage"
 		},
 		{
 			name: "process",
-			label: "Process Description",
-			options: {
-				filter: false,
-				sort: true,
-				setCellProps: () => ({ style: { maxWidth: "300px" } })
-			}
+			label: "Process Description"
 		},
 
 		{
 			label: "Action",
-			name: "",
-			options: {
-				filter: false,
-				setCellProps: () => ({ style: { maxWidth: "200px" } }),
-				customBodyRender: (value, tableMeta, updateValue) => {
-					const getId = tableMeta.rowData[0];
-					console.log(tableMeta.tableState.filterList[1][0]);
-
-					return (
-						<>
-							<Stack direction="row" spacing={2}>
-								<EditOutlinedIcon
-									style={{ cursor: "pointer" }}
-									onClick={() => {
-										setEditFormData(tableMeta.rowData);
-										setOpenEditForm(true);
-									}}
-									editFormData={editFormData}
-								/>
-								<DeleteOutlineOutlinedIcon
-									style={{ cursor: "pointer" }}
-									onClick={(e) => {
-										setOpenDeleteModal(true);
-										onDeleteBtnClick(e, getId);
-									}}
-								/>
-							</Stack>
-						</>
-					);
-				}
-			}
+			name: ""
 		}
 	];
 };

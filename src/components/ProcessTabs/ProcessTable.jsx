@@ -26,6 +26,7 @@ import { filterProcessByBid } from "../../Helpers/bidFilterHelpers";
 import { fetchSingleOrg } from "../../features/org/orgSlice";
 import StageTab from "./StageTab";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
+import { DraggableDataTable } from "../../Common/DraggableDataTable";
 const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 	const dispatch = useDispatch();
 	const { processList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(
@@ -43,20 +44,13 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 	const [filteredProcesses, setFilteredProcesses] = useState([]);
 	const [processId, setProcessId] = useState("");
 	const [open, setOpen] = useState(false);
+	const [dataList, setDataList] = useState([]);
 
 	const onDeleteBtnClick = (e, getId) => {
 		e.stopPropagation();
 		setProcessId(getId);
 	};
-	const columns = processColumn({
-		setEditFormData,
-		setOpenEditForm,
-		setOpenDeleteModal,
-		onDeleteBtnClick,
-		editFormData
-	});
-
-	const options = tableOptions(isLoading, processList);
+	const columns = processColumn();
 
 	useEffect(() => {
 		if (isSuccess) {
@@ -95,6 +89,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 				})
 			);
 		};
+		console.log(editFormData);
 
 		return (
 			<Dialog open={openDeleteModal} onClose={handleClose}>
@@ -150,6 +145,16 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 					<CustomButton
 						variant="contained"
 						onClick={() => setOpen(true)}
+						disabled={true}
+						sx={{ height: "47px", marginRight: "10px" }}
+					>
+						Sort
+					</CustomButton>
+				</Box>
+				<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+					<CustomButton
+						variant="contained"
+						onClick={() => setOpen(true)}
 						sx={{ height: "47px" }}
 					>
 						Create
@@ -157,7 +162,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 				</Box>
 			</Box>
 
-			<DataTable
+			{/* <DataTable
 				datalist={
 					filteredProcesses &&
 					filteredProcesses.map((process) => {
@@ -168,6 +173,28 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 				options={options}
 				title={filterValue + " Processes"}
 				isLoading={isLoading}
+			/> */}
+			<DraggableDataTable
+				initialDataList={
+					filteredProcesses &&
+					filteredProcesses.map((process) => {
+						return {
+							id: process._id,
+							stage: process.stage,
+							description: process.description,
+							bidType: process.bidType
+						};
+					})
+				}
+				isLoading={isLoading}
+				columns={columns}
+				dataList={dataList}
+				setDataList={setDataList}
+				title={"Processes List"}
+				setEditFormData={setEditFormData}
+				setOpenEditForm={setOpenEditForm}
+				setOpenDeleteModal={setOpenDeleteModal}
+				onDeleteBtnClick={onDeleteBtnClick}
 			/>
 
 			<FormDialog
