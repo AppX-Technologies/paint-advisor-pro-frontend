@@ -5,12 +5,19 @@ const endpoint = process.env.REACT_APP_API_BASE_URL_USERS;
 const REGISTRATION_OTP = `${endpoint}/generate-registration-otp`;
 const FORGOT_PASSWORD_OTP = `${endpoint}/send-password-reset-link`;
 const RESET_PASSWORD = `${endpoint}/reset-password`;
-const REGISTER_URL =`${endpoint}/register`;
+const REGISTER_URL = `${endpoint}/register`;
 const LOGIN_URL = `${endpoint}/login`;
 
 const generateRegistrationOtp = async (userData) => {
   const response = await axios.post(REGISTRATION_OTP, userData);
   return response.data;
+};
+export const getUserDetail = () => {
+  return (
+    JSON.parse(localStorage.getItem("user")) || {
+      token: null,
+    }
+  );
 };
 
 // Register user
@@ -41,14 +48,21 @@ const login = async (userData) => {
 
 const logout = () => localStorage.removeItem("user");
 
-const sendForgotPasswordLink = async (userData) =>{
+const sendForgotPasswordLink = async (userData) => {
   const response = await axios.post(FORGOT_PASSWORD_OTP, userData);
   return response.data;
-}
-const resetPassword = async (userData) =>{
+};
+const resetPassword = async (userData) => {
   const response = await axios.post(RESET_PASSWORD, userData);
   return response.data;
-}
+};
 
-const authService = { register, login, logout ,generateRegistrationOtp, sendForgotPasswordLink, resetPassword};
+const authService = {
+  register,
+  login,
+  logout,
+  generateRegistrationOtp,
+  sendForgotPasswordLink,
+  resetPassword,
+};
 export default authService;
