@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Table from "@mui/material/Table";
 import MoreVertIcon from "@mui/icons-material/DragHandleOutlined";
@@ -14,7 +14,6 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { CircularProgress, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import { extractElement } from "../helpers/extractElementsFromObj";
 import Button from "../components/Button";
 import { Link } from "react-router-dom";
 
@@ -204,9 +203,7 @@ export const DraggableDataTable = ({
 																<EditOutlinedIcon
 																	style={{ cursor: "pointer" }}
 																	onClick={() => {
-																		setEditFormData(() =>
-																			extractElement(rowItem)
-																		);
+																		setEditFormData(rowItem);
 																		setOpenEditForm(true);
 																	}}
 																/>

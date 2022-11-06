@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
@@ -12,7 +12,6 @@ import EditUserForm from "./EditUserForm";
 import { deleteUser, fetchUsers, reset } from "../../features/users/userSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import { userColumn } from "../../common/tableHead";
-import { tableOptions } from "../../common/tableOptions";
 import { DraggableDataTable } from "../../common/DraggableDataTable";
 
 const Users = () => {
@@ -24,7 +23,6 @@ const Users = () => {
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
 	const [emailId, setEmailId] = React.useState("");
-	const [options, setOptions] = React.useState({});
 	React.useEffect(() => {
 		dispatch(fetchUsers(userDetail.token));
 	}, []);
@@ -92,9 +90,6 @@ const Users = () => {
 		);
 	}
 
-	useEffect(() => {
-		setOptions(tableOptions(isLoading, userList));
-	}, []);
 	return (
 		<>
 			<Box sx={{ display: "flex", justifyContent: "flex-end" }}>

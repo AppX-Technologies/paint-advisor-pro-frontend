@@ -30,11 +30,11 @@ export default function Edit(props) {
 	console.log("sadsad");
 	const { openEditForm, setOpenEditForm, editFormData, getId } = props;
 	const initialFormState = {
-		name: editFormData[1] ? editFormData[1] : "",
-		email: editFormData[2] ? editFormData[2] : "",
-		phone: editFormData[3] ? editFormData[3] : "",
-		role: editFormData[4] ? editFormData[4] : "",
-		proficiency: editFormData[5] ? editFormData[5] : 1
+		name: editFormData.name ? editFormData.name : "",
+		email: editFormData.email ? editFormData.email : "",
+		phone: editFormData.phone ? editFormData.phone : "",
+		role: editFormData.role ? editFormData.role : "",
+		proficiency: editFormData.proficiency ? editFormData.proficiency : 1
 	};
 	const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
 
@@ -42,11 +42,11 @@ export default function Edit(props) {
 	const { isUpdated, isUpdating } = useSelector((state) => state.usersFromCompany);
 
 	useEffect(() => {
-		["name", "email", "phone", "role"].forEach((h, i) => {
+		Object.keys(editFormData).forEach((key) => {
 			dispatchNew({
 				type: "HANDLE_FORM_INPUT",
-				field: h,
-				payload: editFormData[i + 1]
+				field: key,
+				payload: editFormData[key]
 			});
 		});
 	}, [editFormData]);
@@ -127,7 +127,7 @@ export default function Edit(props) {
 								fullWidth
 								id="name"
 								autoFocus
-								placeholder={editFormData[1]}
+								placeholder={editFormData.name}
 								value={formState.name}
 								onChange={(e) => handleTextChange(e)}
 							/>
@@ -140,7 +140,7 @@ export default function Edit(props) {
 								fullWidth
 								id="phone"
 								autoFocus
-								placeholder={editFormData[3]}
+								placeholder={editFormData.phone}
 								value={formState.phone}
 								onChange={(e) => handleTextChange(e)}
 							/>
@@ -156,7 +156,7 @@ export default function Edit(props) {
 									name="role"
 									labelId="demo-simple-select-standard-label"
 									id="demo-simple-select-standard"
-									value={formState.role ? formState.role : editFormData[4]}
+									value={formState.role ? formState.role : editFormData.role}
 									onChange={(e) => handleTextChange(e)}
 									label="Role"
 								>
