@@ -93,15 +93,15 @@ export default function FormDialog(props) {
     }
   }, [isSuccess]);
 
-useEffect(() => {
-  ['stage', 'description'].forEach((key, i) => {
-    dispatchNew({
-      type: 'HANDLE_FORM_INPUT',
-      field: key,
-      payload: key === 'stage' ? stageCategory : ''
+  useEffect(() => {
+    ['stage', 'description'].forEach((key, i) => {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: key,
+        payload: key === 'stage' ? stageCategory : ''
+      });
     });
-  });	
-}, [stageType]);
+  }, [stageType]);
 
   const handleTextChange = (e) => {
     dispatchNew({

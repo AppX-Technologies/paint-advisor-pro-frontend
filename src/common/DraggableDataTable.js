@@ -12,7 +12,7 @@ import Paper from '@mui/material/Paper';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
@@ -122,7 +122,7 @@ export const DraggableDataTable = ({
           {/* <TableBody> */}
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable isDropDisabled={!draggable} droppableId='droppable'>
-              {(provided, snapshot) => (
+              {(provided) => (
                 <TableBody {...provided.droppableProps} ref={provided.innerRef}>
                   {initialDataList &&
                     initialDataList.map((rowItem, index) => (
@@ -219,6 +219,20 @@ export const DraggableDataTable = ({
           {/* </TableBody> */}
         </Table>
       </TableContainer>
+      {initialDataList && initialDataList.length === 0 && (
+        <>
+          <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              marginTop: '-20',
+              display: 'flex',
+              justifyContent: 'center'
+            }}>
+            <h4 sx={{ textAlign: 'center', fontSize: '18px' }}>No Data Available</h4>
+          </Box>
+        </>
+      )}
     </>
   );
 };
