@@ -27,7 +27,7 @@ export const generateRegistrationOtp = createAsyncThunk(
 				(err.response && err.response.data && err.response.data.message) ||
 				err.message ||
 				err.toString();
-			thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+			thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
@@ -45,7 +45,7 @@ export const register = createAsyncThunk("auth/register", async (user, thunkAPI)
 			(error.response && error.response.data && error.response.data.message) ||
 			error.message ||
 			error.toString();
-		thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+		thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 		return thunkAPI.rejectWithValue(message);
 	}
 });
@@ -82,7 +82,7 @@ export const sendForgotPasswordLink = createAsyncThunk(
 				(error.response && error.response.data && error.response.data.message) ||
 				error.message ||
 				error.toString();
-			thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+			thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
@@ -98,7 +98,7 @@ export const resetPassword = createAsyncThunk("auth/resetPassword", async (user,
 			(error.response && error.response.data && error.response.data.message) ||
 			error.message ||
 			error.toString();
-		thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+		thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 		return thunkAPI.rejectWithValue(message);
 	}
 });

@@ -6,14 +6,15 @@ import orgReducer from "../features/org/orgSlice";
 import userReducer from "../features/users/userSlice";
 import usersFromCompanyReducer from "../features/usersFromCompany/usersFromCompanySlice";
 import processReducer from "../features/process/processSlice";
+
 export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    modal: modalReducer,
-    snackbar: snackbarReducer,
-    org: orgReducer,
-    user: userReducer,
-    process: processReducer,
-    usersFromCompany: usersFromCompanyReducer,
-  },
+	reducer: {
+		auth: authReducer,
+		modal: modalReducer,
+		snackbar: snackbarReducer,
+		org: orgReducer,
+		user: userReducer,
+		process: processReducer,
+		usersFromCompany: usersFromCompanyReducer
+	}
 });

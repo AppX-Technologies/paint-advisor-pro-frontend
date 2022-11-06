@@ -5,8 +5,7 @@ import Tab from "@mui/material/Tab";
 
 const StageTab = ({ stage, onTabChange }) => {
 	return (
-		<>
-			<Box
+		<Box
 				sx={{
 					width: "90%",
 					bgcolor: "background.paper",
@@ -20,7 +19,6 @@ const StageTab = ({ stage, onTabChange }) => {
 					<Tab label="Cleanup" />
 				</Tabs>
 			</Box>
-		</>
 	);
 };
 

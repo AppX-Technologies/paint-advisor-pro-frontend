@@ -1,7 +1,7 @@
-/* eslint-disable */
 import { useSelector } from "react-redux";
 import { NavLink, Outlet } from "react-router-dom";
 import { Typography } from "@mui/material";
+
 const RestrictedRoutes = () => {
 	// const { user } = useSelector((state) => state.auth)
 	const user = JSON.parse(localStorage.getItem("user")) || { user: null };

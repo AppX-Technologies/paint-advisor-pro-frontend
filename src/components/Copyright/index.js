@@ -10,7 +10,7 @@ export function Copyright(props) {
 				Paint Advisor
 			</Link>
 			{new Date().getFullYear()}
-			{"."}
+			.
 		</Typography>
 	);
 }

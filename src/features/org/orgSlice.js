@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import orgService from "./orgService";
 import { showMessage, onClose } from "../snackbar/snackbarSlice";
@@ -29,7 +28,7 @@ export const fetchOrgs = createAsyncThunk("org/fetchOrgs", async (userData, thun
 			(err.response && err.response.data && err.response.data.message) ||
 			err.message ||
 			err.toString();
-		thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+		thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 		return thunkAPI.rejectWithValue(message);
 	}
 });
@@ -43,7 +42,7 @@ export const fetchSingleOrg = createAsyncThunk("org/fetchSingleOrg", async (user
 			(err.response && err.response.data && err.response.data.message) ||
 			err.message ||
 			err.toString();
-		thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+		thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 		return thunkAPI.rejectWithValue(message);
 	}
 });
@@ -59,7 +58,7 @@ export const createOrgs = createAsyncThunk("auth/createOrgs", async (userData, t
 			(error.response && error.response.data && error.response.data.message) ||
 			error.message ||
 			error.toString();
-		thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+		thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 		return thunkAPI.rejectWithValue(message);
 	}
 });
@@ -76,7 +75,7 @@ export const updateOrg = createAsyncThunk("auth/updateOrg", async (userData, thu
 			(error.response && error.response.data && error.response.data.message) ||
 			error.message ||
 			error.toString();
-		thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+		thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 		return thunkAPI.rejectWithValue(message);
 	}
 });
@@ -91,7 +90,7 @@ export const deleteOrg = createAsyncThunk("auth/deleteOrg", async (userData, thu
 			(error.response && error.response.data && error.response.data.message) ||
 			error.message ||
 			error.toString();
-		thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+		thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 		return thunkAPI.rejectWithValue(message);
 	}
 });

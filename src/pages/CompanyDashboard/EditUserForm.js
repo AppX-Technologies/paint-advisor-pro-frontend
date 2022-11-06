@@ -6,7 +6,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useDispatch, useSelector } from "react-redux";
-import formReducer from "../reducers/registerReducer";
 import {
 	CircularProgress,
 	FormControl,
@@ -18,6 +17,7 @@ import {
 	Typography
 } from "@mui/material";
 import { useEffect } from "react";
+import formReducer from "../reducers/registerReducer";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import {
 	updateUserFromCompany,
