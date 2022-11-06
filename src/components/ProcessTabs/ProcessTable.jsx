@@ -1,47 +1,36 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Stack,
-  Typography
-} from '@mui/material';
+import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
 import { processColumn } from '../../common/tableHead';
 import { createProcess, reset } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { filterProcessByBid } from '../../helpers/bidFilterHelpers';
 import CustomButton from '../Button';
+import { DeleteModal } from '../delete-model/DeleteModel';
 import Edit from './EditProcessForm';
 import FormDialog from './ProcessReg';
 import StageTab from './StageTab';
+
 const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   const dispatch = useDispatch();
   const { processList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(
     (state) => state.process
   );
-  const [stage, setStage] = React.useState(0);
+  const [stageValue, setStageValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
-    setStage(newValue);
+    setStageValue(newValue);
   };
   const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
-  const [dataList, setDataList] = useState([]);
+  const [processDataList, setProcessDataList] = useState([]);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [editFormData, setEditFormData] = useState([]);
   const [filteredProcesses, setFilteredProcesses] = useState([]);
   const [processId, setProcessId] = useState('');
   const [open, setOpen] = useState(false);
-  const { companyId } = useParams();
 
   const onDeleteBtnClick = (e, getId) => {
     e.stopPropagation();
@@ -86,60 +75,62 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
     }
   }, [isSuccess]);
 
-  //Delete popup menu
-  function DeleteModal() {
-    const handleClose = () => {
-      setOpenDeleteModal(false);
-    };
-    const handleDelete = () => {
-      setOpenDeleteModal(false);
-      dispatch(
-        createProcess({
-          ID: processList[0]._id,
-          previousProcesses: processList[0].processes,
-          add: false,
-          token: userDetail.token,
-          idToBeDeleted: processId
-        })
-      );
-    };
+  // //Delete popup menu
+  // function DeleteModal() {
+  // 	const handleClose = () => {
+  // 		setOpenDeleteModal(false);
+  // 	};
+  // 	const handleDelete = () => {
+  // 		setOpenDeleteModal(false);
+  // 		dispatch(
+  // 			createProcess({
+  // 				ID: processList[0]._id,
+  // 				previousProcesses: processList[0].processes,
+  // 				add: false,
+  // 				token: userDetail.token,
+  // 				idToBeDeleted: processId
+  // 			})
+  // 		);
+  // 	};
 
-    return (
-      <Dialog open={openDeleteModal} onClose={handleClose}>
-        <DialogTitle>
-          <Stack direction='row' spacing={2}>
-            <Typography variant='h6'>Delete Process</Typography>
-            {
-              <CircularProgress
-                color='primary'
-                size={25}
-                style={{ display: isDeleting ? 'block' : 'none' }}
-              />
-            }
-          </Stack>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>Are you sure you want to delete this Process?</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleDelete} disabled={isDeleting}>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
+  // 	return (
+  // 		<Dialog open={openDeleteModal} onClose={handleClose}>
+  // 			<DialogTitle>
+  // 				<Stack direction="row" spacing={2}>
+  // 					<Typography variant="h6">Delete Process</Typography>
+  // 					{
+  // 						<CircularProgress
+  // 							color="primary"
+  // 							size={25}
+  // 							style={{ display: isDeleting ? "block" : "none" }}
+  // 						/>
+  // 					}
+  // 				</Stack>
+  // 			</DialogTitle>
+  // 			<DialogContent>
+  // 				<DialogContentText>
+  // 					Are you sure you want to delete this Process?
+  // 				</DialogContentText>
+  // 			</DialogContent>
+  // 			<DialogActions>
+  // 				<Button onClick={handleClose}>Cancel</Button>
+  // 				<Button onClick={handleDelete} disabled={isDeleting}>
+  // 					Delete
+  // 				</Button>
+  // 			</DialogActions>
+  // 		</Dialog>
+  // 	);
+  // }
 
   useEffect(() => {
-    if (stage === 0) {
+    if (stageValue === 0) {
       setFilteredProcesses(filterProcessByBid(processList, filterValue, 'Presentation'));
-    } else if (stage === 1) {
+    } else if (stageValue === 1) {
       setFilteredProcesses(filterProcessByBid(processList, filterValue, 'Painting'));
-    } else if (stage === 2) {
+    } else if (stageValue === 2) {
       setFilteredProcesses(filterProcessByBid(processList, filterValue, 'Clean up'));
     }
-  }, [processList, filterValue, stage]);
+  }, [processList, filterValue, stageValue]);
 
   return (
     <>
@@ -150,7 +141,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
           alignItems: 'center',
           margin: '0 0 20px 0'
         }}>
-        <StageTab stage={stage} onTabChange={handleChange} />
+        <StageTab stage={stageValue} onTabChange={handleChange} />
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <CustomButton variant='contained' onClick={() => setOpen(true)} sx={{ height: '47px' }}>
             Create
@@ -172,26 +163,40 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
         }
         isLoading={isLoading}
         columns={columns}
-        dataList={dataList}
-        setDataList={setDataList}
-        title={'Processes List'}
+        dataList={processDataList}
+        setDataList={setProcessDataList}
+        title='Processes List'
         setEditFormData={setEditFormData}
         setOpenEditForm={setOpenEditForm}
         setOpenDeleteModal={setOpenDeleteModal}
         onDeleteBtnClick={onDeleteBtnClick}
         onListSort={onListSort}
-        draggable={true}
+        draggable
       />
 
       <FormDialog
         open={open}
         setOpen={setOpen}
-        stageType={stage}
+        stageType={stageValue}
         bidType={filterValue}
         filteredProcesses={filteredProcesses}
         orgProcessId={org.processes}
       />
-      <DeleteModal />
+      <DeleteModal
+        openDeleteModal={openDeleteModal}
+        setOpenDeleteModal={setOpenDeleteModal}
+        isDeleting={isDeleting}
+        payloadWithUserToken={{
+          ID: processList[0] && processList[0]._id,
+          previousProcesses: processList[0] && processList[0].processes,
+          add: false,
+          token: userDetail.token,
+          idToBeDeleted: processId
+        }}
+        deleteProcess
+        modalTitle='Process'
+        deleteMethod={createProcess}
+      />
       <Edit
         openEditForm={openEditForm}
         setOpenEditForm={setOpenEditForm}

@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React from 'react';
 import BasicTabs from '../../common/BasicTabs';
 import { dashboardTabLists } from '../../common/Constants';

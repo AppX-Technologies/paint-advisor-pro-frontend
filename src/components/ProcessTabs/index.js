@@ -32,14 +32,10 @@ const index = () => {
 
   useEffect(() => {
     dispatch(
-      fetchProcess(
-        companyId
-          ? {
-              token: userDetail.token,
-              id: org.processes
-            }
-          : { token: userDetail.token }
-      )
+      fetchProcess({
+        token: userDetail.token,
+        id: companyId ? org.processes : undefined
+      })
     );
   }, []);
   useEffect(() => {

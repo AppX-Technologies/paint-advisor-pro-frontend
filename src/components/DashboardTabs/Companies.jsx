@@ -1,9 +1,4 @@
-import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { Box } from '@mui/material';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
@@ -11,6 +6,7 @@ import { companyColumns } from '../../common/tableHead';
 import { deleteOrg, fetchOrgs, reset } from '../../features/org/orgSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import CustomButton from '../Button';
+import { DeleteModal } from '../delete-model/DeleteModel';
 import EditOrgForm from './EditOrgForm';
 import FormDialog from './OrgRegisterForm';
 
@@ -47,46 +43,8 @@ const Companies = () => {
     e.stopPropagation();
     setUserId(getId);
   };
-  const columns = companyColumns({
-    setEditFormData,
-    setOpenEditForm,
-    setOpenDeleteModal,
-    onDeleteBtnClick,
-    editFormData
-  });
+  const columns = companyColumns();
 
-  function DeleteModal() {
-    const handleClose = () => {
-      setOpenDeleteModal(false);
-    };
-    const handleDelete = () => {
-      dispatch(deleteOrg({ id: userId, token: userDetail.token }));
-    };
-
-    return (
-      <Dialog open={openDeleteModal} onClose={handleClose}>
-        <DialogTitle>
-          <Stack direction='row' spacing={2}>
-            <Typography variant='h6'>Delete Company</Typography>
-            <CircularProgress
-              color='primary'
-              size={25}
-              style={{ display: isDeleting ? 'block' : 'none' }}
-            />
-          </Stack>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>Are you sure you want to delete this Company?</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleDelete} disabled={isDeleting}>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -125,7 +83,14 @@ const Companies = () => {
         setOpenEditForm={setOpenEditForm}
         editFormData={editFormData}
       />
-      <DeleteModal />
+      <DeleteModal
+        openDeleteModal={openDeleteModal}
+        setOpenDeleteModal={setOpenDeleteModal}
+        isDeleting={isDeleting}
+        payloadWithUserToken={{ id: userId, token: userDetail.token }}
+        modalTitle='Company'
+        deleteMethod={deleteOrg}
+      />
     </>
   );
 };

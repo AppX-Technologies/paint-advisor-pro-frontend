@@ -34,7 +34,7 @@ export default function FormDialog(props) {
   const initialFormState = {
     description: '',
     stage: stageCategory,
-    bidType: bidType
+    bidType
   };
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
@@ -49,7 +49,6 @@ export default function FormDialog(props) {
       ...formState,
       ID: processList[0]._id,
       previousProcesses: processList[0].processes,
-
       add: true,
       token: userDetail.token
     };
@@ -82,17 +81,27 @@ export default function FormDialog(props) {
           variant: 'success'
         })
       );
-      companyId
-        ? dispatch(
-            fetchProcess({
+      dispatch(
+        companyId
+          ? fetchProcess({
               token: userDetail.token,
               id: orgProcessId
             })
-          )
-        : dispatch(fetchProcess({ token: userDetail.token }));
+          : fetchProcess({ token: userDetail.token })
+      );
       dispatch(reset());
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    ['stage', 'description'].forEach((key, i) => {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: key,
+        payload: key === 'stage' ? stageCategory : ''
+      });
+    });
+  }, [stageType]);
 
   const handleTextChange = (e) => {
     dispatchNew({
@@ -107,7 +116,7 @@ export default function FormDialog(props) {
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New Process</Typography>
-            {<CircularProgress color='primary' size={25} style={{ display: 'none' }} />}
+            <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
           </Stack>
         </DialogTitle>
         <DialogContent>

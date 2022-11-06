@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { showMessage } from '../snackbar/snackbarSlice';
 import orgService from './orgService';
+import { showMessage, onClose } from '../snackbar/snackbarSlice';
 
 // initial states
 
@@ -149,9 +149,11 @@ export const orgSlice = createSlice({
         state.message = action.payload;
       })
       .addCase(deleteOrg.pending, (state) => {
+        state.isLoading = true;
         state.isDeleting = true;
       })
       .addCase(deleteOrg.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.isDeleting = false;
         state.isDeleted = true;
         state.message = action.payload;

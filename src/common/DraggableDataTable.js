@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Table from '@mui/material/Table';
@@ -12,7 +11,7 @@ import Paper from '@mui/material/Paper';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
@@ -122,9 +121,9 @@ export const DraggableDataTable = ({
           {/* <TableBody> */}
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable isDropDisabled={!draggable} droppableId='droppable'>
-              {(provided, snapshot) => (
+              {(provided) => (
                 <TableBody {...provided.droppableProps} ref={provided.innerRef}>
-                  {initialDataList &&
+                  {initialDataList && initialDataList.length > 0 ? (
                     initialDataList.map((rowItem, index) => (
                       <Draggable
                         isDragDisabled={!draggable}
@@ -210,7 +209,14 @@ export const DraggableDataTable = ({
                           </TableRow>
                         )}
                       </Draggable>
-                    ))}
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={columns.length + 2}>
+                        <h4 style={{ textAlign: 'center', fontSize: '18px' }}>No Data Available</h4>
+                      </td>
+                    </tr>
+                  )}
                   {provided.placeholder}
                 </TableBody>
               )}

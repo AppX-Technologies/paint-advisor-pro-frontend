@@ -22,7 +22,9 @@
     "react/react-in-jsx-scope": "off",
     "jsx-a11y/label-has-associated-control": "warn",
     "react/jsx-props-no-spreading": "off",
-    "consistent-return": "off"
+    "consistent-return": "off",
+    "react/no-unstable-nested-components": "off",
+    "jsx-curly-brace-presence": "off"
   },
   "globals": {
     "window": true,

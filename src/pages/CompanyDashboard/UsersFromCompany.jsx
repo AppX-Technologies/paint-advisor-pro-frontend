@@ -1,14 +1,10 @@
-import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { Box } from '@mui/material';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
 import { companyUserColumns } from '../../common/tableHead';
 import CustomButton from '../../components/Button';
+import { DeleteModal } from '../../components/delete-model/DeleteModel';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import {
   deleteUserByCompany,
@@ -64,45 +60,47 @@ const UsersFromCompany = (props) => {
     editFormData
   });
 
-  function DeleteModal() {
-    const handleClose = () => {
-      setOpenDeleteModal(false);
-    };
-    const handleDelete = () => {
-      dispatch(
-        deleteUserByCompany({
-          email: emailId,
-          token: JSON.parse(localStorage.getItem('user')).token
-        })
-      );
-    };
+  // function DeleteModal() {
+  // 	const handleClose = () => {
+  // 		setOpenDeleteModal(false);
+  // 	};
+  // 	const handleDelete = () => {
+  // 		dispatch(
+  // 			deleteUserByCompany({
+  // 				email: emailId,
+  // 				token: JSON.parse(localStorage.getItem("user")).token
+  // 			})
+  // 		);
+  // 	};
 
-    return (
-      <Dialog open={openDeleteModal} onClose={handleClose}>
-        <DialogTitle>
-          <Stack direction='row' spacing={2}>
-            <Typography variant='h6'>Delete user</Typography>
-            {
-              <CircularProgress
-                color='primary'
-                size={25}
-                style={{ display: isDeleting ? 'block' : 'none' }}
-              />
-            }
-          </Stack>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>Are you sure you want to delete this user?</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleDelete} disabled={isDeleting}>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
+  // 	return (
+  // 		<Dialog open={openDeleteModal} onClose={handleClose}>
+  // 			<DialogTitle>
+  // 				<Stack direction="row" spacing={2}>
+  // 					<Typography variant="h6">Delete user</Typography>
+  // 					{
+  // 						<CircularProgress
+  // 							color="primary"
+  // 							size={25}
+  // 							style={{ display: isDeleting ? "block" : "none" }}
+  // 						/>
+  // 					}
+  // 				</Stack>
+  // 			</DialogTitle>
+  // 			<DialogContent>
+  // 				<DialogContentText>
+  // 					Are you sure you want to delete this user?
+  // 				</DialogContentText>
+  // 			</DialogContent>
+  // 			<DialogActions>
+  // 				<Button onClick={handleClose}>Cancel</Button>
+  // 				<Button onClick={handleDelete} disabled={isDeleting}>
+  // 					Delete
+  // 				</Button>
+  // 			</DialogActions>
+  // 		</Dialog>
+  // 	);
+  // }
 
   return (
     <>
@@ -131,12 +129,12 @@ const UsersFromCompany = (props) => {
         })}
         isLoading={isLoading}
         columns={columns}
-        title={'Users List'}
+        title='Users List'
         setEditFormData={setEditFormData}
         setOpenEditForm={setOpenEditForm}
         setOpenDeleteModal={setOpenDeleteModal}
         onDeleteBtnClick={onDeleteBtnClick}
-        deleteByEmail={true}
+        deleteByEmail
       />
 
       <CreateUserForm open={open} setOpen={setOpen} />
@@ -148,7 +146,17 @@ const UsersFromCompany = (props) => {
           getId={getId}
         />
       )}
-      <DeleteModal />
+      <DeleteModal
+        openDeleteModal={openDeleteModal}
+        setOpenDeleteModal={setOpenDeleteModal}
+        isDeleting={isDeleting}
+        payloadWithUserToken={{
+          email: emailId,
+          token: JSON.parse(localStorage.getItem('user')).token
+        }}
+        modalTitle='User'
+        deleteMethod={deleteUserByCompany}
+      />
     </>
   );
 };

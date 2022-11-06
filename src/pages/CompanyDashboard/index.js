@@ -1,5 +1,3 @@
-/*eslint-disable*/
-
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MenuIcon from '@mui/icons-material/Menu';
 import MuiAppBar from '@mui/material/AppBar';
@@ -115,8 +113,7 @@ function DashboardContent({ isSystemAdmin }) {
         <Toolbar
           sx={{
             pr: '24px' // keep right padding when drawer closed
-          }}
-        >
+          }}>
           <IconButton
             edge='start'
             color='inherit'
@@ -125,8 +122,7 @@ function DashboardContent({ isSystemAdmin }) {
             sx={{
               marginRight: '36px',
               ...(open && { display: 'none' })
-            }}
-          >
+            }}>
             <MenuIcon />
           </IconButton>
 
@@ -142,8 +138,7 @@ function DashboardContent({ isSystemAdmin }) {
             alignItems: 'center',
             justifyContent: 'flex-end',
             px: [1]
-          }}
-        >
+          }}>
           <IconButton onClick={toggleDrawer}>
             <ChevronLeftIcon />
           </IconButton>
@@ -161,8 +156,7 @@ function DashboardContent({ isSystemAdmin }) {
           flexGrow: 1,
           height: '100vh',
           overflow: 'auto'
-        }}
-      >
+        }}>
         <Toolbar />
         <Container maxWidth='lg' style={{ marginLeft: '-22px' }} sx={{ mt: 0, mb: 4 }}>
           <Grid container spacing={4}>

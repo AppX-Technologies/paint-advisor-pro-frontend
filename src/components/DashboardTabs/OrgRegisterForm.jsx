@@ -1,12 +1,3 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import { useDispatch, useSelector } from 'react-redux';
-import formReducer from './reducers/formReducer';
 import {
   Checkbox,
   CircularProgress,
@@ -15,9 +6,18 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-import { createOrgs, fetchOrgs, reset } from '../../features/org/orgSlice';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import * as React from 'react';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createOrgs, fetchOrgs, reset } from '../../features/org/orgSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
+import formReducer from './reducers/formReducer';
 
 const initialFormState = {
   name: '',
@@ -70,13 +70,12 @@ export default function FormDialog(props) {
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New Organization</Typography>
-            {
-              <CircularProgress
-                color='primary'
-                size={25}
-                style={{ display: isLoading ? 'block' : 'none' }}
-              />
-            }
+
+            <CircularProgress
+              color='primary'
+              size={25}
+              style={{ display: isLoading ? 'block' : 'none' }}
+            />
           </Stack>
         </DialogTitle>
         <DialogContent>

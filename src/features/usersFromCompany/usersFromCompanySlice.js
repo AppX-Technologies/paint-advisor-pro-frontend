@@ -128,9 +128,11 @@ export const usersFromCompanySlice = createSlice({
         state.message = action.payload;
       })
       .addCase(deleteUserByCompany.pending, (state) => {
+        state.isLoading = true;
         state.isDeleting = true;
       })
       .addCase(deleteUserByCompany.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.isDeleting = false;
         state.isDeleted = true;
         state.message = action.payload;

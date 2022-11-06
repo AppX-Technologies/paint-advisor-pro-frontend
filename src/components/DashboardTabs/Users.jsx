@@ -13,6 +13,7 @@ import { deleteUser, fetchUsers, reset } from '../../features/users/userSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { userColumn } from '../../common/tableHead';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
+import { DeleteModal } from '../delete-model/DeleteModel';
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -46,47 +47,41 @@ const Users = () => {
     e.stopPropagation();
     setEmailId(email);
   };
-  const columns = userColumn({
-    setEditFormData,
-    setOpenEditForm,
-    setOpenDeleteModal,
-    onDeleteBtnClick,
-    editFormData
-  });
-  function DeleteModal() {
-    const handleClose = () => {
-      setOpenDeleteModal(false);
-    };
-    const handleDelete = () => {
-      dispatch(deleteUser({ email: emailId, token: userDetail.token }));
-    };
+  const columns = userColumn();
 
-    return (
-      <Dialog open={openDeleteModal} onClose={handleClose}>
-        <DialogTitle>
-          <Stack direction='row' spacing={2}>
-            <Typography variant='h6'>Delete user</Typography>
-            {
-              <CircularProgress
-                color='primary'
-                size={25}
-                style={{ display: isDeleting ? 'block' : 'none' }}
-              />
-            }
-          </Stack>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>Are you sure you want to delete this user?</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleDelete} disabled={isDeleting}>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
+  //   function DeleteModal() {
+  //     const handleClose = () => {
+  //       setOpenDeleteModal(false);
+  //     };
+  //     const handleDelete = () => {
+  //       dispatch(deleteUser({ email: emailId, token: userDetail.token }));
+  //     };
+
+  //     return (
+  //       <Dialog open={openDeleteModal} onClose={handleClose}>
+  //         <DialogTitle>
+  //           <Stack direction='row' spacing={2}>
+  //             <Typography variant='h6'>Delete user</Typography>
+
+  //             <CircularProgress
+  //               color='primary'
+  //               size={25}
+  //               style={{ display: isDeleting ? 'block' : 'none' }}
+  //             />
+  //           </Stack>
+  //         </DialogTitle>
+  //         <DialogContent>
+  //           <DialogContentText>Are you sure you want to delete this user?</DialogContentText>
+  //         </DialogContent>
+  //         <DialogActions>
+  //           <Button onClick={handleClose}>Cancel</Button>
+  //           <Button onClick={handleDelete} disabled={isDeleting}>
+  //             Delete
+  //           </Button>
+  //         </DialogActions>
+  //       </Dialog>
+  //     );
+  //   }
 
   return (
     <>
@@ -99,15 +94,7 @@ const Users = () => {
           Create
         </CustomButton>
       </Box>
-      {/* <DataTable
-				datalist={userList.map((userData) => {
-					return [userData._id, userData.name, userData.email, userData.phone];
-				})}
-				columns={columns}
-				options={options}
-				title={"User List"}
-				isLoading={isLoading}
-			/> */}
+
       <DraggableDataTable
         initialDataList={userList.map((userData) => {
           return {
@@ -119,12 +106,12 @@ const Users = () => {
         })}
         isLoading={isLoading}
         columns={columns}
-        title={'Users List'}
+        title='Users List'
         setEditFormData={setEditFormData}
         setOpenEditForm={setOpenEditForm}
         setOpenDeleteModal={setOpenDeleteModal}
         onDeleteBtnClick={onDeleteBtnClick}
-        deleteByEmail={true}
+        deleteByEmail
       />
 
       <CreateUserForm open={open} setOpen={setOpen} />
@@ -133,7 +120,14 @@ const Users = () => {
         openEditForm={openEditForm}
         setOpenEditForm={setOpenEditForm}
       />
-      <DeleteModal />
+      <DeleteModal
+        openDeleteModal={openDeleteModal}
+        setOpenDeleteModal={setOpenDeleteModal}
+        isDeleting={isDeleting}
+        payloadWithUserToken={{ email: emailId, token: userDetail.token }}
+        modalTitle='User'
+        deleteMethod={deleteUser}
+      />
     </>
   );
 };
