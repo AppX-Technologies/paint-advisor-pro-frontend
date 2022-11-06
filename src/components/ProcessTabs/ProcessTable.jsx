@@ -2,7 +2,6 @@ import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
 import { processColumn } from '../../common/tableHead';
 import { createProcess, reset } from '../../features/process/processSlice';
