@@ -11,9 +11,9 @@ import CreateUserForm from "./UserRegisterForm";
 import EditUserForm from "./EditUserForm";
 import { deleteUser, fetchUsers, reset } from "../../features/users/userSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
-import DataTable from "../../common/DataTable";
 import { userColumn } from "../../common/tableHead";
 import { tableOptions } from "../../common/tableOptions";
+import { DraggableDataTable } from "../../common/DraggableDataTable";
 
 const Users = () => {
 	const dispatch = useDispatch();
@@ -107,7 +107,7 @@ const Users = () => {
 					Create
 				</CustomButton>
 			</Box>
-			<DataTable
+			{/* <DataTable
 				datalist={userList.map((userData) => {
 					return [userData._id, userData.name, userData.email, userData.phone];
 				})}
@@ -115,6 +115,24 @@ const Users = () => {
 				options={options}
 				title={"User List"}
 				isLoading={isLoading}
+			/> */}
+			<DraggableDataTable
+				initialDataList={userList.map((userData) => {
+					return {
+						_id: userData._id,
+						name: userData.name,
+						email: userData.email,
+						phone: userData.phone
+					};
+				})}
+				isLoading={isLoading}
+				columns={columns}
+				title={"Users List"}
+				setEditFormData={setEditFormData}
+				setOpenEditForm={setOpenEditForm}
+				setOpenDeleteModal={setOpenDeleteModal}
+				onDeleteBtnClick={onDeleteBtnClick}
+				deleteByEmail={true}
 			/>
 
 			<CreateUserForm open={open} setOpen={setOpen} />

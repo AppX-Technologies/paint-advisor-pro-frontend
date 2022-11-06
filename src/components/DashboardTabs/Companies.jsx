@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
 import CustomButton from "../Button";
@@ -11,9 +11,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import EditOrgForm from "./EditOrgForm";
 import { deleteOrg, fetchOrgs, reset } from "../../features/org/orgSlice";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
-import DataTable from "../../common/DataTable";
 import { companyColumns } from "../../common/tableHead";
-import { tableOptions } from "../../common/tableOptions";
+import { DraggableDataTable } from "../../common/DraggableDataTable";
 
 const Companies = () => {
 	const dispatch = useDispatch();
@@ -24,7 +23,6 @@ const Companies = () => {
 	const [editFormData, setEditFormData] = React.useState([]);
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const [userId, setUserId] = React.useState("");
-	const [options, setOptions] = React.useState({});
 
 	React.useEffect(() => {
 		dispatch(fetchOrgs(userDetail.token));
@@ -56,10 +54,6 @@ const Companies = () => {
 		onDeleteBtnClick,
 		editFormData
 	});
-
-	useEffect(() => {
-		setOptions(tableOptions(isLoading, orgList));
-	}, []);
 
 	function DeleteModal() {
 		const handleClose = () => {
@@ -110,15 +104,26 @@ const Companies = () => {
 				</CustomButton>
 			</Box>
 
-			<DataTable
-				datalist={orgList.map((org) => {
-					return [org._id, org.name, org.email, org.address, org.phone];
+			<DraggableDataTable
+				initialDataList={orgList.map((org) => {
+					return {
+						_id: org._id,
+						name: org.name,
+						email: org.email,
+						address: org.address,
+						phone: org.phone
+					};
 				})}
-				columns={columns}
-				options={options}
-				title={"Companies List"}
 				isLoading={isLoading}
+				columns={columns}
+				title={"Company List"}
+				setEditFormData={setEditFormData}
+				setOpenEditForm={setOpenEditForm}
+				setOpenDeleteModal={setOpenDeleteModal}
+				onDeleteBtnClick={onDeleteBtnClick}
+				viewCompany={true}
 			/>
+
 			<FormDialog open={open} setOpen={setOpen} />
 			<EditOrgForm
 				openEditForm={openEditForm}

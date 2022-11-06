@@ -1,401 +1,102 @@
 /* eslint-disable */
-import { Button, Stack } from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import { Link } from "react-router-dom";
-
-export const companyColumns = ({
-	setEditFormData,
-	setOpenEditForm,
-	setOpenDeleteModal,
-	onDeleteBtnClick,
-	editFormData
-}) => {
+export const companyColumns = () => {
 	return [
-		{
-			name: "",
-			label: "",
-			options: {
-				display: false
-			}
-		},
 		{
 			name: "name",
 			label: "Name",
-			options: {
-				filter: true,
-				sort: true
-			}
+			width: "15%"
 		},
 		{
 			name: "email",
 			label: "Email",
-			options: {
-				filter: true
-			}
+			width: "20%"
 		},
 		{
 			name: "address",
 			label: "Address",
-			options: {
-				filter: true
-			}
+			width: "20%"
 		},
 		{
 			name: "phone",
 			label: "Phone",
-			options: {
-				filter: true
-			}
+			width: "20%"
 		},
 		{
-			name: "active",
+			name: "status",
 			label: "Status",
-			options: {
-				filter: true,
-				customBodyRender: (value, tableMeta, updateValue) => {
-					return (
-						<Button
-							variant="outlined"
-							color="primary"
-							style={{
-								fontSize: "12px",
-								textTransform: "none",
-								fontWeight: 700,
-								background: "#1565c0",
-								color: "#fafafa",
-								padding: "4px 8px",
-								textTransform: "capitalize"
-							}}
-						>
-							{value ? "Active" : "Inactive"}
-						</Button>
-					);
-				}
-			}
-		},
-		{
-			label: "Action",
-			name: "",
-			options: {
-				filter: false,
-				customBodyRender: (value, tableMeta, updateValue) => {
-					const getId = tableMeta.rowData[0];
-					return (
-						<>
-							<Stack direction="row" spacing={2}>
-								<EditOutlinedIcon
-									style={{ cursor: "pointer" }}
-									onClick={() => {
-										setEditFormData(tableMeta.rowData);
-										setOpenEditForm(true);
-									}}
-								/>
-								<Link to={`/company/${getId}`} target="_blank">
-									<RemoveRedEyeOutlinedIcon
-										style={{ cursor: "pointer", color: "black" }}
-									/>
-								</Link>
-								<DeleteOutlineOutlinedIcon
-									style={{ cursor: "pointer" }}
-									onClick={(e) => {
-										setOpenDeleteModal(true);
-										onDeleteBtnClick(e, getId);
-									}}
-								/>
-							</Stack>
-						</>
-					);
-				}
-			}
+			width: "20%"
 		}
 	];
 };
-export const userColumn = ({
-	setEditFormData,
-	setOpenEditForm,
-	setOpenDeleteModal,
-	onDeleteBtnClick,
-	editFormData
-}) => {
+export const userColumn = () => {
 	return [
-		{
-			name: "",
-			label: "",
-			options: {
-				display: false
-			}
-		},
 		{
 			name: "name",
 			label: "Name",
-			options: {
-				filter: true,
-				sort: true
-			}
+			width: "15%"
 		},
 		{
 			name: "email",
 			label: "Email",
-			options: {
-				filter: true
-			}
+			width: "20%"
 		},
 		{
 			name: "phone",
 			label: "Phone",
-			options: {
-				filter: true
-			}
+			width: "25%"
 		},
 
 		{
-			name: "active",
+			name: "status",
 			label: "Status",
-			options: {
-				filter: true,
-
-				customBodyRender: (value, tableMeta, updateValue) => {
-					return (
-						<Button
-							variant="outlined"
-							color="primary"
-							style={{
-								fontSize: "12px",
-								textTransform: "none",
-								fontWeight: 700,
-								background: "#1565c0",
-								color: "#fafafa",
-								padding: "4px 8px",
-								textTransform: "capitalize"
-							}}
-						>
-							{value ? "Active" : "Inactive"}
-						</Button>
-					);
-				}
-			}
-		},
-		{
-			label: "Action",
-			name: "",
-			options: {
-				filter: false,
-				customBodyRender: (value, tableMeta, updateValue) => {
-					const getEmail = tableMeta.rowData[2];
-					return (
-						<>
-							<Stack direction="row" spacing={2}>
-								<EditOutlinedIcon
-									style={{ cursor: "pointer" }}
-									onClick={() => {
-										setEditFormData(tableMeta.rowData);
-										setOpenEditForm(true);
-									}}
-									editFormData={editFormData}
-								/>
-								<DeleteOutlineOutlinedIcon
-									style={{ cursor: "pointer" }}
-									onClick={(e) => {
-										setOpenDeleteModal(true);
-										onDeleteBtnClick(e, getEmail);
-									}}
-								/>
-							</Stack>
-						</>
-					);
-				}
-			}
+			width: "25%"
 		}
 	];
 };
-export const companyUserColumns = ({
-	setEditFormData,
-	setOpenEditForm,
-	setOpenDeleteModal,
-	onDeleteBtnClick,
-	editFormData
-}) => {
+export const companyUserColumns = () => {
 	return [
 		{
-			name: "",
-			label: "",
-			options: {
-				display: false
-			}
-		},
-		{
 			name: "name",
-			label: "Name",
-			options: {
-				filter: true,
-				sort: true
-			}
+			label: "Name"
 		},
 		{
 			name: "email",
-			label: "Email",
-			options: {
-				filter: true
-			}
+			label: "Email"
 		},
 		{
 			name: "phone",
-			label: "Phone",
-			options: {
-				filter: true
-			}
+			label: "Phone"
 		},
 		{
 			name: "role",
-			label: "Role",
-			options: {
-				filter: true
-			}
+			label: "Role"
 		},
 		{
 			name: "proficiency",
-			label: "Proficiency",
-			options: {
-				filter: true
-			}
+			label: "Proficiency"
 		},
 
 		{
-			name: "company",
-			label: "Company",
-			options: {
-				filter: true
-			}
+			name: "organization",
+			label: "Company"
 		},
 		{
-			name: "active",
-			label: "Status",
-			options: {
-				filter: true,
-
-				customBodyRender: (value, tableMeta, updateValue) => {
-					return (
-						<Button
-							variant="outlined"
-							color="primary"
-							style={{
-								fontSize: "12px",
-								textTransform: "none",
-								fontWeight: 700,
-								background: "#1565c0",
-								color: "#fafafa",
-								padding: "4px 8px",
-								textTransform: "capitalize"
-							}}
-						>
-							{value ? "Active" : "Inactive"}
-						</Button>
-					);
-				}
-			}
-		},
-		{
-			label: "Action",
-			name: "",
-			options: {
-				filter: false,
-				customBodyRender: (value, tableMeta, updateValue) => {
-					const getEmail = tableMeta.rowData[2];
-					return (
-						<>
-							<Stack direction="row" spacing={2}>
-								<EditOutlinedIcon
-									style={{ cursor: "pointer" }}
-									onClick={() => {
-										setEditFormData(tableMeta.rowData);
-										setOpenEditForm(true);
-									}}
-								/>
-								<DeleteOutlineOutlinedIcon
-									style={{ cursor: "pointer" }}
-									onClick={(e) => {
-										setOpenDeleteModal(true);
-										onDeleteBtnClick(e, getEmail);
-									}}
-								/>
-							</Stack>
-						</>
-					);
-				}
-			}
+			name: "status",
+			label: "Status"
 		}
 	];
 };
-export const processColumn = ({
-	setEditFormData,
-	setOpenEditForm,
-	setOpenDeleteModal,
-	onDeleteBtnClick,
-	editFormData
-}) => {
+export const processColumn = () => {
 	return [
-		{
-			name: "",
-			label: "",
-			options: {
-				display: false,
-				filter: false
-			}
-		},
 		{
 			name: "stage",
 			label: "Stage",
-			options: {
-				filter: false,
-				sort: true,
-				setCellProps: () => ({ style: { width: "200px" } })
-			}
+			width: "20%"
 		},
 		{
-			name: "process",
+			name: "description",
 			label: "Process Description",
-			options: {
-				filter: false,
-				sort: true,
-				setCellProps: () => ({ style: { maxWidth: "300px" } })
-			}
-		},
-
-		{
-			label: "Action",
-			name: "",
-			options: {
-				filter: false,
-				setCellProps: () => ({ style: { maxWidth: "200px" } }),
-				customBodyRender: (value, tableMeta, updateValue) => {
-					const getId = tableMeta.rowData[0];
-					console.log(tableMeta.tableState.filterList[1][0]);
-
-					return (
-						<>
-							<Stack direction="row" spacing={2}>
-								<EditOutlinedIcon
-									style={{ cursor: "pointer" }}
-									onClick={() => {
-										setEditFormData(tableMeta.rowData);
-										setOpenEditForm(true);
-									}}
-									editFormData={editFormData}
-								/>
-								<DeleteOutlineOutlinedIcon
-									style={{ cursor: "pointer" }}
-									onClick={(e) => {
-										setOpenDeleteModal(true);
-										onDeleteBtnClick(e, getId);
-									}}
-								/>
-							</Stack>
-						</>
-					);
-				}
-			}
+			width: "50%"
 		}
 	];
 };

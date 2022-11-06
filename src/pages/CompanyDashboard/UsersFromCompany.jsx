@@ -16,8 +16,7 @@ import {
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 import CreateUserForm from "./CreateUserForm";
 import { companyUserColumns } from "../../common/tableHead";
-import { tableOptions } from "../../common/tableOptions";
-import DataTable from "../../common/DataTable";
+import { DraggableDataTable } from "../../common/DraggableDataTable";
 
 const UsersFromCompany = (props) => {
 	const { getId } = props;
@@ -31,7 +30,6 @@ const UsersFromCompany = (props) => {
 	const userDetail = JSON.parse(localStorage.getItem("user"));
 	const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
 	const [emailId, setEmailId] = React.useState("");
-	const [options, setOptions] = React.useState({});
 	React.useEffect(() => {
 		if (isDeleted) {
 			dispatch(
@@ -53,9 +51,6 @@ const UsersFromCompany = (props) => {
 		}
 	}, [isDeleted]);
 
-	useEffect(() => {
-		setOptions(tableOptions(isLoading, companyMadeByUsers));
-	}, []);
 	// set email on click
 	const onDeleteBtnClick = (e, email) => {
 		e.stopPropagation();
@@ -123,24 +118,30 @@ const UsersFromCompany = (props) => {
 					Create
 				</CustomButton>
 			</Box>
-			<DataTable
-				datalist={companyMadeByUsers.map((org) => {
-					return [
-						org._id,
-						org.name,
-						org.email,
-						org.phone,
-						org.role,
-						org.proficiency,
-						org.organization ? org.organization.name : "",
-						org.active
-					];
+
+			<DraggableDataTable
+				initialDataList={companyMadeByUsers.map((org) => {
+					return {
+						_id: org._id,
+						name: org.name,
+						email: org.email,
+						phone: org.phone,
+						role: org.role,
+						proficiency: org.proficiency,
+						organization: org.organization ? org.organization.name : "",
+						status: org.active
+					};
 				})}
-				columns={columns}
-				options={options}
-				title={"User List"}
 				isLoading={isLoading}
+				columns={columns}
+				title={"Users List"}
+				setEditFormData={setEditFormData}
+				setOpenEditForm={setOpenEditForm}
+				setOpenDeleteModal={setOpenDeleteModal}
+				onDeleteBtnClick={onDeleteBtnClick}
+				deleteByEmail={true}
 			/>
+
 			<CreateUserForm open={open} setOpen={setOpen} />
 			{openEditForm && (
 				<EditUserForm

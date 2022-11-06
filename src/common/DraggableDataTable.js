@@ -9,12 +9,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import SwapVerticalCircleIcon from "@mui/icons-material/SwapVerticalCircle";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { CircularProgress, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { extractElement } from "../helpers/extractElementsFromObj";
+import Button from "../components/Button";
+import { Link } from "react-router-dom";
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -38,7 +40,9 @@ export const DraggableDataTable = ({
 	onDeleteBtnClick,
 	setEditFormData,
 	onListSort,
-	draggable = false
+	draggable = false,
+	deleteByEmail = false,
+	viewCompany = false
 }) => {
 	console.log(initialDataList);
 	const onDragEnd = (result) => {
@@ -50,146 +54,201 @@ export const DraggableDataTable = ({
 	};
 
 	return (
-		<TableContainer component={Paper}>
-			<Typography
-				sx={{
-					flex: "1 1 100%",
-					margin: "5px 0px 5px 15px",
-					fontSize: "18px",
-					fontWeight: "700"
-				}}
-				color="inherit"
-				variant="subtitle1"
-				component="div"
-			>
-				<div
-					style={{
-						display: "flex",
-						justifyContent: "flex-start",
-						alignItems: "center"
+		<>
+			<TableContainer component={Paper}>
+				<Typography
+					sx={{
+						flex: "1 1 100%",
+						margin: "5px 0px 5px 15px",
+						fontSize: "18px",
+						fontWeight: "700"
 					}}
+					color="inherit"
+					variant="subtitle1"
+					component="div"
 				>
-					<div style={{ marginLeft: "10px", display: "flex", alignItems: "center" }}>
-						<Typography
-							sx={{
-								flex: "1 1 100%",
-								margin: "5px 0px -10px 10px",
-								fontSize: "18px",
-								fontWeight: "700"
-							}}
-							color="inherit"
-							variant="subtitle1"
-							component="div"
-						>
-							{title}
-						</Typography>
-						{isLoading && (
-							<CircularProgress
-								color="primary"
-								style={{
-									display: isLoading ? "flex" : "none",
-									marginLeft: "10px",
-									width: "30px",
-									height: "30px"
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "flex-start",
+							alignItems: "center"
+						}}
+					>
+						<div style={{ marginLeft: "10px", display: "flex", alignItems: "center" }}>
+							<Typography
+								sx={{
+									flex: "1 1 100%",
+									margin: "5px 0px -10px -10px",
+									fontSize: "18px",
+									fontWeight: "700"
 								}}
-							/>
-						)}
+								color="inherit"
+								variant="subtitle1"
+								component="div"
+							>
+								{title}
+							</Typography>
+							{isLoading && (
+								<CircularProgress
+									color="primary"
+									style={{
+										display: isLoading ? "flex" : "none",
+										margin: "15px 0 0 10px",
+										width: "30px",
+										height: "30px"
+									}}
+								/>
+							)}
+						</div>
 					</div>
-				</div>
-			</Typography>
-			<Table aria-label="simple table">
-				<TableHead>
-					<TableRow>
-						{draggable && (
-							<TableCell sx={{ fontSize: "16px", fontWeight: "550" }}></TableCell>
-						)}
-						{columns.map((column) => {
-							return (
-								<TableCell
-									sx={{ fontSize: "16px", fontWeight: "550", color: "#4d5057" }}
-								>
-									{column.label}
-								</TableCell>
-							);
-						})}
-					</TableRow>
-				</TableHead>
-				{/* <TableBody> */}
-				<DragDropContext onDragEnd={onDragEnd}>
-					<Droppable is isDropDisabled={!draggable} droppableId="droppable">
-						{(provided, snapshot) => (
-							<TableBody {...provided.droppableProps} ref={provided.innerRef}>
-								{initialDataList &&
-									initialDataList.map((rowItem, index) => (
-										<Draggable
-											isDragDisabled={!draggable}
-											key={rowItem._id}
-											draggableId={"q-" + rowItem._id}
-											index={index}
-										>
-											{(provided, snapshot) => (
-												<TableRow
-													ref={provided.innerRef}
-													{...provided.draggableProps}
-													{...provided.dragHandleProps}
-													style={getItemStyle(
-														snapshot.isDragging,
-														provided.draggableProps.style
-													)}
-												>
-													{draggable && (
-														<TableCell
-															component="th"
-															scope="row"
-															style={{ width: "5%" }}
-														>
-															<MoreVertIcon />
-														</TableCell>
-													)}
-													<TableCell
-														component="th"
-														scope="row"
-														style={{ width: "15%" }}
+				</Typography>
+				<Table aria-label="simple table">
+					<TableHead>
+						<TableRow>
+							{draggable && (
+								<TableCell sx={{ fontSize: "16px", fontWeight: "550" }}></TableCell>
+							)}
+							{columns.map((column) => {
+								return (
+									<TableCell
+										sx={{
+											fontSize: "16px",
+											fontWeight: "550",
+											color: "#4d5057"
+										}}
+									>
+										{column.label}
+									</TableCell>
+								);
+							})}
+							<TableCell
+								sx={{ fontSize: "16px", fontWeight: "550", color: "#4d5057" }}
+							>
+								Action
+							</TableCell>
+						</TableRow>
+					</TableHead>
+					{/* <TableBody> */}
+					<DragDropContext onDragEnd={onDragEnd}>
+						<Droppable isDropDisabled={!draggable} droppableId="droppable">
+							{(provided, snapshot) => (
+								<TableBody {...provided.droppableProps} ref={provided.innerRef}>
+									{initialDataList &&
+										initialDataList.map((rowItem, index) => (
+											<Draggable
+												isDragDisabled={!draggable}
+												key={rowItem._id}
+												draggableId={"q-" + rowItem._id}
+												index={index}
+											>
+												{(provided, snapshot) => (
+													<TableRow
+														ref={provided.innerRef}
+														{...provided.draggableProps}
+														{...provided.dragHandleProps}
+														style={getItemStyle(
+															snapshot.isDragging,
+															provided.draggableProps.style
+														)}
 													>
-														{rowItem.stage}
-													</TableCell>
-													<TableCell style={{ width: "50%" }}>
-														{rowItem.description}
-													</TableCell>
-													<TableCell style={{ width: "50%" }}>
-														<Stack direction="row" spacing={2}>
-															<EditOutlinedIcon
-																style={{ cursor: "pointer" }}
-																onClick={() => {
-																	setEditFormData(() =>
-																		extractElement(rowItem)
-																	);
-																	setOpenEditForm(true);
-																}}
-															/>
-															<DeleteOutlineOutlinedIcon
-																style={{ cursor: "pointer" }}
-																onClick={(e) => {
-																	setOpenDeleteModal(true);
-																	onDeleteBtnClick(
-																		e,
-																		rowItem._id
-																	);
-																}}
-															/>
-														</Stack>
-													</TableCell>
-												</TableRow>
-											)}
-										</Draggable>
-									))}
-								{provided.placeholder}
-							</TableBody>
-						)}
-					</Droppable>
-				</DragDropContext>
-				{/* </TableBody> */}
-			</Table>
-		</TableContainer>
+														{draggable && (
+															<TableCell
+																component="th"
+																scope="row"
+																style={{ width: "5%" }}
+															>
+																<MoreVertIcon />
+															</TableCell>
+														)}
+														{columns.map((item) => {
+															console.log(rowItem);
+															return item.name === "status" ? (
+																<>
+																	<Button
+																		variant="outlined"
+																		color="primary"
+																		style={{
+																			fontSize: "12px",
+																			textTransform: "none",
+																			fontWeight: 700,
+																			background: "#1565c0",
+																			color: "#fafafa",
+																			marginTop: "15px",
+																			marginLeft: "15px",
+																			padding: "4px 8px",
+																			textTransform:
+																				"capitalize"
+																		}}
+																	>
+																		Inactive
+																	</Button>
+																</>
+															) : (
+																<TableCell
+																	component="th"
+																	scope="row"
+																	style={{
+																		width: `${
+																			item.width
+																				? item.width
+																				: "20%"
+																		}`
+																	}}
+																>
+																	{rowItem[item.name]}
+																</TableCell>
+															);
+														})}
+														<TableCell style={{ width: "50%" }}>
+															<Stack direction="row" spacing={2}>
+																<EditOutlinedIcon
+																	style={{ cursor: "pointer" }}
+																	onClick={() => {
+																		setEditFormData(() =>
+																			extractElement(rowItem)
+																		);
+																		setOpenEditForm(true);
+																	}}
+																/>
+																{viewCompany && (
+																	<Link
+																		to={`/company/${rowItem._id}`}
+																		target="_blank"
+																	>
+																		<RemoveRedEyeOutlinedIcon
+																			style={{
+																				cursor: "pointer",
+																				color: "black"
+																			}}
+																		/>
+																	</Link>
+																)}
+																<DeleteOutlineOutlinedIcon
+																	style={{ cursor: "pointer" }}
+																	onClick={(e) => {
+																		setOpenDeleteModal(true);
+																		onDeleteBtnClick(
+																			e,
+																			deleteByEmail
+																				? rowItem.email
+																				: rowItem._id
+																		);
+																	}}
+																/>
+															</Stack>
+														</TableCell>
+													</TableRow>
+												)}
+											</Draggable>
+										))}
+									{provided.placeholder}
+								</TableBody>
+							)}
+						</Droppable>
+					</DragDropContext>
+					{/* </TableBody> */}
+				</Table>
+			</TableContainer>
+		</>
 	);
 };

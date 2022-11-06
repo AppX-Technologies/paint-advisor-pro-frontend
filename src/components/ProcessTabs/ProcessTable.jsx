@@ -155,7 +155,6 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 				}}
 			>
 				<StageTab stage={stage} onTabChange={handleChange} />
-
 				<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
 					<CustomButton
 						variant="contained"
@@ -189,6 +188,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 				setOpenDeleteModal={setOpenDeleteModal}
 				onDeleteBtnClick={onDeleteBtnClick}
 				onListSort={onListSort}
+				draggable={true}
 			/>
 
 			<FormDialog
