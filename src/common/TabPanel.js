@@ -9,8 +9,7 @@ export function TabPanel({ children, value, index, tabLabels, Category, ...other
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
+      {...other}>
       {value === index && (
         <Box sx={{ p: 3 }}>
           <Typography>{Category}</Typography>

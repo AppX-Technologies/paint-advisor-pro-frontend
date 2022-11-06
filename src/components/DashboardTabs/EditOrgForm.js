@@ -16,11 +16,11 @@ export default function Edit(props) {
   const dispatch = useDispatch();
   const { openEditForm, setOpenEditForm, editFormData } = props;
   const initialFormState = {
-    name: editFormData[1] ? editFormData[1] : '',
-    email: editFormData[2] ? editFormData[2] : '',
-    address: editFormData[3] ? editFormData[3] : '',
-    phone: editFormData[4] ? editFormData[4] : '',
-    active: editFormData[5] ? editFormData[5] : false
+    name: editFormData.name ? editFormData.name : '',
+    email: editFormData.email ? editFormData.email : '',
+    address: editFormData.address ? editFormData.address : '',
+    phone: editFormData.phone ? editFormData.phone : '',
+    active: editFormData.active ? editFormData.active : false
   };
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
@@ -28,11 +28,11 @@ export default function Edit(props) {
   const { isUpdated, isUpdating } = useSelector((state) => state.org);
 
   useEffect(() => {
-    ['name', 'email', 'address', 'phone', 'active'].forEach((h, i) => {
+    Object.keys(editFormData).forEach((key) => {
       dispatchNew({
         type: 'HANDLE_FORM_INPUT',
-        field: h,
-        payload: editFormData[i + 1]
+        field: key,
+        payload: editFormData[key]
       });
     });
   }, [editFormData]);
@@ -54,7 +54,7 @@ export default function Edit(props) {
 
   const formStateWithToken = {
     ...formState,
-    id: editFormData[0],
+    id: editFormData._id,
     token: userDetail.token
   };
   const handleEdit = (e) => {
@@ -103,7 +103,7 @@ export default function Edit(props) {
                 name='email'
                 required
                 fullWidth
-                placeholder={editFormData[2]}
+                placeholder={editFormData.email}
                 id='email'
                 autoFocus
                 value={formState.email}
@@ -116,7 +116,7 @@ export default function Edit(props) {
                 name='address'
                 required
                 fullWidth
-                placeholder={editFormData[3]}
+                placeholder={editFormData.address}
                 id='address'
                 autoFocus
                 value={formState.address}
@@ -129,7 +129,7 @@ export default function Edit(props) {
                 name='phone'
                 required
                 fullWidth
-                placeholder={editFormData[4]}
+                placeholder={editFormData.phone}
                 id='phone'
                 autoFocus
                 value={formState.phone}
@@ -156,8 +156,7 @@ export default function Edit(props) {
             disabled={isUpdating}
             type='submit'
             variant='contained'
-            onClick={(e) => handleEdit(e)}
-          >
+            onClick={(e) => handleEdit(e)}>
             Update
           </Button>
         </DialogActions>

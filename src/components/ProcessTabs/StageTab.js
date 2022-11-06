@@ -11,8 +11,7 @@ const StageTab = ({ stage, onTabChange }) => {
         bgcolor: 'background.paper',
         margin: '0 8px 0 0',
         borderRadius: '5px'
-      }}
-    >
+      }}>
       <Tabs value={stage} onChange={onTabChange}>
         <Tab label='Presentation' />
         <Tab label='Painting' />

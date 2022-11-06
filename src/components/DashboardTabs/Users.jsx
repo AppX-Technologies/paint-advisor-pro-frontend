@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
@@ -11,9 +11,8 @@ import CreateUserForm from './UserRegisterForm';
 import EditUserForm from './EditUserForm';
 import { deleteUser, fetchUsers, reset } from '../../features/users/userSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import DataTable from '../../common/DataTable';
 import { userColumn } from '../../common/tableHead';
-import { tableOptions } from '../../common/tableOptions';
+import { DraggableDataTable } from '../../common/DraggableDataTable';
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -24,7 +23,6 @@ const Users = () => {
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [emailId, setEmailId] = React.useState('');
-  const [options, setOptions] = React.useState({});
   React.useEffect(() => {
     dispatch(fetchUsers(userDetail.token));
   }, []);
@@ -90,9 +88,6 @@ const Users = () => {
     );
   }
 
-  useEffect(() => {
-    setOptions(tableOptions(isLoading, userList));
-  }, []);
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -100,19 +95,36 @@ const Users = () => {
           variant='contained'
           sx={{ mb: 2 }}
           onClick={() => setOpen(true)}
-          disabled={isLoading}
-        >
+          disabled={isLoading}>
           Create
         </CustomButton>
       </Box>
-      <DataTable
-        datalist={userList.map((userData) => {
-          return [userData._id, userData.name, userData.email, userData.phone];
+      {/* <DataTable
+				datalist={userList.map((userData) => {
+					return [userData._id, userData.name, userData.email, userData.phone];
+				})}
+				columns={columns}
+				options={options}
+				title={"User List"}
+				isLoading={isLoading}
+			/> */}
+      <DraggableDataTable
+        initialDataList={userList.map((userData) => {
+          return {
+            _id: userData._id,
+            name: userData.name,
+            email: userData.email,
+            phone: userData.phone
+          };
         })}
-        columns={columns}
-        options={options}
-        title={'User List'}
         isLoading={isLoading}
+        columns={columns}
+        title={'Users List'}
+        setEditFormData={setEditFormData}
+        setOpenEditForm={setOpenEditForm}
+        setOpenDeleteModal={setOpenDeleteModal}
+        onDeleteBtnClick={onDeleteBtnClick}
+        deleteByEmail={true}
       />
 
       <CreateUserForm open={open} setOpen={setOpen} />

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
 import {
   Box,
+  Button,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -8,23 +8,21 @@ import {
   DialogContentText,
   DialogTitle,
   Stack,
-  Typography,
-  Button
+  Typography
 } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 
-import CustomButton from '../Button';
-import { processColumn } from '../../common/tableHead';
-import { tableOptions } from '../../common/tableOptions';
 import { useDispatch, useSelector } from 'react-redux';
-import { createProcess, reset } from '../../features/process/processSlice';
-import DataTable from '../../common/DataTable';
-import FormDialog from './ProcessReg';
-import Edit from './EditProcessForm';
 import { useParams } from 'react-router-dom';
-import { filterProcessByBid } from '../../helpers/bidFilterHelpers';
-import { fetchSingleOrg } from '../../features/org/orgSlice';
-import StageTab from './StageTab';
+import { DraggableDataTable } from '../../common/DraggableDataTable';
+import { processColumn } from '../../common/tableHead';
+import { createProcess, reset } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
+import { filterProcessByBid } from '../../helpers/bidFilterHelpers';
+import CustomButton from '../Button';
+import Edit from './EditProcessForm';
+import FormDialog from './ProcessReg';
+import StageTab from './StageTab';
 const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   const dispatch = useDispatch();
   const { processList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(
@@ -37,30 +35,41 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   };
   const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
+  const [dataList, setDataList] = useState([]);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [editFormData, setEditFormData] = useState([]);
   const [filteredProcesses, setFilteredProcesses] = useState([]);
   const [processId, setProcessId] = useState('');
   const [open, setOpen] = useState(false);
+  const { companyId } = useParams();
 
   const onDeleteBtnClick = (e, getId) => {
     e.stopPropagation();
     setProcessId(getId);
   };
-  const columns = processColumn({
-    setEditFormData,
-    setOpenEditForm,
-    setOpenDeleteModal,
-    onDeleteBtnClick,
-    editFormData
-  });
+  const columns = processColumn();
 
-  const options = tableOptions(isLoading, processList);
+  const resortProcesses = (sortedList, originalProcessList) => {
+    if (!sortedList.length) return originalProcessList;
+    const { bidType, stage } = sortedList[0];
+    const currentBidTypeAndStageRemoved = originalProcessList.filter(
+      (item) => item.bidType !== bidType && item.stage !== stage
+    );
+    return [...currentBidTypeAndStageRemoved, ...sortedList];
+  };
 
-  useEffect(() => {
-    if (isSuccess) {
-    }
-  }, [isSuccess]);
+  const onListSort = (dataList) => {
+    const formState = {};
+    const formStateWithToken = {
+      ...formState,
+      ID: processList[0]._id,
+      previousProcesses: resortProcesses(dataList, processList[0].processes),
+      add: true,
+      token: userDetail.token
+    };
+    dispatch(createProcess(formStateWithToken));
+    setFilteredProcesses(dataList);
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -149,17 +158,29 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
         </Box>
       </Box>
 
-      <DataTable
-        datalist={
+      <DraggableDataTable
+        initialDataList={
           filteredProcesses &&
           filteredProcesses.map((process) => {
-            return [process._id, process.stage, process.description, process.bidType];
+            return {
+              _id: process._id,
+              stage: process.stage,
+              description: process.description,
+              bidType: process.bidType
+            };
           })
         }
-        columns={columns}
-        options={options}
-        title={filterValue + ' Processes'}
         isLoading={isLoading}
+        columns={columns}
+        dataList={dataList}
+        setDataList={setDataList}
+        title={'Processes List'}
+        setEditFormData={setEditFormData}
+        setOpenEditForm={setOpenEditForm}
+        setOpenDeleteModal={setOpenDeleteModal}
+        onDeleteBtnClick={onDeleteBtnClick}
+        onListSort={onListSort}
+        draggable={true}
       />
 
       <FormDialog

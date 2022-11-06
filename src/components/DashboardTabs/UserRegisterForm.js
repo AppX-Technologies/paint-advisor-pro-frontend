@@ -1,29 +1,16 @@
-import * as React from 'react';
+import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  Checkbox,
-  CircularProgress,
-  FormControlLabel,
-  Grid,
-  Slider,
-  SSlider,
-  Stack,
-  Typography
-} from '@mui/material';
+import TextField from '@mui/material/TextField';
+import * as React from 'react';
 import { useEffect } from 'react';
-import formReducer from './reducers/formReducer';
-import { createUsers, fetchUsers, reset } from '../../features/users/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
+import { createUsers, fetchUsers, reset } from '../../features/users/userSlice';
+import formReducer from './reducers/formReducer';
 
 const initialFormState = {
   name: '',
@@ -84,10 +71,10 @@ export default function CreateUserForm(props) {
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New User</Typography>
             <CircularProgress
-                color='primary'
-                size={25}
-                style={{ display: isLoading ? 'block' : 'none' }}
-              />
+              color='primary'
+              size={25}
+              style={{ display: isLoading ? 'block' : 'none' }}
+            />
           </Stack>
         </DialogTitle>
         <DialogContent>
@@ -131,43 +118,6 @@ export default function CreateUserForm(props) {
                 onChange={(e) => handleTextChange(e)}
               />
             </Grid>
-
-            {/* <Grid item xs={12}>
-              <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-standard-label">Role</InputLabel>
-                <Select
-                fullWidth
-                  name="role"
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={formState.role}
-                  onChange={(e)=>handleTextChange(e)}
-                  label="Role"
-                >
-                  <MenuItem value='Admin'>Admin</MenuItem>
-                  <MenuItem value='Org Admin'>Org Admin</MenuItem>
-                  <MenuItem value='Estimator'>Estimator</MenuItem>
-                  <MenuItem value='Painter'>Painter</MenuItem>
-                </Select>
-              </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-              <TextField
-                  name="organization"
-                  required
-                  fullWidth
-                  variant="standard"
-                  id="organization"
-                  label="Organization"
-                  autoFocus
-                  value={formState.organization}
-                  onChange={(e)=>handleTextChange(e)}
-                />
-              </Grid> */}
-            {/* <Grid item xs={12}>
-              <FormControlLabel control={<Checkbox name="active" checked={formState.active}
-            onChange={(e)=>handleTextChange(e)} />} label="Is organization active?" />
-              </Grid> */}
           </Grid>
         </DialogContent>
         <DialogActions>

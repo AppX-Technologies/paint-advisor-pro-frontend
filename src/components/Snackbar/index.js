@@ -16,8 +16,7 @@ export default function CustomSnackBar() {
       open={open}
       autoHideDuration={3000}
       onClose={() => dispatch(onClose())}
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-    >
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
       <Alert onClose={() => dispatch(onClose())} severity={severity} sx={{ width: '100%' }}>
         {message}
       </Alert>

@@ -16,9 +16,9 @@ export default function Edit(props) {
   const dispatch = useDispatch();
   const { openEditForm, setOpenEditForm, editFormData } = props;
   const initialFormState = {
-    name: editFormData[1] ? editFormData[1] : '',
-    email: editFormData[2] ? editFormData[2] : '',
-    phone: editFormData[3] ? editFormData[3] : '',
+    name: editFormData.name ? editFormData.name : '',
+    email: editFormData.email ? editFormData.email : '',
+    phone: editFormData.phone ? editFormData.phone : '',
     role: 'Admin'
   };
   console.log(editFormData);
@@ -28,11 +28,11 @@ export default function Edit(props) {
   const { isUpdated, isUpdating } = useSelector((state) => state.user);
 
   useEffect(() => {
-    ['name', 'email', 'phone', 'role'].forEach((h, i) => {
+    Object.keys(editFormData).forEach((key) => {
       dispatchNew({
         type: 'HANDLE_FORM_INPUT',
-        field: h,
-        payload: h === 'role' ? 'Admin' : editFormData[i + 1]
+        field: key,
+        payload: key === 'role' ? 'Admin' : editFormData[key]
       });
     });
   }, [editFormData]);
@@ -89,7 +89,7 @@ export default function Edit(props) {
                 name='name'
                 required
                 fullWidth
-                placeholder={editFormData[1]}
+                placeholder={editFormData.name}
                 id='name'
                 autoFocus
                 value={formState.name}
@@ -102,7 +102,7 @@ export default function Edit(props) {
                 name='email'
                 required
                 fullWidth
-                placeholder={editFormData[2]}
+                placeholder={editFormData.email}
                 id='email'
                 autoFocus
                 value={formState.email}
@@ -115,7 +115,7 @@ export default function Edit(props) {
                 name='phone'
                 required
                 fullWidth
-                placeholder={editFormData[3]}
+                placeholder={editFormData.phone}
                 id='phone'
                 autoFocus
                 value={formState.phone}
@@ -133,8 +133,7 @@ export default function Edit(props) {
             disabled={isUpdating}
             type='submit'
             variant='contained'
-            onClick={(e) => handleEdit(e)}
-          >
+            onClick={(e) => handleEdit(e)}>
             Update
           </Button>
         </DialogActions>

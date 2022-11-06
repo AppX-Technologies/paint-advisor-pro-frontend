@@ -1,5 +1,3 @@
-/*eslint-disable*/
-
 import React from 'react';
 import BasicTabs from '../../common/BasicTabs';
 import { materialTabLists } from '../../common/Constants';

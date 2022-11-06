@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -8,7 +7,6 @@ import { fetchSingleOrg } from '../../features/org/orgSlice';
 import { fetchProcess } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { reset } from '../../features/usersFromCompany/usersFromCompanySlice';
-
 import ProcessTable from './ProcessTable';
 
 const index = () => {
@@ -33,14 +31,16 @@ const index = () => {
   }, [isDeleted]);
 
   useEffect(() => {
-    companyId
-      ? dispatch(
-          fetchProcess({
-            token: userDetail.token,
-            id: org.processes
-          })
-        )
-      : dispatch(fetchProcess({ token: userDetail.token }));
+    dispatch(
+      fetchProcess(
+        companyId
+          ? {
+              token: userDetail.token,
+              id: org.processes
+            }
+          : { token: userDetail.token }
+      )
+    );
   }, []);
   useEffect(() => {
     dispatch(

@@ -97,10 +97,10 @@ export default function CreateUserForm(props) {
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New User</Typography>
             <CircularProgress
-                color='primary'
-                size={25}
-                style={{ display: isLoading ? 'block' : 'none' }}
-              />
+              color='primary'
+              size={25}
+              style={{ display: isLoading ? 'block' : 'none' }}
+            />
           </Stack>
         </DialogTitle>
         <DialogContent>
@@ -165,20 +165,20 @@ export default function CreateUserForm(props) {
             <Grid xs={6} sx={{ marginTop: '24px' }}>
               {formState.role === 'Painter' && (
                 <FormControl variant='standard' sx={{ mt: 2, minWidth: '98%' }}>
-                    <InputLabel id='demo-simple-select-standard-label'>Proficiency *</InputLabel>
-                    <Select
-                      fullWidth
-                      name='proficiency'
-                      labelId='demo-simple-select-standard-label'
-                      id='demo-simple-select-standard'
-                      value={formState.proficiency}
-                      onChange={(e) => handleTextChange(e)}
-                      label='Role'>
-                      <MenuItem value='Beginner'>Beginner</MenuItem>
-                      <MenuItem value='Intermediate'>Intermediate</MenuItem>
-                      <MenuItem value='Expert'>Expert</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <InputLabel id='demo-simple-select-standard-label'>Proficiency *</InputLabel>
+                  <Select
+                    fullWidth
+                    name='proficiency'
+                    labelId='demo-simple-select-standard-label'
+                    id='demo-simple-select-standard'
+                    value={formState.proficiency}
+                    onChange={(e) => handleTextChange(e)}
+                    label='Role'>
+                    <MenuItem value='Beginner'>Beginner</MenuItem>
+                    <MenuItem value='Intermediate'>Intermediate</MenuItem>
+                    <MenuItem value='Expert'>Expert</MenuItem>
+                  </Select>
+                </FormControl>
               )}
             </Grid>
           </Grid>

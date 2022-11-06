@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { showMessage } from '../snackbar/snackbarSlice';
 import orgService from './orgService';
-import { showMessage, onClose } from '../snackbar/snackbarSlice';
 
 // initial states
 

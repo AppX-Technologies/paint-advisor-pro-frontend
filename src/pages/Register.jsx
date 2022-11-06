@@ -59,7 +59,9 @@ export default function RegisterPage() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (formState.password !== formState.confirmPassword) {
-      dispatch(showMessage({message: 'Password and confirm password should be same', severity: 'error'}));
+      dispatch(
+        showMessage({ message: 'Password and confirm password should be same', severity: 'error' })
+      );
       return;
     }
     dispatch(register(requiredStates));
@@ -82,8 +84,7 @@ export default function RegisterPage() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
-          }}
-        >
+          }}>
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -177,8 +178,7 @@ export default function RegisterPage() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
-          }}
-        >
+          }}>
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>

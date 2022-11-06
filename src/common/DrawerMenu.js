@@ -1,25 +1,25 @@
-import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
-import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Menu, MenuItem } from '@mui/material';
+import MuiAppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import MuiDrawer from '@mui/material/Drawer';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import { styled } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import IconButton from '@mui/material/IconButton';
-import { Menu, MenuItem } from '@mui/material';
+import { Copyright } from '../components/Copyright';
 import { logout, reset } from '../features/auth/authSlice';
 import NavItems from '../pages/Dashboard/NavItems';
-import { Copyright } from '../components/Copyright';
 
 const drawerWidth = 240;
 const AppBar = styled(MuiAppBar, {
@@ -105,8 +105,7 @@ export function DrawerMenu(props) {
         horizontal: 'right'
       }}
       open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
+      onClose={handleMenuClose}>
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
@@ -121,8 +120,7 @@ export function DrawerMenu(props) {
             <Toolbar
               sx={{
                 pr: '24px' // keep right padding when drawer closed
-              }}
-            >
+              }}>
               <IconButton
                 edge='start'
                 color='inherit'
@@ -131,8 +129,7 @@ export function DrawerMenu(props) {
                 sx={{
                   marginRight: '36px',
                   ...(open && { display: 'none' })
-                }}
-              >
+                }}>
                 <MenuIcon />
               </IconButton>
               <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
@@ -145,8 +142,7 @@ export function DrawerMenu(props) {
                 aria-controls={menuId}
                 aria-haspopup='true'
                 onClick={handleProfileMenuOpen}
-                color='inherit'
-              >
+                color='inherit'>
                 <AccountCircle />
               </IconButton>
             </Toolbar>
@@ -159,8 +155,7 @@ export function DrawerMenu(props) {
                 alignItems: 'center',
                 justifyContent: 'flex-end',
                 px: [1]
-              }}
-            >
+              }}>
               <IconButton onClick={toggleDrawer}>
                 <ChevronLeftIcon />
               </IconButton>
@@ -180,8 +175,7 @@ export function DrawerMenu(props) {
           flexGrow: 1,
           height: '100vh',
           overflow: 'auto'
-        }}
-      >
+        }}>
         <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
             {tabPanel}

@@ -27,8 +27,7 @@ const MainListItems = (props) => {
       <ListItemButton
         onClick={() => {
           setClickedMenu('Bids');
-        }}
-      >
+        }}>
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
@@ -38,8 +37,7 @@ const MainListItems = (props) => {
       <ListItemButton
         onClick={() => {
           setClickedMenu('Processes');
-        }}
-      >
+        }}>
         <ListItemIcon>
           <AccountTreeOutlinedIcon />
         </ListItemIcon>
@@ -49,8 +47,7 @@ const MainListItems = (props) => {
       <ListItemButton
         onClick={() => {
           setClickedMenu('Materials');
-        }}
-      >
+        }}>
         <ListItemIcon>
           <HomeRepairServiceOutlinedIcon />
         </ListItemIcon>
@@ -61,8 +58,7 @@ const MainListItems = (props) => {
         <ListItemButton
           onClick={() => {
             setClickedMenu('Users');
-          }}
-        >
+          }}>
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>

@@ -1,19 +1,18 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
-import CustomButton from '../Button';
-import FormDialog from './OrgRegisterForm';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import EditOrgForm from './EditOrgForm';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { DraggableDataTable } from '../../common/DraggableDataTable';
+import { companyColumns } from '../../common/tableHead';
 import { deleteOrg, fetchOrgs, reset } from '../../features/org/orgSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import DataTable from '../../common/DataTable';
-import { companyColumns } from '../../common/tableHead';
-import { tableOptions } from '../../common/tableOptions';
+import CustomButton from '../Button';
+import EditOrgForm from './EditOrgForm';
+import FormDialog from './OrgRegisterForm';
 
 const Companies = () => {
   const dispatch = useDispatch();
@@ -24,7 +23,6 @@ const Companies = () => {
   const [editFormData, setEditFormData] = React.useState([]);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [userId, setUserId] = React.useState('');
-  const [options, setOptions] = React.useState({});
 
   React.useEffect(() => {
     dispatch(fetchOrgs(userDetail.token));
@@ -57,10 +55,6 @@ const Companies = () => {
     editFormData
   });
 
-  useEffect(() => {
-    setOptions(tableOptions(isLoading, orgList));
-  }, []);
-
   function DeleteModal() {
     const handleClose = () => {
       setOpenDeleteModal(false);
@@ -74,13 +68,11 @@ const Companies = () => {
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Delete Company</Typography>
-            {
-              <CircularProgress
-                color='primary'
-                size={25}
-                style={{ display: isDeleting ? 'block' : 'none' }}
-              />
-            }
+            <CircularProgress
+              color='primary'
+              size={25}
+              style={{ display: isDeleting ? 'block' : 'none' }}
+            />
           </Stack>
         </DialogTitle>
         <DialogContent>
@@ -102,21 +94,31 @@ const Companies = () => {
           variant='contained'
           sx={{ mb: 2 }}
           onClick={() => setOpen(true)}
-          disabled={isLoading}
-        >
+          disabled={isLoading}>
           Create
         </CustomButton>
       </Box>
 
-      <DataTable
-        datalist={orgList.map((org) => {
-          return [org._id, org.name, org.email, org.address, org.phone];
+      <DraggableDataTable
+        initialDataList={orgList.map((org) => {
+          return {
+            _id: org._id,
+            name: org.name,
+            email: org.email,
+            address: org.address,
+            phone: org.phone
+          };
         })}
-        columns={columns}
-        options={options}
-        title={'Companies List'}
         isLoading={isLoading}
+        columns={columns}
+        title='Company List'
+        setEditFormData={setEditFormData}
+        setOpenEditForm={setOpenEditForm}
+        setOpenDeleteModal={setOpenDeleteModal}
+        onDeleteBtnClick={onDeleteBtnClick}
+        viewCompany
       />
+
       <FormDialog open={open} setOpen={setOpen} />
       <EditOrgForm
         openEditForm={openEditForm}

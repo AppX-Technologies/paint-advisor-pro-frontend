@@ -1,41 +1,39 @@
-import * as React from 'react';
+import { CircularProgress, Grid, TextareaAutosize } from '@mui/material';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { CircularProgress, Grid, TextareaAutosize } from '@mui/material';
+import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import formReducer from '../DashboardTabs/reducers/formReducer';
 import { createProcess } from '../../features/process/processSlice';
-import { showMessage } from '../../features/snackbar/snackbarSlice';
+import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function Edit(props) {
   const userDetail = JSON.parse(localStorage.getItem('user'));
-  const { openEditForm, setOpenEditForm, editFormData, bidType, filteredProcesses } = props;
+  const { openEditForm, setOpenEditForm, editFormData } = props;
 
   const initialFormState = {
-    stage: editFormData[1] ? editFormData[1] : '',
-    description: editFormData[2] ? editFormData[2] : '',
-    bidType: editFormData[2] ? editFormData[2] : ''
+    stage: editFormData.stage ? editFormData.stage : '',
+    description: editFormData.description ? editFormData.description : '',
+    bidType: editFormData.bidType ? editFormData.bidType : ''
   };
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
   const { processList } = useSelector((state) => state.process);
-  console.log(editFormData);
+
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    ['stage', 'description', 'bidType'].forEach((h, i) => {
+    Object.keys(editFormData).forEach((key) => {
       dispatchNew({
         type: 'HANDLE_FORM_INPUT',
-        field: h,
-        payload: editFormData[i + 1]
+        field: key,
+        payload: editFormData[key]
       });
     });
   }, [editFormData]);
@@ -59,13 +57,12 @@ export default function Edit(props) {
       ...formState,
       ID: processList[0]._id,
       previousProcesses: processList[0].processes.filter(
-        (previousProcess) => previousProcess._id !== editFormData[0]
+        (previousProcess) => previousProcess._id !== editFormData._id
       ),
 
       add: true,
       token: userDetail.token
     };
-
     dispatch(createProcess(formStateWithToken));
     setOpenEditForm(false);
   };
@@ -90,7 +87,7 @@ export default function Edit(props) {
               id='process'
               label='Description'
               autoFocus
-              placeholder={editFormData[2]}
+              placeholder={editFormData.description}
               value={formState.description}
               onChange={(e) => handleTextChange(e)}
               style={{ width: '100%' }}
@@ -104,7 +101,7 @@ export default function Edit(props) {
                   labelId='demo-select-small'
                   id='demo-select-small'
                   name='stage'
-                  value={formState.stage ? formState.stage : editFormData[1]}
+                  value={formState.stage ? formState.stage : editFormData.stage}
                   label='stage'
                   onChange={(e) => handleTextChange(e)}>
                   <MenuItem value='Presentation'>Preparation</MenuItem>
@@ -120,7 +117,7 @@ export default function Edit(props) {
                   labelId='demo-select-small'
                   id='demo-select-small'
                   name='bidType'
-                  value={formState.bidType ? formState.bidType : editFormData[3]}
+                  value={formState.bidType ? formState.bidType : editFormData.bidType}
                   label='Bid Type'
                   onChange={(e) => handleTextChange(e)}>
                   <MenuItem value='Interior'>Interior</MenuItem>

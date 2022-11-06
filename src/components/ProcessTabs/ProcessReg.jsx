@@ -1,21 +1,21 @@
-import * as React from 'react';
+import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { useDispatch, useSelector } from 'react-redux';
-import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
-import { createProcess, fetchProcess, reset } from '../../features/process/processSlice';
-import formReducer from '../DashboardTabs/reducers/formReducer';
-import { useParams } from 'react-router-dom';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import * as React from 'react';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { createProcess, fetchProcess, reset } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
+import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function FormDialog(props) {
   const { processList, isSuccess } = useSelector((state) => state.process);
@@ -36,7 +36,7 @@ export default function FormDialog(props) {
     stage: stageCategory,
     bidType: bidType
   };
-  console.log(initialFormState);
+
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
 
   const handleClose = () => {

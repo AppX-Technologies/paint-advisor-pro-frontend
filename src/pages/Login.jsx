@@ -2,7 +2,16 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
-  Avatar, Box, CircularProgress, Container, CssBaseline, Grid, IconButton, InputAdornment, TextField, Typography
+  Avatar,
+  Box,
+  CircularProgress,
+  Container,
+  CssBaseline,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography
 } from '@mui/material';
 import * as React from 'react';
 import OtpInput from 'react-otp-input';
@@ -12,7 +21,11 @@ import Button from '../components/Button';
 import ConfirmModal from '../components/Modal';
 import { login, reset } from '../features/auth/authSlice';
 import {
-  confirmNewPassword, fillEmail, fillOtp, openModal, setNewPassword
+  confirmNewPassword,
+  fillEmail,
+  fillOtp,
+  openModal,
+  setNewPassword
 } from '../features/modal/modalSlice';
 import { showMessage } from '../features/snackbar/snackbarSlice';
 import { validateEmail } from '../helpers/utlis';
@@ -46,8 +59,6 @@ export default function Login() {
       dispatch(reset());
     }
   }, [isSuccess, isError, message, dispatch]);
-
-
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -102,7 +113,7 @@ export default function Login() {
                 id='password'
                 autoComplete='new-password'
                 onChange={(e) => setPassword(e.target.value)}
-                error={(password && password.length && (password.length < 5))}
+                error={password && password.length && password.length < 5}
                 helperText={
                   password && password.length < 5 ? 'Password must be more than 5 characters!' : ''
                 }
