@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 /* eslint-disable */
 import React from "react";
+=======
+import React, { useState } from "react";
+>>>>>>> 7295685a801de37f273c6b1e5f384b2866fc4373
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Table from "@mui/material/Table";
 import MoreVertIcon from "@mui/icons-material/DragHandleOutlined";
@@ -160,7 +164,6 @@ export const DraggableDataTable = ({
 															</TableCell>
 														)}
 														{columns.map((item) => {
-															console.log(rowItem);
 															return item.name === "status" ? (
 																<>
 																	<Button

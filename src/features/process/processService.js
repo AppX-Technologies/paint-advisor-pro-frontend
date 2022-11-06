@@ -1,4 +1,3 @@
-/* eslint-disable */
 import axios from "axios";
 
 const endpoint = "https://painting-app-backend.herokuapp.com/processes";
@@ -37,7 +36,6 @@ const fetchSingleProcess = async (userData) => {
 };
 
 const createProcess = async (userData) => {
-	console.log(userData, "Createajaj");
 	const config = {
 		headers: {
 			"Content-Type": "application/json",
@@ -46,7 +44,7 @@ const createProcess = async (userData) => {
 	};
 	delete userData.token;
 	const response = await axios.put(
-		CREATE_PROCESS + `/${userData.ID}`,
+		`${CREATE_PROCESS  }/${userData.ID}`,
 		{
 			processes: userData.add
 				? [

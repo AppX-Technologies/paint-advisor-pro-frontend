@@ -30,7 +30,7 @@ export const fetchUserMadeByCompany = createAsyncThunk(
 				(err.response && err.response.data && err.response.data.message) ||
 				err.message ||
 				err.toString();
-			thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+			thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
@@ -48,7 +48,7 @@ export const createUsersByCompany = createAsyncThunk(
 				(err.response && err.response.data && err.response.data.message) ||
 				err.message ||
 				err.toString();
-			thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+			thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
@@ -65,7 +65,7 @@ export const deleteUserByCompany = createAsyncThunk(
 				(error.response && error.response.data && error.response.data.message) ||
 				error.message ||
 				error.toString();
-			thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+			thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
@@ -82,7 +82,7 @@ export const updateUserFromCompany = createAsyncThunk(
 				(error.response && error.response.data && error.response.data.message) ||
 				error.message ||
 				error.toString();
-			thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+			thunkAPI.dispatch(showMessage({ message, severity: "error" }));
 			return thunkAPI.rejectWithValue(message);
 		}
 	}

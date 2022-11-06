@@ -1,14 +1,14 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Typography } from "@mui/material";
+
 const ProtectedRoute = () => {
 	// const { user } = useSelector((state) => state.auth)
 	const user = JSON.parse(localStorage.getItem("user"));
 	// show unauthorized screen if no user is found in redux store
 	if (!user) {
 		return (
-			<>
-				<div className="unauthorized">
+			<div className="unauthorized">
 					<Typography component="h1" variant="h5">
 						Unauthorized 😔
 					</Typography>
@@ -16,7 +16,6 @@ const ProtectedRoute = () => {
 						<NavLink to="/login">Login</NavLink> to gain access
 					</Typography>
 				</div>
-			</>
 		);
 	}
 

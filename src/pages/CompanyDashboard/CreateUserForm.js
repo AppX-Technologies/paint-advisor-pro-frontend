@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -11,14 +10,14 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useDispatch, useSelector } from "react-redux";
-import formReducer from "../reducers/registerReducer";
 import { CircularProgress, Grid, Stack, Typography } from "@mui/material";
+import { useEffect } from "react";
+import formReducer from "../reducers/registerReducer";
 import {
 	createUsersByCompany,
 	fetchUserMadeByCompany,
 	reset
 } from "../../features/usersFromCompany/usersFromCompanySlice";
-import { useEffect } from "react";
 import { showMessage } from "../../features/snackbar/snackbarSlice";
 
 const initialFormState = {
@@ -98,13 +97,11 @@ export default function CreateUserForm(props) {
 				<DialogTitle>
 					<Stack direction="row" spacing={2}>
 						<Typography variant="h6">Add New User</Typography>
-						{
-							<CircularProgress
+						<CircularProgress
 								color="primary"
 								size={25}
 								style={{ display: isLoading ? "block" : "none" }}
 							/>
-						}
 					</Stack>
 				</DialogTitle>
 				<DialogContent>
@@ -171,8 +168,7 @@ export default function CreateUserForm(props) {
 						</Grid>
 						<Grid xs={6} sx={{ marginTop: "24px" }}>
 							{formState.role === "Painter" && (
-								<>
-									<FormControl variant="standard" sx={{ mt: 2, minWidth: "98%" }}>
+								<FormControl variant="standard" sx={{ mt: 2, minWidth: "98%" }}>
 										<InputLabel id="demo-simple-select-standard-label">
 											Proficiency *
 										</InputLabel>
@@ -190,7 +186,6 @@ export default function CreateUserForm(props) {
 											<MenuItem value="Expert">Expert</MenuItem>
 										</Select>
 									</FormControl>
-								</>
 							)}
 						</Grid>
 					</Grid>
