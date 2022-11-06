@@ -1,138 +1,98 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
-import CustomButton from "../Button";
-import FormDialog from "./OrgRegisterForm";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import EditOrgForm from "./EditOrgForm";
-import { deleteOrg, fetchOrgs, reset } from "../../features/org/orgSlice";
-import { showMessage } from "../../features/snackbar/snackbarSlice";
-import { companyColumns } from "../../common/tableHead";
-import { DraggableDataTable } from "../../common/DraggableDataTable";
+import { Box } from '@mui/material';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { DraggableDataTable } from '../../common/DraggableDataTable';
+import { companyColumns } from '../../common/tableHead';
+import { deleteOrg, fetchOrgs, reset } from '../../features/org/orgSlice';
+import { showMessage } from '../../features/snackbar/snackbarSlice';
+import CustomButton from '../Button';
+import { DeleteModal } from '../delete-model/DeleteModel';
+import EditOrgForm from './EditOrgForm';
+import FormDialog from './OrgRegisterForm';
 
 const Companies = () => {
-	const dispatch = useDispatch();
-	const { orgList, isDeleting, isLoading, isDeleted } = useSelector((state) => state.org);
-	const [open, setOpen] = React.useState(false);
-	const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
-	const [openEditForm, setOpenEditForm] = React.useState(false);
-	const [editFormData, setEditFormData] = React.useState([]);
-	const userDetail = JSON.parse(localStorage.getItem("user"));
-	const [userId, setUserId] = React.useState("");
+  const dispatch = useDispatch();
+  const { orgList, isDeleting, isLoading, isDeleted } = useSelector((state) => state.org);
+  const [open, setOpen] = React.useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
+  const [openEditForm, setOpenEditForm] = React.useState(false);
+  const [editFormData, setEditFormData] = React.useState([]);
+  const userDetail = JSON.parse(localStorage.getItem('user'));
+  const [userId, setUserId] = React.useState('');
 
-	React.useEffect(() => {
-		dispatch(fetchOrgs(userDetail.token));
-	}, []);
+  React.useEffect(() => {
+    dispatch(fetchOrgs(userDetail.token));
+  }, []);
 
-	React.useEffect(() => {
-		if (isDeleted) {
-			dispatch(
-				showMessage({
-					message: "Company deleted successfully",
-					variant: "success"
-				})
-			);
-			setOpenDeleteModal(false);
-			dispatch(fetchOrgs(userDetail.token));
-			dispatch(reset());
-		}
-	}, [isDeleted]);
+  React.useEffect(() => {
+    if (isDeleted) {
+      dispatch(
+        showMessage({
+          message: 'Company deleted successfully',
+          variant: 'success'
+        })
+      );
+      setOpenDeleteModal(false);
+      dispatch(fetchOrgs(userDetail.token));
+      dispatch(reset());
+    }
+  }, [isDeleted]);
 
-	// set email on click
-	const onDeleteBtnClick = (e, getId) => {
-		e.stopPropagation();
-		setUserId(getId);
-	};
-	const columns = companyColumns({
-		setEditFormData,
-		setOpenEditForm,
-		setOpenDeleteModal,
-		onDeleteBtnClick,
-		editFormData
-	});
+  // set email on click
+  const onDeleteBtnClick = (e, getId) => {
+    e.stopPropagation();
+    setUserId(getId);
+  };
+  const columns = companyColumns();
 
-	function DeleteModal() {
-		const handleClose = () => {
-			setOpenDeleteModal(false);
-		};
-		const handleDelete = () => {
-			dispatch(deleteOrg({ id: userId, token: userDetail.token }));
-		};
+  return (
+    <>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <CustomButton
+          variant='contained'
+          sx={{ mb: 2 }}
+          onClick={() => setOpen(true)}
+          disabled={isLoading}>
+          Create
+        </CustomButton>
+      </Box>
 
-		return (
-			<Dialog open={openDeleteModal} onClose={handleClose}>
-				<DialogTitle>
-					<Stack direction="row" spacing={2}>
-						<Typography variant="h6">Delete Company</Typography>
-						{
-							<CircularProgress
-								color="primary"
-								size={25}
-								style={{ display: isDeleting ? "block" : "none" }}
-							/>
-						}
-					</Stack>
-				</DialogTitle>
-				<DialogContent>
-					<DialogContentText>
-						Are you sure you want to delete this Company?
-					</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={handleClose}>Cancel</Button>
-					<Button onClick={handleDelete} disabled={isDeleting}>
-						Delete
-					</Button>
-				</DialogActions>
-			</Dialog>
-		);
-	}
-	return (
-		<>
-			<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-				<CustomButton
-					variant="contained"
-					sx={{ mb: 2 }}
-					onClick={() => setOpen(true)}
-					disabled={isLoading}
-				>
-					Create
-				</CustomButton>
-			</Box>
+      <DraggableDataTable
+        initialDataList={orgList.map((org) => {
+          return {
+            _id: org._id,
+            name: org.name,
+            email: org.email,
+            address: org.address,
+            phone: org.phone
+          };
+        })}
+        isLoading={isLoading}
+        columns={columns}
+        title='Company List'
+        setEditFormData={setEditFormData}
+        setOpenEditForm={setOpenEditForm}
+        setOpenDeleteModal={setOpenDeleteModal}
+        onDeleteBtnClick={onDeleteBtnClick}
+        viewCompany
+      />
 
-			<DraggableDataTable
-				initialDataList={orgList.map((org) => {
-					return {
-						_id: org._id,
-						name: org.name,
-						email: org.email,
-						address: org.address,
-						phone: org.phone
-					};
-				})}
-				isLoading={isLoading}
-				columns={columns}
-				title={"Company List"}
-				setEditFormData={setEditFormData}
-				setOpenEditForm={setOpenEditForm}
-				setOpenDeleteModal={setOpenDeleteModal}
-				onDeleteBtnClick={onDeleteBtnClick}
-				viewCompany={true}
-			/>
-
-			<FormDialog open={open} setOpen={setOpen} />
-			<EditOrgForm
-				openEditForm={openEditForm}
-				setOpenEditForm={setOpenEditForm}
-				editFormData={editFormData}
-			/>
-			<DeleteModal />
-		</>
-	);
+      <FormDialog open={open} setOpen={setOpen} />
+      <EditOrgForm
+        openEditForm={openEditForm}
+        setOpenEditForm={setOpenEditForm}
+        editFormData={editFormData}
+      />
+      <DeleteModal
+        openDeleteModal={openDeleteModal}
+        setOpenDeleteModal={setOpenDeleteModal}
+        isDeleting={isDeleting}
+        payloadWithUserToken={{ id: userId, token: userDetail.token }}
+        modalTitle='Company'
+        deleteMethod={deleteOrg}
+      />
+    </>
+  );
 };
 
 export default Companies;
