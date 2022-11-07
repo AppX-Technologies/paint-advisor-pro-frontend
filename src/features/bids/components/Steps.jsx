@@ -17,7 +17,7 @@ const Steps = () => {
                 )}
                 <Chip
                   label={`Chip Filled (${idx + 1})`}
-                  sx={{ margin: '5px' }}
+                  sx={{ margin: '2px 5px 5px 5px' }}
                   size='small'
                   variant={selectedStep === idx ? 'filled' : 'outlined'}
                   onClick={() => setSelectedStep(idx)}

@@ -24,7 +24,8 @@
     "react/jsx-props-no-spreading": "off",
     "consistent-return": "off",
     "react/no-unstable-nested-components": "off",
-    "jsx-curly-brace-presence": "off"
+    "jsx-curly-brace-presence": "off",
+    "prefer-arrow-callback": "off"
   },
   "globals": {
     "window": true,

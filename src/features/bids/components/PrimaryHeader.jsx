@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 
-const PrimaryHeader = () => {
+const PrimaryHeader = ({ showFilter, onFilterChange }) => {
   const [selectOption, setSelectOption] = useState('');
   const [sortOption, setSortOption] = useState('');
   const menuItems = [
@@ -33,11 +33,11 @@ const PrimaryHeader = () => {
       options: ['a', 'b', 'c', 'd']
     }
   ];
-
   return (
     <>
       <Box mt={2} ml={2} sx={{ width: '100%' }}>
         <Grid container gap={1.5} sx={{ width: '100%' }}>
+          {/* Search Input */}
           <Grid xs={6} ml={2}>
             <TextField
               InputProps={{
@@ -57,6 +57,7 @@ const PrimaryHeader = () => {
               size='small'
             />
           </Grid>
+          {/* Select */}
           {menuItems.map((menuItem) => {
             return (
               <Grid xs={1.5}>
@@ -79,6 +80,7 @@ const PrimaryHeader = () => {
               </Grid>
             );
           })}
+          {/* Sort and Filter Icons */}
           {Array(2)
             .fill(0)
             .map((_, idx) => {
@@ -88,6 +90,11 @@ const PrimaryHeader = () => {
                     <Button
                       sx={{ width: '100%' }}
                       variant='contained'
+                      onClick={
+                        idx === 1
+                          ? () => onFilterChange((prevFilterValue) => !prevFilterValue)
+                          : undefined
+                      }
                       startIcon={
                         idx === 0 ? (
                           <ArrowDownwardIcon sx={{ marginLeft: '13px' }} />
