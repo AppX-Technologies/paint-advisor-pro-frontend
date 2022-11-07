@@ -16,7 +16,8 @@ import formReducer from '../reducers/registerReducer';
 import {
   createUsersByCompany,
   fetchUserMadeByCompany,
-  reset
+  reset,
+  userFromCompanySelector
 } from '../../features/usersFromCompany/usersFromCompanySlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 
@@ -31,8 +32,7 @@ const initialFormState = {
 export default function CreateUserForm({ open, setOpen, orgId }) {
   const dispatch = useDispatch();
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-  const { isSuccess, isLoading } = useSelector((state) => state.usersFromCompany);
-  const userDetail = JSON.parse(localStorage.getItem('user'));
+  const { isSuccess, isLoading } = useSelector(userFromCompanySelector);
 
   const handleTextChange = (e) => {
     dispatchNew({

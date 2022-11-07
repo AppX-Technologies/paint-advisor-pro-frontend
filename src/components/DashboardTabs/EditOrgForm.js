@@ -10,7 +10,8 @@ import { Checkbox, CircularProgress, FormControlLabel, Grid } from '@mui/materia
 import { useEffect } from 'react';
 import formReducer from './reducers/formReducer';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { updateOrg, fetchOrgs, reset } from '../../features/org/orgSlice';
+import { updateOrg, fetchOrgs, reset, orgSelector } from '../../features/org/orgSlice';
+import { authSelector } from '../../features/auth/authSlice';
 
 export default function Edit(props) {
   const dispatch = useDispatch();
@@ -24,8 +25,8 @@ export default function Edit(props) {
   };
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-  const userDetail = JSON.parse(localStorage.getItem('user'));
-  const { isUpdated, isUpdating } = useSelector((state) => state.org);
+  const { user } = useSelector(authSelector);
+  const { isUpdated, isUpdating } = useSelector(orgSelector);
 
   useEffect(() => {
     Object.keys(editFormData).forEach((key) => {
@@ -55,7 +56,7 @@ export default function Edit(props) {
   const formStateWithToken = {
     ...formState,
     id: editFormData._id,
-    token: userDetail.token
+    token: user.token
   };
   const handleEdit = (e) => {
     e.preventDefault();
@@ -72,7 +73,7 @@ export default function Edit(props) {
           variant: 'success'
         })
       );
-      dispatch(fetchOrgs(userDetail.token));
+      dispatch(fetchOrgs(user.token));
       dispatch(reset());
     }
   }, [isUpdated]);

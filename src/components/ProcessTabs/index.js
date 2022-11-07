@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { processesTabLists } from '../../common/Constants';
-import { fetchSingleOrg } from '../../features/org/orgSlice';
-import { fetchProcess } from '../../features/process/processSlice';
+import { authSelector } from '../../features/auth/authSlice';
+import { fetchSingleOrg, orgSelector } from '../../features/org/orgSlice';
+import { fetchProcess, processSelector } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { reset } from '../../features/usersFromCompany/usersFromCompanySlice';
 import ProcessTable from './ProcessTable';
@@ -15,10 +16,10 @@ const Processes = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const { org } = useSelector((state) => state.org);
-  const userDetail = JSON.parse(localStorage.getItem('user'));
+  const { org } = useSelector(orgSelector);
+  const { user } = useSelector(authSelector);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const { isDeleted } = useSelector((state) => state.process);
+  const { isDeleted } = useSelector(processSelector);
   const { companyId } = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -38,7 +39,7 @@ const Processes = () => {
   useEffect(() => {
     dispatch(
       fetchProcess({
-        token: userDetail.token,
+        token: user.token,
         id: companyId ? org.processes : undefined
       })
     );
@@ -49,7 +50,7 @@ const Processes = () => {
         filter: {
           _id: companyId
         },
-        token: userDetail.token
+        token: user.token
       })
     );
   }, []);

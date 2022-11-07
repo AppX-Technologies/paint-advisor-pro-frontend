@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import ConfirmModal from '../components/Modal';
-import { login, reset } from '../features/auth/authSlice';
+import { authSelector, login, reset } from '../features/auth/authSlice';
 import {
   confirmNewPassword,
   fillEmail,
@@ -39,14 +39,15 @@ export default function Login() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [showPassword, setShowPassword] = React.useState(false);
-  const userDetail = JSON.parse(localStorage.getItem('user'));
+    const { user } = useSelector(authSelector);
+
 
   React.useEffect(() => {
     if (isSuccess) {
       if (
-        userDetail.role === 'Org Admin' ||
-        userDetail.role === 'Estimator' ||
-        userDetail.role === 'Painter'
+        user.role === 'Org Admin' ||
+        user.role === 'Estimator' ||
+        user.role === 'Painter'
       ) {
         navigate(`/company`, { replace: true });
         dispatch(reset());

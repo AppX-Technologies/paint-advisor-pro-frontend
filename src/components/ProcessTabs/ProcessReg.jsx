@@ -12,13 +12,15 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createProcess, reset } from '../../features/process/processSlice';
+import { authSelector } from '../../features/auth/authSlice';
+import { createProcess, processSelector, reset } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function FormDialog(props) {
-  const { processList, isSuccess } = useSelector((state) => state.process);
-  const userDetail = JSON.parse(localStorage.getItem('user'));
+  const { processList, isSuccess } = useSelector(processSelector);
+  const { user } = useSelector(authSelector);
+
   const dispatch = useDispatch();
   const { open, setOpen, bidType, filteredProcesses, stageType } = props;
 
@@ -49,7 +51,7 @@ export default function FormDialog(props) {
       ID: processList[0]._id,
       previousProcesses: processList[0].processes,
       add: true,
-      token: userDetail.token
+      token: user.token
     };
     if (
       filteredProcesses.some((process) => {

@@ -3,7 +3,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
 import { companyColumns } from '../../common/tableHead';
-import { deleteOrg, fetchOrgs, reset } from '../../features/org/orgSlice';
+import { authSelector } from '../../features/auth/authSlice';
+import { deleteOrg, fetchOrgs, orgSelector, reset } from '../../features/org/orgSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import CustomButton from '../Button';
 import { DeleteModal } from '../delete-model/DeleteModel';
@@ -12,16 +13,16 @@ import FormDialog from './OrgRegisterForm';
 
 const Companies = () => {
   const dispatch = useDispatch();
-  const { orgList, isDeleting, isLoading, isDeleted } = useSelector((state) => state.org);
+  const { orgList, isDeleting, isLoading, isDeleted } = useSelector(orgSelector);
+  const { user } = useSelector(authSelector);
   const [open, setOpen] = React.useState(false);
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData, setEditFormData] = React.useState([]);
-  const userDetail = JSON.parse(localStorage.getItem('user'));
+  
   const [userId, setUserId] = React.useState('');
-
   React.useEffect(() => {
-    dispatch(fetchOrgs(userDetail.token));
+    dispatch(fetchOrgs(user.token));
   }, []);
 
   React.useEffect(() => {
@@ -33,7 +34,7 @@ const Companies = () => {
         })
       );
       setOpenDeleteModal(false);
-      dispatch(fetchOrgs(userDetail.token));
+      dispatch(fetchOrgs(user.token));
       dispatch(reset());
     }
   }, [isDeleted]);
@@ -87,7 +88,7 @@ const Companies = () => {
         openDeleteModal={openDeleteModal}
         setOpenDeleteModal={setOpenDeleteModal}
         isDeleting={isDeleting}
-        payloadWithUserToken={{ id: userId, token: userDetail.token }}
+        payloadWithUserToken={{ id: userId, token: user.token }}
         modalTitle='Company'
         deleteMethod={deleteOrg}
       />

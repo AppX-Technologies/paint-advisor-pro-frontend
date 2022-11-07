@@ -10,7 +10,8 @@ import { CircularProgress, Grid } from '@mui/material';
 import { useEffect } from 'react';
 import formReducer from './reducers/formReducer';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { updateUser, fetchUsers, reset } from '../../features/users/userSlice';
+import { updateUser, fetchUsers, reset, userSelector } from '../../features/users/userSlice';
+import { authSelector } from '../../features/auth/authSlice';
 
 export default function Edit(props) {
   const dispatch = useDispatch();
@@ -21,11 +22,9 @@ export default function Edit(props) {
     phone: editFormData.phone ? editFormData.phone : '',
     role: 'Admin'
   };
-  console.log(editFormData);
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-
-  const userDetail = JSON.parse(localStorage.getItem('user'));
-  const { isUpdated, isUpdating } = useSelector((state) => state.user);
+  const { user } = useSelector(authSelector);
+  const { isUpdated, isUpdating } = useSelector(userSelector);
 
   useEffect(() => {
     Object.keys(editFormData).forEach((key) => {
@@ -55,7 +54,7 @@ export default function Edit(props) {
     e.preventDefault();
     const formStateWithToken = {
       ...formState,
-      token: userDetail.token
+      token: user.token
     };
     dispatch(updateUser(formStateWithToken));
     dispatch(reset());
@@ -70,7 +69,7 @@ export default function Edit(props) {
           variant: 'success'
         })
       );
-      dispatch(fetchUsers(userDetail.token));
+      dispatch(fetchUsers(user.token));
       dispatch(reset());
     }
   }, [isUpdated]);

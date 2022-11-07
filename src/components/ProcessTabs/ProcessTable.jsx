@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
 import { processColumn } from '../../common/tableHead';
-import { createProcess, reset } from '../../features/process/processSlice';
+import { authSelector } from '../../features/auth/authSlice';
+import { createProcess, processSelector, reset } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { filterProcessByBid } from '../../helpers/bidFilterHelpers';
 import CustomButton from '../Button';
@@ -14,16 +15,14 @@ import StageTab from './StageTab';
 
 const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   const dispatch = useDispatch();
-  const { processList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(
-    (state) => state.process
-  );
+  const { processList, isDeleting, isLoading, isSuccess } = useSelector(processSelector);
   const [stageValue, setStageValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setStageValue(newValue);
   };
-  const { org } = useSelector((state) => state.org);
-  const userDetail = JSON.parse(localStorage.getItem('user'));
+    const { user } = useSelector(authSelector);
+
   const [processDataList, setProcessDataList] = useState([]);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [editFormData, setEditFormData] = useState([]);
@@ -53,7 +52,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
       ID: processList[0]._id,
       previousProcesses: resortProcesses(dataList, processList[0].processes),
       add: true,
-      token: userDetail.token
+      token: user.token
     };
     dispatch(createProcess(formStateWithToken));
     setFilteredProcesses(dataList);
@@ -141,7 +140,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
           ID: processList[0] && processList[0]._id,
           previousProcesses: processList[0] && processList[0].processes,
           add: false,
-          token: userDetail.token,
+          token: user.token,
           idToBeDeleted: processId
         }}
         deleteProcess

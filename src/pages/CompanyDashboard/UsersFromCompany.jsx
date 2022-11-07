@@ -11,7 +11,8 @@ import { showMessage } from '../../features/snackbar/snackbarSlice';
 import {
   deleteUserByCompany,
   fetchUserMadeByCompany,
-  reset
+  reset,
+  userFromCompanySelector
 } from '../../features/usersFromCompany/usersFromCompanySlice';
 import { isCompanyAdmin, isSystemUser } from '../../helpers/roles';
 import CreateUserForm from './CreateUserForm';
@@ -21,9 +22,8 @@ const UsersFromCompany = () => {
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { companyId } = useParams();
-  const { companyMadeByUsers, isDeleting, isLoading, isDeleted } = useSelector(
-    (state) => state.usersFromCompany
-  );
+  const { companyMadeByUsers, isDeleting, isLoading, isDeleted } =
+    useSelector(userFromCompanySelector);
   const [open, setOpen] = React.useState(false);
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData, setEditFormData] = React.useState([]);

@@ -1,31 +1,27 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import CustomButton from '../Button';
 import CreateUserForm from './UserRegisterForm';
 import EditUserForm from './EditUserForm';
-import { deleteUser, fetchUsers, reset } from '../../features/users/userSlice';
+import { deleteUser, fetchUsers, reset, userSelector } from '../../features/users/userSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { userColumn } from '../../common/tableHead';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
 import { DeleteModal } from '../delete-model/DeleteModel';
+import { authSelector } from '../../features/auth/authSlice';
 
 const Users = () => {
   const dispatch = useDispatch();
-  const { userList, isDeleting, isLoading, isDeleted } = useSelector((state) => state.user);
+  const { userList, isDeleting, isLoading, isDeleted } = useSelector(userSelector);
   const [open, setOpen] = React.useState(false);
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData, setEditFormData] = React.useState([]);
-  const userDetail = JSON.parse(localStorage.getItem('user'));
+  const { user } = useSelector(authSelector);
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [emailId, setEmailId] = React.useState('');
   React.useEffect(() => {
-    dispatch(fetchUsers(userDetail.token));
+    dispatch(fetchUsers(user.token));
   }, []);
 
   React.useEffect(() => {
@@ -37,7 +33,7 @@ const Users = () => {
         })
       );
       setOpenDeleteModal(false);
-      dispatch(fetchUsers(userDetail.token));
+      dispatch(fetchUsers(user.token));
       dispatch(reset());
     }
   }, [isDeleted]);
@@ -54,7 +50,7 @@ const Users = () => {
   //       setOpenDeleteModal(false);
   //     };
   //     const handleDelete = () => {
-  //       dispatch(deleteUser({ email: emailId, token: userDetail.token }));
+  //       dispatch(deleteUser({ email: emailId, token: user.token }));
   //     };
 
   //     return (
@@ -124,7 +120,7 @@ const Users = () => {
         openDeleteModal={openDeleteModal}
         setOpenDeleteModal={setOpenDeleteModal}
         isDeleting={isDeleting}
-        payloadWithUserToken={{ email: emailId, token: userDetail.token }}
+        payloadWithUserToken={{ email: emailId, token: user.token }}
         modalTitle='User'
         deleteMethod={deleteUser}
       />

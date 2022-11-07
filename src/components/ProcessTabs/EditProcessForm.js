@@ -10,11 +10,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createProcess } from '../../features/process/processSlice';
+import { authSelector } from '../../features/auth/authSlice';
+import { createProcess, processSelector } from '../../features/process/processSlice';
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function Edit(props) {
-  const userDetail = JSON.parse(localStorage.getItem('user'));
+  const { user } = useSelector(authSelector);
   const { openEditForm, setOpenEditForm, editFormData } = props;
 
   const initialFormState = {
@@ -24,7 +25,7 @@ export default function Edit(props) {
   };
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-  const { processList } = useSelector((state) => state.process);
+  const { processList } = useSelector(processSelector);
 
   const dispatch = useDispatch();
 
@@ -61,7 +62,7 @@ export default function Edit(props) {
       ),
 
       add: true,
-      token: userDetail.token
+      token: user.token
     };
     dispatch(createProcess(formStateWithToken));
     setOpenEditForm(false);

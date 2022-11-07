@@ -8,8 +8,9 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { authSelector } from '../../features/auth/authSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { createUsers, fetchUsers, reset } from '../../features/users/userSlice';
+import { createUsers, fetchUsers, reset, userSelector } from '../../features/users/userSlice';
 import formReducer from './reducers/formReducer';
 
 const initialFormState = {
@@ -23,8 +24,8 @@ export default function CreateUserForm(props) {
   const dispatch = useDispatch();
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
   const { open, setOpen } = props;
-  const userDetail = JSON.parse(localStorage.getItem('user'));
-  const { isSuccess, isLoading } = useSelector((state) => state.user);
+  const { user } = useSelector(authSelector);
+  const { isSuccess, isLoading } = useSelector(userSelector);
   const handleTextChange = (e) => {
     dispatchNew({
       type: 'HANDLE_FORM_INPUT',
@@ -46,10 +47,10 @@ export default function CreateUserForm(props) {
     e.preventDefault();
     const formStateWithToken = {
       ...formState,
-      token: userDetail.token
+      token: user.token
     };
     dispatch(createUsers(formStateWithToken));
-    dispatch(fetchUsers(userDetail.token));
+    dispatch(fetchUsers(user.token));
   };
 
   useEffect(() => {

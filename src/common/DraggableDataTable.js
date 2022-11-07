@@ -42,7 +42,6 @@ export const DraggableDataTable = ({
   deleteByEmail = false,
   viewCompany = false
 }) => {
-  console.log(initialDataList);
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;

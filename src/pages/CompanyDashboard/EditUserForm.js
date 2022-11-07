@@ -22,12 +22,13 @@ import { showMessage } from '../../features/snackbar/snackbarSlice';
 import {
   updateUserFromCompany,
   fetchUserMadeByCompany,
-  reset
+  reset,
+  userFromCompanySelector
 } from '../../features/usersFromCompany/usersFromCompanySlice';
+import { authSelector } from '../../features/auth/authSlice';
 
 export default function Edit(props) {
   const dispatch = useDispatch();
-  console.log('sadsad');
   const { openEditForm, setOpenEditForm, editFormData, getId } = props;
   const initialFormState = {
     name: editFormData.name ? editFormData.name : '',
@@ -37,9 +38,9 @@ export default function Edit(props) {
     proficiency: editFormData.proficiency ? editFormData.proficiency : 1
   };
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
+  const { user } = useSelector(authSelector);
 
-  const userDetail = JSON.parse(localStorage.getItem('user'));
-  const { isUpdated, isUpdating } = useSelector((state) => state.usersFromCompany);
+  const { isUpdated, isUpdating } = useSelector(userFromCompanySelector);
 
   useEffect(() => {
     Object.keys(editFormData).forEach((key) => {
@@ -69,7 +70,7 @@ export default function Edit(props) {
     e.preventDefault();
     const formStateWithToken = {
       ...formState,
-      token: userDetail.token
+      token: user.token
     };
     if (formState.role === '') {
       dispatch(

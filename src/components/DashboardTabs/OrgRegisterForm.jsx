@@ -15,7 +15,8 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createOrgs, fetchOrgs, reset } from '../../features/org/orgSlice';
+import { authSelector } from '../../features/auth/authSlice';
+import { createOrgs, fetchOrgs, orgSelector, reset } from '../../features/org/orgSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import formReducer from './reducers/formReducer';
 
@@ -30,8 +31,9 @@ export default function FormDialog(props) {
   const dispatch = useDispatch();
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
   const { open, setOpen } = props;
-  const userDetail = JSON.parse(localStorage.getItem('user'));
-  const { isSuccess, isLoading } = useSelector((state) => state.org);
+  const { user } = useSelector(authSelector);
+
+  const { isSuccess, isLoading } = useSelector(orgSelector);
   const handleTextChange = (e) => {
     dispatchNew({
       type: 'HANDLE_FORM_INPUT',
@@ -46,7 +48,7 @@ export default function FormDialog(props) {
     e.preventDefault();
     const formStateWithToken = {
       ...formState,
-      token: userDetail.token
+      token: user.token
     };
     dispatch(createOrgs(formStateWithToken));
   };
@@ -60,7 +62,7 @@ export default function FormDialog(props) {
           variant: 'success'
         })
       );
-      dispatch(fetchOrgs(userDetail.token));
+      dispatch(fetchOrgs(user.token));
       dispatch(reset());
     }
   }, [isSuccess]);
