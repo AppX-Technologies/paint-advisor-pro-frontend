@@ -13,18 +13,12 @@ import {
 } from '@mui/material';
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import ListItemText from '@mui/material/ListItemText';
-import ListItem from '@mui/material/ListItem';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction='left' ref={ref} {...props} />;
 });
 
 const Filter = ({ showFilter, onFilterOptionsClose }) => {
-  const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-
   return (
     <>
       {showFilter && (
