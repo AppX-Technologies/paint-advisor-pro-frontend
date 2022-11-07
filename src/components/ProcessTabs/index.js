@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { processesTabLists } from '../../common/Constants';
+import TabsNavigation from '../../common/TabsNavigation';
 import { fetchSingleOrg } from '../../features/org/orgSlice';
 import { fetchProcess } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
@@ -57,11 +58,7 @@ const Processes = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label='basic tabs example'>
-          {processesTabLists.map((processTab) => {
-            return <Tab label={processTab} key={processTab} />;
-          })}
-        </Tabs>
+        <TabsNavigation value={value} handleTabChange={handleChange} tabList={processesTabLists} />
       </Box>
       <div role='tabpanel' id={`simple-tabpanel-${0}`} aria-labelledby={`simple-tab-${0}`}>
         <Box sx={{ p: 3 }}>

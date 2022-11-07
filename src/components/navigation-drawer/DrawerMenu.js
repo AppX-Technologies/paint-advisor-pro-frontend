@@ -1,4 +1,12 @@
-import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import {
+  Box,
+  Divider,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography
+} from '@mui/material';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -29,19 +37,31 @@ const DrawerMenu = ({ menuItems = [] }) => {
           <ListItemText primary={text} />
         </ListItemButton>
       ))}
-      {commonRoutes.map(({ icon: Icon, text, relLink }) => (
-        <ListItemButton
-          selected={pathname.includes(relLink)}
-          key={text}
-          onClick={text === 'Logout' ? onLogoutClick : () => navigate(relLink)}>
-          {Icon && (
-            <ListItemIcon>
-              <Icon />
-            </ListItemIcon>
-          )}
-          <ListItemText primary={text} />
-        </ListItemButton>
-      ))}
+      <Divider light />
+      <Box sx={{ display: 'flex' }}>
+        {commonRoutes.map(({ icon: Icon, text, relLink }, idx) => (
+          <>
+            <ListItemButton
+              selected={pathname.includes(relLink)}
+              key={text}
+              onClick={text === 'Logout' ? onLogoutClick : () => navigate(relLink)}>
+              {Icon && (
+                <ListItemIcon>
+                  <Icon />
+                </ListItemIcon>
+              )}
+              <ListItemText
+                primary={
+                  <Typography type='body2' sx={{ fontSize: '15px', marginLeft: '-15px' }}>
+                    {text}
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+            {idx === 0 && <Divider orientation='vertical' flexItem />}
+          </>
+        ))}
+      </Box>
     </List>
   );
 };

@@ -16,6 +16,6 @@ export const systemAdminRoutes = [
 export const companyRoutes = (id) =>
   [
     { relLink: 'bids', icon: Dashboard, text: 'Bids', element: Bids },
-    { relLink: 'processes', icon: Dashboard, text: 'Processes', element: Processes },
-    { relLink: 'users', icon: Dashboard, text: 'Users', element: UsersFromCompany }
+    { relLink: 'processes', icon: FormatListBulleted, text: 'Processes', element: Processes },
+    { relLink: 'users', icon: People, text: 'Users', element: UsersFromCompany }
   ].map((l) => ({ ...l, link: id ? `/${id}/${l.relLink}` : `/${l.relLink}` }));
