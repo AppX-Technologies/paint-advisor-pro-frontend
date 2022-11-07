@@ -5,7 +5,7 @@ import { Outlet, useParams } from 'react-router-dom';
 import { NavigationDrawer } from '../components/navigation-drawer';
 import { authSelector } from '../features/auth/authSlice';
 import { fetchSingleOrg, orgSelector } from '../features/org/orgSlice';
-import { companyRoutes, commonRoutes } from '../routing/routes';
+import { companyRoutes } from '../routing/routes';
 
 const CompanyRouteLayout = ({ isSystemAdmin }) => {
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ const CompanyRouteLayout = ({ isSystemAdmin }) => {
   return (
     <NavigationDrawer
       title={company.name}
-      menuItems={[...companyRoutes(isSystemAdmin ? companyId : ''), ...commonRoutes]}>
+      menuItems={[...companyRoutes(isSystemAdmin ? companyId : '')]}>
       <Outlet />
     </NavigationDrawer>
   );
