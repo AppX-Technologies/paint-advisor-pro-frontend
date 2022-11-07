@@ -1,4 +1,5 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
 import MenuIcon from '@mui/icons-material/Menu';
 import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -12,8 +13,8 @@ import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import DrawerMenu from './DrawerMenu';
 import { APP_NAME } from '../../helpers/contants';
+import DrawerMenu from './DrawerMenu';
 
 const drawerWidth = 240;
 const AppBar = styled(MuiAppBar, {
@@ -101,16 +102,18 @@ export const NavigationDrawer = ({ title = APP_NAME, menuItems = [], children })
           sx={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'flex-end',
+            justifyContent: 'space-between',
             px: [1]
           }}>
+          <IconButton sx={{fontSize:"18px",fontWeight:"550" }}>
+            Paint Advisor
+          </IconButton>
           <IconButton onClick={toggleDrawer}>
             <ChevronLeftIcon />
           </IconButton>
         </Toolbar>
         <Divider />
         <DrawerMenu menuItems={menuItems} />
-        
       </Drawer>
       <Box
         component='main'
