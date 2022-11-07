@@ -1,10 +1,12 @@
 import { Dashboard, FormatListBulleted, People, Logout } from '@mui/icons-material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 import UsersFromCompany from '../pages/CompanyDashboard/UsersFromCompany';
 import { Processes } from '../pages/Processes';
 import Bids from '../features/bids/Index';
 
 export const commonRoutes = [
-  { relLink: '/profile', link: '/profile', icon: People, text: 'Profile' },
+  { relLink: '/profile', link: '/profile', icon: AccountCircleIcon, text: 'Profile' },
   { icon: Logout, text: 'Logout' }
 ];
 
