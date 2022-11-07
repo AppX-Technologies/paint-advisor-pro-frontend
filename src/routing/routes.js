@@ -1,9 +1,6 @@
 import { Dashboard, FormatListBulleted, People, Logout } from '@mui/icons-material';
-<<<<<<< HEAD
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Bids from '../pages/Bids';
-=======
->>>>>>> 378e63a63a4f6436012e0295a4dedb6a458c1ea6
+
 import UsersFromCompany from '../pages/CompanyDashboard/UsersFromCompany';
 import { Processes } from '../pages/Processes';
 import Bids from '../features/bids/Index';
