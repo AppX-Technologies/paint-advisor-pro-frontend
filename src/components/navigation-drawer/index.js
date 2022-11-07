@@ -109,8 +109,7 @@ export const NavigationDrawer = ({ title = APP_NAME, menuItems = [], children })
           </IconButton>
         </Toolbar>
         <Divider />
-        <DrawerMenu menuItems={menuItems} />
-        
+        <DrawerMenu menuItems={menuItems} open={open} />
       </Drawer>
       <Box
         component='main'

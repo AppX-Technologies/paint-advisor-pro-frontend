@@ -13,7 +13,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '../../features/auth/authSlice';
 import { commonRoutes } from '../../routing/routes';
 
-const DrawerMenu = ({ menuItems = [] }) => {
+const DrawerMenu = ({ menuItems = [], open }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ const DrawerMenu = ({ menuItems = [] }) => {
         </ListItemButton>
       ))}
       <Divider light />
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: open ? 'flex' : 'static' }}>
         {commonRoutes.map(({ icon: Icon, text, relLink }, idx) => (
           <>
             <ListItemButton
@@ -50,13 +50,15 @@ const DrawerMenu = ({ menuItems = [] }) => {
                   <Icon />
                 </ListItemIcon>
               )}
-              <ListItemText
-                primary={
-                  <Typography type='body2' sx={{ fontSize: '15px', marginLeft: '-15px' }}>
-                    {text}
-                  </Typography>
-                }
-              />
+              {open && (
+                <ListItemText
+                  primary={
+                    <Typography type='body2' sx={{ fontSize: '15px', marginLeft: '-15px' }}>
+                      {text}
+                    </Typography>
+                  }
+                />
+              )}
             </ListItemButton>
             {idx === 0 && <Divider orientation='vertical' flexItem />}
           </>
