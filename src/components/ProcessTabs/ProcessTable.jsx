@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
 import { processColumn } from '../../common/tableHead';
@@ -133,7 +132,6 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
         stageType={stageValue}
         bidType={filterValue}
         filteredProcesses={filteredProcesses}
-        orgProcessId={org.processes}
       />
       <DeleteModal
         openDeleteModal={openDeleteModal}

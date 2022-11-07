@@ -1,7 +1,6 @@
 import React from 'react';
-import { DrawerMenu } from '../../common/DrawerMenu';
-import ProcessTabPanel from '../../components/ProcessTabs/index';
+import ProcessTabPanel from '../../components/ProcessTabs';
 
-export const Processes = ({ showDrawerMenu }) => {
-  return <DrawerMenu tabPanel={<ProcessTabPanel />} showDrawerMenu={showDrawerMenu} />;
+export const Processes = () => {
+  return <ProcessTabPanel />;
 };

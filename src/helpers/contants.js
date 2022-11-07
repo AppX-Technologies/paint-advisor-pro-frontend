@@ -1,3 +1,6 @@
+// General Constants
+export const APP_NAME = 'Paint Advisor Pro';
+
 // Roles and auth
 export const ROLE_SYSTEM_ADMIN = 'Admin';
 export const ROLE_ORG_ADMIN = 'Org Admin';

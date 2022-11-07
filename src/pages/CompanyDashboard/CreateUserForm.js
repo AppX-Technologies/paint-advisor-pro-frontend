@@ -28,14 +28,12 @@ const initialFormState = {
   proficiency: 'Beginner'
 };
 
-export default function CreateUserForm(props) {
+export default function CreateUserForm({ open, setOpen, orgId }) {
   const dispatch = useDispatch();
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-  const { open, setOpen } = props;
   const { isSuccess, isLoading } = useSelector((state) => state.usersFromCompany);
   const userDetail = JSON.parse(localStorage.getItem('user'));
-  const param = window.location.href.split('/').reverse()[0];
-  const getId = param === 'company' ? userDetail._id : window.location.href.split('/').reverse()[0];
+
   const handleTextChange = (e) => {
     dispatchNew({
       type: 'HANDLE_INPUT',
@@ -58,7 +56,7 @@ export default function CreateUserForm(props) {
     e.preventDefault();
     const formStateWithCompanyId = {
       ...formState,
-      organization: getId,
+      organization: orgId,
       token: JSON.parse(localStorage.getItem('user')).token
     };
     if (formState.role === '') {
@@ -78,14 +76,6 @@ export default function CreateUserForm(props) {
     if (isSuccess) {
       setOpen(false);
       dispatch(showMessage({ message: 'User created successfully', variant: 'success' }));
-      if (userDetail.role === 'Org Admin' || userDetail.role === 'Admin') {
-        dispatch(
-          fetchUserMadeByCompany({
-            orgId: getId,
-            token: userDetail.token
-          })
-        );
-      }
       dispatch(reset());
     }
   }, [isSuccess]);

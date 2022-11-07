@@ -1,31 +1,47 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
 import { companyUserColumns } from '../../common/tableHead';
 import CustomButton from '../../components/Button';
 import { DeleteModal } from '../../components/delete-model/DeleteModel';
+import { authSelector } from '../../features/auth/authSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import {
   deleteUserByCompany,
   fetchUserMadeByCompany,
   reset
 } from '../../features/usersFromCompany/usersFromCompanySlice';
+import { isCompanyAdmin, isSystemUser } from '../../helpers/roles';
 import CreateUserForm from './CreateUserForm';
 import EditUserForm from './EditUserForm';
 
-const UsersFromCompany = (props) => {
-  const { getId } = props;
+const UsersFromCompany = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector(authSelector);
+  const { companyId } = useParams();
   const { companyMadeByUsers, isDeleting, isLoading, isDeleted } = useSelector(
     (state) => state.usersFromCompany
   );
   const [open, setOpen] = React.useState(false);
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData, setEditFormData] = React.useState([]);
-  const userDetail = JSON.parse(localStorage.getItem('user'));
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [emailId, setEmailId] = React.useState('');
+  const [orgId] = useState(isSystemUser(user) ? companyId : user.organization._id);
+
+  useEffect(() => {
+    if (isSystemUser(user) || isCompanyAdmin(user)) {
+      dispatch(
+        fetchUserMadeByCompany({
+          token: user.token,
+          orgId
+        })
+      );
+    }
+  }, []);
+
   React.useEffect(() => {
     if (isDeleted) {
       dispatch(
@@ -35,14 +51,6 @@ const UsersFromCompany = (props) => {
         })
       );
       setOpenDeleteModal(false);
-      if (userDetail.role === 'Org Admin' || userDetail.role === 'Admin') {
-        dispatch(
-          fetchUserMadeByCompany({
-            token: userDetail.token,
-            orgId: getId
-          })
-        );
-      }
       dispatch(reset());
     }
   }, [isDeleted]);
@@ -52,6 +60,7 @@ const UsersFromCompany = (props) => {
     e.stopPropagation();
     setEmailId(email);
   };
+
   const columns = companyUserColumns({
     setEditFormData,
     setOpenEditForm,
@@ -95,13 +104,13 @@ const UsersFromCompany = (props) => {
         deleteByEmail
       />
 
-      <CreateUserForm open={open} setOpen={setOpen} />
+      <CreateUserForm open={open} setOpen={setOpen} orgId={orgId} />
       {openEditForm && (
         <EditUserForm
           editFormData={editFormData}
           openEditForm={openEditForm}
           setOpenEditForm={setOpenEditForm}
-          getId={getId}
+          orgId={orgId}
         />
       )}
       <DeleteModal

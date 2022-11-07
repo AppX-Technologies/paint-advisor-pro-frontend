@@ -12,17 +12,16 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { createProcess, fetchProcess, reset } from '../../features/process/processSlice';
+import { createProcess, reset } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function FormDialog(props) {
   const { processList, isSuccess } = useSelector((state) => state.process);
-  const { companyId } = useParams();
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const dispatch = useDispatch();
-  const { open, setOpen, bidType, filteredProcesses, stageType, orgProcessId } = props;
+  const { open, setOpen, bidType, filteredProcesses, stageType } = props;
+
   let stageCategory;
   if (stageType === 0) {
     stageCategory = 'Presentation';
@@ -80,14 +79,6 @@ export default function FormDialog(props) {
           message: 'Process Updated successfully',
           variant: 'success'
         })
-      );
-      dispatch(
-        companyId
-          ? fetchProcess({
-              token: userDetail.token,
-              id: orgProcessId
-            })
-          : fetchProcess({ token: userDetail.token })
       );
       dispatch(reset());
     }

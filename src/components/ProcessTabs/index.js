@@ -9,7 +9,7 @@ import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { reset } from '../../features/usersFromCompany/usersFromCompanySlice';
 import ProcessTable from './ProcessTable';
 
-const index = () => {
+const Processes = () => {
   const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -66,4 +66,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Processes;

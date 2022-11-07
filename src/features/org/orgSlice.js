@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { showMessage } from '../snackbar/snackbarSlice';
 import orgService from './orgService';
-import { showMessage, onClose } from '../snackbar/snackbarSlice';
 
 // initial states
 
 const initialState = {
   orgList: [],
-  org: [],
+  org: null,
   isLoading: false,
   isError: false,
   isSuccess: false,
@@ -179,5 +179,6 @@ export const orgSlice = createSlice({
 });
 
 export const { reset } = orgSlice.actions;
+export const orgSelector = (state) => state.org;
 
 export default orgSlice.reducer;

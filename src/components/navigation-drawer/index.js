@@ -8,23 +8,14 @@ import Divider from '@mui/material/Divider';
 import MuiDrawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
 import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fetchSingleOrg } from '../../features/org/orgSlice';
-import { fetchUserMadeByCompany } from '../../features/usersFromCompany/usersFromCompanySlice';
-import Bids from '../Bids';
-import Materials from '../Materials';
-import { Processes } from '../Processes';
-import MainListItems from './listItems';
-import UsersFromCompany from './UsersFromCompany';
+import DrawerMenu from './DrawerMenu';
+import { APP_NAME } from '../../helpers/contants';
 
 const drawerWidth = 240;
-console.log(JSON.parse(localStorage.getItem('user')));
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open'
 })(({ theme, open }) => ({
@@ -69,42 +60,16 @@ const Drawer = styled(MuiDrawer, {
   }
 }));
 
-function DashboardContent({ isSystemAdmin }) {
-  const dispatch = useDispatch();
+/**
+ * menuItem = { link: '/company/bids', icon: "MuiIcon", text="Bids", onClick }
+ * if pass only one of link or onClick
+ */
+export const NavigationDrawer = ({ title = APP_NAME, menuItems = [], children }) => {
   const [open, setOpen] = React.useState(true);
-  const [clickedMenu, setClickedMenu] = React.useState('Bids');
-  const { org, isLoading } = useSelector((state) => state.org);
-  const userDetail = JSON.parse(localStorage.getItem('user'));
-  const { companyId } = useParams();
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
-  React.useEffect(() => {
-    dispatch(
-      fetchSingleOrg({
-        filter: isSystemAdmin
-          ? {
-              _id: companyId
-            }
-          : undefined,
-        token: userDetail.token
-      })
-    );
-  }, []);
-  console.log(org);
-
-  React.useEffect(() => {
-    if (userDetail.role === 'Org Admin' || userDetail.role === 'Admin') {
-      dispatch(
-        fetchUserMadeByCompany({
-          token: userDetail.token,
-          orgId: companyId
-        })
-      );
-    }
-  }, []);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -127,7 +92,7 @@ function DashboardContent({ isSystemAdmin }) {
           </IconButton>
 
           <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
-            {(org ? org.name : userDetail.name) || 'Painting App'}
+            {title}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -144,9 +109,7 @@ function DashboardContent({ isSystemAdmin }) {
           </IconButton>
         </Toolbar>
         <Divider />
-        <List component='nav'>
-          <MainListItems setClickedMenu={setClickedMenu} />
-        </List>
+        <DrawerMenu menuItems={menuItems} />
       </Drawer>
       <Box
         component='main'
@@ -161,18 +124,11 @@ function DashboardContent({ isSystemAdmin }) {
         <Container maxWidth='lg' style={{ marginLeft: '-22px' }} sx={{ mt: 0, mb: 4 }}>
           <Grid container spacing={4}>
             <Grid item xs={12} md={12} lg={12}>
-              {clickedMenu === 'Bids' && <Bids />}
-              {clickedMenu === 'Materials' && <Materials />}
-              {clickedMenu === 'Processes' && <Processes showDrawerMenu={false} />}
-              {clickedMenu === 'Users' && <UsersFromCompany getId={org._id} />}
+              {children}
             </Grid>
           </Grid>
         </Container>
       </Box>
     </Box>
   );
-}
-
-export default function CompanyDashboard({ isSystemAdmin }) {
-  return <DashboardContent isSystemAdmin={isSystemAdmin} />;
-}
+};
