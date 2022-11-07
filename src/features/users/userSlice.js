@@ -1,11 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import userService from "./userService";
-import { showMessage, onClose } from "../snackbar/snackbarSlice";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { showMessage } from '../snackbar/snackbarSlice';
+import userService from './userService';
 
 // initial states
 
 const initialState = {
-  userList:[],
+  userList: [],
   isLoading: false,
   isError: false,
   isSuccess: false,
@@ -13,91 +13,70 @@ const initialState = {
   isDeleted: false,
   isUpdating: false,
   isUpdated: false,
-  message:""
+  message: ''
 };
 
 // get users
 
-export const fetchUsers = createAsyncThunk(
-  "org/fetchUsers",
-  async (userData, thunkAPI) => {
-    try {
-      const response = await userService.fetchUsers(userData);
-      return response;
-    } catch (err) {
-      const message =
+export const fetchUsers = createAsyncThunk('org/fetchUsers', async (userData, thunkAPI) => {
+  try {
+    const response = await userService.fetchUsers(userData);
+    return response;
+  } catch (err) {
+    const message =
       (err.response && err.response.data && err.response.data.message) ||
       err.message ||
       err.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
-      return thunkAPI.rejectWithValue(message);
-    }
+    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 // create users
 
-export const createUsers = createAsyncThunk(
-  "auth/createUsers",
-  async (userData, thunkAPI) => {
-    try {
-      const response = await userService.createUsers(userData);
-      console.log(response);
-      return response;
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
-      return thunkAPI.rejectWithValue(message);
-    }
+export const createUsers = createAsyncThunk('auth/createUsers', async (userData, thunkAPI) => {
+  try {
+    const response = await userService.createUsers(userData);
+    return response;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
-export const updateUser = createAsyncThunk(
-  "auth/updateUser",
-  async (userData, thunkAPI) => {
-    try {
-      const response = await userService.updateUser(userData);
-      console.log(response);
-      return response;
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-          error.message ||
-        error.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
-      return thunkAPI.rejectWithValue(message);
-    }
+export const updateUser = createAsyncThunk('auth/updateUser', async (userData, thunkAPI) => {
+  try {
+    const response = await userService.updateUser(userData);
+    return response;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
-export const deleteUser = createAsyncThunk(
-  "auth/deleteUser",
-  async (userData, thunkAPI) => {
-    try {
-      const response = await userService.deleteUser(userData);
-      console.log(response);
-      return response;
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-          error.message ||
-        error.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
-      return thunkAPI.rejectWithValue(message);
-    }
+export const deleteUser = createAsyncThunk('auth/deleteUser', async (userData, thunkAPI) => {
+  try {
+    const response = await userService.deleteUser(userData);
+    return response;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 export const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     reset: (state) => {
@@ -107,7 +86,7 @@ export const userSlice = createSlice({
       state.isDeleting = false;
       state.isDeleted = false;
       state.isUpdated = false;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -136,7 +115,7 @@ export const userSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(updateUser.pending, (state,action) =>{
+      .addCase(updateUser.pending, (state, action) => {
         state.isUpdating = true;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
@@ -149,24 +128,22 @@ export const userSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(deleteUser.pending, (state,action) =>{
+      .addCase(deleteUser.pending, (state, action) => {
         state.isDeleting = true;
-      }
-      )
+      })
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.isDeleting = false;
         state.isDeleted = true;
         state.message = action.payload;
-      }
-      )
+      })
       .addCase(deleteUser.rejected, (state, action) => {
         state.isDeleting = false;
         state.isError = true;
         state.message = action.payload;
       });
-    }
+  }
 });
 
 export const { reset } = userSlice.actions;
-
+export const userSelector = (state) => state.user;
 export default userSlice.reducer;

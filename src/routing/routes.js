@@ -1,0 +1,21 @@
+import { Dashboard, FormatListBulleted, People, Logout } from '@mui/icons-material';
+import Bids from '../pages/Bids';
+import UsersFromCompany from '../pages/CompanyDashboard/UsersFromCompany';
+import { Processes } from '../pages/Processes';
+
+export const commonRoutes = [
+  { relLink: '/profile', link: '/profile', icon: People, text: 'Profile' },
+  { icon: Logout, text: 'Logout' }
+];
+
+export const systemAdminRoutes = [
+  { relLink: 'dashboard', icon: Dashboard, text: 'Dashboard' },
+  { relLink: 'processes', icon: FormatListBulleted, text: 'Default Processes' }
+].map((l) => ({ ...l, link: `/${l.relLink}` }));
+
+export const companyRoutes = (id) =>
+  [
+    { relLink: 'bids', icon: Dashboard, text: 'Bids', element: Bids },
+    { relLink: 'processes', icon: Dashboard, text: 'Processes', element: Processes },
+    { relLink: 'users', icon: Dashboard, text: 'Users', element: UsersFromCompany }
+  ].map((l) => ({ ...l, link: id ? `/${id}/${l.relLink}` : `/${l.relLink}` }));

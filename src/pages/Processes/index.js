@@ -1,9 +1,6 @@
-import React from 'react'
+import React from 'react';
+import ProcessTabPanel from '../../components/ProcessTabs';
 
-const Processes = () => {
-  return (
-    <div>Processes pages here.</div>
-  )
-}
-
-export default Processes
+export const Processes = () => {
+  return <ProcessTabPanel />;
+};

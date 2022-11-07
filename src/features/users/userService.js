@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 const endpoint = process.env.REACT_APP_API_BASE_URL_USERS;
 
@@ -11,14 +11,14 @@ const DELETE_USER = `${endpoint}/`;
 const fetchUsers = async (userData) => {
   const config = {
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${userData}`,
-    },
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData}`
+    }
   };
   const response = await axios.post(
     FETCH_USERS,
     {
-      filter: { role: ["Admin"] },
+      filter: { role: ['Admin'] }
     },
     config
   );
@@ -28,9 +28,9 @@ const fetchUsers = async (userData) => {
 const createUsers = async (userData) => {
   const config = {
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${userData.token}`,
-    },
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
   };
   delete userData.token;
   const response = await axios.post(CREATE_USERS, userData, config);
@@ -40,9 +40,9 @@ const createUsers = async (userData) => {
 const updateUser = async (userData) => {
   const config = {
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${userData.token}`,
-    },
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
   };
   delete userData.token;
   const response = await axios.post(UPDATE_USER, userData, config);
@@ -52,14 +52,14 @@ const updateUser = async (userData) => {
 const deleteUser = async (userData) => {
   const config = {
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${userData.token}`,
-    },
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
   };
   delete userData.token;
   const response = await axios.delete(DELETE_USER, {
     ...config,
-    data: userData,
+    data: userData
   });
   return response.data;
 };

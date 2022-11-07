@@ -1,10 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "../features/auth/authSlice";
-import modalReducer from "../features/modal/modalSlice";
-import snackbarReducer from "../features/snackbar/snackbarSlice";
-import orgReducer from "../features/org/orgSlice";
-import userReducer from "../features/users/userSlice";
-import usersFromCompanyReducer from "../features/usersFromCompany/usersFromCompanySlice"
+import { configureStore } from '@reduxjs/toolkit';
+import authReducer from '../features/auth/authSlice';
+import modalReducer from '../features/modal/modalSlice';
+import snackbarReducer from '../features/snackbar/snackbarSlice';
+import orgReducer from '../features/org/orgSlice';
+import userReducer from '../features/users/userSlice';
+import usersFromCompanyReducer from '../features/usersFromCompany/usersFromCompanySlice';
+import processReducer from '../features/process/processSlice';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     snackbar: snackbarReducer,
     org: orgReducer,
     user: userReducer,
-    usersFromCompany: usersFromCompanyReducer,
-  },
+    process: processReducer,
+    usersFromCompany: usersFromCompanyReducer
+  }
 });

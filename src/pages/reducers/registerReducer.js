@@ -1,18 +1,18 @@
-const registerReducer = (state,action) =>{
-  switch(action.type){
-    case "HANDLE_INPUT":
+const registerReducer = (state, action) => {
+  switch (action.type) {
+    case 'HANDLE_INPUT':
       return {
         ...state,
-        [action.field]:action.payload,
+        [action.field]: action.payload
       };
-    case "HANDLE_OTP_INPUT":
+    case 'HANDLE_OTP_INPUT':
       return {
         ...state,
-        otp:action.payload,
+        otp: action.payload
       };
     default:
       return state;
-}
-}
+  }
+};
 
 export default registerReducer;

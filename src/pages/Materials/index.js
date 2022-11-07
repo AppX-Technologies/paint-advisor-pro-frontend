@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const Materials = () => {
-  return (
-    <div>Materials</div>
-  )
-}
+  return <h2>Materials</h2>;
+};
 
-export default Materials
+export default Materials;

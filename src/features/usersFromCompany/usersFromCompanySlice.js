@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { showMessage, onClose } from "../snackbar/snackbarSlice";
-import usersFromCompanyService from "./usersFromCompanyService";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { showMessage } from '../snackbar/snackbarSlice';
+import usersFromCompanyService from './usersFromCompanyService';
 
 // initial states
 
@@ -13,90 +13,79 @@ const initialState = {
   isDeleted: false,
   isUpdating: false,
   isUpdated: false,
-  message: "",
+  message: ''
 };
 
 export const fetchUserMadeByCompany = createAsyncThunk(
-  "usersFromCompany/fetchUserMadeByCompany",
+  'usersFromCompany/fetchUserMadeByCompany',
   async (userData, thunkAPI) => {
     try {
-      const response = await usersFromCompanyService.fetchUserMadeByCompany(
-        userData
+      const response = await usersFromCompanyService.fetchUserMadeByCompany(userData);
+      return response.filter((org) =>
+        org.organization ? org.organization._id === userData.orgId : null
       );
-      return response;
     } catch (err) {
       const message =
         (err.response && err.response.data && err.response.data.message) ||
         err.message ||
         err.toString();
-      thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+      thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const createUsersByCompany = createAsyncThunk(
-  "usersFromCompany/createUsersByCompany",
+  'usersFromCompany/createUsersByCompany',
   async (userData, thunkAPI) => {
     try {
-      const response = await usersFromCompanyService.createUsersByCompany(
-        userData
-      );
+      const response = await usersFromCompanyService.createUsersByCompany(userData);
       return response;
     } catch (err) {
       const message =
         (err.response && err.response.data && err.response.data.message) ||
         err.message ||
         err.toString();
-      thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+      thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const deleteUserByCompany = createAsyncThunk(
-  "usersFromCompany/deleteUserByCompany",
+  'usersFromCompany/deleteUserByCompany',
   async (userData, thunkAPI) => {
     try {
-      const response = await usersFromCompanyService.deleteUserByCompany(
-        userData
-      );
+      const response = await usersFromCompanyService.deleteUserByCompany(userData);
       return response;
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.response && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
-      thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+      thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 export const updateUserFromCompany = createAsyncThunk(
-  "auth/updateUserFromCompany",
+  'auth/updateUserFromCompany',
   async (userData, thunkAPI) => {
     try {
-      const response = await usersFromCompanyService.updateUserFromCompany(
-        userData
-      );
-      console.log(response);
+      const response = await usersFromCompanyService.updateUserFromCompany(userData);
       return response;
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.response && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
-      thunkAPI.dispatch(showMessage({ message: message, severity: "error" }));
+      thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 export const usersFromCompanySlice = createSlice({
-  name: "usersFromCompany",
+  name: 'usersFromCompany',
   initialState,
   reducers: {
     reset: (state) => {
@@ -106,7 +95,7 @@ export const usersFromCompanySlice = createSlice({
       state.isDeleting = false;
       state.isDeleted = false;
       state.isUpdated = false;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -136,9 +125,11 @@ export const usersFromCompanySlice = createSlice({
         state.message = action.payload;
       })
       .addCase(deleteUserByCompany.pending, (state) => {
+        state.isLoading = true;
         state.isDeleting = true;
       })
       .addCase(deleteUserByCompany.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.isDeleting = false;
         state.isDeleted = true;
         state.message = action.payload;
@@ -161,9 +152,9 @@ export const usersFromCompanySlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       });
-  },
+  }
 });
 
 export const { reset } = usersFromCompanySlice.actions;
-
+export const userFromCompanySelector = (state) => state.usersFromCompany;
 export default usersFromCompanySlice.reducer;

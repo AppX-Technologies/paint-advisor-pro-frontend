@@ -6,125 +6,135 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useDispatch, useSelector } from 'react-redux';
-import formReducer from './reducers/formReducer'
-import { Checkbox, CircularProgress, FormControlLabel, Grid } from '@mui/material';
+import { CircularProgress, Grid } from '@mui/material';
 import { useEffect } from 'react';
+import formReducer from './reducers/formReducer';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import {updateUser,fetchUsers,reset} from '../../features/users/userSlice';
-
+import { updateUser, fetchUsers, reset, userSelector } from '../../features/users/userSlice';
+import { authSelector } from '../../features/auth/authSlice';
 
 export default function Edit(props) {
   const dispatch = useDispatch();
-  const {openEditForm,setOpenEditForm,editFormData} = props;
+  const { openEditForm, setOpenEditForm, editFormData } = props;
   const initialFormState = {
-    name: editFormData[1] ? editFormData[1] : '',
-    email: editFormData[2] ?  editFormData[2] : '',
-    phone: editFormData[3]  ? editFormData[3] : '',
-    role:"Admin", 
-    };
-  const [formState,dispatchNew] = React.useReducer(formReducer,initialFormState)
-  
-  const {user} = useSelector((state)=> state.auth);
-  const userDetail = JSON.parse(localStorage.getItem("user"));
-  const {isUpdated,isUpdating} = useSelector((state)=> state.user);
+    name: editFormData.name ? editFormData.name : '',
+    email: editFormData.email ? editFormData.email : '',
+    phone: editFormData.phone ? editFormData.phone : '',
+    role: 'Admin'
+  };
+  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
+  const { user } = useSelector(authSelector);
+  const { isUpdated, isUpdating } = useSelector(userSelector);
 
-  useEffect(()=>{
-    formState.name = editFormData[1] ? editFormData[1] : '';
-    formState.email = editFormData[2] ?  editFormData[2] : '';
-    formState.phone = editFormData[3]  ? editFormData[3] : '';
-    formState.role = "Admin"
-  },[editFormData])
-
-  const handleTextChange = (e) =>{
-    dispatchNew({
-      type:"HANDLE_FORM_INPUT",
-      field:e.target.name,
-      payload:e.target.value
+  useEffect(() => {
+    Object.keys(editFormData).forEach((key) => {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: key,
+        payload: key === 'role' ? 'Admin' : editFormData[key]
+      });
     });
-  }
+  }, [editFormData]);
+
+  const handleTextChange = (e) => {
+    dispatchNew({
+      type: 'HANDLE_FORM_INPUT',
+      field: e.target.name,
+      payload: e.target.value
+    });
+  };
   const handleClose = () => {
     setOpenEditForm(false);
     Object.keys(formState).forEach((key) => {
       formState[key] = '';
-    }
-    );
+    });
   };
-
-  const formStateWithToken = {
-    ...formState,
-    token:userDetail.token
-  }
 
   const handleEdit = (e) => {
     e.preventDefault();
+    const formStateWithToken = {
+      ...formState,
+      token: user.token
+    };
     dispatch(updateUser(formStateWithToken));
     dispatch(reset());
-  }
+  };
 
-  useEffect(()=>{
-    if(isUpdated){
+  useEffect(() => {
+    if (isUpdated) {
       setOpenEditForm(false);
-      dispatch(showMessage({message:"User updated successfully",variant:"success"}));
-      dispatch(fetchUsers(userDetail.token));
+      dispatch(
+        showMessage({
+          message: 'User updated successfully',
+          variant: 'success'
+        })
+      );
+      dispatch(fetchUsers(user.token));
       dispatch(reset());
     }
-  },[isUpdated])
+  }, [isUpdated]);
   return (
     <div>
       <Dialog open={openEditForm} onClose={handleClose}>
         <DialogTitle>
           Edit User
-          <CircularProgress style={{display:isUpdating ? "block" : "none"}} size={25} />
-          </DialogTitle>
+          <CircularProgress style={{ display: isUpdating ? 'block' : 'none' }} size={25} />
+        </DialogTitle>
         <DialogContent>
-        <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <label>Name</label>
-                <TextField
-                  name="name"
-                  required
-                  fullWidth
-                  placeholder={editFormData[1]}
-                  id="name"
-                  autoFocus
-                  value={formState.name}
-                  onChange={(e)=>handleTextChange(e)}
-                />
-              </Grid>
-              <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <label>Name</label>
+              <TextField
+                name='name'
+                required
+                fullWidth
+                placeholder={editFormData.name}
+                id='name'
+                autoFocus
+                value={formState.name}
+                onChange={(e) => handleTextChange(e)}
+              />
+            </Grid>
+            <Grid item xs={12}>
               <label>Email</label>
               <TextField
-                  name="email"
-                  required
-                  fullWidth
-                  placeholder={editFormData[2]}
-                  id="email"
-                  autoFocus
-                  value={formState.email}
-                  onChange={(e)=>handleTextChange(e)}
-                />
-              </Grid>
-              <Grid item xs={12}>
+                name='email'
+                required
+                fullWidth
+                placeholder={editFormData.email}
+                id='email'
+                autoFocus
+                value={formState.email}
+                onChange={(e) => handleTextChange(e)}
+              />
+            </Grid>
+            <Grid item xs={12}>
               <label>Phone</label>
               <TextField
-                  name="phone"
-                  required
-                  fullWidth
-                  placeholder={editFormData[3]}
-                  id="phone"
-                  autoFocus
-                  value={formState.phone}
-                  onChange={(e)=>handleTextChange(e)}
-                  InputLabelProps={{
-                    style: { color: '#988817' }, 
-                 }}
-                />
-              </Grid>
+                name='phone'
+                required
+                fullWidth
+                placeholder={editFormData.phone}
+                id='phone'
+                autoFocus
+                value={formState.phone}
+                onChange={(e) => handleTextChange(e)}
+                InputLabelProps={{
+                  style: { color: '#988817' }
+                }}
+              />
             </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button disabled={isUpdating} type="submit" variant="contained" onClick={(e)=>handleEdit(e)}>Update</Button>
+          <Button
+            disabled={isUpdating}
+            type='submit'
+            variant='contained'
+            onClick={(e) => handleEdit(e)}>
+            Update
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

@@ -6,43 +6,45 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useDispatch, useSelector } from 'react-redux';
-import formReducer from './reducers/formReducer'
 import { Checkbox, CircularProgress, FormControlLabel, Grid } from '@mui/material';
 import { useEffect } from 'react';
+import formReducer from './reducers/formReducer';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import {updateOrg,fetchOrgs,reset} from '../../features/org/orgSlice';
-
+import { updateOrg, fetchOrgs, reset, orgSelector } from '../../features/org/orgSlice';
+import { authSelector } from '../../features/auth/authSlice';
 
 export default function Edit(props) {
   const dispatch = useDispatch();
-  const {openEditForm,setOpenEditForm,editFormData} = props;
+  const { openEditForm, setOpenEditForm, editFormData } = props;
   const initialFormState = {
-    name: editFormData[1] ? editFormData[1] : '',
-    email: editFormData[2] ?  editFormData[2] : '',
-    address: editFormData[3]  ? editFormData[3] : '',
-    phone: editFormData[4]  ? editFormData[4] : '',
-    active: editFormData[5]  ? editFormData[5] : false,
-    };
- 
-  const [formState,dispatchNew] = React.useReducer(formReducer,initialFormState)
-  const {user} = useSelector((state)=> state.auth);
-  const userDetail = JSON.parse(localStorage.getItem("user"));
-  const {isUpdated,isUpdating} = useSelector((state)=> state.org);
+    name: editFormData.name ? editFormData.name : '',
+    email: editFormData.email ? editFormData.email : '',
+    address: editFormData.address ? editFormData.address : '',
+    phone: editFormData.phone ? editFormData.phone : '',
+    active: editFormData.active ? editFormData.active : false
+  };
 
-  useEffect(()=>{
-    formState.name = editFormData[1] ? editFormData[1] : '';
-    formState.email = editFormData[2] ?  editFormData[2] : '';
-    formState.address = editFormData[3]  ? editFormData[3] : '';
-    formState.phone = editFormData[4]  ? editFormData[4] : '';
-    formState.active = editFormData[5]  ? editFormData[5] : false;
-  },[editFormData])
-  const handleTextChange = (e) =>{
-    dispatchNew({
-      type:"HANDLE_FORM_INPUT",
-      field:e.target.name,
-      payload:e.target.name === "active" ? e.target.checked : e.target.value
+  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
+  const { user } = useSelector(authSelector);
+  const { isUpdated, isUpdating } = useSelector(orgSelector);
+
+  useEffect(() => {
+    Object.keys(editFormData).forEach((key) => {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: key,
+        payload: editFormData[key]
+      });
     });
-  }
+  }, [editFormData]);
+
+  const handleTextChange = (e) => {
+    dispatchNew({
+      type: 'HANDLE_FORM_INPUT',
+      field: e.target.name,
+      payload: e.target.name === 'active' ? e.target.checked : e.target.value
+    });
+  };
 
   const handleClose = () => {
     setOpenEditForm(false);
@@ -53,96 +55,111 @@ export default function Edit(props) {
 
   const formStateWithToken = {
     ...formState,
-    id:editFormData[0],
-    token:userDetail.token
-  }
-
+    id: editFormData._id,
+    token: user.token
+  };
   const handleEdit = (e) => {
     e.preventDefault();
     dispatch(updateOrg(formStateWithToken));
     // dispatch(reset());
-  }
+  };
 
-  useEffect(()=>{
-    if(isUpdated){
+  useEffect(() => {
+    if (isUpdated) {
       setOpenEditForm(false);
-      dispatch(showMessage({message:"Organization updated successfully",variant:"success"}));
-      dispatch(fetchOrgs(userDetail.token));
+      dispatch(
+        showMessage({
+          message: 'Organization updated successfully',
+          variant: 'success'
+        })
+      );
+      dispatch(fetchOrgs(user.token));
       dispatch(reset());
     }
-  },[isUpdated])
+  }, [isUpdated]);
   return (
     <div>
       <Dialog open={openEditForm} onClose={handleClose}>
         <DialogTitle>
           Edit Organization
-          <CircularProgress style={{display:isUpdating ? "block" : "none"}} size={25} />
-          </DialogTitle>
+          <CircularProgress style={{ display: isUpdating ? 'block' : 'none' }} size={25} />
+        </DialogTitle>
         <DialogContent>
-        <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <label>Name</label>
-                <TextField
-                  name="name"
-                  required
-                  fullWidth
-                  placeholder={editFormData[1]}
-                  id="name"
-                  autoFocus
-                  value={formState.name}
-                  onChange={(e)=>handleTextChange(e)}
-                />
-              </Grid>
-              <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <label>Name</label>
+              <TextField
+                name='name'
+                required
+                fullWidth
+                id='name'
+                autoFocus
+                value={formState.name}
+                onChange={(e) => handleTextChange(e)}
+              />
+            </Grid>
+            <Grid item xs={12}>
               <label>Email</label>
               <TextField
-                  name="email"
-                  required
-                  fullWidth
-                  placeholder={editFormData[2]}
-                  id="email"
-                  autoFocus
-                  value={formState.email}
-                  onChange={(e)=>handleTextChange(e)}
-                />
-              </Grid>
-              <Grid item xs={12}>
+                name='email'
+                required
+                fullWidth
+                placeholder={editFormData.email}
+                id='email'
+                autoFocus
+                value={formState.email}
+                onChange={(e) => handleTextChange(e)}
+              />
+            </Grid>
+            <Grid item xs={12}>
               <label>Address</label>
               <TextField
-                  name="address"
-                  required
-                  fullWidth
-                  placeholder={editFormData[3]}
-                  id="address"
-                  autoFocus
-                  value={formState.address}
-                  onChange={(e)=>handleTextChange(e)}
-                />
-              </Grid>
-              <Grid item xs={12}>
+                name='address'
+                required
+                fullWidth
+                placeholder={editFormData.address}
+                id='address'
+                autoFocus
+                value={formState.address}
+                onChange={(e) => handleTextChange(e)}
+              />
+            </Grid>
+            <Grid item xs={12}>
               <label>Phone</label>
               <TextField
-                  name="phone"
-                  required
-                  fullWidth
-                  placeholder={editFormData[4]}
-                  id="phone"
-                  autoFocus
-                  value={formState.phone }
-                  onChange={(e)=>handleTextChange(e)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-              <FormControlLabel control={
-              <Checkbox name="active" checked={formState.active}
-              onChange={(e)=>handleTextChange(e)} />
-              } label="Is organization active?" />
-              </Grid>
+                name='phone'
+                required
+                fullWidth
+                placeholder={editFormData.phone}
+                id='phone'
+                autoFocus
+                value={formState.phone}
+                onChange={(e) => handleTextChange(e)}
+              />
             </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name='active'
+                    checked={formState.active}
+                    onChange={(e) => handleTextChange(e)}
+                  />
+                }
+                label='Is organization active?'
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button disabled={isUpdating} type="submit" variant="contained" onClick={(e)=>handleEdit(e)}>Update</Button>
+          <Button
+            disabled={isUpdating}
+            type='submit'
+            variant='contained'
+            onClick={(e) => handleEdit(e)}>
+            Update
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

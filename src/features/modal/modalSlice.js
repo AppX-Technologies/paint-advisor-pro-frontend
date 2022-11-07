@@ -3,11 +3,11 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isOpen: false,
   isOtpModal: false,
-  resetEmail:'',
+  resetEmail: '',
   modalType: null,
   otp: '',
-  newPassword:"",
-  confirmPassword: "",
+  newPassword: '',
+  confirmPassword: ''
 };
 
 const modalSlice = createSlice({
@@ -20,34 +20,43 @@ const modalSlice = createSlice({
     },
     closeModal: (state, action) => {
       state.isOpen = false;
-      state.isOtpModal = action.payload === "otp" && false ;
-      state.modalType = "";
-      state.otp =  action.payload === "otp" && ""
+      state.isOtpModal = action.payload === 'otp' && false;
+      state.modalType = '';
+      state.otp = action.payload === 'otp' && '';
     },
-    otpModal: (state, action) => {
+    otpModal: (state) => {
       state.isOpen = false;
       state.isOtpModal = true;
     },
-    closeOtpModal: (state, action) => {
+    closeOtpModal: (state) => {
       state.isOtpModal = false;
-      state.newPassword = "";
-      state.confirmPassword = "";
+      state.newPassword = '';
+      state.confirmPassword = '';
     },
     fillEmail: (state, action) => {
       state.resetEmail = action.payload;
     },
-    fillOtp: (state,action)=>{
-      state.otp = action.payload
+    fillOtp: (state, action) => {
+      state.otp = action.payload;
     },
-    setNewPassword: (state,action)=>{
-      state.newPassword = action.payload
+    setNewPassword: (state, action) => {
+      state.newPassword = action.payload;
     },
-    confirmNewPassword: (state,action)=>{
-      state.confirmPassword = action.payload
+    confirmNewPassword: (state, action) => {
+      state.confirmPassword = action.payload;
     }
-  },
+  }
 });
 
-export const { openModal, closeModal, otpModal, fillOtp,fillEmail,confirmNewPassword,setNewPassword ,closeOtpModal} = modalSlice.actions;
+export const {
+  openModal,
+  closeModal,
+  otpModal,
+  fillOtp,
+  fillEmail,
+  confirmNewPassword,
+  setNewPassword,
+  closeOtpModal
+} = modalSlice.actions;
 
 export default modalSlice.reducer;
