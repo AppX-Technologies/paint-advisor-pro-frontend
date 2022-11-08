@@ -2,11 +2,14 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Box, Button, Divider, Grid } from '@mui/material';
 import React, { useState } from 'react';
 import AddNewClientForm from './AddNewClientForm';
+import ClientInfo from './ClientInfo';
 import Comment from './Comment';
+
 import Filter from './Filter';
 import PrimaryHeader from './PrimaryHeader';
 import QuickSearch from './QuickSearch';
 import Steps from './Steps';
+import UploadFiles from './UploadFiles';
 
 const Pipeline = () => {
   const [showFilter, setShowFilter] = useState(false);
@@ -64,6 +67,8 @@ const Pipeline = () => {
           </Grid>
           <Grid xs={10}>
             <Steps selectedStep={selectedStep} onSelctedStepChange={setSelectedStep} />
+            <ClientInfo />
+            <UploadFiles />
             <Comment />
           </Grid>
         </Grid>
