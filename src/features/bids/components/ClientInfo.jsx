@@ -2,6 +2,7 @@ import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOu
 import { Box, Chip, Divider, Grid, Menu, MenuItem, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { AddNewClientTextField } from '../../../common/FormTextField';
+import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { findCurrentStageButtonInfo } from '../helpers/findCurrentStageButtonInfo';
 
 const ClientInfo = () => {
@@ -55,7 +56,7 @@ const ClientInfo = () => {
                       margin: '5px 4px'
                     }}>
                     <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
-                      {field.name.toUpperCase()} :{' '}
+                      {convertStringCase(field.name)} :{' '}
                     </Typography>
                     <Chip label='abcdefghijklm' size='small' />
                   </Box>
