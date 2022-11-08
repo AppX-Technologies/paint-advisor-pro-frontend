@@ -8,6 +8,7 @@ import Filter from './Filter';
 import PrimaryHeader from './PrimaryHeader';
 import QuickSearch from './QuickSearch';
 import Steps from './Steps';
+import UploadFiles from './UploadFiles';
 
 const Pipeline = () => {
   const [showFilter, setShowFilter] = useState(false);
@@ -66,6 +67,7 @@ const Pipeline = () => {
           <Grid xs={10}>
             <Steps selectedStep={selectedStep} onSelctedStepChange={setSelectedStep} />
             <ClientInfo />
+            <UploadFiles />
           </Grid>
         </Grid>
       </Box>

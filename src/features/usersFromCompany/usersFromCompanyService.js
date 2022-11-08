@@ -9,7 +9,6 @@ const UPDATE_USER = `${endpoint}/update-user-details`;
 // const {token} = JSON.parse(localStorage.getItem("user"));
 
 const fetchUserMadeByCompany = async (userData) => {
-  console.log(userData);
   const config = {
     headers: {
       'Content-Type': 'application/json',
