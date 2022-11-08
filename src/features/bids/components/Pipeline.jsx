@@ -17,6 +17,14 @@ const Pipeline = () => {
   const onFilterOptionsClose = () => {
     setShowFilter(false);
   };
+  const [date, setDate] = React.useState();
+
+  const handleChange = (newDate) => {
+    setDate(newDate);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const onSelecetedListItemChange = (itemValue) => {
     console.log(itemValue);
@@ -37,7 +45,14 @@ const Pipeline = () => {
         <GroupAddIcon sx={{ mr: 1 }} /> Add new client
       </Button>
 
-      <AddNewClientForm open={open} setOpen={setOpen} />
+      <AddNewClientForm
+        open={open}
+        setOpen={setOpen}
+        date={date}
+        setDate={setDate}
+        handleChange={handleChange}
+        handleClose={handleClose}
+      />
       <PrimaryHeader showFilter={showFilter} onFilterChange={setShowFilter} />
       <Divider light sx={{ margin: '10px 0 10px 5px', width: '103%' }} />
       <Box>
