@@ -3,6 +3,7 @@ import { Box, Divider, Grid } from '@mui/material';
 import React, { useState } from 'react';
 import Button from '../../../components/Button';
 import AddNewClientForm from './AddNewClientForm';
+import ClientInfo from './ClientInfo';
 import Filter from './Filter';
 import PrimaryHeader from './PrimaryHeader';
 import QuickSearch from './QuickSearch';
@@ -49,6 +50,7 @@ const Pipeline = () => {
           </Grid>
           <Grid xs={10}>
             <Steps selectedStep={selectedStep} onSelctedStepChange={setSelectedStep} />
+            <ClientInfo />
           </Grid>
         </Grid>
       </Box>
