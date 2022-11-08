@@ -1,15 +1,18 @@
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import { Divider } from '@mui/material';
+import { Box, Divider, Grid } from '@mui/material';
 import React, { useState } from 'react';
 import Button from '../../../components/Button';
 import AddNewClientForm from './AddNewClientForm';
 import Filter from './Filter';
 import PrimaryHeader from './PrimaryHeader';
+import QuickSearch from './QuickSearch';
 import Steps from './Steps';
 
 const Pipeline = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedStep, setSelectedStep] = useState(0);
+  const [selectedListItem, setSelectedListItem] = useState(0);
   const onFilterOptionsClose = () => {
     setShowFilter(false);
   };
@@ -20,6 +23,11 @@ const Pipeline = () => {
   };
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const onSelecetedListItemChange = (itemValue) => {
+    console.log(itemValue);
+    setSelectedListItem(itemValue);
   };
 
   return (
@@ -46,7 +54,19 @@ const Pipeline = () => {
       />
       <PrimaryHeader showFilter={showFilter} onFilterChange={setShowFilter} />
       <Divider light sx={{ margin: '10px 0 10px 5px', width: '103%' }} />
-      <Steps />
+      <Box>
+        <Grid container>
+          <Grid xs={2}>
+            <QuickSearch
+              selectedListItem={selectedListItem}
+              onSelecetedListItemChange={onSelecetedListItemChange}
+            />
+          </Grid>
+          <Grid xs={10}>
+            <Steps selectedStep={selectedStep} onSelctedStepChange={setSelectedStep} />
+          </Grid>
+        </Grid>
+      </Box>
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
     </>
   );

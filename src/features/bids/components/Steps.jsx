@@ -1,12 +1,11 @@
 import { Box, Chip } from '@mui/material';
-import React, { useState } from 'react';
+import React from 'react';
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 
-const Steps = () => {
-  const [selectedStep, setSelectedStep] = useState(0);
+const Steps = ({ selectedStep, onSelctedStepChange }) => {
   return (
-    <Box sx={{ width: '100%', border: '1px solid lightgray', borderRadius: '40px' }} ml={3} mt={1}>
-      <Box p={3}>
+    <Box sx={{ width: '100%', border: '1px solid lightgray', borderRadius: '15px' }} ml={1}>
+      <Box p={1}>
         {Array(10)
           .fill(0)
           .map((_, idx) => {
@@ -17,10 +16,10 @@ const Steps = () => {
                 )}
                 <Chip
                   label={`Chip Filled (${idx + 1})`}
-                  sx={{ margin: '2px 5px 5px 5px' }}
+                  sx={{ margin: '1px 2px 2px 2px' }}
                   size='small'
                   variant={selectedStep === idx ? 'filled' : 'outlined'}
-                  onClick={() => setSelectedStep(idx)}
+                  onClick={() => onSelctedStepChange(idx)}
                 />
               </>
             );
