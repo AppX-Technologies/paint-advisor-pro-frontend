@@ -1,13 +1,13 @@
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Divider } from '@mui/material';
 import React, { useState } from 'react';
-import Button from '../../components/Button';
-import AddNewClientForm from './components/AddNewClientForm';
-import Filter from './components/Filter';
-import PrimaryHeader from './components/PrimaryHeader';
-import Steps from './components/Steps';
+import Button from '../../../components/Button';
+import AddNewClientForm from './AddNewClientForm';
+import Filter from './Filter';
+import PrimaryHeader from './PrimaryHeader';
+import Steps from './Steps';
 
-const Index = () => {
+const Pipeline = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [open, setOpen] = useState(false);
   const onFilterOptionsClose = () => {
@@ -37,4 +37,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Pipeline;
