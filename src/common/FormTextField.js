@@ -21,7 +21,7 @@ export const AddNewClientTextField = [
     name: 'contact method',
     id: 'prefered-contact-method',
     label: 'Prefered Contact Method',
-    dataType: 'text'
+    dataType: 'dropDown'
   },
   {
     name: 'email',
@@ -39,42 +39,42 @@ export const AddNewClientTextField = [
     name: 'target-start-date',
     id: 'target-start-date',
     label: 'Target Start Date',
-    dataType: 'text'
+    dataType: 'date'
   },
   {
     name: 'target-end-date',
     id: 'target-end-date',
     label: 'Target End Date',
-    dataType: 'text'
+    dataType: 'date'
   },
   {
     name: 'property-type',
     id: 'property-type',
     label: 'Property Type',
-    dataType: 'text'
+    dataType: 'dropDown'
   },
   {
     name: 'providing-paint',
     id: 'providing-paint',
     label: 'Will Customer be providing paint?',
-    dataType: 'text'
+    dataType: 'dropDown'
   },
   {
     name: 'date',
     id: 'date',
     label: 'Date/Time for Estimate Appointment',
-    dataType: 'text'
+    dataType: 'date'
   },
   {
     name: 'time',
     id: 'time',
     label: 'Date/Time for Estimate Appintment',
-    dataType: 'text'
+    dataType: 'time'
   },
-  {
-    name: 'project-status',
-    id: 'project-status',
-    label: 'Project Status',
-    dataType: 'dropdown'
-  }
+  // {
+  //   name: 'project-status',
+  //   id: 'project-status',
+  //   label: 'Project Status',
+  //   dataType: 'dropdown'
+  // }
 ];
