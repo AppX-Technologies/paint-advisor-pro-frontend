@@ -23,24 +23,16 @@ const DrawerMenu = ({ menuItems = [], open }) => {
   };
 
   return (
-    <List component='nav'>
-      {menuItems.map(({ icon: Icon, text, relLink }) => (
-        <ListItemButton
-          selected={pathname.includes(relLink)}
-          key={text}
-          onClick={text === 'Logout' ? onLogoutClick : () => navigate(relLink)}>
-          {Icon && (
-            <ListItemIcon>
-              <Icon />
-            </ListItemIcon>
-          )}
-          <ListItemText primary={text} />
-        </ListItemButton>
-      ))}
-      <Divider light />
-      <Box sx={{ display: open ? 'flex' : 'static' }}>
-        {commonRoutes.map(({ icon: Icon, text, relLink }, idx) => (
-          <>
+    <List component='nav' sx={{ height: '100%' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          height: '100%'
+        }}>
+        <div>
+          {menuItems.map(({ icon: Icon, text, relLink }) => (
             <ListItemButton
               selected={pathname.includes(relLink)}
               key={text}
@@ -50,20 +42,38 @@ const DrawerMenu = ({ menuItems = [], open }) => {
                   <Icon />
                 </ListItemIcon>
               )}
-              {open && (
-                <ListItemText
-                  primary={
-                    <Typography type='body2' sx={{ fontSize: '15px', marginLeft: '-15px' }}>
-                      {text}
-                    </Typography>
-                  }
-                />
-              )}
+              <ListItemText primary={text} />
             </ListItemButton>
-            {idx === 0 && <Divider orientation='vertical' flexItem />}
-          </>
-        ))}
-      </Box>
+          ))}
+          <Divider light />
+        </div>
+        <div style={{ display: open ? 'flex' : 'static' }}>
+          {commonRoutes.map(({ icon: Icon, text, relLink }, idx) => (
+            <>
+              <ListItemButton
+                selected={pathname.includes(relLink)}
+                key={text}
+                onClick={text === 'Logout' ? onLogoutClick : () => navigate(relLink)}>
+                {Icon && (
+                  <ListItemIcon>
+                    <Icon />
+                  </ListItemIcon>
+                )}
+                {open && (
+                  <ListItemText
+                    primary={
+                      <Typography type='body2' sx={{ fontSize: '15px', marginLeft: '-15px' }}>
+                        {text}
+                      </Typography>
+                    }
+                  />
+                )}
+              </ListItemButton>
+              {idx === 0 && <Divider orientation='vertical' flexItem />}
+            </>
+          ))}
+        </div>
+      </div>
     </List>
   );
 };

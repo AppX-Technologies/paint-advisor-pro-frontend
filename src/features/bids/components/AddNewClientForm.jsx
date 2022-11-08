@@ -1,5 +1,14 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { Grid,Box, Toolbar, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Toolbar,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
+} from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -12,7 +21,7 @@ import { ALL_STATUS } from '../../../helpers/contants';
 export default function AddNewClientForm(props) {
   const { open, setOpen } = props;
   const [status, setStatus] = React.useState('');
-  const values=ALL_STATUS;
+  const values = ALL_STATUS;
   const handleChange = (event) => {
     setStatus(event.target.value);
   };
@@ -38,7 +47,7 @@ export default function AddNewClientForm(props) {
             Close <CloseIcon sx={{ height: '10px' }} />
           </Button>
         </Toolbar>
-        <Box >
+        <Box>
           <FormControl sx={{ m: 3, minWidth: 120 }} size='small'>
             <InputLabel id='demo-select-small'>Status</InputLabel>
             <Select
@@ -69,7 +78,7 @@ export default function AddNewClientForm(props) {
                   />
                 </Grid>
               ) : (
-                <FormControl sx={{ mt: 3,ml:2, minWidth: 120 }} size='small'>
+                <FormControl sx={{ mt: 3, ml: 2, minWidth: 120 }} size='small'>
                   <InputLabel id='demo-select-small'>{item.name}</InputLabel>
                   <Select
                     labelId='demo-select-small'
