@@ -1,5 +1,4 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
 import MenuIcon from '@mui/icons-material/Menu';
 import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -16,7 +15,7 @@ import * as React from 'react';
 import { APP_NAME } from '../../helpers/contants';
 import DrawerMenu from './DrawerMenu';
 
-const drawerWidth = 240;
+const drawerWidth = 180;
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open'
 })(({ theme, open }) => ({
@@ -105,9 +104,7 @@ export const NavigationDrawer = ({ title = APP_NAME, menuItems = [], children })
             justifyContent: 'space-between',
             px: [1]
           }}>
-          <IconButton sx={{fontSize:"18px",fontWeight:"550" }}>
-            Paint Advisor
-          </IconButton>
+          <IconButton sx={{ fontSize: '18px', fontWeight: '550' }}>Paint Advisor</IconButton>
           <IconButton onClick={toggleDrawer}>
             <ChevronLeftIcon />
           </IconButton>

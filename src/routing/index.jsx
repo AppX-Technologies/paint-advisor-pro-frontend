@@ -10,7 +10,6 @@ import PublicRouteLayout from '../layouts/PublicRouteLayout';
 import Dashboard from '../pages/Dashboard';
 import Login from '../pages/Login';
 import { Processes } from '../pages/Processes';
-import Profile from '../pages/Profile';
 import RegisterPage from '../pages/Register';
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';

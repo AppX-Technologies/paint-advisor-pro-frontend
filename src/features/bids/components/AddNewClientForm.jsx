@@ -21,8 +21,7 @@ import * as React from 'react';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 
 export default function AddNewClientForm(props) {
-  const { open,date,handleClose,handleChange } = props;
-  
+  const { open, date, handleClose, handleChange } = props;
 
   return (
     <div>
@@ -65,7 +64,7 @@ export default function AddNewClientForm(props) {
                     <FormControl sx={{ m: 0, minWidth: '100%', marginTop: 1 }} size='small'>
                       <InputLabel id='demo-select-small'>{item.label}</InputLabel>
                       <Select
-                        sx={{height:"35px"}}
+                        sx={{ height: '35px' }}
                         labelId='demo-select-small'
                         id='demo-select-small'
                         name={item.name}
@@ -121,19 +120,11 @@ export default function AddNewClientForm(props) {
               );
             })}
           </Grid>
-          <div style={{ height: '500px', width: '100px', marginTop: '10px' }}>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur asperiores vero
-              hic, repellat qui id ut fugiat ea fugit labore autem amet numquam at enim facilis
-              dolorem nesciunt facere a.
-            </p>
-          </div>
         </DialogContent>
-
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button type='submit' variant='contained'>
-            Next
+            Save
           </Button>
         </DialogActions>
       </Dialog>

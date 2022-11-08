@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const endpoint = process.env.REACT_APP_API_BASE_URL_USERS;
+const endpoint = 'https://painting-app-backend.herokuapp.com/users';
 
 const CREATE_USERS = `${endpoint}/`;
 const FETCH_USERS = `${endpoint}/list`;
@@ -9,6 +9,7 @@ const DELETE_USER = `${endpoint}/`;
 // const {token} = JSON.parse(localStorage.getItem("user"));
 
 const fetchUsers = async (userData) => {
+  console.log(userData, 'yess');
   const config = {
     headers: {
       'Content-Type': 'application/json',

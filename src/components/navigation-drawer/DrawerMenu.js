@@ -1,5 +1,4 @@
 import {
-  Box,
   Divider,
   List,
   ListItemButton,
@@ -42,7 +41,7 @@ const DrawerMenu = ({ menuItems = [], open }) => {
                   <Icon />
                 </ListItemIcon>
               )}
-              <ListItemText primary={text} />
+              <ListItemText sx={{ margin: open ? '-10px' : '0px' }} primary={text} />
             </ListItemButton>
           ))}
           <Divider light />
@@ -55,14 +54,14 @@ const DrawerMenu = ({ menuItems = [], open }) => {
                 key={text}
                 onClick={text === 'Logout' ? onLogoutClick : () => navigate(relLink)}>
                 {Icon && (
-                  <ListItemIcon>
+                  <ListItemIcon sx={{ marginLeft: '-10px' }}>
                     <Icon />
                   </ListItemIcon>
                 )}
                 {open && (
                   <ListItemText
                     primary={
-                      <Typography type='body2' sx={{ fontSize: '15px', marginLeft: '-15px' }}>
+                      <Typography type='body2' sx={{ fontSize: '15px', marginLeft: '-30px' }}>
                         {text}
                       </Typography>
                     }

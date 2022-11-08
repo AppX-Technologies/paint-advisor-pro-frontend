@@ -1,8 +1,8 @@
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import { Box, Divider, Grid } from '@mui/material';
+import { Box, Button, Divider, Grid } from '@mui/material';
 import React, { useState } from 'react';
-import Button from '../../../components/Button';
 import AddNewClientForm from './AddNewClientForm';
+import Comment from './Comment';
 import Filter from './Filter';
 import PrimaryHeader from './PrimaryHeader';
 import QuickSearch from './QuickSearch';
@@ -33,7 +33,7 @@ const Pipeline = () => {
   return (
     <>
       <Button
-        variant='outlined'
+        variant='contained'
         color='primary'
         style={{
           position: 'absolute',
@@ -64,6 +64,7 @@ const Pipeline = () => {
           </Grid>
           <Grid xs={10}>
             <Steps selectedStep={selectedStep} onSelctedStepChange={setSelectedStep} />
+            <Comment />
           </Grid>
         </Grid>
       </Box>
