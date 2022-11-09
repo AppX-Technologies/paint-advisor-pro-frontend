@@ -11,6 +11,7 @@ import Select from '@mui/material/Select';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProcess } from '../../features/process/processSlice';
+import { ALL_PROCESS_STAGES } from '../../helpers/contants';
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function Edit(props) {
@@ -104,9 +105,11 @@ export default function Edit(props) {
                   value={formState.stage ? formState.stage : editFormData.stage}
                   label='stage'
                   onChange={(e) => handleTextChange(e)}>
-                  <MenuItem value='Presentation'>Preparation</MenuItem>
-                  <MenuItem value='Painting'>Painting</MenuItem>
-                  <MenuItem value='Clean up'>Clean up</MenuItem>
+                 {
+                    ALL_PROCESS_STAGES.map((stage)=>{
+                      return <MenuItem key={stage} value={stage}>{stage}</MenuItem>;
+                    })
+                  }
                 </Select>
               </FormControl>
             </Grid>

@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProcess, reset } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
+import { ALL_PROCESS_STAGES } from '../../helpers/contants';
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function FormDialog(props) {
@@ -24,11 +25,11 @@ export default function FormDialog(props) {
 
   let stageCategory;
   if (stageType === 0) {
-    stageCategory = 'Presentation';
+    stageCategory = 'Preparation';
   } else if (stageType === 1) {
     stageCategory = 'Painting';
   } else {
-    stageCategory = 'Clean up';
+    stageCategory = 'Cleanup';
   }
   const initialFormState = {
     description: '',
@@ -141,9 +142,13 @@ export default function FormDialog(props) {
                   label='stage'
                   onChange={(e) => handleTextChange(e)}
                   required>
-                  <MenuItem value='Presentation'>Presentation</MenuItem>
-                  <MenuItem value='Painting'>Painting</MenuItem>
-                  <MenuItem value='Clean up'>Clean up</MenuItem>
+                  {ALL_PROCESS_STAGES.map((stage) => {
+                    return (
+                      <MenuItem key={stage} value={stage}>
+                        {stage}
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
               </FormControl>
             </Grid>

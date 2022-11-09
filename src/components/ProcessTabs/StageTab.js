@@ -13,7 +13,7 @@ const StageTab = ({ stage, onTabChange }) => {
         borderRadius: '5px'
       }}>
       <Tabs value={stage} onChange={onTabChange}>
-        <Tab label='Presentation' />
+        <Tab label='Preparation' />
         <Tab label='Painting' />
         <Tab label='Cleanup' />
       </Tabs>

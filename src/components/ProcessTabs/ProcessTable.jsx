@@ -55,7 +55,8 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
       add: true,
       token: userDetail.token
     };
-    dispatch(createProcess(formStateWithToken));
+    // dispatch(createProcess(formStateWithToken));
+    console.log(formStateWithToken);
     setFilteredProcesses(dataList);
   };
 
@@ -76,11 +77,11 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 
   useEffect(() => {
     if (stageValue === 0) {
-      setFilteredProcesses(filterProcessByBid(processList, filterValue, 'Presentation'));
+      setFilteredProcesses(filterProcessByBid(processList, filterValue, 'Preparation'));
     } else if (stageValue === 1) {
       setFilteredProcesses(filterProcessByBid(processList, filterValue, 'Painting'));
     } else if (stageValue === 2) {
-      setFilteredProcesses(filterProcessByBid(processList, filterValue, 'Clean up'));
+      setFilteredProcesses(filterProcessByBid(processList, filterValue, 'Cleanup'));
     }
   }, [processList, filterValue, stageValue]);
 
