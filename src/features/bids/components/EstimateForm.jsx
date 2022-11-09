@@ -1,4 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import {
   FormControl,
   Grid,
@@ -13,16 +14,26 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import TextField from '@mui/material/TextField';
-import { DateTimePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { DateTimePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import * as React from 'react';
-import { AddNewClientTextField, estimateFields } from '../../../common/FormTextField';
+import { useEffect } from 'react';
+import { estimateFields } from '../../../common/FormTextField';
 
 export default function EstimateForm(props) {
-  const { open, handleClose } = props;
-const selectedValue=[{
-    id:""
-}];
+  const { open,setOpen,estimateValue,setEstimateValue } = props;
+  const [edit, setEdit] = React.useState(estimateValue && estimateValue.length !== 0);
+
+  useEffect(()=>{
+setEdit(estimateValue.length !== 0);
+  },[open]);
+  const handleEdit =()=>{
+                    setEdit((prev) => !prev);
+
+};
+const handleClose = () => {
+  setOpen(false);
+};
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>
@@ -30,6 +41,17 @@ const selectedValue=[{
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             Estimate
           </Typography>
+          <Button
+            variant='outlined'
+            color='success'
+            style={{
+              height: '30px',
+              padding: '3px',
+              marginRight: '10px'
+            }}
+            onClick={handleEdit}>
+            Edit <EditIcon sx={{ height: '15px' }} />
+          </Button>
           <Button
             variant='outlined'
             color='primary'
@@ -46,8 +68,38 @@ const selectedValue=[{
           <Grid container spacing={2}>
             {estimateFields.map((item) => {
               return (
-                item.dataType === 'dropDown' && (
-                  <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
+                (item.dataType === 'text' && (
+                  <Grid item xs={3} md={3} sx={{ marginTop: '-10px' }}>
+                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                      {item.label}
+                    </InputLabel>
+
+                    <TextField
+                      InputProps={{
+                        style: { height: '30px' }
+                      }}
+                      name={item.name}
+                      fullWidth
+                      disabled={edit}
+                      variant='outlined'
+                      id='outlined-basic'
+                      autoFocus
+                      value={
+                       estimateValue && estimateValue.find((obj) => obj.name === item.name)
+                          ? estimateValue.find((obj) => obj.name === item.name).value
+                          : ''
+                      }
+                      onChange={(event) =>
+                        setEstimateValue([
+                          ...estimateValue.filter((item1) => item1.name !== item.name),
+                          { name: item.name, value: event.target.value }
+                        ])
+                      }
+                    />
+                  </Grid>
+                )) ||
+                (item.dataType === 'dropDown' && (
+                  <Grid item xs={3} md={3} sx={{ marginTop: '-10px' }}>
                     <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                       {item.label}
                     </InputLabel>
@@ -58,10 +110,21 @@ const selectedValue=[{
                         labelId='demo-select-small'
                         id='demo-select-small'
                         name={item.name}
-                        value={undefined}
+                        disabled={edit}
+                        value={
+                         estimateValue && estimateValue.find((obj) => obj.name === item.name)
+                            ? estimateValue.find((obj) => obj.name === item.name).optionChoosed
+                            : ''
+                        }
+                        onChange={(event) =>
+                          setEstimateValue([
+                            ...estimateValue.filter((item1) => item1.name !== item.name),
+                            { name: item.name, optionChoosed: event.target.value }
+                          ])
+                        }
                         renderValue={
-                          selectedValue.find((obj) => obj.id === item.name)
-                            ? ''
+                          estimateValue.find((obj) => obj.name === item.name)
+                            ? undefined
                             : () => (
                                 <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
                                   Select One...
@@ -74,7 +137,7 @@ const selectedValue=[{
                       </Select>
                     </FormControl>
                   </Grid>
-                )
+                ))
               );
             })}
           </Grid>

@@ -5,7 +5,6 @@ import { bidsStages } from '../../../helpers/bidsStages';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
 
 const Steps = ({ selectedStep, onSelectedStepChange }) => {
-  console.log(selectedStep, 'onSelectedStepChange');
   return (
     <Box sx={{ border: '1px solid lightgray', borderRadius: '15px' }} ml={1} bgcolor='white'>
       <Box p={1}>

@@ -25,7 +25,8 @@ export const buttonStageInfo = [
       {
         text: 'Begin Estimate',
         color: 'warning',
-        icon: <ArticleIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
+        icon: <ArticleIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />,
+        nextState: true
       }
     ]
   },
@@ -41,6 +42,14 @@ export const buttonStageInfo = [
         text: 'Cancel The Job',
         color: 'error',
         icon: <DeleteIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
+      },
+
+      {
+        text: 'Estimate Job',
+        color: 'info',
+        icon: <ScheduleIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />,
+        openForm : true,
+        
       }
     ]
   }

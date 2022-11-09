@@ -9,10 +9,12 @@ import PrimaryHeader from './PrimaryHeader';
 import QuickSearch from './QuickSearch';
 import Steps from './Steps';
 import UploadFiles from './UploadFiles';
+import EstimateForm from './EstimateForm';
 
 const Pipeline = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openEstimate, setOpenEstimate] = useState(false);
   const [selectedStep, setSelectedStep] = useState('new client');
   const [selectedListItem, setSelectedListItem] = useState(0);
   const onFilterOptionsClose = () => {
@@ -33,6 +35,7 @@ const Pipeline = () => {
     dateTime: ''
   };
   const [selectedValue, setSelectedvalue] = React.useState([]);
+  const [estimateValue , setEstimateValue] = React.useState([]);
 
   const handleChange = (newDate) => {
     setDate(newDate);
@@ -61,7 +64,6 @@ const Pipeline = () => {
           <GroupAddIcon sx={{ mr: 1 }} /> Add new client
         </Button>
       )}
-
       <AddNewClientForm
         open={open}
         setOpen={setOpen}
@@ -71,6 +73,16 @@ const Pipeline = () => {
         handleClose={handleClose}
         selectedValue={selectedValue}
         setSelectedvalue={setSelectedvalue}
+      />{' '}
+      <EstimateForm
+        open={openEstimate}
+        setOpen={setOpenEstimate}
+        date={date}
+        setDate={setDate}
+        handleChange={handleChange}
+        handleClose={handleClose}
+        estimateValue={estimateValue}
+        setEstimateValue={setEstimateValue}
       />
       <PrimaryHeader showFilter={showFilter} onFilterChange={setShowFilter} />
       <Divider light sx={{ margin: '10px 0 10px 5px', width: '103%' }} />
@@ -89,7 +101,10 @@ const Pipeline = () => {
               onSelectedStepChange={setSelectedStep}
               selectedValue={selectedValue}
               selectedStep={selectedStep}
+              open={openEstimate}
+              setOpen={setOpenEstimate}
             />
+
             <UploadFiles />
             <Comment />
           </Grid>

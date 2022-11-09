@@ -59,6 +59,11 @@ export default function AddNewClientForm(props) {
                       variant='outlined'
                       id='outlined-basic'
                       autoFocus
+                      value={
+                        selectedValue.find((obj) => obj.name === item.name)
+                          ? selectedValue.find((obj) => obj.name === item.name).value
+                          : ''
+                      }
                       onChange={(event) =>
                         setSelectedvalue([
                           ...selectedValue.filter((item1) => item1.name !== item.name),
