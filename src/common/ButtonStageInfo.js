@@ -28,5 +28,20 @@ export const buttonStageInfo = [
         icon: <ArticleIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
       }
     ]
+  },
+  {
+    name: 'estimate in progress',
+    actions: [
+      {
+        text: 'Update Estimation Info',
+        color: 'success',
+        icon: <EditIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
+      },
+      {
+        text: 'Cancel The Job',
+        color: 'error',
+        icon: <DeleteIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
+      }
+    ]
   }
 ];

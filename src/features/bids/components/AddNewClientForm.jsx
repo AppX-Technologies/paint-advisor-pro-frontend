@@ -166,7 +166,7 @@ export default function AddNewClientForm(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type='submit' variant='contained'>
+          <Button type='submit' variant='contained' onClick={handleClose}>
             Save
           </Button>
         </DialogActions>

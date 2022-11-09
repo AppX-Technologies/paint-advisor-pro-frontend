@@ -47,18 +47,20 @@ const Pipeline = () => {
 
   return (
     <>
-      <Button
-        variant='contained'
-        color='primary'
-        style={{
-          position: 'absolute',
-          right: 20,
-          bottom: 10,
-          height: '25px'
-        }}
-        onClick={() => setOpen(true)}>
-        <GroupAddIcon sx={{ mr: 1 }} /> Add new client
-      </Button>
+      {selectedStep === 'new client' && (
+        <Button
+          variant='contained'
+          color='primary'
+          style={{
+            position: 'absolute',
+            right: 20,
+            bottom: 10,
+            height: '25px'
+          }}
+          onClick={() => setOpen(true)}>
+          <GroupAddIcon sx={{ mr: 1 }} /> Add new client
+        </Button>
+      )}
 
       <AddNewClientForm
         open={open}
@@ -81,10 +83,13 @@ const Pipeline = () => {
             />
           </Grid>
 
-          
           <Grid xs={10} sx={{ height: '74vh', overflowY: 'scroll' }}>
             <Steps selectedStep={selectedStep} onSelectedStepChange={setSelectedStep} />
-            <ClientInfo onSelectedStepChange={setSelectedStep} selectedValue={selectedValue} />
+            <ClientInfo
+              onSelectedStepChange={setSelectedStep}
+              selectedValue={selectedValue}
+              selectedStep={selectedStep}
+            />
             <UploadFiles />
             <Comment />
           </Grid>

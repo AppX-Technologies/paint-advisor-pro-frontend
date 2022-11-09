@@ -134,8 +134,8 @@ export default function Edit(props) {
               />
             </Grid>
 
-            <Grid item xs={5}>
-              <FormControl variant='standard' sx={{ mt: 2, minWidth: '100%' }}>
+            <Grid item xs={6}>
+              <FormControl variant='standard' sx={{ mt: 2, minWidth: '90%' }}>
                 <InputLabel id='demo-simple-select-standard-label'>Role *</InputLabel>
                 <Select
                   fullWidth
@@ -151,25 +151,24 @@ export default function Edit(props) {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid xs={7} sx={{ marginTop: '44px' }}>
+
+            <Grid xs={6} sx={{ marginTop: '16px' }}>
               {formState.role === 'Painter' && (
-                <>
-                  <Typography
-                    variant='h6'
-                    sx={{ fontSize: '12px', marginLeft: '25px', color: 'gray' }}>
-                    Proficiency {formState.proficiency ? `(${formState.proficiency})` : null}
-                  </Typography>
-                  <Slider
-                    sx={{ width: '93%', marginLeft: '25px' }}
+                <FormControl variant='standard' sx={{ mt: 2, ml: 2, minWidth: '90%' }}>
+                  <InputLabel id='demo-simple-select-standard-label'>Proficiency *</InputLabel>
+                  <Select
+                    fullWidth
                     name='proficiency'
-                    aria-label='Default'
-                    valueLabelDisplay='auto'
-                    min={1}
-                    max={5}
+                    labelId='demo-simple-select-standard-label'
+                    id='demo-simple-select-standard'
                     value={formState.proficiency}
                     onChange={(e) => handleTextChange(e)}
-                  />
-                </>
+                    label='Role'>
+                    <MenuItem value='Beginner'>Beginner</MenuItem>
+                    <MenuItem value='Intermediate'>Intermediate</MenuItem>
+                    <MenuItem value='Expert'>Expert</MenuItem>
+                  </Select>
+                </FormControl>
               )}
             </Grid>
           </Grid>
