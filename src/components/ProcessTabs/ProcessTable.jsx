@@ -39,9 +39,9 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 
   const resortProcesses = (sortedList, originalProcessList) => {
     if (!sortedList.length) return originalProcessList;
-    const { bidType, stage } = sortedList[0];
+
     const currentBidTypeAndStageRemoved = originalProcessList.filter(
-      (item) => item.bidType !== bidType && item.stage !== stage
+      (item) => !sortedList.map((p) => p._id).includes(item._id)
     );
     return [...currentBidTypeAndStageRemoved, ...sortedList];
   };
@@ -52,11 +52,10 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
       ...formState,
       ID: processList[0]._id,
       previousProcesses: resortProcesses(dataList, processList[0].processes),
-      add: true,
+      add: false,
       token: userDetail.token
     };
-    // dispatch(createProcess(formStateWithToken));
-    console.log(formStateWithToken);
+    dispatch(createProcess(formStateWithToken));
     setFilteredProcesses(dataList);
   };
 
