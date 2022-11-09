@@ -13,14 +13,13 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import TextField from '@mui/material/TextField';
-import { DesktopDatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import { DateTimePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
 import * as React from 'react';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 
 export default function AddNewClientForm(props) {
-  const { open, date, handleClose, handleChange } = props;
+  const { open, handleClose, selectedValue, setSelectedvalue } = props;
 
   return (
     <div>
@@ -37,7 +36,7 @@ export default function AddNewClientForm(props) {
               padding: '3px'
             }}
             onClick={handleClose}>
-            Close <CloseIcon sx={{ height: '10px' }} />
+            Close <CloseIcon sx={{ height: '15px' }} />
           </Button>
         </Toolbar>
 
@@ -46,71 +45,116 @@ export default function AddNewClientForm(props) {
             {AddNewClientTextField.map((item) => {
               return (
                 (item.dataType === 'text' && (
-                  <Grid item xs={4} md={4}>
+                  <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
+                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                      {item.label}
+                    </InputLabel>
+
                     <TextField
+                      InputProps={{
+                        style: { height: '30px' }
+                      }}
                       name={item.name}
-                      required
                       fullWidth
-                      variant='standard'
-                      id={item.id}
-                      label={item.label}
+                      variant='outlined'
+                      id='outlined-basic'
                       autoFocus
+                      onChange={(event) =>
+                        setSelectedvalue([
+                          ...selectedValue.filter((item1) => item1.name !== item.name),
+                          { name: item.name, value: event.target.value }
+                        ])
+                      }
                     />
                   </Grid>
                 )) ||
                 (item.dataType === 'dropDown' && (
-                  <Grid item xs={4} md={4} sx={{ marginTop: 1 }}>
-                    <FormControl sx={{ m: 0, minWidth: '100%', marginTop: 1 }} size='small'>
-                      <InputLabel id='demo-select-small'>{item.label}</InputLabel>
+                  <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
+                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                      {item.label}
+                    </InputLabel>
+                    <FormControl sx={{ m: 0, minWidth: '100%' }} size='small'>
                       <Select
-                        sx={{ height: '35px' }}
+                        displayEmpty
+                        sx={{ height: '30px' }}
                         labelId='demo-select-small'
                         id='demo-select-small'
                         name={item.name}
-                        value='Email'
-                        label={item.label}>
-                        <MenuItem value='Interior'>Email</MenuItem>
-                        <MenuItem value='Exterior'>Phone</MenuItem>
+                        value={
+                          selectedValue.find((obj) => obj.name === item.name)
+                            ? selectedValue.find((obj) => obj.name === item.name).optionChoosed
+                            : ''
+                        }
+                        onChange={(event) =>
+                          setSelectedvalue([
+                            ...selectedValue.filter((item1) => item1.name !== item.name),
+                            { name: item.name, optionChoosed: event.target.value }
+                          ])
+                        }
+                        renderValue={
+                          selectedValue.find((obj) => obj.name === item.name)
+                            ? undefined
+                            : () => (
+                                <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
+                                  Select One...
+                                </Typography>
+                              )
+                        }>
+                        {item.option.map((o) => {
+                          return <MenuItem value={o}>{o}</MenuItem>;
+                        })}
                       </Select>
                     </FormControl>
                   </Grid>
                 )) ||
                 (item.dataType === 'date' && (
-                  <Grid item xs={4} md={4} sx={{ marginTop: 2 }}>
+                  <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
+                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                      {item.label}
+                    </InputLabel>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DesktopDatePicker
                         InputProps={{
-                          style: { height: '35px' }
+                          style: { height: '30px' }
                         }}
-                        label={
-                          <Typography sx={{ marginTop: '-5px', fontSize: '12px' }}>
-                            {item.label}
-                          </Typography>
-                        }
                         inputFormat='MM/DD/YYYY'
-                        value={date}
-                        sx={{ marginTop: 3 }}
-                        onChange={handleChange}
+                        value={
+                          selectedValue.find((obj) => obj.name === item.name)
+                            ? selectedValue.find((obj) => obj.name === item.name).value
+                            : ''
+                        }
+                        onChange={(newVal) =>
+                          setSelectedvalue([
+                            ...selectedValue.filter((i) => i.name !== item.name),
+                            { name: item.name, value: newVal.$d.toString() }
+                          ])
+                        }
                         renderInput={(params) => <TextField {...params} fullWidth />}
                       />
                     </LocalizationProvider>
                   </Grid>
                 )) ||
-                (item.dataType === 'time' && (
-                  <Grid item xs={4} md={4} sx={{ marginTop: 2 }}>
+                (item.dataType === 'dateTime' && (
+                  <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
+                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                      {item.label}
+                    </InputLabel>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <TimePicker
+                      <DateTimePicker
                         InputProps={{
-                          style: { height: '35px' }
+                          style: { height: '30px' }
                         }}
-                        label={
-                          <Typography sx={{ marginTop: '-5px', fontSize: '12px' }}>
-                            {item.label}
-                          </Typography>
+                        value={
+                          selectedValue.find((obj) => obj.name === item.name)
+                            ? selectedValue.find((obj) => obj.name === item.name).value
+                            : ''
                         }
-                        value={date}
-                        sx={{ marginTop: 3 }}
-                        onChange={handleChange}
+                        onChange={(newVal) =>
+                          setSelectedvalue([
+                            ...selectedValue.filter((item1) => item1.name !== item.name),
+                            { name: item.name, value: newVal.$d.toString() }
+                          ])
+                        }
                         renderInput={(params) => <TextField {...params} fullWidth />}
                       />
                     </LocalizationProvider>

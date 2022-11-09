@@ -11,7 +11,7 @@ export const commonRoutes = [
 
 export const systemAdminRoutes = [
   { relLink: 'dashboard', icon: Dashboard, text: 'Dashboard' },
-  { relLink: 'processes', icon: FormatListBulleted, text: 'Default Processes' }
+  { relLink: 'processes', icon: FormatListBulleted, text: 'Processes' }
 ].map((l) => ({ ...l, link: `/${l.relLink}` }));
 
 export const companyRoutes = (id) =>

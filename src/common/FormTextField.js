@@ -1,12 +1,13 @@
 export const AddNewClientTextField = [
   {
-    name: 'project name',
+    name: 'projectName',
     id: 'project-name',
     label: 'Project Name',
+
     dataType: 'text'
   },
   {
-    name: 'customer name',
+    name: 'customerName',
     id: 'customer-name',
     label: 'Customer Name',
     dataType: 'text'
@@ -18,10 +19,11 @@ export const AddNewClientTextField = [
     dataType: 'text'
   },
   {
-    name: 'contact method',
+    name: 'contactMethod',
     id: 'prefered-contact-method',
     label: 'Prefered Contact Method',
-    dataType: 'dropDown'
+    dataType: 'dropDown',
+    option: ['Phone Call', 'Text Message', 'Email']
   },
   {
     name: 'email',
@@ -30,51 +32,54 @@ export const AddNewClientTextField = [
     dataType: 'text'
   },
   {
-    name: 'contact',
+    name: 'contactNumber',
     id: 'contact-number',
     label: 'Contact Number',
     dataType: 'text'
   },
   {
-    name: 'target-start-date',
+    name: 'targetStartDate',
     id: 'target-start-date',
     label: 'Target Start Date',
     dataType: 'date'
   },
   {
-    name: 'target-end-date',
+    name: 'targetEndDate',
     id: 'target-end-date',
     label: 'Target End Date',
     dataType: 'date'
   },
   {
-    name: 'property-type',
+    name: 'propertyType',
     id: 'property-type',
     label: 'Property Type',
-    dataType: 'dropDown'
+    dataType: 'dropDown',
+    option: ['Home', 'Business']
   },
   {
-    name: 'providing-paint',
+    name: 'providingPaint',
     id: 'providing-paint',
     label: 'Will Customer be providing paint?',
-    dataType: 'dropDown'
+    dataType: 'dropDown',
+    option: ['Yes', 'No']
   },
   {
-    name: 'date',
-    id: 'date',
-    label: 'Date/Time for Estimate Appointment',
-    dataType: 'date'
-  },
-  {
-    name: 'time',
-    id: 'time',
+    name: 'dateTime',
+    id: 'dateTime',
     label: 'Date/Time for Estimate Appintment',
-    dataType: 'time'
-  },
-  // {
-  //   name: 'project-status',
-  //   id: 'project-status',
-  //   label: 'Project Status',
-  //   dataType: 'dropdown'
-  // }
+    dataType: 'dateTime'
+  }
 ];
+
+export const estimateFields =[
+  {
+    label:"Bid Type",
+    dataType:"dropDown",
+    option:["Interior","Exterior"]
+  },
+  {
+    label:"Sub Type",
+    dataType:"dropDown",
+    option:["Room By Room","Man"]
+  }
+]

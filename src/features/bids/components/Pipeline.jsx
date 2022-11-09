@@ -20,6 +20,20 @@ const Pipeline = () => {
     setShowFilter(false);
   };
   const [date, setDate] = React.useState();
+  const initialState = {
+    projectName: 'asd',
+    customerName: '',
+    address: '',
+    contactMethod: '',
+    email: '',
+    contactNumber: '',
+    targetStartDate: '',
+    targetEndDate: '',
+    propertyType: '',
+    providingPaint: '',
+    dateTime: ''
+  };
+  const [selectedValue, setSelectedvalue] = React.useState([]);
 
   const handleChange = (newDate) => {
     setDate(newDate);
@@ -29,7 +43,6 @@ const Pipeline = () => {
   };
 
   const onSelecetedListItemChange = (itemValue) => {
-    console.log(itemValue);
     setSelectedListItem(itemValue);
   };
 
@@ -41,7 +54,8 @@ const Pipeline = () => {
         style={{
           position: 'absolute',
           right: 20,
-          bottom: 10
+          bottom: 10,
+          height: '25px'
         }}
         onClick={() => setOpen(true)}>
         <GroupAddIcon sx={{ mr: 1 }} /> Add new client
@@ -54,6 +68,8 @@ const Pipeline = () => {
         setDate={setDate}
         handleChange={handleChange}
         handleClose={handleClose}
+        selectedValue={selectedValue}
+        setSelectedvalue={setSelectedvalue}
       />
       <PrimaryHeader showFilter={showFilter} onFilterChange={setShowFilter} />
       <Divider light sx={{ margin: '10px 0 10px 5px', width: '103%' }} />
@@ -67,7 +83,7 @@ const Pipeline = () => {
           </Grid>
           <Grid xs={10}>
             <Steps selectedStep={selectedStep} onSelctedStepChange={setSelectedStep} />
-            <ClientInfo />
+            <ClientInfo selectedValue={selectedValue} />
             <UploadFiles />
             <Comment />
           </Grid>

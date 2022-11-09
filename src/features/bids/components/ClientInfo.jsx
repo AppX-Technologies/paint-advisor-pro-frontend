@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 import { findCurrentStageButtonInfo } from '../helpers/findCurrentStageButtonInfo';
 
-const ClientInfo = () => {
+const ClientInfo = ({selectedValue}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -13,8 +13,11 @@ const ClientInfo = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+    React.useEffect(() => {
+      console.log(selectedValue);
+    }, [selectedValue]);
   return (
-    <>
+    
       <Box m={1} sx={{ border: '1px solid lightgray', borderRadius: '15px', width: '100%' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }} p={1}>
           <Typography p={1} sx={{ width: '100%' }}>
@@ -42,9 +45,9 @@ const ClientInfo = () => {
         <Divider light />
         {/* Client's Info Card */}
         <Grid container>
-          {AddNewClientTextField.map((field) => {
+          { selectedValue && selectedValue.map((field) => {
             return (
-              <>
+              
                 <Grid md={2} xs={10}>
                   <Box
                     p={0.5}
@@ -57,15 +60,15 @@ const ClientInfo = () => {
                     <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
                       {field.name.toUpperCase()} :{' '}
                     </Typography>
-                    <Chip label='abcdefghijklm' size='small' />
+                    <Chip label={field.value ?  field.value : field.optionChoosed  }  size='small' />
                   </Box>
                 </Grid>
-              </>
+            
             );
           })}
         </Grid>
       </Box>
-    </>
+    
   );
 };
 
