@@ -2,9 +2,8 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Box, Button, Divider, Grid } from '@mui/material';
 import React, { useState } from 'react';
 import AddNewClientForm from './AddNewClientForm';
-import ClientInfo from './ClientInfo';
 import Comment from './Comment';
-
+import ClientInfo from './ClientInfo';
 import Filter from './Filter';
 import PrimaryHeader from './PrimaryHeader';
 import QuickSearch from './QuickSearch';
@@ -14,7 +13,7 @@ import UploadFiles from './UploadFiles';
 const Pipeline = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedStep, setSelectedStep] = useState(0);
+  const [selectedStep, setSelectedStep] = useState('new client');
   const [selectedListItem, setSelectedListItem] = useState(0);
   const onFilterOptionsClose = () => {
     setShowFilter(false);
@@ -81,9 +80,11 @@ const Pipeline = () => {
               onSelecetedListItemChange={onSelecetedListItemChange}
             />
           </Grid>
-          <Grid xs={10}>
-            <Steps selectedStep={selectedStep} onSelctedStepChange={setSelectedStep} />
-            <ClientInfo selectedValue={selectedValue} />
+
+          
+          <Grid xs={10} sx={{ height: '74vh', overflowY: 'scroll' }}>
+            <Steps selectedStep={selectedStep} onSelectedStepChange={setSelectedStep} />
+            <ClientInfo onSelectedStepChange={setSelectedStep} selectedValue={selectedValue} />
             <UploadFiles />
             <Comment />
           </Grid>

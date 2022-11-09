@@ -1,46 +1,32 @@
-import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
-import { Box, Chip, Divider, Grid, Menu, MenuItem, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { AddNewClientTextField } from '../../../common/FormTextField';
+import { Box, Button, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material';
+import React from 'react';
+import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { findCurrentStageButtonInfo } from '../helpers/findCurrentStageButtonInfo';
 
-const ClientInfo = ({selectedValue}) => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-    React.useEffect(() => {
-      console.log(selectedValue);
-    }, [selectedValue]);
+const ClientInfo = ({ onSelectedStepChange,selectedValue }) => {
   return (
     
-      <Box m={1} sx={{ border: '1px solid lightgray', borderRadius: '15px', width: '100%' }}>
+      <Box m={1} sx={{ border: '1px solid lightgray', borderRadius: '15px' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }} p={1}>
-          <Typography p={1} sx={{ width: '100%' }}>
-            Client&apos;s Info
-          </Typography>
-          <Box sx={{ display: 'flex' }}>
-            <ExpandCircleDownOutlinedIcon
-              onClick={handleClick}
-              sx={{ cursor: 'pointer', width: '30px', height: '30px' }}
-            />
-            <Menu
-              id='basic-menu'
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button'
-              }}>
-              {findCurrentStageButtonInfo('crate-client').actions.map((info) => {
-                return <MenuItem onClick={handleClose}>{info.text}</MenuItem>;
-              })}
-            </Menu>
-          </Box>
+          <Typography sx={{ width: '100%' }}>Client&apos;s Info</Typography>
+
+          {findCurrentStageButtonInfo('new client').actions.map((info) => {
+            return (
+              
+                <Tooltip title={info.text} placement='top'>
+                  <Button
+                    sx={{ margin: '0 5px', height: '30px' }}
+                    variant='outlined'
+                    startIcon={info.icon}
+                    color={info.color}
+                    onClick={() =>
+                      info.text === 'Begin Estimate' && onSelectedStepChange('estimate in progress')
+                    }
+                  />
+                </Tooltip>
+              
+            );
+          })}
         </Box>
         <Divider light />
         {/* Client's Info Card */}
@@ -58,7 +44,7 @@ const ClientInfo = ({selectedValue}) => {
                       margin: '5px 4px'
                     }}>
                     <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
-                      {field.name.toUpperCase()} :{' '}
+                      {convertStringCase(field.name)} :{' '}
                     </Typography>
                     <Chip label={field.value ?  field.value : field.optionChoosed  }  size='small' />
                   </Box>

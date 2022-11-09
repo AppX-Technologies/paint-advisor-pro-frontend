@@ -9,14 +9,14 @@ const UploadFiles = () => {
       <input type='file' name='' id='file-upload' hidden />
       <label htmlFor='file-upload'>
         <Box
+          bgcolor='white'
           sx={{
             border: '1px solid lightgray',
             borderRadius: '15px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            cursor: 'pointer',
-            width: '100%'
+            cursor: 'pointer'
           }}
           ml={1}
           mt={1}>

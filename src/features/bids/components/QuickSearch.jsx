@@ -18,7 +18,12 @@ const QuickSearch = ({ onSelecetedListItemChange, selectedListItem }) => {
         <Box sx={{ display: 'flex', mt: 1, p: 0.5 }}>
           <TextField
             InputProps={{
-              style: { height: '30px', marginRight: '2px', fontSize: '13px' }
+              style: {
+                height: '30px',
+                marginRight: '2px',
+                fontSize: '13px',
+                backgroundColor: 'white'
+              }
             }}
             id='outlined-basic'
             label={
