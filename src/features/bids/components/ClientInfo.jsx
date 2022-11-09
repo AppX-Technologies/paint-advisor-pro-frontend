@@ -1,5 +1,6 @@
 import { Box, Button, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material';
 import React from 'react';
+import { AddNewClientTextField } from '../../../common/FormTextField';
 import { bidsStages } from '../../../helpers/bidsStages';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { findCurrentStageButtonInfo } from '../helpers/findCurrentStageButtonInfo';
@@ -38,39 +39,40 @@ const ClientInfo = ({ onSelectedStepChange, selectedValue, selectedStep,open,set
           );
         })}
       </Box>
-      {selectedValue.length !== 0 && <Divider light />}
+      <Divider light />
 
       {/* Client's Info Card */}
       <Grid container>
-        {selectedValue &&
-          selectedValue.map((field) => {
-            return (
-              <Grid md={2} xs={10}>
-                <Box
-                  p={0.5}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-start',
-                    margin: '5px 4px'
-                  }}>
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
-                    {convertStringCase(field.name)} :{' '}
-                  </Typography>
-                  <Chip
-                    label={
-                      <Typography sx={{ textAlign: 'left', fontWeight: '500' }}>
-                        {field.value
-                          ? convertStringCase(field.value)
-                          : convertStringCase(field.optionChoosed)}
-                      </Typography>
-                    }
-                    size='small'
-                  />
-                </Box>
-              </Grid>
-            );
-          })}
+        {Object.keys(selectedValue).map((field) => {
+          return (
+            <Grid md={2} xs={10}>
+              <Box
+                p={0.5}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                  margin: '5px 4px'
+                }}>
+                <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
+                  {AddNewClientTextField.map((item) => {
+                    return item.name === field && <>{convertStringCase(item.label)}</>;
+                  })}
+                </Typography>
+                <Chip
+                  label={
+                    <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
+                      {selectedValue[field] !== '' && field !== 'email'
+                        ? convertStringCase(selectedValue[field])
+                        : selectedValue[field]}
+                    </Typography>
+                  }
+                  size='small'
+                />
+              </Box>
+            </Grid>
+          );
+        })}
       </Grid>
     </Box>
   );

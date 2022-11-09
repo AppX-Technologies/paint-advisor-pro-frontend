@@ -1,13 +1,6 @@
 const booleanOption = ['Yes', 'No'];
 export const AddNewClientTextField = [
   {
-    name: 'projectName',
-    id: 'project-name',
-    label: 'Project Name',
-
-    dataType: 'text'
-  },
-  {
     name: 'customerName',
     id: 'customer-name',
     label: 'Customer Name',
@@ -17,6 +10,28 @@ export const AddNewClientTextField = [
     name: 'address',
     id: 'Address',
     label: 'Address',
+    dataType: 'text',
+
+  },
+  {
+    name: 'city',
+    id: 'City',
+    label: 'City',
+    dataType: 'text',
+    resizeable: true
+  },
+  {
+    name: 'state',
+    id: 'State',
+    label: 'State',
+    dataType: 'text',
+    resizeable: true
+  },
+  {
+    name: 'zipCode',
+    id: 'zip-code',
+    label: 'Zip Code',
+    resizeable: true,
     dataType: 'text'
   },
   {
@@ -38,18 +53,7 @@ export const AddNewClientTextField = [
     label: 'Contact Number',
     dataType: 'text'
   },
-  {
-    name: 'targetStartDate',
-    id: 'target-start-date',
-    label: 'Target Start Date',
-    dataType: 'date'
-  },
-  {
-    name: 'targetEndDate',
-    id: 'target-end-date',
-    label: 'Target End Date',
-    dataType: 'date'
-  },
+  
   {
     name: 'propertyType',
     id: 'property-type',
@@ -57,19 +61,7 @@ export const AddNewClientTextField = [
     dataType: 'dropDown',
     option: ['Home', 'Business']
   },
-  {
-    name: 'providingPaint',
-    id: 'providing-paint',
-    label: 'Will Customer be providing paint?',
-    dataType: 'dropDown',
-    option: booleanOption
-  },
-  {
-    name: 'dateTime',
-    id: 'dateTime',
-    label: 'Date/Time for Estimate Appintment',
-    dataType: 'dateTime'
-  }
+  
 ];
 
 export const estimateFields = [

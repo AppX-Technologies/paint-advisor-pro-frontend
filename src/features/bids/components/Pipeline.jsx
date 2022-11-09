@@ -22,20 +22,19 @@ const Pipeline = () => {
   };
   const [date, setDate] = React.useState();
   const initialState = {
-    projectName: 'asd',
     customerName: '',
     address: '',
+    city: '',
+    state: '',
+    zipCode: '',
     contactMethod: '',
     email: '',
     contactNumber: '',
-    targetStartDate: '',
-    targetEndDate: '',
     propertyType: '',
-    providingPaint: '',
-    dateTime: ''
+   
   };
-  const [selectedValue, setSelectedvalue] = React.useState([]);
-  const [estimateValue , setEstimateValue] = React.useState([]);
+  const [selectedValue, setSelectedvalue] = React.useState(initialState);
+  const [estimateValue, setEstimateValue] = React.useState([]);
 
   const handleChange = (newDate) => {
     setDate(newDate);
