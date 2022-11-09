@@ -1,5 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import {
+  Box,
   FormControl,
   Grid,
   InputLabel,
@@ -43,30 +44,40 @@ export default function AddNewClientForm(props) {
         <DialogContent dividers sx={{ m: 1 }}>
           <Grid container spacing={2}>
             {AddNewClientTextField.map((item) => {
+              const fieldType = item.name;
               return (
                 (item.dataType === 'text' && (
-                  <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
-                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                      {item.label}
-                    </InputLabel>
+                  <>
+                    <Grid item xs={10} md={item.resizeable ? 1 : 4} sx={{ marginTop: '-10px' }}>
+                      <>
+                        <InputLabel
+                          id='demo-select-small'
+                          sx={{ fontSize: '14px', margin: item.resizeable ? '0 30px' : '0' }}>
+                          {item.label}
+                        </InputLabel>
 
-                    <TextField
-                      InputProps={{
-                        style: { height: '30px' }
-                      }}
-                      name={item.name}
-                      fullWidth
-                      variant='outlined'
-                      id='outlined-basic'
-                      autoFocus
-                      onChange={(event) =>
-                        setSelectedvalue([
-                          ...selectedValue.filter((item1) => item1.name !== item.name),
-                          { name: item.name, value: event.target.value }
-                        ])
-                      }
-                    />
-                  </Grid>
+                        <TextField
+                          InputProps={{
+                            style: {
+                              height: '30px',
+                              width: item.resizeable ? '100px' : 'auto',
+                              margin: item.resizeable ? '0 30px' : '0'
+                            }
+                          }}
+                          name={item.name}
+                          fullWidth
+                          variant='outlined'
+                          id='outlined-basic'
+                          autoFocus
+                          value={selectedValue[fieldType]}
+                          onChange={(event) => {
+                            selectedValue[fieldType] = event.target.value;
+                            setSelectedvalue({ ...selectedValue });
+                          }}
+                        />
+                      </>
+                    </Grid>
+                  </>
                 )) ||
                 (item.dataType === 'dropDown' && (
                   <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
@@ -80,26 +91,16 @@ export default function AddNewClientForm(props) {
                         labelId='demo-select-small'
                         id='demo-select-small'
                         name={item.name}
-                        value={
-                          selectedValue.find((obj) => obj.name === item.name)
-                            ? selectedValue.find((obj) => obj.name === item.name).optionChoosed
-                            : ''
-                        }
-                        onChange={(event) =>
-                          setSelectedvalue([
-                            ...selectedValue.filter((item1) => item1.name !== item.name),
-                            { name: item.name, optionChoosed: event.target.value }
-                          ])
-                        }
-                        renderValue={
-                          selectedValue.find((obj) => obj.name === item.name)
-                            ? undefined
-                            : () => (
-                                <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
-                                  Select One...
-                                </Typography>
-                              )
-                        }>
+                        value={selectedValue[fieldType]}
+                        onChange={(event) => {
+                          selectedValue[fieldType] = event.target.value;
+                          setSelectedvalue({ ...selectedValue });
+                        }}
+                        renderValue={() => (
+                          <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
+                            Select One...
+                          </Typography>
+                        )}>
                         {item.option.map((o) => {
                           return <MenuItem value={o}>{o}</MenuItem>;
                         })}
@@ -118,17 +119,11 @@ export default function AddNewClientForm(props) {
                           style: { height: '30px' }
                         }}
                         inputFormat='MM/DD/YYYY'
-                        value={
-                          selectedValue.find((obj) => obj.name === item.name)
-                            ? selectedValue.find((obj) => obj.name === item.name).value
-                            : ''
-                        }
-                        onChange={(newVal) =>
-                          setSelectedvalue([
-                            ...selectedValue.filter((i) => i.name !== item.name),
-                            { name: item.name, value: newVal.$d.toString() }
-                          ])
-                        }
+                        value={selectedValue[fieldType]}
+                        onChange={(event) => {
+                          selectedValue[fieldType] = event.target.value;
+                          setSelectedvalue({ ...selectedValue });
+                        }}
                         renderInput={(params) => <TextField {...params} fullWidth />}
                       />
                     </LocalizationProvider>
@@ -144,17 +139,11 @@ export default function AddNewClientForm(props) {
                         InputProps={{
                           style: { height: '30px' }
                         }}
-                        value={
-                          selectedValue.find((obj) => obj.name === item.name)
-                            ? selectedValue.find((obj) => obj.name === item.name).value
-                            : ''
-                        }
-                        onChange={(newVal) =>
-                          setSelectedvalue([
-                            ...selectedValue.filter((item1) => item1.name !== item.name),
-                            { name: item.name, value: newVal.$d.toString() }
-                          ])
-                        }
+                        value={selectedValue[fieldType]}
+                        onChange={(event) => {
+                          selectedValue[fieldType] = event.target.value;
+                          setSelectedvalue({ ...selectedValue });
+                        }}
                         renderInput={(params) => <TextField {...params} fullWidth />}
                       />
                     </LocalizationProvider>

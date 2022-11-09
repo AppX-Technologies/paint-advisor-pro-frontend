@@ -1,12 +1,5 @@
 export const AddNewClientTextField = [
   {
-    name: 'projectName',
-    id: 'project-name',
-    label: 'Project Name',
-
-    dataType: 'text'
-  },
-  {
     name: 'customerName',
     id: 'customer-name',
     label: 'Customer Name',
@@ -16,6 +9,27 @@ export const AddNewClientTextField = [
     name: 'address',
     id: 'Address',
     label: 'Address',
+    dataType: 'text',
+    resizeable: true
+  },
+  {
+    name: 'city',
+    id: 'City',
+    label: 'City',
+    dataType: 'text',
+    resizeable: true
+  },
+  {
+    name: 'state',
+    id: 'State',
+    label: 'State',
+    dataType: 'text',
+    resizeable: true
+  },
+  {
+    name: 'zipCode',
+    id: 'zip-code',
+    label: 'Zip Code',
     dataType: 'text'
   },
   {
@@ -57,29 +71,22 @@ export const AddNewClientTextField = [
     option: ['Home', 'Business']
   },
   {
-    name: 'providingPaint',
-    id: 'providing-paint',
-    label: 'Will Customer be providing paint?',
-    dataType: 'dropDown',
-    option: ['Yes', 'No']
-  },
-  {
     name: 'dateTime',
     id: 'dateTime',
-    label: 'Date/Time for Estimate Appintment',
+    label: 'Estimate Appintment',
     dataType: 'dateTime'
   }
 ];
 
-export const estimateFields =[
+export const estimateFields = [
   {
-    label:"Bid Type",
-    dataType:"dropDown",
-    option:["Interior","Exterior"]
+    label: 'Bid Type',
+    dataType: 'dropDown',
+    option: ['Interior', 'Exterior']
   },
   {
-    label:"Sub Type",
-    dataType:"dropDown",
-    option:["Room By Room","Man"]
+    label: 'Sub Type',
+    dataType: 'dropDown',
+    option: ['Room By Room', 'Man']
   }
-]
+];
