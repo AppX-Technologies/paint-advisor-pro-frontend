@@ -1,11 +1,13 @@
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import {
+  Divider,
   FormControl,
   Grid,
   InputLabel,
   MenuItem,
   Select,
+  TextField,
   Toolbar,
   Typography
 } from '@mui/material';
@@ -13,27 +15,30 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import TextField from '@mui/material/TextField';
-// import { DateTimePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import * as React from 'react';
-import { useEffect } from 'react';
-import { estimateFields } from '../../../common/FormTextField';
+import { InteriorManByManFormFields } from '../../../common/FormTextField';
+import ExteriorManByMan from './forms/exterior/ExteriorManByMan';
+import InteriorManByMan from './forms/interior/InteriorManByMan';
+import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
 export default function EstimateForm(props) {
-  const { open,setOpen,estimateValue,setEstimateValue } = props;
-  const [edit, setEdit] = React.useState(estimateValue && estimateValue.length !== 0);
-
-  useEffect(()=>{
-setEdit(estimateValue.length !== 0);
-  },[open]);
-  const handleEdit =()=>{
-                    setEdit((prev) => !prev);
-
-};
-const handleClose = () => {
-  setOpen(false);
-};
+  const { open, setOpen, initialBidInfo, setInitialBidInfo } = props;
+  const [roomStats, setRoomStats] = React.useState({
+    roomName: '',
+    roomLength: '',
+    roomWidth: '',
+    roomHeight: '',
+    wallCoating: '',
+    ceilingCoat: '',
+    paintTrim: '',
+    doorNumber: '',
+    paintDoor: '',
+    numberOfWindows: '',
+    paintWindow: ''
+  });
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>
@@ -48,8 +53,7 @@ const handleClose = () => {
               height: '30px',
               padding: '3px',
               marginRight: '10px'
-            }}
-            onClick={handleEdit}>
+            }}>
             Edit <EditIcon sx={{ height: '15px' }} />
           </Button>
           <Button
@@ -65,8 +69,8 @@ const handleClose = () => {
         </Toolbar>
 
         <DialogContent dividers sx={{ m: 1 }}>
-          <Grid container spacing={2}>
-            {estimateFields.map((item) => {
+          <Grid container spacing={2} mt={2}>
+            {InteriorManByManFormFields.map((item) => {
               return (
                 (item.dataType === 'text' && (
                   <Grid item xs={3} md={3} sx={{ marginTop: '-10px' }}>
@@ -78,23 +82,11 @@ const handleClose = () => {
                       InputProps={{
                         style: { height: '30px' }
                       }}
-                      name={item.name}
+                      name='name'
                       fullWidth
-                      disabled={edit}
                       variant='outlined'
                       id='outlined-basic'
                       autoFocus
-                      value={
-                       estimateValue && estimateValue.find((obj) => obj.name === item.name)
-                          ? estimateValue.find((obj) => obj.name === item.name).value
-                          : ''
-                      }
-                      onChange={(event) =>
-                        setEstimateValue([
-                          ...estimateValue.filter((item1) => item1.name !== item.name),
-                          { name: item.name, value: event.target.value }
-                        ])
-                      }
                     />
                   </Grid>
                 )) ||
@@ -109,28 +101,7 @@ const handleClose = () => {
                         sx={{ height: '30px' }}
                         labelId='demo-select-small'
                         id='demo-select-small'
-                        name={item.name}
-                        disabled={edit}
-                        value={
-                         estimateValue && estimateValue.find((obj) => obj.name === item.name)
-                            ? estimateValue.find((obj) => obj.name === item.name).optionChoosed
-                            : ''
-                        }
-                        onChange={(event) =>
-                          setEstimateValue([
-                            ...estimateValue.filter((item1) => item1.name !== item.name),
-                            { name: item.name, optionChoosed: event.target.value }
-                          ])
-                        }
-                        renderValue={
-                          estimateValue.find((obj) => obj.name === item.name)
-                            ? undefined
-                            : () => (
-                                <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
-                                  Select One...
-                                </Typography>
-                              )
-                        }>
+                        name='name'>
                         {item.option.map((o) => {
                           return <MenuItem value={o}>{o}</MenuItem>;
                         })}
@@ -141,6 +112,78 @@ const handleClose = () => {
               );
             })}
           </Grid>
+          <Grid container spacing={2} mt={1}>
+            <Grid item xs={3} md={3} sx={{ marginTop: '-10px' }}>
+              <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                Bid Type
+              </InputLabel>
+              <FormControl sx={{ m: 0, minWidth: '100%' }} size='small'>
+                <Select
+                  displayEmpty
+                  sx={{ height: '30px' }}
+                  labelId='demo-select-small'
+                  id='demo-select-small'
+                  name='Bid Type'
+                  onChange={(event) => {
+                    initialBidInfo.bidType = event.target.value;
+                    setInitialBidInfo({ ...initialBidInfo });
+                  }}
+                  renderValue={
+                    initialBidInfo.bidType !== ''
+                      ? undefined
+                      : () => (
+                          <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
+                            Select One...
+                          </Typography>
+                        )
+                  }>
+                  <MenuItem value='Interior'>Interior</MenuItem>
+                  <MenuItem value='Exterior'>Exterior</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={3} md={3} sx={{ marginTop: '-10px' }}>
+              <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                Sub Type
+              </InputLabel>
+              <FormControl sx={{ m: 0, minWidth: '100%' }} size='small'>
+                <Select
+                  displayEmpty
+                  sx={{ height: '30px' }}
+                  labelId='demo-select-small'
+                  id='demo-select-small'
+                  name='Bid Type'
+                  onChange={(event) => {
+                    initialBidInfo.subType = event.target.value;
+                    setInitialBidInfo({ ...initialBidInfo });
+                  }}
+                  renderValue={
+                    initialBidInfo.subType !== ''
+                      ? undefined
+                      : () => (
+                          <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
+                            Select One...
+                          </Typography>
+                        )
+                  }>
+                  <MenuItem value='Man Hour'>Man Hour</MenuItem>
+                  {initialBidInfo.bidType === 'Interior' && (
+                    <MenuItem value='Room by Room'>Room by Room</MenuItem>
+                  )}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Divider sx={{ mt: 2 }} />
+          {initialBidInfo.bidType === 'Interior' && initialBidInfo.subType === 'Room by Room' && (
+            <InteriorRoomByRoom roomStats={roomStats} setRoomStats={setRoomStats} />
+          )}
+          {initialBidInfo.bidType === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
+            <InteriorManByMan />
+          )}
+          {initialBidInfo.bidType === 'Exterior' && initialBidInfo.subType === 'Man Hour' && (
+            <ExteriorManByMan />
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>

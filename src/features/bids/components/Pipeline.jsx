@@ -16,6 +16,10 @@ const Pipeline = () => {
   const [open, setOpen] = useState(false);
   const [openEstimate, setOpenEstimate] = useState(false);
   const [selectedStep, setSelectedStep] = useState('new client');
+  const [initialEstimateBidInfo,setInitialEstimateBidInfo]=useState({
+    bidType:'',
+    subType:''
+  });
   const [selectedListItem, setSelectedListItem] = useState(0);
   const onFilterOptionsClose = () => {
     setShowFilter(false);
@@ -33,8 +37,19 @@ const Pipeline = () => {
     propertyType: '',
    
   };
+    const initialEstimateState = {
+      startEndDate: '',
+      customerProvidingPaintMaterial: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      contactMethod: '',
+      email: '',
+      contactNumber: '',
+      propertyType: ''
+    };
   const [selectedValue, setSelectedvalue] = React.useState(initialState);
-  const [estimateValue, setEstimateValue] = React.useState([]);
+  const [estimateValue, setEstimateValue] = React.useState(initialEstimateState);
 
   const handleChange = (newDate) => {
     setDate(newDate);
@@ -80,8 +95,8 @@ const Pipeline = () => {
         setDate={setDate}
         handleChange={handleChange}
         handleClose={handleClose}
-        estimateValue={estimateValue}
-        setEstimateValue={setEstimateValue}
+        initialBidInfo={initialEstimateBidInfo}
+        setInitialBidInfo={setInitialEstimateBidInfo}
       />
       <PrimaryHeader showFilter={showFilter} onFilterChange={setShowFilter} />
       <Divider light sx={{ margin: '10px 0 10px 5px', width: '103%' }} />

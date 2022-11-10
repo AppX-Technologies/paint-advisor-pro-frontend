@@ -64,7 +64,9 @@ export const AddNewClientTextField = [
   
 ];
 
-export const estimateFields = [
+
+
+export const InteriorManByManFormFields = [
   {
     label: 'What will be Start date/End Date?',
     name: 'startEndDate',
@@ -75,36 +77,95 @@ export const estimateFields = [
     label: 'Will the customer be providing paint/materials for this job?',
     name: 'customerProvidingPaintMaterial',
     dataType: 'dropDown',
-    option: booleanOption
+    option: booleanOption,
+    moreQuestions: [
+      {
+        label: 'What quality of paint will be used on this job?',
+        name: 'paintQuality',
+        dataType: 'dropDown',
+        option: ['Low', 'Medium', 'High']
+      },
+      {
+        label: 'What brands of paint and sheen will be used?',
+        name: 'paintBrand',
+        dataType: 'text'
+      }
+    ]
   },
+  
   {
-    label: 'What quality of paint will be used on this job?',
-    name: 'paintQuality',
+    label: 'Will you offer any Discount?',
+    name: 'discount',
     dataType: 'dropDown',
-    option: ['Low', 'Medium', 'High']
-  },
+    option: booleanOption
+  }
+];
+export const ExteriorManByManFormFields = [
   {
-    label: 'What brands of paint and sheen will be used?',
-    name: 'paintBrand',
+    label: 'What will be Start date/End Date?',
+    name: 'startEndDate',
     dataType: 'text'
   },
   {
-    label: 'What is the name of the Room1?',
+    label: 'Will the customer be providing paint/materials for this job?',
+    name: 'customerProvidingPaintMaterial',
+    dataType: 'dropDown',
+    option: booleanOption,
+    moreQuestions: [
+      {
+        label: 'What quality of paint will be used on this job?',
+        name: 'paintQuality',
+        dataType: 'dropDown',
+        option: ['Low', 'Medium', 'High']
+      },
+      {
+        label: 'What brands of paint and sheen will be used?',
+        name: 'paintBrand',
+        dataType: 'text'
+      }
+    ]
+  },
+  
+  {
+    label: 'How much Coating in the walls?',
+    name: 'wallCoating',
+    dataType: 'dropDown',
+    option: ['1 Coat', '2 Coat']
+  },
+
+  {
+    label: 'Are you painting any trim?',
+    name: 'paintTrim',
+    dataType: 'dropDown',
+    option: booleanOption
+  },
+
+  {
+    label: 'Will you offer any Discount?',
+    name: 'discount',
+    dataType: 'dropDown',
+    option: booleanOption
+  }
+];
+
+export const RoomInfofields = [
+  {
+    label: 'Room Name',
     name: 'roomName',
     dataType: 'text'
   },
   {
-    label: 'What is the length of room?',
+    label: 'Room Length',
     name: 'roomLength',
     dataType: 'text'
   },
   {
-    label: 'What is the width of room?',
+    label: 'Room Width',
     name: 'roomWidth',
     dataType: 'text'
   },
   {
-    label: 'What is the average height of the room',
+    label: 'Average Room Height',
     name: 'roomHeight',
     dataType: 'text'
   },
@@ -112,17 +173,23 @@ export const estimateFields = [
     label: 'How much Coating in the walls?',
     name: 'wallCoating',
     dataType: 'dropDown',
-    option: ['1 Coat', '2 Coat']
+    option: ['1 Coat', '2 Coat','3 Coat']
   },
   {
     label: 'How much Coating in the ceiling?',
     name: 'ceilingCoat',
     dataType: 'dropDown',
-    option: ['1 Coat', '2 Coat']
+    option: ['1 Coat', '2 Coat','3 Coat']
   },
   {
-    label: 'Are you painting any trim in the room',
+    label: 'Paint Trims?',
     name: 'paintTrim',
+    dataType: 'dropDown',
+    option: booleanOption
+  },
+  {
+    label: 'Are you painting the doors? ',
+    name: 'paintDoor',
     dataType: 'dropDown',
     option: booleanOption
   },
@@ -132,8 +199,8 @@ export const estimateFields = [
     dataType: 'text'
   },
   {
-    label: 'Are you painting the doors? ',
-    name: 'paintDoor',
+    label: 'Are you painting the windows? ',
+    name: 'paintWindow',
     dataType: 'dropDown',
     option: booleanOption
   },
@@ -142,15 +209,4 @@ export const estimateFields = [
     name: 'numberOfWindows',
     dataType: 'text'
   },
-  {
-    label: 'Are you painting the windows? ',
-    name: 'paintWindow',
-    dataType: 'dropDown',
-    option:booleanOption
-  },{
-    label:"Will you offer any Discount?",
-    name:'discount',
-    dataType:'dropDown',
-    option:booleanOption
-  }
 ];

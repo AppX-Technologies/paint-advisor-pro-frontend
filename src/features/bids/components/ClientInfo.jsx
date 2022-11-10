@@ -12,7 +12,7 @@ const ClientInfo = ({ onSelectedStepChange, selectedValue, selectedStep,open,set
         <Typography sx={{ width: '100%' }}>Client&apos;s Info</Typography>
 
         {findCurrentStageButtonInfo(selectedStep).actions.map((info) => {
-          return info.text === 'Estimate Job' ? (
+          return info.text === 'Begin Estimate' ? (
             <Tooltip title={info.text} placement='top'>
               <Button
                 sx={{ margin: '0 5px', height: '30px' }}
