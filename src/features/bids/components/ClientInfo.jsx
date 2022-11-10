@@ -40,7 +40,7 @@ const ClientInfo = ({
                 return info.text === 'Estimate Job' ? (
                   <Tooltip title={info.text} placement='top'>
                     <Button
-                      sx={{ margin: '0 2px', p: 0 }}
+                      sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
                       variant='outlined'
                       startIcon={info.icon}
                       color={info.color}
@@ -51,7 +51,7 @@ const ClientInfo = ({
                 ) : (
                   <Tooltip title={info.text} placement='top'>
                     <Button
-                      sx={{ margin: '0 2px', p: 0 }}
+                      sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
                       variant='outlined'
                       startIcon={info.icon}
                       color={info.color}
