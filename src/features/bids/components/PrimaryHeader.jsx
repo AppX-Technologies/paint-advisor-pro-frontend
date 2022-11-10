@@ -16,21 +16,21 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 
-const PrimaryHeader = ({ showFilter, onFilterChange }) => {
+const PrimaryHeader = ({ onFilterChange }) => {
   const [selectOption, setSelectOption] = useState('');
   const [sortOption, setSortOption] = useState('');
   const menuItems = [
     {
-      name: 'Select',
+      name: 'Max-Limit',
       value: selectOption,
       changeValue: setSelectOption,
-      options: ['a', 'b', 'c', 'd']
+      options: ['10', '20', '30', 'All']
     },
     {
       name: 'Sort By',
       value: sortOption,
       changeValue: setSortOption,
-      options: ['a', 'b', 'c', 'd']
+      options: ['Created At', 'Updated At', 'Project Start Date', 'Schedule Date']
     }
   ];
   return (

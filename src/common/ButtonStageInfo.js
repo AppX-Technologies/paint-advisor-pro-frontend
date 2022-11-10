@@ -8,11 +8,6 @@ export const buttonStageInfo = [
     name: 'new client',
     actions: [
       {
-        text: 'Update Client Info',
-        color: 'success',
-        icon: <EditIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
-      },
-      {
         text: 'Cancel The Job',
         color: 'error',
         icon: <DeleteIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
@@ -48,8 +43,7 @@ export const buttonStageInfo = [
         text: 'Estimate Job',
         color: 'info',
         icon: <ScheduleIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />,
-        openForm : true,
-        
+        openForm: true
       }
     ]
   }

@@ -6,6 +6,7 @@ import orgReducer from '../features/org/orgSlice';
 import userReducer from '../features/users/userSlice';
 import usersFromCompanyReducer from '../features/usersFromCompany/usersFromCompanySlice';
 import processReducer from '../features/process/processSlice';
+import bidsReducer from '../features/bids/bidsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     org: orgReducer,
     user: userReducer,
     process: processReducer,
-    usersFromCompany: usersFromCompanyReducer
+    usersFromCompany: usersFromCompanyReducer,
+    bids: bidsReducer
   }
 });

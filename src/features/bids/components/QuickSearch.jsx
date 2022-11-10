@@ -1,9 +1,21 @@
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import { Box, FormControl, MenuItem, Select, TextField, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import SearchListItems from './SearchListItems';
 
-const QuickSearch = ({ onSelecetedListItemChange, selectedListItem }) => {
+const QuickSearch = ({
+  onSelecetedListItemChange,
+  selectedListItem,
+  handleSearch,
+  filteredClietsList
+}) => {
+  const { clientList } = useSelector((state) => state.bids);
+
+  useEffect(() => {
+    handleSearch('');
+  }, [clientList]);
+
   return (
     <>
       <Box
@@ -17,6 +29,7 @@ const QuickSearch = ({ onSelecetedListItemChange, selectedListItem }) => {
 
         <Box sx={{ display: 'flex', mt: 1, p: 0.5 }}>
           <TextField
+            onChange={(e) => handleSearch(e.target.value)}
             InputProps={{
               style: {
                 height: '30px',
@@ -35,29 +48,20 @@ const QuickSearch = ({ onSelecetedListItemChange, selectedListItem }) => {
             sx={{ width: '100%' }}
             size='small'
           />
-          {/* Select */}
-          <FormControl sx={{ width: '45%', height: '20px' }} size='small'>
-            <Select
-              IconComponent={(props) => (
-                <PushPinOutlinedIcon {...props} sx={{ width: '14px', height: '14px', mt: 0.5 }} />
-              )}
-              labelId='demo-select-small'
-              id='demo-select-small'
-              // onChange={(e) => menuItem.changeValue(e.target.value)}
-              sx={{ height: '30px' }}>
-              <MenuItem value='abc'>abc</MenuItem>
-              <MenuItem value='abc'>def</MenuItem>
-            </Select>
-          </FormControl>
         </Box>
 
         {/* ListItems */}
         <Box sx={{ overflowY: 'scroll', height: '66vh' }}>
-          {Array(60)
-            .fill(1)
-            .map((_, idx) => (
+          {filteredClietsList.length === 0 && (
+            <Typography sx={{ textAlign: 'center', fontWeight: '500', mt: 1 }}>
+              No Clients
+            </Typography>
+          )}
+          {filteredClietsList &&
+            filteredClietsList.map((client, idx) => (
               <SearchListItems
                 selectedListItem={selectedListItem}
+                client={client}
                 idx={idx}
                 onSelecetedListItemChange={onSelecetedListItemChange}
               />
