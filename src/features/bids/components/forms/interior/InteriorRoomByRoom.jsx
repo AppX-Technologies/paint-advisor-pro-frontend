@@ -2,7 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import HomeIcon from '@mui/icons-material/Home';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { Box, Chip, Grid, Tooltip, Typography } from '@mui/material';
+import { Box, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
@@ -13,7 +13,7 @@ const InteriorRoomByRoom = ({ roomStats, setRoomStats }) => {
   return (
     <Box>
       {/* Main Form Body  */}
-<Typography mt={2}>Add Room</Typography>
+<Typography mt={2}>Rooms(1)</Typography>
       <Box>
         
         <Tooltip title='Add Room' placement='top'>
@@ -29,7 +29,7 @@ const InteriorRoomByRoom = ({ roomStats, setRoomStats }) => {
           <Grid
             xs={3}
             md={3}
-            sx={{ border: '1px solid gray', borderRadius: '10px', padding: '5px' }}>
+            sx={{ border: '1px solid lightgray', borderRadius: '10px', padding: '5px' }}>
             <Box>
               <Tooltip title='Delete this room' placement='top'>
                 <HighlightOffIcon
@@ -54,7 +54,8 @@ const InteriorRoomByRoom = ({ roomStats, setRoomStats }) => {
               <Typography sx={{ fontSize: '12px', textAlign: 'left', marginTop: '5px' }}>
                 Bed Room
               </Typography>
-            </Box>{' '}
+            </Box>
+            <Divider />
             <Grid container spacing={2} ml={1} mt={1} >
               <Grid xs={4} md={4}>
                 <Box >
@@ -69,7 +70,7 @@ const InteriorRoomByRoom = ({ roomStats, setRoomStats }) => {
                   />
                 </Box>
               </Grid>
-              <Grid xs={4} md={4}>
+              {/* <Grid xs={4} md={4}>
                 <Box >
                   <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Coating</Typography>
                   <Chip
@@ -94,10 +95,10 @@ const InteriorRoomByRoom = ({ roomStats, setRoomStats }) => {
                     size='small'
                   />
                 </Box>
-              </Grid>
+              </Grid> */}
               <Grid xs={4} md={4}>
                 <Box >
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Doors</Typography>
+                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Num of Doors</Typography>
                   <Chip
                     label={
                       <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
@@ -110,7 +111,7 @@ const InteriorRoomByRoom = ({ roomStats, setRoomStats }) => {
               </Grid>
               <Grid xs={4} md={4}>
                 <Box >
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Windows</Typography>
+                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Num of Windows</Typography>
                   <Chip
                     label={
                       <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>

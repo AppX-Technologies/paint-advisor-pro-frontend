@@ -8,24 +8,19 @@ export const buttonStageInfo = [
     name: 'new client',
     actions: [
       {
-        text: 'Update Client Info',
-        color: 'success',
-        icon: <EditIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
-      },
-      {
         text: 'Cancel The Job',
         color: 'error',
-        icon: <DeleteIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
+        icon: <DeleteIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
       },
       {
         text: 'Schedule',
         color: 'info',
-        icon: <ScheduleIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
+        icon: <ScheduleIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
       },
       {
         text: 'Begin Estimate',
         color: 'warning',
-        icon: <ArticleIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />,
+        icon: <ArticleIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />,
         nextState: true
       }
     ]
@@ -36,20 +31,19 @@ export const buttonStageInfo = [
       {
         text: 'Update Estimation Info',
         color: 'success',
-        icon: <EditIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
+        icon: <EditIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
       },
       {
         text: 'Cancel The Job',
         color: 'error',
-        icon: <DeleteIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />
+        icon: <DeleteIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
       },
 
       {
         text: 'Estimate Job',
         color: 'info',
-        icon: <ScheduleIcon sx={{ width: '20px', height: '20px', marginLeft: '13px' }} />,
-        openForm : true,
-        
+        icon: <ScheduleIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />,
+        openForm: true
       }
     ]
   }

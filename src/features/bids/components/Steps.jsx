@@ -6,7 +6,16 @@ import { convertStringCase } from '../../../helpers/stringCaseConverter';
 
 const Steps = ({ selectedStep, onSelectedStepChange }) => {
   return (
-    <Box sx={{ border: '1px solid lightgray', borderRadius: '15px' }} ml={1} bgcolor='white'>
+    <Box
+      sx={{
+        border: '1px solid lightgray',
+        borderRadius: '15px',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100
+      }}
+      ml={1}
+      bgcolor='white'>
       <Box p={1}>
         {bidsStages.map((bidStage, idx) => {
           return (

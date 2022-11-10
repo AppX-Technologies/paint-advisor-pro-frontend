@@ -1,18 +1,34 @@
-import { Box, Divider, TextareaAutosize, Typography } from '@mui/material';
+import { Box, TextareaAutosize, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createAComment } from '../bidsSlice';
+import { findCommentsUniquely } from '../helpers/generalHepers';
 
-import React, { useState } from 'react';
+const Comment = ({ currentClientInfo, onCommentListChange, commentList }) => {
+  const { comments } = useSelector((state) => state.bids);
+  console.log(comments);
+  const [comment, setComment] = useState('');
+  const dispatch = useDispatch();
 
-const Comment = () => {
+  const handleCommentSubmission = () => {
+    dispatch(createAComment({ customerName: currentClientInfo.customerName, comment }));
+    setComment('');
+  };
+
+  useEffect(() => {
+    onCommentListChange(
+      findCommentsUniquely(comments, currentClientInfo && currentClientInfo.customerName)
+    );
+  }, [comments, currentClientInfo]);
   return (
     <>
       <Box>
         <Typography sx={{ mt: 1, flex: 1, fontSize: '16px', ml: 3 }} variant='h6' component='div'>
           Comments
         </Typography>
-        {Array(5)
-          .fill('abc')
-          .map((_, idx) => {
+        {commentList &&
+          commentList.map((info, idx) => {
             return (
               <>
                 <Box
@@ -24,7 +40,7 @@ const Comment = () => {
                   }}>
                   <Typography
                     sx={{
-                      ml: 1,
+                      ml: 2,
                       mt: 1,
                       flex: 1,
                       fontSize: '16px',
@@ -33,15 +49,13 @@ const Comment = () => {
                     }}
                     variant='h6'
                     component='div'>
-                    User Name
+                    {info.customerName}
                   </Typography>
                   <Typography
-                    sx={{ ml: 1, mb: 1, flex: 1, fontSize: '14px' }}
+                    sx={{ ml: 2, mb: 1, flex: 1, fontSize: '14px' }}
                     variant='h3'
                     component='div'>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta et quod, quo
-                    odit, quae, voluptas velit numquam aspernatur eligendi quaerat cum eveniet
-                    ducimus. Exercitationem obcaecati sit voluptas, doloribus praesentium eos.
+                    {info.comment}
                   </Typography>
                 </Box>
                 <Typography
@@ -70,8 +84,14 @@ const Comment = () => {
             marginTop: '5px',
             border: '1px solid lightgray'
           }}
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
         />
-        <Button sx={{ ml: 1, mt: 1 }} variant='contained' color='primary'>
+        <Button
+          sx={{ ml: 1, mt: 1 }}
+          variant='contained'
+          color='primary'
+          onClick={handleCommentSubmission}>
           Comment
         </Button>
       </Box>
