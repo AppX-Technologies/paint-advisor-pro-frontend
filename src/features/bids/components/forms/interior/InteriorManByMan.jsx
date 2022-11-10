@@ -9,6 +9,10 @@ import AddRoomForm from './AddRoomForm';
 
 const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
   const [addRoom, setAddRoom] = useState(false);
+  const handleDelete = (name) => {
+    
+    setAllRoom(allRoom.filter((room) => room.roomName !== name));
+  };
   return (
     <Box>
       {/* Main Form Body  */}
@@ -16,9 +20,9 @@ const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
       <Box>
         <Tooltip title='Add Room' placement='top'>
           <Button
-            sx={{ marginTop: '10px', height: '30px', p: 0 }}
+            sx={{ marginTop: '10px', height: '30px', minWidth: '40px', p: 0 }}
             variant='contained'
-            startIcon={<AddIcon />}
+            startIcon={<AddIcon sx={{ ml: 1 }} />}
             color='info'
             onClick={() => setAddRoom(true)}
           />
@@ -32,7 +36,7 @@ const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
               <Grid
                 xs={3}
                 md={3}
-                m={0.4}
+                m={1}
                 sx={{ border: '1px solid lightgray', borderRadius: '10px', padding: '5px' }}>
                 <Box>
                   <Tooltip title='Delete this room' placement='top'>
@@ -41,6 +45,7 @@ const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
                       sx={{ cursor: 'pointer', float: 'right' }}
                       style={{ fontSize: '15px' }}
                       color='primary'
+                      onClick={() => handleDelete(room.roomName)}
                     />
                   </Tooltip>
                   <Tooltip title='Edit this room' placement='top'>
@@ -62,18 +67,7 @@ const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
                 <Divider />
                 <Grid container spacing={2} ml={1} mt={1}>
                   {Object.keys(room)
-                    .filter(
-                      (name) =>
-                        name !== 'roomName' &&
-                        name !== 'roomLength' &&
-                        name !== 'roomWidth' &&
-                        name !== 'roomHeight' &&
-                        name !== 'paintTrim' &&
-                        name !== 'wallCoating' &&
-                        name !== 'ceilingCoat' &&
-                        name !== 'paintDoor' &&
-                        name !== 'paintWindow'
-                    )
+                    .filter((name) => name === 'roomName' || name === 'doorNumber')
                     .map((i) => {
                       return (
                         <Grid xs={6} md={6}>
