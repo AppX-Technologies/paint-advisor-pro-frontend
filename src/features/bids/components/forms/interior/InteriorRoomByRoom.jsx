@@ -7,58 +7,103 @@ import React, { useState } from 'react';
 import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
 
-const InteriorRoomByRoom = ({ roomStats, setRoomStats }) => {
+const InteriorRoomByRoom = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
   const [addRoom, setAddRoom] = useState(false);
 
   return (
     <Box>
       {/* Main Form Body  */}
-<Typography mt={2}>Rooms(1)</Typography>
+      <Typography mt={2}>Rooms({allRoom.length})</Typography>
       <Box>
-        
         <Tooltip title='Add Room' placement='top'>
           <Button
             sx={{ marginTop: '10px', height: '30px', p: 0 }}
             variant='contained'
-            startIcon={<AddIcon  />}
+            startIcon={<AddIcon />}
             color='info'
             onClick={() => setAddRoom(true)}
           />
         </Tooltip>
-        <Grid spacing={2} mt={2}>
-          <Grid
-            xs={3}
-            md={3}
-            sx={{ border: '1px solid lightgray', borderRadius: '10px', padding: '5px' }}>
-            <Box>
-              <Tooltip title='Delete this room' placement='top'>
-                <HighlightOffIcon
-                  fontSize='small'
-                  sx={{ cursor: 'pointer', float: 'right' }}
-                  style={{ fontSize: '15px' }}
-                  color='primary'
-                />
-              </Tooltip>
-              <Tooltip title='Edit this room' placement='top'>
-                <BorderColorIcon
-                  color='info'
-                  fontSize='small'
-                  sx={{ cursor: 'pointer', float: 'right', mr: 0.2 }}
-                  style={{ fontSize: '15px' }}
-                  onClick={() => setAddRoom(true)}
-                />
-              </Tooltip>
-            </Box>
-            <Box sx={{ display: 'flex' }}>
-              <HomeIcon />
-              <Typography sx={{ fontSize: '12px', textAlign: 'left', marginTop: '5px' }}>
-                Bed Room
-              </Typography>
-            </Box>
-            <Divider />
-            <Grid container spacing={2} ml={1} mt={1} >
-              <Grid xs={4} md={4}>
-                <Box >
+        <Grid container spacing={1} mt={2}>
+          {allRoom.map((room) => {
+            const height = room.roomHeight;
+            const width = room.roomWidth;
+            const length = room.roomLength;
+            return (
+              <Grid
+                xs={3}
+                md={3}
+                m={0.4}
+                sx={{ border: '1px solid lightgray', borderRadius: '10px', padding: '5px' }}>
+                <Box>
+                  <Tooltip title='Delete this room' placement='top'>
+                    <HighlightOffIcon
+                      fontSize='small'
+                      sx={{ cursor: 'pointer', float: 'right' }}
+                      style={{ fontSize: '15px' }}
+                      color='primary'
+                    />
+                  </Tooltip>
+                  <Tooltip title='Edit this room' placement='top'>
+                    <BorderColorIcon
+                      color='info'
+                      fontSize='small'
+                      sx={{ cursor: 'pointer', float: 'right', mr: 0.2 }}
+                      style={{ fontSize: '15px' }}
+                      onClick={() => setAddRoom(true)}
+                    />
+                  </Tooltip>
+                </Box>
+                <Box sx={{ display: 'flex' }}>
+                  <HomeIcon />
+                  <Typography sx={{ fontSize: '12px', textAlign: 'left', marginTop: '5px' }}>
+                    {room.roomName}
+                  </Typography>
+                </Box>
+                <Divider />
+                <Grid container spacing={2} ml={1} mt={1}>
+                  {Object.keys(room)
+                    .filter(
+                      (name) =>
+                        name !== 'roomName' &&
+                        name !== 'roomLength' &&
+                        name !== 'roomWidth' &&
+                        name !== 'roomHeight' &&
+                        name !== 'paintTrim' &&
+                        name !== 'wallCoating' &&
+                        name !== 'ceilingCoat' &&
+                        name !== 'paintDoor' &&
+                        name !== 'paintWindow'
+                    )
+                    .map((i) => {
+                      return (
+                        <Grid xs={6} md={6}>
+                          <Box>
+                            <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
+                              {i === 'doorNumber' ? 'Dimensions' : 'Num of Door'}
+                            </Typography>
+                            <Chip
+                              label={
+                                <Typography
+                                  sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
+                                  {i === 'doorNumber' ? (
+                                    <>
+                                      {length}x{width}x{height}
+                                    </>
+                                  ) : (
+                                    room.doorNumber
+                                  )}
+                                </Typography>
+                              }
+                              size='small'
+                            />
+                          </Box>
+                        </Grid>
+                      );
+                    })}
+
+                  {/* <Grid xs={4} md={4}>
+                <Box>
                   <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Dimensions</Typography>
                   <Chip
                     label={
@@ -70,34 +115,9 @@ const InteriorRoomByRoom = ({ roomStats, setRoomStats }) => {
                   />
                 </Box>
               </Grid>
-              {/* <Grid xs={4} md={4}>
-                <Box >
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Coating</Typography>
-                  <Chip
-                    label={
-                      <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
-                        2
-                      </Typography>
-                    }
-                    size='small'
-                  />
-                </Box>
-              </Grid>
+             
               <Grid xs={4} md={4}>
-                <Box >
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Paint Trim</Typography>
-                  <Chip
-                    label={
-                      <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
-                        Yes
-                      </Typography>
-                    }
-                    size='small'
-                  />
-                </Box>
-              </Grid> */}
-              <Grid xs={4} md={4}>
-                <Box >
+                <Box>
                   <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Num of Doors</Typography>
                   <Chip
                     label={
@@ -110,8 +130,10 @@ const InteriorRoomByRoom = ({ roomStats, setRoomStats }) => {
                 </Box>
               </Grid>
               <Grid xs={4} md={4}>
-                <Box >
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Num of Windows</Typography>
+                <Box>
+                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
+                    Num of Windows
+                  </Typography>
                   <Chip
                     label={
                       <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
@@ -121,9 +143,11 @@ const InteriorRoomByRoom = ({ roomStats, setRoomStats }) => {
                     size='small'
                   />
                 </Box>
+              </Grid> */}
+                </Grid>
               </Grid>
-            </Grid>
-          </Grid>
+            );
+          })}
           {/* <Box sx={{ display: 'flex' }}>
                
               </Box> */}
@@ -134,6 +158,8 @@ const InteriorRoomByRoom = ({ roomStats, setRoomStats }) => {
         setOpen={setAddRoom}
         roomStats={roomStats}
         setRoomStats={setRoomStats}
+        allRoom={allRoom}
+        setAllRoom={setAllRoom}
       />
     </Box>
   );

@@ -23,6 +23,7 @@ import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
 export default function EstimateForm(props) {
   const { open, setOpen, initialBidInfo, setInitialBidInfo } = props;
+  const [allRoom,setAllRoom]=React.useState([]);
   const [roomStats, setRoomStats] = React.useState({
     roomName: '',
     roomLength: '',
@@ -176,10 +177,20 @@ export default function EstimateForm(props) {
           </Grid>
           <Divider sx={{ mt: 2 }} />
           {initialBidInfo.bidType === 'Interior' && initialBidInfo.subType === 'Room by Room' && (
-            <InteriorRoomByRoom roomStats={roomStats} setRoomStats={setRoomStats} />
+            <InteriorRoomByRoom
+              roomStats={roomStats}
+              setRoomStats={setRoomStats}
+              allRoom={allRoom}
+              setAllRoom={setAllRoom}
+            />
           )}
           {initialBidInfo.bidType === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
-            <InteriorManByMan />
+            <InteriorManByMan
+              roomStats={roomStats}
+              setRoomStats={setRoomStats}
+              allRoom={allRoom}
+              setAllRoom={setAllRoom}
+            />
           )}
           {initialBidInfo.bidType === 'Exterior' && initialBidInfo.subType === 'Man Hour' && (
             <ExteriorManByMan />

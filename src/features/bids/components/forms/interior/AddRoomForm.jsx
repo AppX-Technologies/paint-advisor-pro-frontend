@@ -12,10 +12,11 @@ import * as React from 'react';
 import { RoomInfofields } from '../../../../../common/FormTextField';
 
 export default function AddRoomForm(props) {
-  const { open, setOpen, roomStats, setRoomStats } = props;
+  const { open, setOpen, roomStats, setRoomStats, allRoom, setAllRoom } = props;
   const handleClose = () => {
     setOpen(false);
   };
+  console.log(allRoom);
 
   return (
     <div>
@@ -70,7 +71,6 @@ export default function AddRoomForm(props) {
                           roomStats[fieldType] = event.target.value;
                           setRoomStats({ ...roomStats });
                         }}
-                        
                         name='name'>
                         {item.option.map((o) => {
                           return <MenuItem value={o}>{o}</MenuItem>;
@@ -81,7 +81,7 @@ export default function AddRoomForm(props) {
                 ))
               );
             })}
-            {roomStats.paintTrim === 'Yes' && (
+            {/* {roomStats.paintTrim === 'Yes' && (
               <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
                 <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                   In progress
@@ -103,12 +103,16 @@ export default function AddRoomForm(props) {
                   // }}
                 />
               </Grid>
-            )}
+            )} */}
           </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type='submit' variant='contained'>
+          <Button
+            type='submit'
+            variant='contained'
+            onClick={() => setAllRoom([...allRoom, roomStats])}
+            >
             Add Room
           </Button>
         </DialogActions>
