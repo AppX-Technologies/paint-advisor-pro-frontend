@@ -16,7 +16,6 @@ export default function AddRoomForm(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(allRoom);
 
   return (
     <div>
@@ -111,8 +110,10 @@ export default function AddRoomForm(props) {
           <Button
             type='submit'
             variant='contained'
-            onClick={() => setAllRoom([...allRoom, roomStats])}
-            >
+            onClick={() => {
+              setAllRoom([...allRoom, roomStats]);
+              handleClose();
+            }}>
             Add Room
           </Button>
         </DialogActions>
