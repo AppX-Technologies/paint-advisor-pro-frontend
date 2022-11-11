@@ -31,7 +31,8 @@ const theme = createTheme({
     fontFamily: ['Signika Negative']
   },
   palette: {
-    primary: { main: '#d50000' }
+    primary: { main: '#d50000' },
+    background: { default: '#f9f6f6' }
   }
 });
 
