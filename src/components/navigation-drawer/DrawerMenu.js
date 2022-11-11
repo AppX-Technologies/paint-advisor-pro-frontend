@@ -22,16 +22,33 @@ const DrawerMenu = ({ menuItems = [], open }) => {
   };
 
   return (
-    <List component='nav' sx={{ height: '100%' }}>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          height: '100%'
-        }}>
-        <div>
-          {menuItems.map(({ icon: Icon, text, relLink }) => (
+    <List
+      component='nav'
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
+      }}>
+      <div>
+        {menuItems.map(({ icon: Icon, text, relLink }) => (
+          <ListItemButton
+            selected={pathname.includes(relLink)}
+            key={text}
+            onClick={() => navigate(relLink)}>
+            {Icon && (
+              <ListItemIcon>
+                <Icon />
+              </ListItemIcon>
+            )}
+            <ListItemText sx={{ margin: open ? '-10px' : '0px' }} primary={text} />
+          </ListItemButton>
+        ))}
+        <Divider light />
+      </div>
+      <div style={{ display: open ? 'flex' : 'static' }}>
+        {commonRoutes.map(({ icon: Icon, text, relLink }, idx) => (
+          <>
             <ListItemButton
               selected={pathname.includes(relLink)}
               key={text}
@@ -41,37 +58,19 @@ const DrawerMenu = ({ menuItems = [], open }) => {
                   <Icon />
                 </ListItemIcon>
               )}
-              <ListItemText sx={{ margin: open ? '-10px' : '0px' }} primary={text} />
+              {open && (
+                <ListItemText
+                  primary={
+                    <Typography type='body2' sx={{ fontSize: '15px', marginLeft: '-30px' }}>
+                      {text}
+                    </Typography>
+                  }
+                />
+              )}
             </ListItemButton>
-          ))}
-          <Divider light />
-        </div>
-        <div style={{ display: open ? 'flex' : 'static' }}>
-          {commonRoutes.map(({ icon: Icon, text, relLink }, idx) => (
-            <>
-              <ListItemButton
-                selected={pathname.includes(relLink)}
-                key={text}
-                onClick={text === 'Logout' ? onLogoutClick : () => navigate(relLink)}>
-                {Icon && (
-                  <ListItemIcon sx={{ marginLeft: '-10px' }}>
-                    <Icon />
-                  </ListItemIcon>
-                )}
-                {open && (
-                  <ListItemText
-                    primary={
-                      <Typography type='body2' sx={{ fontSize: '15px', marginLeft: '-30px' }}>
-                        {text}
-                      </Typography>
-                    }
-                  />
-                )}
-              </ListItemButton>
-              {idx === 0 && <Divider orientation='vertical' flexItem />}
-            </>
-          ))}
-        </div>
+            {idx === 0 && <Divider orientation='vertical' flexItem />}
+          </>
+        ))}
       </div>
     </List>
   );

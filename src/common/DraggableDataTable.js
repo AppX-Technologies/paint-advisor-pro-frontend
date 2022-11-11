@@ -56,46 +56,23 @@ export const DraggableDataTable = ({
       <TableContainer component={Paper}>
         <Typography
           sx={{
-            flex: '1 1 100%',
-            margin: '5px 0px 5px 15px',
-            fontSize: '18px',
-            fontWeight: '700'
+            padding: 2
           }}
           color='inherit'
           variant='subtitle1'
           component='div'>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'center'
-            }}>
-            <div style={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
-              <Typography
-                sx={{
-                  flex: '1 1 100%',
-                  margin: '5px 0px -10px -10px',
-                  fontSize: '18px',
-                  fontWeight: '700'
-                }}
-                color='inherit'
-                variant='subtitle1'
-                component='div'>
-                {title}
-              </Typography>
-              {isLoading && (
-                <CircularProgress
-                  color='primary'
-                  style={{
-                    display: isLoading ? 'flex' : 'none',
-                    margin: '15px 0 0 10px',
-                    width: '30px',
-                    height: '30px'
-                  }}
-                />
-              )}
-            </div>
-          </div>
+          <Typography color='inherit' variant='subtitle'>
+            {title}
+          </Typography>
+          {isLoading && (
+            <CircularProgress
+              sx={{
+                marginLeft: 2
+              }}
+              color='primary'
+              size={16}
+            />
+          )}
         </Typography>
         <Table aria-label='simple table'>
           <TableHead>
@@ -155,7 +132,7 @@ export const DraggableDataTable = ({
                                 {item.name === 'status' ? (
                                   <Chip
                                     label={rowItem['active'] ? 'Active' : 'Inactive'}
-                                    color={rowItem['active'] ? 'success' : 'info'}>
+                                    color={rowItem['active'] ? 'success' : 'primary'}>
                                     Inactive
                                   </Chip>
                                 ) : (

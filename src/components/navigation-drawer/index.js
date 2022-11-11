@@ -15,7 +15,7 @@ import * as React from 'react';
 import { APP_NAME } from '../../helpers/contants';
 import DrawerMenu from './DrawerMenu';
 
-const drawerWidth = 180;
+const drawerWidth = 200;
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open'
 })(({ theme, open }) => ({
@@ -72,7 +72,7 @@ export const NavigationDrawer = ({ title = APP_NAME, menuItems = [], children })
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       <CssBaseline />
       <AppBar position='absolute' open={open}>
         <Toolbar
@@ -117,16 +117,13 @@ export const NavigationDrawer = ({ title = APP_NAME, menuItems = [], children })
         sx={{
           backgroundColor: (theme) => theme.palette.background,
           flexGrow: 1,
-          height: '100vh',
-          overflow: 'auto'
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%'
         }}>
         <Toolbar />
-        <Container maxWidth='lg' style={{ marginLeft: '-22px' }} sx={{ mt: 0, mb: 4 }}>
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={12} lg={12}>
-              {children}
-            </Grid>
-          </Grid>
+        <Container sx={{ flexGrow: 1, overflowY: 'scroll' }} maxWidth={false} disableGutters>
+          {children}
         </Container>
       </Box>
     </Box>

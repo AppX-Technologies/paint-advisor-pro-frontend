@@ -117,45 +117,50 @@ const Pipeline = () => {
         setInitialBidInfo={setInitialEstimateBidInfo}
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
-      <PrimaryHeader showFilter={showFilter} onFilterChange={setShowFilter} />
-      <Divider light sx={{ margin: '10px 0 10px 5px', width: '103%' }} />
-      <Box>
-        <Grid container>
-          <Grid xs={2}>
-            <QuickSearch
-              selectedListItem={selectedListItem}
-              onSelecetedListItemChange={onSelecetedListItemChange}
-              filteredClietsList={filteredClietsList}
-              setFilteredClietsList={setFilteredClietsList}
-              handleSearch={handleSearch}
-            />
-          </Grid>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <div>
+          <PrimaryHeader showFilter={showFilter} onFilterChange={setShowFilter} />
+          <Divider light sx={{ margin: '10px 0 10px 5px' }} />
+        </div>
 
-          <Grid xs={10} sx={{ height: '74vh', overflowY: 'scroll' }}>
-            <Steps selectedStep={selectedStep} onSelectedStepChange={setSelectedStep} />
-            <ClientInfo
-              onSelectedStepChange={setSelectedStep}
-              selectedValue={selectedValue}
-              selectedStep={selectedStep}
-              open={openEstimate}
-              setOpen={setOpenEstimate}
-              selectedListItem={selectedListItem}
-              currentClientInfo={currentClientInfo}
-              setCurrentClientInfo={setCurrentClientInfo}
-            />
-            {selectedListItem && (
-              <>
-                <UploadFiles />
-                <Comment
-                  currentClientInfo={currentClientInfo}
-                  selectedListItem={selectedListItem}
-                  commentList={commentList}
-                  onCommentListChange={setCommentList}
-                />
-              </>
-            )}
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container>
+            <Grid xs={2}>
+              <QuickSearch
+                selectedListItem={selectedListItem}
+                onSelecetedListItemChange={onSelecetedListItemChange}
+                filteredClietsList={filteredClietsList}
+                setFilteredClietsList={setFilteredClietsList}
+                handleSearch={handleSearch}
+              />
+            </Grid>
+
+            <Grid xs={10} sx={{ height: '74vh', overflowY: 'scroll' }}>
+              <Steps selectedStep={selectedStep} onSelectedStepChange={setSelectedStep} />
+              <ClientInfo
+                onSelectedStepChange={setSelectedStep}
+                selectedValue={selectedValue}
+                selectedStep={selectedStep}
+                open={openEstimate}
+                setOpen={setOpenEstimate}
+                selectedListItem={selectedListItem}
+                currentClientInfo={currentClientInfo}
+                setCurrentClientInfo={setCurrentClientInfo}
+              />
+              {selectedListItem && (
+                <>
+                  <UploadFiles />
+                  <Comment
+                    currentClientInfo={currentClientInfo}
+                    selectedListItem={selectedListItem}
+                    commentList={commentList}
+                    onCommentListChange={setCommentList}
+                  />
+                </>
+              )}
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
       </Box>
     </>
   );
