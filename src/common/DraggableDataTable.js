@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, Chip, CircularProgress, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
@@ -144,37 +144,25 @@ export const DraggableDataTable = ({
                                 <MoreVertIcon />
                               </TableCell>
                             )}
-                            {columns.map((item) => {
-                              return item.name === 'status' ? (
-                                <>
-                                  <Button
-                                    variant='outlined'
-                                    color='primary'
-                                    style={{
-                                      fontSize: '12px',
-                                      textTransform: 'none',
-                                      fontWeight: 700,
-                                      background: '#1565c0',
-                                      color: '#fafafa',
-                                      marginTop: '15px',
-                                      marginLeft: '15px',
-                                      padding: '4px 8px',
-                                      textTransform: 'capitalize'
-                                    }}>
+
+                            {columns.map((item) => (
+                              <TableCell
+                                component='th'
+                                scope='row'
+                                style={{
+                                  width: `${item.width ? item.width : '20%'}`
+                                }}>
+                                {item.name === 'status' ? (
+                                  <Chip
+                                    label={rowItem['active'] ? 'Active' : 'Inactive'}
+                                    color={rowItem['active'] ? 'success' : 'info'}>
                                     Inactive
-                                  </Button>
-                                </>
-                              ) : (
-                                <TableCell
-                                  component='th'
-                                  scope='row'
-                                  style={{
-                                    width: `${item.width ? item.width : '20%'}`
-                                  }}>
-                                  {rowItem[item.name]}
-                                </TableCell>
-                              );
-                            })}
+                                  </Chip>
+                                ) : (
+                                  rowItem[item.name]
+                                )}
+                              </TableCell>
+                            ))}
                             <TableCell style={{ width: '50%' }}>
                               <Stack direction='row' spacing={2}>
                                 <EditOutlinedIcon
