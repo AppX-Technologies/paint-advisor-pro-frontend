@@ -25,7 +25,8 @@
     "consistent-return": "off",
     "react/no-unstable-nested-components": "off",
     "jsx-curly-brace-presence": "off",
-    "prefer-arrow-callback": "off"
+    "prefer-arrow-callback": "off",
+    "no-plusplus": "off"
   },
   "globals": {
     "window": true,

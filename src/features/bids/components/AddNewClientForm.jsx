@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { createClient } from '../bidsSlice';
+import { findSameTypeOfWall } from './forms/formHelper';
 
 export default function AddNewClientForm(props) {
   const { open, handleClose, selectedValue, setSelectedvalue, initialState } = props;
@@ -41,6 +42,7 @@ export default function AddNewClientForm(props) {
     dispatch(createClient(selectedValue));
     setSelectedvalue(initialState);
   };
+
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>

@@ -1,5 +1,7 @@
-import { CircularProgress, Grid, Stack, TextField, Typography } from '@mui/material';
+import { CircularProgress, Grid, Stack, TextField, Tooltip, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -11,14 +13,27 @@ import Select from '@mui/material/Select';
 import * as React from 'react';
 import { RoomInfofields } from '../../../../../common/FormTextField';
 import AddMoreDetails from './AddMoreDetails';
+import { findSameTypeOfWall } from '../formHelper';
 
 export default function AddRoomForm(props) {
-  const { open, setOpen, roomStats, setRoomStats, allRoom, setAllRoom } = props;
+  const {
+    open,
+    setOpen,
+    roomStats,
+    setRoomStats,
+    allRoom,
+    setAllRoom,
+    setWallStats,
+    wallStats,
+    addWalls,
+    onAddWallsChange
+  } = props;
   const [secondPopUp, setSecondPopUp] = React.useState(true);
-  console.log(roomStats);
   const handleClose = () => {
     setOpen(false);
   };
+
+  console.log(findSameTypeOfWall(roomStats.walls),"addWalls");
 
   return (
     <div>
@@ -79,11 +94,27 @@ export default function AddRoomForm(props) {
                         })}
                       </Select>
                     </FormControl>
+
                     {roomStats[fieldType] === 'Yes' && (
+                      <Tooltip title='Add Walls' placement='top'>
+                        <Button
+                          sx={{ marginTop: '10px', height: '30px', minWidth: '40px', p: 0 }}
+                          variant='contained'
+                          startIcon={<AddIcon sx={{ ml: 1 }} />}
+                          color='info'
+                          onClick={() => onAddWallsChange(true)}
+                        />
+                      </Tooltip>
+                    )}
+                    {addWalls && (
                       <AddMoreDetails
-                        wallStats={roomStats.walls}
+                        roomStats={roomStats.walls}
                         secondPopUp={secondPopUp}
                         setSecondPopUp={setSecondPopUp}
+                        wallStats={wallStats}
+                        setWallStats={setWallStats}
+                        addWalls={addWalls}
+                        onAddWallsChange={onAddWallsChange}
                       />
                     )}
                   </Grid>

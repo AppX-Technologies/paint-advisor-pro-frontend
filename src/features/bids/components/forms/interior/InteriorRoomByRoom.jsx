@@ -6,12 +6,25 @@ import { Box, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
+import { findSameTypeOfWall } from '../formHelper';
 
-const InteriorRoomByRoom = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
+const InteriorRoomByRoom = ({
+  roomStats,
+  setRoomStats,
+  allRoom,
+  setAllRoom,
+  setWallStats,
+  wallStats,
+  addWalls,
+  setAddWalls,
+  onAddWallsChange
+}) => {
   const [addRoom, setAddRoom] = useState(false);
+
   const handleDelete = (name) => {
     setAllRoom(allRoom.filter((room) => room.roomName !== name));
   };
+
   return (
     <Box>
       {/* Main Form Body  */}
@@ -152,6 +165,11 @@ const InteriorRoomByRoom = ({ roomStats, setRoomStats, allRoom, setAllRoom }) =>
         setRoomStats={setRoomStats}
         allRoom={allRoom}
         setAllRoom={setAllRoom}
+        wallStats={wallStats}
+        setWallStats={setWallStats}
+        addWalls={addWalls}
+        setAddWalls={setAddWalls}
+        onAddWallsChange={onAddWallsChange}
       />
     </Box>
   );

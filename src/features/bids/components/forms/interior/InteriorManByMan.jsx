@@ -6,6 +6,7 @@ import { Box, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
+import { findSameTypeOfWall } from '../formHelper';
 
 const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
   const [addRoom, setAddRoom] = useState(false);

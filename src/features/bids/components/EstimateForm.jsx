@@ -16,9 +16,9 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { DateRangePicker } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import * as React from 'react';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
 import ExteriorManByMan from './forms/exterior/ExteriorManByMan';
@@ -40,13 +40,24 @@ export default function EstimateForm(props) {
     paintDoor: 'No',
     paintCrownModeling: 'No',
     paintCloset: 'No',
-    walls:[],
-    ceiling:[],
-    window:[]
+    walls: [],
+    ceiling: [],
+    window: []
+  });
+  const [wallStats, setWallStats] = React.useState({
+    height: '',
+    length: ''
   });
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [addWalls, setAddWalls] = React.useState(false);
+
+  const onAddWallsChange = (addWallValue) => {
+    setAddWalls(addWallValue);
+  };
+
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>
@@ -76,7 +87,7 @@ export default function EstimateForm(props) {
           </Button>
         </Toolbar>
 
-        <DialogContent >
+        <DialogContent>
           <Grid container spacing={2} mt={2}>
             {InteriorManByManFormFields.map((item) => {
               return (
@@ -99,7 +110,7 @@ export default function EstimateForm(props) {
                         renderInput={(startProps, endProps) => (
                           <>
                             <TextField size='small' {...startProps} />
-                            <Box sx={{ mx: 1}}> to </Box>
+                            <Box sx={{ mx: 1 }}> to </Box>
                             <TextField size='small' {...endProps} />
                           </>
                         )}
@@ -198,6 +209,11 @@ export default function EstimateForm(props) {
               setRoomStats={setRoomStats}
               allRoom={allRoom}
               setAllRoom={setAllRoom}
+              wallStats={wallStats}
+              setWallStats={setWallStats}
+              addWalls={addWalls}
+              setAddWalls={setAddWalls}
+              onAddWallsChange={onAddWallsChange}
             />
           )}
           {initialBidInfo.bidType === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
