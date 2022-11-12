@@ -12,7 +12,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '../../features/auth/authSlice';
 import { commonRoutes } from '../../routing/routes';
 
-const DrawerMenu = ({ menuItems = [], open }) => {
+const DrawerMenu = ({ menuItems = [], open, onDrawerMenuChange }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const dispatch = useDispatch();
@@ -35,7 +35,10 @@ const DrawerMenu = ({ menuItems = [], open }) => {
           <ListItemButton
             selected={pathname.includes(relLink)}
             key={text}
-            onClick={() => navigate(relLink)}>
+            onClick={() => {
+              navigate(relLink);
+              onDrawerMenuChange(false);
+            }}>
             {Icon && (
               <ListItemIcon>
                 <Icon />
@@ -52,7 +55,14 @@ const DrawerMenu = ({ menuItems = [], open }) => {
             <ListItemButton
               selected={pathname.includes(relLink)}
               key={text}
-              onClick={text === 'Logout' ? onLogoutClick : () => navigate(relLink)}>
+              onClick={
+                text === 'Logout'
+                  ? onLogoutClick
+                  : () => {
+                      navigate(relLink);
+                      onDrawerMenuChange(false);
+                    }
+              }>
               {Icon && (
                 <ListItemIcon>
                   <Icon />

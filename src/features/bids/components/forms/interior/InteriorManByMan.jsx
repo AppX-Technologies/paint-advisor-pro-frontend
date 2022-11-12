@@ -10,9 +10,9 @@ import AddRoomForm from './AddRoomForm';
 const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
   const [addRoom, setAddRoom] = useState(false);
   const handleDelete = (name) => {
-    
     setAllRoom(allRoom.filter((room) => room.roomName !== name));
   };
+
   return (
     <Box>
       {/* Main Form Body  */}
