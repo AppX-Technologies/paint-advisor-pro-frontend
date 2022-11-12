@@ -66,7 +66,7 @@ export default function AddNewClientForm(props) {
               const fieldType = item.name;
               return (
                 (item.dataType === 'text' && (
-                  <Grid item xs={10} md={item.resizeable ? 1 : 4} sx={{ marginTop: '-10px' }}>
+                  <Grid item xs={10} md={item.resizeable ? 1.33 : 4} sx={{ marginTop: '-10px' }}>
                     <>
                       <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                         {item.label}
@@ -76,7 +76,7 @@ export default function AddNewClientForm(props) {
                         InputProps={{
                           style: {
                             height: '30px',
-                            width: item.resizeable ? '100px' : 'auto'
+                            width: item.resizeable ? '130px' : 'auto'
                           }
                         }}
                         name={item.name}
