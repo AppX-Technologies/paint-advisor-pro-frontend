@@ -1,6 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import {
+  Box,
   Divider,
   FormControl,
   Grid,
@@ -15,6 +16,9 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import * as React from 'react';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
 import ExteriorManByMan from './forms/exterior/ExteriorManByMan';
@@ -23,19 +27,22 @@ import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
 export default function EstimateForm(props) {
   const { open, setOpen, initialBidInfo, setInitialBidInfo } = props;
-  const [allRoom,setAllRoom]=React.useState([]);
+  const [allRoom, setAllRoom] = React.useState([]);
+  const [value, setValue] = React.useState([null, null]);
   const [roomStats, setRoomStats] = React.useState({
     roomName: '',
-    roomLength: '',
-    roomWidth: '',
-    roomHeight: '',
-    wallCoating: '',
-    ceilingCoat: '',
-    paintTrim: '',
-    doorNumber: '',
-    paintDoor: '',
-    numberOfWindows: '',
-    paintWindow: ''
+    paintWall: 'No',
+    baseboardTrim: 'No',
+    paintCeiling: 'No',
+    paintWindow: 'No',
+    paintWindowTrim: 'No',
+    paintDoorjambs: 'No',
+    paintDoor: 'No',
+    paintCrownModeling: 'No',
+    paintCloset: 'No',
+    walls:[],
+    ceiling:[],
+    window:[]
   });
   const handleClose = () => {
     setOpen(false);
@@ -43,12 +50,12 @@ export default function EstimateForm(props) {
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>
-        <Toolbar>
-          <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
+        <Toolbar sx={{ backgroundColor: '#D50000' }}>
+          <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
             Estimate
           </Typography>
           <Button
-            variant='outlined'
+            variant='contained'
             color='success'
             style={{
               height: '30px',
@@ -58,8 +65,8 @@ export default function EstimateForm(props) {
             Edit <EditIcon sx={{ height: '15px' }} />
           </Button>
           <Button
-            variant='outlined'
-            color='primary'
+            variant='contained'
+            color='warning'
             style={{
               height: '30px',
               padding: '3px'
@@ -69,30 +76,39 @@ export default function EstimateForm(props) {
           </Button>
         </Toolbar>
 
-        <DialogContent dividers sx={{ m: 1 }}>
+        <DialogContent >
           <Grid container spacing={2} mt={2}>
             {InteriorManByManFormFields.map((item) => {
               return (
-                (item.dataType === 'text' && (
-                  <Grid item xs={3} md={3} sx={{ marginTop: '-10px' }}>
+                (item.dataType === 'dateTime' && (
+                  <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
                     <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                      {item.label}
+                      Enter Start Time/End Time
                     </InputLabel>
-
-                    <TextField
-                      InputProps={{
-                        style: { height: '30px' }
-                      }}
-                      name='name'
-                      fullWidth
-                      variant='outlined'
-                      id='outlined-basic'
-                      autoFocus
-                    />
+                    <LocalizationProvider
+                      dateAdapter={AdapterDayjs}
+                      localeText={{ start: 'Start Date', end: 'End Date' }}>
+                      <DateRangePicker
+                        InputProps={{
+                          style: { height: '10px' }
+                        }}
+                        value={value}
+                        onChange={(newValue) => {
+                          setValue(newValue);
+                        }}
+                        renderInput={(startProps, endProps) => (
+                          <>
+                            <TextField size='small' {...startProps} />
+                            <Box sx={{ mx: 1}}> to </Box>
+                            <TextField size='small' {...endProps} />
+                          </>
+                        )}
+                      />
+                    </LocalizationProvider>
                   </Grid>
                 )) ||
                 (item.dataType === 'dropDown' && (
-                  <Grid item xs={3} md={3} sx={{ marginTop: '-10px' }}>
+                  <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
                     <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                       {item.label}
                     </InputLabel>
@@ -114,7 +130,7 @@ export default function EstimateForm(props) {
             })}
           </Grid>
           <Grid container spacing={2} mt={1}>
-            <Grid item xs={3} md={3} sx={{ marginTop: '-10px' }}>
+            <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
               <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                 Bid Type
               </InputLabel>
@@ -143,7 +159,7 @@ export default function EstimateForm(props) {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={3} md={3} sx={{ marginTop: '-10px' }}>
+            <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
               <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                 Sub Type
               </InputLabel>

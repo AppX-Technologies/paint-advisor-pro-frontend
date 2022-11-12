@@ -70,7 +70,7 @@ export const InteriorManByManFormFields = [
   {
     label: 'What will be Start date/End Date?',
     name: 'startEndDate',
-    dataType: 'text',
+    dataType: 'dateTime',
     option: ['Interior', 'Exterior']
   },
   {
@@ -154,59 +154,58 @@ export const RoomInfofields = [
     name: 'roomName',
     dataType: 'text'
   },
+
   {
-    label: 'Room Length',
-    name: 'roomLength',
-    dataType: 'text'
-  },
-  {
-    label: 'Room Width',
-    name: 'roomWidth',
-    dataType: 'text'
-  },
-  {
-    label: 'Average Room Height',
-    name: 'roomHeight',
-    dataType: 'text'
-  },
-  {
-    label: 'How much Coating in the walls?',
-    name: 'wallCoating',
-    dataType: 'dropDown',
-    option: ['1 Coat', '2 Coat','3 Coat']
-  },
-  {
-    label: 'How much Coating in the ceiling?',
-    name: 'ceilingCoat',
-    dataType: 'dropDown',
-    option: ['1 Coat', '2 Coat','3 Coat']
-  },
-  {
-    label: 'Paint Trims?',
-    name: 'paintTrim',
+    label: 'Paint Walls?',
+    name: 'paintWall',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
-    label: 'Are you painting the doors? ',
-    name: 'paintDoor',
+    label: 'Paint Baseboard trim? ',
+    name: 'baseboardTrim',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
-    label: 'How many doors are in the room?',
-    name: 'doorNumber',
-    dataType: 'text'
+    label: 'Paint Ceiling?',
+    name: 'paintCeiling',
+    dataType: 'dropDown',
+    option: booleanOption
   },
   {
-    label: 'Are you painting the windows? ',
+    label: 'Paint Window? ',
     name: 'paintWindow',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
-    label: '  How many windows are in the room?',
-    name: 'numberOfWindows',
-    dataType: 'text'
+    label: 'Paint Window trim?',
+    name: 'paintWindowTrim',
+    dataType: 'dropDown',
+    option: booleanOption
+  },
+  {
+    label: 'Paint Door Jambs? ',
+    name: 'paintDoorjambs',
+    dataType: 'dropDown',
+    option: booleanOption
+  },
+  {
+    label: 'Paint Doors?',
+    name: 'paintDoor',
+    dataType: 'dropDown',
+    option: booleanOption
+  },
+  {
+    label: 'Paint Crown Modeling?',
+    name: 'paintCrownModeling',
+    dataType: 'dropDown',
+    option: booleanOption
+  },{
+    label: 'Closet?',
+    name: 'paintCloset',
+    dataType: 'dropDown',
+    option:booleanOption
   },
 ];

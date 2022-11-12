@@ -10,9 +10,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import * as React from 'react';
 import { RoomInfofields } from '../../../../../common/FormTextField';
+import AddMoreDetails from './AddMoreDetails';
 
 export default function AddRoomForm(props) {
   const { open, setOpen, roomStats, setRoomStats, allRoom, setAllRoom } = props;
+  const [secondPopUp, setSecondPopUp] = React.useState(true);
+  console.log(roomStats);
   const handleClose = () => {
     setOpen(false);
   };
@@ -71,38 +74,22 @@ export default function AddRoomForm(props) {
                           setRoomStats({ ...roomStats });
                         }}
                         name='name'>
-                        {item.option.map((o) => {
+                        {item.option.map((o, index) => {
                           return <MenuItem value={o}>{o}</MenuItem>;
                         })}
                       </Select>
                     </FormControl>
+                    {roomStats[fieldType] === 'Yes' && (
+                      <AddMoreDetails
+                        wallStats={roomStats.walls}
+                        secondPopUp={secondPopUp}
+                        setSecondPopUp={setSecondPopUp}
+                      />
+                    )}
                   </Grid>
                 ))
               );
             })}
-            {/* {roomStats.paintTrim === 'Yes' && (
-              <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
-                <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                  In progress
-                </InputLabel>
-
-                <TextField
-                  InputProps={{
-                    style: { height: '30px' }
-                  }}
-                  name='name'
-                  fullWidth
-                  variant='outlined'
-                  id='outlined-basic'
-                  autoFocus
-                  // value={roomStats[]}
-                  // onChange={(event) => {
-                  //   roomStats[] = event.target.value;
-                  //   setRoomStats({ ...roomStats });
-                  // }}
-                />
-              </Grid>
-            )} */}
           </Grid>
         </DialogContent>
         <DialogActions>
