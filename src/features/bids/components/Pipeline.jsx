@@ -1,5 +1,5 @@
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import { Box, Button, Divider, Grid } from '@mui/material';
+import { Box, Button, Card, Divider, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { findCurrentClient, searchedResult } from '../helpers/generalHepers';
@@ -117,12 +117,9 @@ const Pipeline = () => {
         setInitialBidInfo={setInitialEstimateBidInfo}
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <div>
-          <PrimaryHeader showFilter={showFilter} onFilterChange={setShowFilter} />
-          <Divider light sx={{ margin: '10px 0 10px 5px' }} />
-        </div>
-
+      <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>
+        <PrimaryHeader showFilter={showFilter} onFilterChange={setShowFilter} />
+        <Divider light sx={{ margin: '10px 0 10px 5px' }} />
         <Box sx={{ flexGrow: 1 }}>
           <Grid container>
             <Grid xs={2}>
@@ -134,30 +131,31 @@ const Pipeline = () => {
                 handleSearch={handleSearch}
               />
             </Grid>
-
-            <Grid xs={10} sx={{ height: '74vh', overflowY: 'scroll' }}>
+            <Grid xs={10} sx={{ height: '74vh', overflowY: 'auto', paddingLeft: 1 }}>
               <Steps selectedStep={selectedStep} onSelectedStepChange={setSelectedStep} />
-              <ClientInfo
-                onSelectedStepChange={setSelectedStep}
-                selectedValue={selectedValue}
-                selectedStep={selectedStep}
-                open={openEstimate}
-                setOpen={setOpenEstimate}
-                selectedListItem={selectedListItem}
-                currentClientInfo={currentClientInfo}
-                setCurrentClientInfo={setCurrentClientInfo}
-              />
-              {selectedListItem && (
-                <>
-                  <UploadFiles />
-                  <Comment
-                    currentClientInfo={currentClientInfo}
-                    selectedListItem={selectedListItem}
-                    commentList={commentList}
-                    onCommentListChange={setCommentList}
-                  />
-                </>
-              )}
+              <Card sx={{ padding: 1, marginTop: 1 }}>
+                <ClientInfo
+                  onSelectedStepChange={setSelectedStep}
+                  selectedValue={selectedValue}
+                  selectedStep={selectedStep}
+                  open={openEstimate}
+                  setOpen={setOpenEstimate}
+                  selectedListItem={selectedListItem}
+                  currentClientInfo={currentClientInfo}
+                  setCurrentClientInfo={setCurrentClientInfo}
+                />
+                {selectedListItem && (
+                  <>
+                    <UploadFiles />
+                    <Comment
+                      currentClientInfo={currentClientInfo}
+                      selectedListItem={selectedListItem}
+                      commentList={commentList}
+                      onCommentListChange={setCommentList}
+                    />
+                  </>
+                )}
+              </Card>
             </Grid>
           </Grid>
         </Box>

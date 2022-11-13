@@ -23,7 +23,7 @@ const ClientInfo = ({
   }, [selectedListItem]);
 
   return (
-    <Box m={1} sx={{ border: '1px solid lightgray', borderRadius: '15px' }}>
+    <Box>
       {selectedListItem ? (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }} p={1}>

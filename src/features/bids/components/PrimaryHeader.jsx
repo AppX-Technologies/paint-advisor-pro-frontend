@@ -35,7 +35,7 @@ const PrimaryHeader = ({ onFilterChange }) => {
   ];
   return (
     <>
-      <Box mt={2} ml={2} sx={{ width: '100%' }}>
+      <Box mt={2} sx={{ width: '100%' }}>
         <Grid container gap={1.5} sx={{ width: '100%' }}>
           {/* Search Input */}
           <Grid xs={6} ml={2}>
