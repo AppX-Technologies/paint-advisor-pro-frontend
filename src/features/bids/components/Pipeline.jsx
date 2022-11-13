@@ -2,6 +2,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Box, Button, Divider, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { STAGE_1 } from '../../../helpers/contants';
 import { findCurrentClient, searchedResult } from '../helpers/generalHepers';
 import AddNewClientForm from './AddNewClientForm';
 import ClientInfo from './ClientInfo';
@@ -60,7 +61,6 @@ const Pipeline = () => {
     propertyType: ''
   };
   const [selectedValue, setSelectedvalue] = React.useState(initialState);
-  const [estimateValue, setEstimateValue] = React.useState(initialEstimateState);
 
   const handleChange = (newDate) => {
     setDate(newDate);
@@ -81,7 +81,7 @@ const Pipeline = () => {
 
   return (
     <>
-      {selectedStep === 'new client' && (
+      {selectedStep === STAGE_1 && (
         <Button
           variant='contained'
           color='primary'

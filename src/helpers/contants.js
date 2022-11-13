@@ -26,3 +26,27 @@ export const ALL_PROCESS_STAGES = [
   PROCESS_STAGE_PAINTING,
   PROCESS_STAGE_CLEANUP
 ];
+
+export const STAGE_1 = 'new client';
+export const STAGE_2 = 'estimate in progress';
+export const STAGE_3 = 'in review';
+export const STAGE_4 = 'contractPending';
+export const STAGE_5 = 'contract sent';
+export const STAGE_6 = 'contract rejected';
+export const STAGE_7 = 'job scheduled';
+export const STAGE_8 = 'job in progress';
+export const STAGE_9 = 'invoicing';
+export const STAGE_10 = 'complete';
+
+export const BIDS_STAGES = [
+  STAGE_1,
+  STAGE_2,
+  STAGE_3,
+  STAGE_4,
+  STAGE_5,
+  STAGE_6,
+  STAGE_7,
+  STAGE_8,
+  STAGE_9,
+  STAGE_10
+];
