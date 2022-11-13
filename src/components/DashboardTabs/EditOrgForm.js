@@ -72,7 +72,7 @@ export default function Edit(props) {
           variant: 'success'
         })
       );
-      dispatch(fetchOrgs(userDetail.token));
+
       dispatch(reset());
     }
   }, [isUpdated]);

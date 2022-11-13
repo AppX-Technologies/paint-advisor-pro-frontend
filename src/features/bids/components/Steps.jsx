@@ -1,8 +1,8 @@
 import { Box, Card, Chip } from '@mui/material';
 import React from 'react';
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
-import { bidsStages } from '../../../helpers/bidsStages';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
+import { BIDS_STAGES } from '../../../helpers/contants';
 
 const Steps = ({ selectedStep, onSelectedStepChange }) => {
   return (
@@ -15,7 +15,7 @@ const Steps = ({ selectedStep, onSelectedStepChange }) => {
         }}
         bgcolor='white'>
         <Box p={1}>
-          {bidsStages.map((bidStage, idx) => {
+          {BIDS_STAGES.map((bidStage, idx) => {
             return (
               <>
                 {idx !== 0 && (

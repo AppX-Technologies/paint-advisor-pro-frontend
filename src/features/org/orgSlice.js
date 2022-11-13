@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { addOrUpdateItemInArray } from '../../helpers/addRemoveUpdateListHelper';
 import { showMessage } from '../snackbar/snackbarSlice';
 import orgService from './orgService';
 
@@ -14,7 +15,8 @@ const initialState = {
   isDeleted: false,
   isUpdating: false,
   isUpdated: false,
-  message: ''
+  message: '',
+  response: null
 };
 
 // get organizations
@@ -142,6 +144,7 @@ export const orgSlice = createSlice({
         state.isUpdated = true;
         state.isUpdating = false;
         state.message = action.payload;
+        state.response = addOrUpdateItemInArray(state.orgList, action.payload);
       })
       .addCase(updateOrg.rejected, (state, action) => {
         state.isUpdating = false;

@@ -58,15 +58,7 @@ const Companies = () => {
       </Box>
 
       <DraggableDataTable
-        initialDataList={orgList.map((org) => {
-          return {
-            _id: org._id,
-            name: org.name,
-            email: org.email,
-            address: org.address,
-            phone: org.phone
-          };
-        })}
+        initialDataList={orgList}
         isLoading={isLoading}
         columns={columns}
         title='Company List'
