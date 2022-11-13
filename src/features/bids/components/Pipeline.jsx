@@ -13,7 +13,6 @@ import PrimaryHeader from './PrimaryHeader';
 import QuickSearch from './QuickSearch';
 import Steps from './Steps';
 import UploadFiles from './UploadFiles';
-import CardBox from '../../../common/Card';
 
 const Pipeline = () => {
   const { clientList } = useSelector((state) => state.bids);
@@ -34,15 +33,22 @@ const Pipeline = () => {
     bidType: '',
     subType: ''
   };
-  const [initialEstimateBidInfo, setInitialEstimateBidInfo] = useState(estimationFormInitialInfo);
-  const onFilterOptionsClose = () => {
-    setShowFilter(false);
-  };
-  const handleSearch = (keyword) => {
-    setFilteredClietsList(searchedResult(clientList, keyword));
+  const initialRoomState = {
+    roomName: '',
+    paintWall: 'No',
+    baseboardTrim: 'No',
+    paintCeiling: 'No',
+    paintWindow: 'No',
+    paintWindowTrim: 'No',
+    paintDoorjambs: 'No',
+    paintDoor: 'No',
+    paintCrownModeling: 'No',
+    paintCloset: 'No',
+    walls: [],
+    ceiling: [],
+    window: []
   };
 
-  const [date, setDate] = React.useState();
   const initialState = {
     customerName: '',
     address: '',
@@ -55,12 +61,23 @@ const Pipeline = () => {
     propertyType: ''
   };
 
+  const [initialEstimateBidInfo, setInitialEstimateBidInfo] = useState(estimationFormInitialInfo);
+
+  const [allRoom, setAllRoom] = React.useState([]);
+  const [value, setValue] = React.useState([null, null]);
+
+  const [roomStats, setRoomStats] = React.useState(initialRoomState);
+
   const [selectedValue, setSelectedvalue] = React.useState(initialState);
-  const handleChange = (newDate) => {
-    setDate(newDate);
+
+  const handleSearch = (keyword) => {
+    setFilteredClietsList(searchedResult(clientList, keyword));
   };
   const handleClose = () => {
     setOpen(false);
+  };
+  const onFilterOptionsClose = () => {
+    setShowFilter(false);
   };
 
   const onSelecetedListItemChange = (itemValue) => {
@@ -92,9 +109,6 @@ const Pipeline = () => {
       <AddNewClientForm
         open={open}
         setOpen={setOpen}
-        date={date}
-        setDate={setDate}
-        handleChange={handleChange}
         handleClose={handleClose}
         selectedValue={selectedValue}
         setSelectedvalue={setSelectedvalue}
@@ -103,13 +117,17 @@ const Pipeline = () => {
       <EstimateForm
         open={openEstimate}
         setOpen={setOpenEstimate}
-        date={date}
-        setDate={setDate}
-        handleChange={handleChange}
         handleClose={handleClose}
         initialBidInfo={initialEstimateBidInfo}
         setInitialBidInfo={setInitialEstimateBidInfo}
         estimationFormInitialInfo={estimationFormInitialInfo}
+        allRoom={allRoom}
+        setAllRoom={setAllRoom}
+        value={value}
+        setValue={setValue}
+        roomStats={roomStats}
+        setRoomStats={setRoomStats}
+        initialRoomState={initialRoomState}
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>

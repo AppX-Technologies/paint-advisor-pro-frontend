@@ -24,29 +24,23 @@ import { InteriorManByManFormFields } from '../../../common/FormTextField';
 import ExteriorManByMan from './forms/exterior/ExteriorManByMan';
 import InteriorManByMan from './forms/interior/InteriorManByMan';
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
-import RoomDetailsCard from './forms/RoomDetailsCard';
 
 export default function EstimateForm(props) {
-  const { open, setOpen, initialBidInfo, setInitialBidInfo, estimationFormInitialInfo } = props;
-  const [allRoom, setAllRoom] = React.useState([]);
-  const [value, setValue] = React.useState([null, null]);
+  const {
+    open,
+    setOpen,
+    initialBidInfo,
+    setInitialBidInfo,
+    estimationFormInitialInfo,
+    allRoom,
+    setAllRoom,
+    value,
+    setValue,
+    initialRoomState,
+    roomStats,
+    setRoomStats
+  } = props;
 
-  const initialRoomState = {
-    roomName: '',
-    paintWall: 'No',
-    baseboardTrim: 'No',
-    paintCeiling: 'No',
-    paintWindow: 'No',
-    paintWindowTrim: 'No',
-    paintDoorjambs: 'No',
-    paintDoor: 'No',
-    paintCrownModeling: 'No',
-    paintCloset: 'No',
-    walls: [],
-    ceiling: [],
-    window: []
-  };
-  const [roomStats, setRoomStats] = React.useState(initialRoomState);
   const handleClose = () => {
     setOpen(false);
     setRoomStats(initialRoomState);
@@ -55,8 +49,6 @@ export default function EstimateForm(props) {
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>
-        <RoomDetailsCard />
-
         <Toolbar sx={{ backgroundColor: '#D50000' }}>
           <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
             Estimate

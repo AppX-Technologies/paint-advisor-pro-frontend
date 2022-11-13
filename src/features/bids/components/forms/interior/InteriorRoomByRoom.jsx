@@ -6,7 +6,6 @@ import { Box, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
-import { findSameTypeOfWall } from '../formHelper';
 
 const InteriorRoomByRoom = ({
   roomStats,
@@ -106,56 +105,10 @@ const InteriorRoomByRoom = ({
                         </Grid>
                       );
                     })}
-
-                  {/* <Grid xs={4} md={4}>
-                <Box>
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Dimensions</Typography>
-                  <Chip
-                    label={
-                      <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
-                        10x10x5
-                      </Typography>
-                    }
-                    size='small'
-                  />
-                </Box>
-              </Grid>
-             
-              <Grid xs={4} md={4}>
-                <Box>
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Num of Doors</Typography>
-                  <Chip
-                    label={
-                      <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
-                        3
-                      </Typography>
-                    }
-                    size='small'
-                  />
-                </Box>
-              </Grid>
-              <Grid xs={4} md={4}>
-                <Box>
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
-                    Num of Windows
-                  </Typography>
-                  <Chip
-                    label={
-                      <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
-                        2
-                      </Typography>
-                    }
-                    size='small'
-                  />
-                </Box>
-              </Grid> */}
                 </Grid>
               </Grid>
             );
           })}
-          {/* <Box sx={{ display: 'flex' }}>
-               
-              </Box> */}
         </Grid>
       </Box>
       <AddRoomForm
