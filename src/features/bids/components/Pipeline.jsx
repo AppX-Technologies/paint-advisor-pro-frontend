@@ -2,6 +2,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Box, Button, Card, Divider, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import AddMoreButton from '../../../common/AddMoreButton';
 import { STAGE_1 } from '../../../helpers/contants';
 import { findCurrentClient, searchedResult } from '../helpers/generalHepers';
 import AddNewClientForm from './AddNewClientForm';
@@ -51,6 +52,7 @@ const Pipeline = () => {
 
   const initilWallInfo = {
     _id: '',
+    wallName: '',
     prepHour: '',
     height: '',
     length: '',
@@ -146,7 +148,7 @@ const Pipeline = () => {
         setRoomStats={setRoomStats}
         initialRoomState={initialRoomState}
         wallStats={wallStats}
-        setWallStats={setWindowStats}
+        setWallStats={setWallStats}
         windowStats={windowStats}
         setWindowStats={setWindowStats}
       />
@@ -192,7 +194,6 @@ const Pipeline = () => {
               </Card>
             </Grid>
           </Grid>
-          {/* <CardBox /> */}
         </Box>
       </Box>
     </>

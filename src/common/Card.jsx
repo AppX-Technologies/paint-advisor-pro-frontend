@@ -3,7 +3,7 @@ import React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-const Card = ({ items, title }) => {
+const Card = ({ items, title, onCardDelete}) => {
   return (
     <Box className='card-box' p={1}>
       {/* Header-section */}
@@ -30,11 +30,12 @@ const Card = ({ items, title }) => {
               cursor: 'pointer'
             }}
             size='small'
+            onClick={() => onCardDelete(items.id)}
           />
         </Box>
       </Box>
       {/* Body-section */}
-      {Object.keys(items).map((item) => {
+      {Object.keys(items).filter(x=>x!=='id').map((item) => {
         return (
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>{item}</Typography>

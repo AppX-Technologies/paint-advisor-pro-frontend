@@ -1,16 +1,15 @@
-import { Box, CircularProgress, Grid, Stack, TextField, Tooltip, Typography } from '@mui/material';
+import BrushIcon from '@mui/icons-material/Brush';
+import { Box, CircularProgress, Divider, Grid, Stack, TextField, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import Switch from '@mui/material/Switch';
 import * as React from 'react';
+import AddMoreButton from '../../../../../common/AddMoreButton';
+import Card from '../../../../../common/Card';
 import { RoomInfofields } from '../../../../../common/FormTextField';
 import AddMoreDetails from './AddMoreDetails';
 
@@ -22,102 +21,124 @@ export default function AddRoomForm(props) {
     setRoomStats,
     allRoom,
     setAllRoom,
+    addWall,
+    setAddWall,
     wallStats,
-    setWallStats,
-    windowStats,
-    setWindowStats
+    setWallStats
   } = props;
-  const [addWall, setAddWall] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
   };
+  const onAddWallChange = (value) => {
+    setAddWall(value);
+  };
+  const onCardDelete = (id) => {
+    console.log(id);
+    roomStats.walls.splice(
+      roomStats.walls.findIndex((x) => x._id === id),
+      1
+    );
+    setRoomStats({ ...roomStats });
+  };
+  const label = { inputProps: { 'aria-label': 'Switch demo' } };
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { width: '40%' } }}>
-        <DialogTitle>
+      <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { minWidth: '80%' } }}>
+        <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
           <Stack direction='row' spacing={2}>
-            <Typography variant='h6'>Add New Room</Typography>
+            <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
+              Add New Room
+            </Typography>
             <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
           </Stack>
         </DialogTitle>
         <DialogContent>
-          <Grid container spacing={2} mt={2}>
+          <Grid container spacing={2} mt={0.5}>
+            <Grid item xs={12} md={12} sx={{ marginTop: '-10px' }}>
+              <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                Room Name
+              </InputLabel>
+
+              <TextField
+                InputProps={{
+                  style: { height: '30px' }
+                }}
+                name='name'
+                fullWidth
+                variant='outlined'
+                id='outlined-basic'
+                autoFocus
+                value={roomStats.roomName}
+                onChange={(event) => {
+                  roomStats.roomName = event.target.value;
+                  setRoomStats({ ...roomStats });
+                }}
+              />
+            </Grid>
+            <Divider />
             {RoomInfofields.map((item) => {
               const fieldType = item.name;
               return (
-                (item.dataType === 'text' && (
-                  <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
-                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                      {item.label}
-                    </InputLabel>
-
-                    <TextField
-                      InputProps={{
-                        style: { height: '30px' }
-                      }}
-                      name='name'
-                      fullWidth
-                      variant='outlined'
-                      id='outlined-basic'
-                      autoFocus
-                      value={roomStats[fieldType]}
-                      onChange={(event) => {
-                        roomStats[fieldType] = event.target.value;
-                        setRoomStats({ ...roomStats });
-                      }}
-                    />
-                  </Grid>
-                )) ||
-                (item.dataType === 'dropDown' && (
-                  <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
-                    <Box sx={{ display: 'flex' }}>
+                item.dataType === 'dropDown' && (
+                  <Grid item xs={12} md={12} sx={{ marginTop: '-10px' }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}>
                       <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                        <BrushIcon
+                          sx={{
+                            color: roomStats[fieldType]
+                              ? (theme) => theme.deleteicon.color.main
+                              : 'gray',
+                            fontSize: '18px',
+                            marginBottom: '-5px',
+                            mr: 1
+                          }}
+                        />
                         {item.label}
-                      </InputLabel>{' '}
-                      {roomStats[fieldType] === 'Yes' && (
-                        <Tooltip title='Add Walls' placement='top'>
-                          <AddCircleIcon
-                            onClick={() => setAddWall(true)}
-                            sizr='small'
-                            style={{
-                              fontSize: '18px',
-                              color: 'green',
-                              cursor: 'pointer',
-                              marginLeft: '6px'
-                            }}
-                          />
-                        </Tooltip>
-                      )}
-                      {roomStats[fieldType] === 'Yes' && (
-                        <span style={{ marginTop: '-4px', marginLeft: '3px' }}>
-                          ({roomStats.walls.length})
-                        </span>
-                      )}
-                    </Box>
-                    <FormControl sx={{ m: 0, minWidth: '100%' }} size='small'>
-                      <Select
-                        displayEmpty
-                        sx={{ height: '30px' }}
-                        labelId='demo-select-small'
-                        id='demo-select-small'
-                        value={roomStats[fieldType]}
+                      </InputLabel>
+                      <Switch
+                        checked={roomStats[fieldType]}
                         onChange={(event) => {
-                          roomStats[fieldType] = event.target.value;
+                          roomStats[fieldType] = event.target.checked;
                           setRoomStats({ ...roomStats });
                         }}
-                        name='name'>
-                        {item.option.map((o, index) => {
-                          return <MenuItem value={o}>{o}</MenuItem>;
-                        })}
-                      </Select>
-                    </FormControl>
-                    <AddMoreDetails
-                      wallStat={roomStats.walls}
-                      addWall={addWall}
-                      setAddWall={setAddWall}
-                    />
+                        {...label}
+                      />
+                    </Box>
+                    {roomStats[fieldType] && (
+                      <Grid container alignItems='center' justify='center'>
+                        {roomStats.walls.length !== 0 &&
+                          roomStats.walls.map((wall) => {
+                            return (
+                              <Grid xs={10} md={3}>
+                                <Card
+                                  items={{
+                                    id: wall._id,
+                                    Dimensions: `${wall.length}x${wall.height}`,
+                                    WallType: wall.wallType,
+                                    Coats: wall.coats
+                                  }}
+                                  title={wall.wallName}
+                                  onCardDelete={onCardDelete}
+                                />
+                              </Grid>
+                            );
+                          })}
+                        <Grid xs={3} md={3}>
+                          <AddMoreButton
+                            onAddWallChange={
+                              item.name === 'paintWall' ? onAddWallChange : () => null
+                            }
+                          />
+                        </Grid>
+                      </Grid>
+                    )}
                   </Grid>
-                ))
+                )
               );
             })}
           </Grid>
@@ -134,6 +155,16 @@ export default function AddRoomForm(props) {
             Add Room
           </Button>
         </DialogActions>
+        {addWall && (
+          <AddMoreDetails
+            addWall={addWall}
+            roomStat={roomStats}
+            setRoomStat={setRoomStats}
+            setAddWall={setAddWall}
+            wallStats={wallStats}
+            setWallStats={setWallStats}
+          />
+        )}
       </Dialog>
     </div>
   );

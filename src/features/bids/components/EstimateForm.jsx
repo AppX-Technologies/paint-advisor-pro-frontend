@@ -45,6 +45,8 @@ export default function EstimateForm(props) {
     setWindowStats
   } = props;
 
+  const [addWall, setAddWall] = React.useState(false);
+
   const handleClose = () => {
     setOpen(false);
     setRoomStats(initialRoomState);
@@ -223,7 +225,9 @@ export default function EstimateForm(props) {
               allRoom={allRoom}
               setAllRoom={setAllRoom}
               wallStats={wallStats}
-              setWallStats={setWindowStats}
+              addWall={addWall}
+              setAddWall={setAddWall}
+              setWallStats={setWallStats}
               windowStats={windowStats}
               setWindowStats={setWindowStats}
             />

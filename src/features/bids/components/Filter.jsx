@@ -51,11 +51,9 @@ const Filter = ({ showFilter, onFilterOptionsClose }) => {
                 .fill(0)
                 .map(() => {
                   return (
-                    <>
-                      <FormGroup>
-                        <FormControlLabel control={<Checkbox defaultChecked />} label='Filter' />
-                      </FormGroup>
-                    </>
+                    <FormGroup>
+                      <FormControlLabel control={<Checkbox defaultChecked />} label='Filter' />
+                    </FormGroup>
                   );
                 })}
             </Box>
