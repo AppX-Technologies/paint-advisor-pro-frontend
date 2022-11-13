@@ -1,7 +1,7 @@
-import { CircularProgress, Grid, Stack, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, Stack, TextField, Tooltip, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -16,25 +16,12 @@ import AddMoreDetails from './AddMoreDetails';
 import { findSameTypeOfWall } from '../formHelper';
 
 export default function AddRoomForm(props) {
-  const {
-    open,
-    setOpen,
-    roomStats,
-    setRoomStats,
-    allRoom,
-    setAllRoom,
-    setWallStats,
-    wallStats,
-    addWalls,
-    onAddWallsChange
-  } = props;
-  const [secondPopUp, setSecondPopUp] = React.useState(true);
+  const { open, setOpen, roomStats, setRoomStats, allRoom, setAllRoom } = props;
+  const [addWall, setAddWall] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
   };
-
-  console.log(findSameTypeOfWall(roomStats.walls),"addWalls");
-
+  console.log(roomStats);
   return (
     <div>
       <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { width: '40%' } }}>
@@ -74,9 +61,30 @@ export default function AddRoomForm(props) {
                 )) ||
                 (item.dataType === 'dropDown' && (
                   <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
-                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                      {item.label}
-                    </InputLabel>
+                    <Box sx={{ display: 'flex' }}>
+                      <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                        {item.label}
+                      </InputLabel>{' '}
+                      {roomStats[fieldType] === 'Yes' && (
+                        <Tooltip title='Add Walls' placement='top'>
+                          <AddCircleIcon
+                            onClick={() => setAddWall(true)}
+                            sizr='small'
+                            style={{
+                              fontSize: '18px',
+                              color: 'green',
+                              cursor: 'pointer',
+                              marginLeft: '6px'
+                            }}
+                          />
+                        </Tooltip>
+                      )}
+                      {roomStats[fieldType] === 'Yes' && (
+                        <span style={{ marginTop: '-4px', marginLeft: '3px' }}>
+                          ({roomStats.walls.length})
+                        </span>
+                      )}
+                    </Box>
                     <FormControl sx={{ m: 0, minWidth: '100%' }} size='small'>
                       <Select
                         displayEmpty
@@ -94,29 +102,11 @@ export default function AddRoomForm(props) {
                         })}
                       </Select>
                     </FormControl>
-
-                    {roomStats[fieldType] === 'Yes' && (
-                      <Tooltip title='Add Walls' placement='top'>
-                        <Button
-                          sx={{ marginTop: '10px', height: '30px', minWidth: '40px', p: 0 }}
-                          variant='contained'
-                          startIcon={<AddIcon sx={{ ml: 1 }} />}
-                          color='info'
-                          onClick={() => onAddWallsChange(true)}
-                        />
-                      </Tooltip>
-                    )}
-                    {addWalls && (
-                      <AddMoreDetails
-                        roomStats={roomStats.walls}
-                        secondPopUp={secondPopUp}
-                        setSecondPopUp={setSecondPopUp}
-                        wallStats={wallStats}
-                        setWallStats={setWallStats}
-                        addWalls={addWalls}
-                        onAddWallsChange={onAddWallsChange}
-                      />
-                    )}
+                    <AddMoreDetails
+                      wallStat={roomStats.walls}
+                      addWall={addWall}
+                      setAddWall={setAddWall}
+                    />
                   </Grid>
                 ))
               );
