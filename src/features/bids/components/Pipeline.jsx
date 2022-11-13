@@ -27,10 +27,14 @@ const Pipeline = () => {
     findCurrentClient(clientList, selectedListItem)
   );
   const [commentList, setCommentList] = useState([]);
-  const [initialEstimateBidInfo, setInitialEstimateBidInfo] = useState({
+
+  const estimationFormInitialInfo = {
+    startDate: '',
+    endDate: '',
     bidType: '',
     subType: ''
-  });
+  };
+  const [initialEstimateBidInfo, setInitialEstimateBidInfo] = useState(estimationFormInitialInfo);
   const onFilterOptionsClose = () => {
     setShowFilter(false);
   };
@@ -105,6 +109,7 @@ const Pipeline = () => {
         handleClose={handleClose}
         initialBidInfo={initialEstimateBidInfo}
         setInitialBidInfo={setInitialEstimateBidInfo}
+        estimationFormInitialInfo={estimationFormInitialInfo}
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>
