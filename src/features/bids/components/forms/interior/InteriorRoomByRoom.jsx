@@ -12,11 +12,13 @@ const InteriorRoomByRoom = ({
   setRoomStats,
   allRoom,
   setAllRoom,
-  setWallStats,
-  wallStats,
   addWalls,
   setAddWalls,
-  onAddWallsChange
+  onAddWallsChange,
+  wallStats,
+  setWallStats,
+  windowStats,
+  setWindowStats
 }) => {
   const [addRoom, setAddRoom] = useState(false);
 
@@ -123,6 +125,8 @@ const InteriorRoomByRoom = ({
         addWalls={addWalls}
         setAddWalls={setAddWalls}
         onAddWallsChange={onAddWallsChange}
+        windowStats={windowStats}
+        setWindowStats={setWindowStats}
       />
     </Box>
   );

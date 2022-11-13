@@ -38,7 +38,11 @@ export default function EstimateForm(props) {
     setValue,
     initialRoomState,
     roomStats,
-    setRoomStats
+    setRoomStats,
+    wallStats,
+    setWallStats,
+    windowStats,
+    setWindowStats
   } = props;
 
   const handleClose = () => {
@@ -218,6 +222,10 @@ export default function EstimateForm(props) {
               setRoomStats={setRoomStats}
               allRoom={allRoom}
               setAllRoom={setAllRoom}
+              wallStats={wallStats}
+              setWallStats={setWindowStats}
+              windowStats={windowStats}
+              setWindowStats={setWindowStats}
             />
           )}
           {initialBidInfo.bidType === 'Interior' && initialBidInfo.subType === 'Man Hour' && (

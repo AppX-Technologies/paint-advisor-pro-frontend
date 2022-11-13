@@ -35,18 +35,36 @@ const Pipeline = () => {
   };
   const initialRoomState = {
     roomName: '',
-    paintWall: 'No',
-    baseboardTrim: 'No',
-    paintCeiling: 'No',
-    paintWindow: 'No',
-    paintWindowTrim: 'No',
-    paintDoorjambs: 'No',
-    paintDoor: 'No',
-    paintCrownModeling: 'No',
-    paintCloset: 'No',
+    paintWall: false,
+    baseboardTrim: false,
+    paintCeiling: false,
+    paintWindow: false,
+    paintWindowTrim: false,
+    paintDoorjambs: false,
+    paintDoor: false,
+    paintCrownModeling: false,
+    paintCloset: false,
     walls: [],
     ceiling: [],
     window: []
+  };
+
+  const initilWallInfo = {
+    _id: '',
+    prepHour: '',
+    height: '',
+    length: '',
+    wallType: '',
+    coats: ''
+  };
+
+  const initialWindowInfo = {
+    _id: '',
+    style: '',
+    height: '',
+    length: '',
+    coats: '',
+    wall: ''
   };
 
   const initialState = {
@@ -62,13 +80,12 @@ const Pipeline = () => {
   };
 
   const [initialEstimateBidInfo, setInitialEstimateBidInfo] = useState(estimationFormInitialInfo);
-
   const [allRoom, setAllRoom] = React.useState([]);
   const [value, setValue] = React.useState([null, null]);
-
   const [roomStats, setRoomStats] = React.useState(initialRoomState);
-
   const [selectedValue, setSelectedvalue] = React.useState(initialState);
+  const [wallStats, setWallStats] = useState(initilWallInfo);
+  const [windowStats, setWindowStats] = useState(initialWindowInfo);
 
   const handleSearch = (keyword) => {
     setFilteredClietsList(searchedResult(clientList, keyword));
@@ -128,6 +145,10 @@ const Pipeline = () => {
         roomStats={roomStats}
         setRoomStats={setRoomStats}
         initialRoomState={initialRoomState}
+        wallStats={wallStats}
+        setWallStats={setWindowStats}
+        windowStats={windowStats}
+        setWindowStats={setWindowStats}
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>

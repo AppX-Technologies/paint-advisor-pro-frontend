@@ -15,7 +15,18 @@ import { RoomInfofields } from '../../../../../common/FormTextField';
 import AddMoreDetails from './AddMoreDetails';
 
 export default function AddRoomForm(props) {
-  const { open, setOpen, roomStats, setRoomStats, allRoom, setAllRoom } = props;
+  const {
+    open,
+    setOpen,
+    roomStats,
+    setRoomStats,
+    allRoom,
+    setAllRoom,
+    wallStats,
+    setWallStats,
+    windowStats,
+    setWindowStats
+  } = props;
   const [addWall, setAddWall] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
