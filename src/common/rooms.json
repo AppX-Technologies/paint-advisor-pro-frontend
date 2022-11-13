@@ -24,17 +24,17 @@
         "breadth": "",
         "count": 1,
         "trim": [
-            {
-              "type": "",
-              "length": "",
-              "breadth": ""
-            },
-            {
-              "type": "",
-              "length": "",
-              "breadth": ""
-            }
-          ]
+          {
+            "type": "",
+            "length": "",
+            "breadth": ""
+          },
+          {
+            "type": "",
+            "length": "",
+            "breadth": ""
+          }
+        ]
       }
     ]
   }
