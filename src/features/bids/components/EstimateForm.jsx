@@ -18,18 +18,20 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import * as React from 'react';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
 import ExteriorManByMan from './forms/exterior/ExteriorManByMan';
 import InteriorManByMan from './forms/interior/InteriorManByMan';
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
+import RoomDetailsCard from './forms/RoomDetailsCard';
 
 export default function EstimateForm(props) {
-  const { open, setOpen, initialBidInfo, setInitialBidInfo } = props;
+  const { open, setOpen, initialBidInfo, setInitialBidInfo, estimationFormInitialInfo } = props;
   const [allRoom, setAllRoom] = React.useState([]);
   const [value, setValue] = React.useState([null, null]);
-  const [roomStats, setRoomStats] = React.useState({
+
+  const initialRoomState = {
     roomName: '',
     paintWall: 'No',
     baseboardTrim: 'No',
@@ -43,13 +45,18 @@ export default function EstimateForm(props) {
     walls: [],
     ceiling: [],
     window: []
-  });
+  };
+  const [roomStats, setRoomStats] = React.useState(initialRoomState);
   const handleClose = () => {
     setOpen(false);
+    setRoomStats(initialRoomState);
+    setInitialBidInfo(estimationFormInitialInfo);
   };
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>
+        <RoomDetailsCard />
+
         <Toolbar sx={{ backgroundColor: '#D50000' }}>
           <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
             Estimate
@@ -81,44 +88,42 @@ export default function EstimateForm(props) {
             {InteriorManByManFormFields.map((item) => {
               return (
                 (item.dataType === 'dateTime' && (
-                  <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
-                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                      Enter Start Time/End Time
-                    </InputLabel>
-                    <LocalizationProvider
-                      dateAdapter={AdapterDayjs}
-                      style={{ mb: 1 }}
-                      localeText={{ start: 'Start Date', end: 'End Date' }}>
-                      <DateRangePicker
-                        value={value}
-                        onChange={(newValue) => {
-                          setValue(newValue);
-                        }}
-                        renderInput={(startProps, endProps) => (
-                          <>
+                  <Grid item xs={10} md={3}>
+                    <Box>
+                      <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                        {item.label}
+                      </InputLabel>
+                      <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
+                        style={{ mb: 1 }}
+                        localeText={{ start: 'Start Date', end: 'End Date' }}>
+                        <DesktopDatePicker
+                          sx={{ m: 0 }}
+                          InputProps={{
+                            style: { height: '30px' }
+                          }}
+                          value={value}
+                          minDate='2017-01-01'
+                          onChange={(newValue) => {
+                            setValue(newValue);
+                          }}
+                          renderInput={(params) => (
                             <TextField
                               size='small'
-                              InputProps={{
-                                style: { height: '30px' }
+                              inputProps={{
+                                style: { fontSize: '14px', marginTop: '-10px' }
                               }}
-                              {...startProps}
+                              fullWidth
+                              {...params}
                             />
-                            <Box sx={{ mx: 1 }}> to </Box>
-                            <TextField
-                              InputProps={{
-                                style: { height: '30px' }
-                              }}
-                              size='small'
-                              {...endProps}
-                            />
-                          </>
-                        )}
-                      />
-                    </LocalizationProvider>
+                          )}
+                        />
+                      </LocalizationProvider>
+                    </Box>
                   </Grid>
                 )) ||
                 (item.dataType === 'dropDown' && (
-                  <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
+                  <Grid item xs={10} md={3}>
                     <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                       {item.label}
                     </InputLabel>
@@ -128,7 +133,20 @@ export default function EstimateForm(props) {
                         sx={{ height: '30px' }}
                         labelId='demo-select-small'
                         id='demo-select-small'
-                        name='name'>
+                        name='name'
+                        value={initialBidInfo[item.name]}
+                        onChange={(e) => {
+                          initialBidInfo[item.name] = e.target.value;
+                          setInitialBidInfo({ ...initialBidInfo });
+                        }}
+                        renderValue={
+                          !initialBidInfo[item.name] &&
+                          (() => (
+                            <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
+                              Select One...
+                            </Typography>
+                          ))
+                        }>
                         {item.option.map((o) => {
                           return <MenuItem value={o}>{o}</MenuItem>;
                         })}
@@ -140,36 +158,36 @@ export default function EstimateForm(props) {
             })}
           </Grid>
           <Grid container spacing={2} mt={1}>
-            <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
+            <Grid item xs={10} md={3}>
               <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                 Bid Type
               </InputLabel>
-              <FormControl sx={{ m: 0, minWidth: '100%' }} size='small'>
+              <FormControl sx={{ m: 0, width: '100%' }} size='small'>
                 <Select
                   displayEmpty
                   sx={{ height: '30px' }}
                   labelId='demo-select-small'
                   id='demo-select-small'
                   name='Bid Type'
+                  value={initialBidInfo.bidType}
                   onChange={(event) => {
                     initialBidInfo.bidType = event.target.value;
                     setInitialBidInfo({ ...initialBidInfo });
                   }}
                   renderValue={
-                    initialBidInfo.bidType !== ''
-                      ? undefined
-                      : () => (
-                          <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
-                            Select One...
-                          </Typography>
-                        )
+                    initialBidInfo.bidType === '' &&
+                    (() => (
+                      <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
+                        Select One...
+                      </Typography>
+                    ))
                   }>
                   <MenuItem value='Interior'>Interior</MenuItem>
                   <MenuItem value='Exterior'>Exterior</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
+            <Grid item xs={10} md={3}>
               <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                 Sub Type
               </InputLabel>
@@ -180,18 +198,18 @@ export default function EstimateForm(props) {
                   labelId='demo-select-small'
                   id='demo-select-small'
                   name='Bid Type'
+                  value={initialBidInfo.subType}
                   onChange={(event) => {
                     initialBidInfo.subType = event.target.value;
                     setInitialBidInfo({ ...initialBidInfo });
                   }}
                   renderValue={
-                    initialBidInfo.subType !== ''
-                      ? undefined
-                      : () => (
-                          <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
-                            Select One...
-                          </Typography>
-                        )
+                    initialBidInfo.subType === '' &&
+                    (() => (
+                      <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
+                        Select One...
+                      </Typography>
+                    ))
                   }>
                   <MenuItem value='Man Hour'>Man Hour</MenuItem>
                   {initialBidInfo.bidType === 'Interior' && (
