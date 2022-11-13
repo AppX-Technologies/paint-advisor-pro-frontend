@@ -7,7 +7,6 @@ import { findCommentsUniquely } from '../helpers/generalHepers';
 
 const Comment = ({ currentClientInfo, onCommentListChange, commentList }) => {
   const { comments } = useSelector((state) => state.bids);
-  console.log(comments);
   const [comment, setComment] = useState('');
   const dispatch = useDispatch();
 

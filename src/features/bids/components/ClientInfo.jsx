@@ -86,9 +86,14 @@ const ClientInfo = ({
                         })}
                       </Typography>
                       <Chip
+                        sx={{
+                          bgcolor: (theme) => theme.chip.background.main,
+                          WebkitJustifyContent: 'left',
+                          justifyContent: 'left'
+                        }}
                         label={
                           <Typography
-                            sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
+                            sx={{ textAlign: 'left', fontWeight: '400', fontSize: '10px' }}>
                             {currentClientInfo[field] !== '' && field !== 'email'
                               ? convertStringCase(currentClientInfo[field])
                               : currentClientInfo[field]}

@@ -13,7 +13,6 @@ import Select from '@mui/material/Select';
 import * as React from 'react';
 import { RoomInfofields } from '../../../../../common/FormTextField';
 import AddMoreDetails from './AddMoreDetails';
-import { findSameTypeOfWall } from '../formHelper';
 
 export default function AddRoomForm(props) {
   const { open, setOpen, roomStats, setRoomStats, allRoom, setAllRoom } = props;
@@ -21,7 +20,6 @@ export default function AddRoomForm(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(roomStats);
   return (
     <div>
       <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { width: '40%' } }}>

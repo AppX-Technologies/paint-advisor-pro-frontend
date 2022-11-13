@@ -19,7 +19,6 @@ export const generateRegistrationOtp = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await authService.generateRegistrationOtp(userData);
-      console.log(response);
       return response;
     } catch (err) {
       const message =
@@ -37,7 +36,6 @@ export const generateRegistrationOtp = createAsyncThunk(
 export const register = createAsyncThunk('auth/register', async (user, thunkAPI) => {
   try {
     const response = await authService.register(user);
-    console.log(response);
     return response;
   } catch (error) {
     const message =
@@ -74,7 +72,6 @@ export const sendForgotPasswordLink = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const response = await authService.sendForgotPasswordLink(user);
-      console.log(response);
       return response;
     } catch (error) {
       const message =
@@ -90,7 +87,6 @@ export const sendForgotPasswordLink = createAsyncThunk(
 export const resetPassword = createAsyncThunk('auth/resetPassword', async (user, thunkAPI) => {
   try {
     const response = await authService.resetPassword(user);
-    console.log(response);
     return response;
   } catch (error) {
     const message =

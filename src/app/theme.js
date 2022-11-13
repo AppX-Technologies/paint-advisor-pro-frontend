@@ -7,6 +7,7 @@ const theme = createTheme({
         enableColorScheme: true
       }
     },
+
     MuiButtonBase: {
       defaultProps: {
         disableTouchRipple: true
@@ -29,6 +30,15 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: ['Signika Negative']
+  },
+  chip: {
+    background: { main: '#FAF2F0' }
+  },
+  deleteicon: {
+    color: { main: '#CD2C63' }
+  },
+  editicon: {
+    color: { main: '#9B29AB' }
   },
   palette: {
     primary: { main: '#d50000' },

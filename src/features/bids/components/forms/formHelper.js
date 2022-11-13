@@ -1,5 +1,4 @@
 export const findSameTypeOfWall = (walls) => {
-  console.log(walls);
   const wallsDimensionsAndCount = [];
   walls.forEach((wall) => {
     const wallsWithSameDim = wallsDimensionsAndCount.find(

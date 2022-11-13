@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
 import { findSameTypeOfWall } from '../formHelper';
+import Card from '../../../../../common/Card';
 
 const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
   const [addRoom, setAddRoom] = useState(false);
@@ -30,115 +31,12 @@ const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
         </Tooltip>
         <Grid container spacing={1} mt={2}>
           {allRoom.map((room) => {
-            const height = room.roomHeight;
-            const width = room.roomWidth;
-            const length = room.roomLength;
+            const height = '12';
+            const width = '10';
+            const Dimension = height.concat('x', width);
             return (
-              <Grid
-                xs={3}
-                md={3}
-                m={1}
-                sx={{ border: '1px solid lightgray', borderRadius: '10px', padding: '5px' }}>
-                <Box>
-                  <Tooltip title='Delete this room' placement='top'>
-                    <HighlightOffIcon
-                      fontSize='small'
-                      sx={{ cursor: 'pointer', float: 'right' }}
-                      style={{ fontSize: '15px' }}
-                      color='primary'
-                      onClick={() => handleDelete(room.roomName)}
-                    />
-                  </Tooltip>
-                  <Tooltip title='Edit this room' placement='top'>
-                    <BorderColorIcon
-                      color='info'
-                      fontSize='small'
-                      sx={{ cursor: 'pointer', float: 'right', mr: 0.2 }}
-                      style={{ fontSize: '15px' }}
-                      onClick={() => setAddRoom(true)}
-                    />
-                  </Tooltip>
-                </Box>
-                <Box sx={{ display: 'flex' }}>
-                  <HomeIcon />
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left', marginTop: '5px' }}>
-                    {room.roomName}
-                  </Typography>
-                </Box>
-                <Divider />
-                <Grid container spacing={2} ml={1} mt={1}>
-                  {Object.keys(room)
-                    .filter((name) => name === 'roomName' || name === 'doorNumber')
-                    .map((i) => {
-                      return (
-                        <Grid xs={6} md={6}>
-                          <Box>
-                            <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
-                              {i === 'doorNumber' ? 'Dimensions' : 'Num of Door'}
-                            </Typography>
-                            <Chip
-                              label={
-                                <Typography
-                                  sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
-                                  {i === 'doorNumber' ? (
-                                    <>
-                                      {length}x{width}x{height}
-                                    </>
-                                  ) : (
-                                    room.doorNumber
-                                  )}
-                                </Typography>
-                              }
-                              size='small'
-                            />
-                          </Box>
-                        </Grid>
-                      );
-                    })}
-
-                  {/* <Grid xs={4} md={4}>
-                <Box>
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Dimensions</Typography>
-                  <Chip
-                    label={
-                      <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
-                        10x10x5
-                      </Typography>
-                    }
-                    size='small'
-                  />
-                </Box>
-              </Grid>
-             
-              <Grid xs={4} md={4}>
-                <Box>
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>Num of Doors</Typography>
-                  <Chip
-                    label={
-                      <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
-                        3
-                      </Typography>
-                    }
-                    size='small'
-                  />
-                </Box>
-              </Grid>
-              <Grid xs={4} md={4}>
-                <Box>
-                  <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
-                    Num of Windows
-                  </Typography>
-                  <Chip
-                    label={
-                      <Typography sx={{ textAlign: 'left', fontWeight: '400', fontSize: '11px' }}>
-                        2
-                      </Typography>
-                    }
-                    size='small'
-                  />
-                </Box>
-              </Grid> */}
-                </Grid>
+              <Grid xs={3} md={3} m={1}>
+                <Card items={{ Dimensions: Dimension }} title={room.roomName} />
               </Grid>
             );
           })}

@@ -19,3 +19,11 @@ body {
   color: rgb(0, 0, 0) !important;
   padding: 5px;
 }
+
+.card-box {
+  height: auto;
+  width:250px;
+  border-radius: 10px;
+  background: #faf2f0;
+  box-shadow: 5px 5px 6px #dad3d1, -5px -5px 6px #ffffff;
+}

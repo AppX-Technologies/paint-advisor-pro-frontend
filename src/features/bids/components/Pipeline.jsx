@@ -13,6 +13,7 @@ import PrimaryHeader from './PrimaryHeader';
 import QuickSearch from './QuickSearch';
 import Steps from './Steps';
 import UploadFiles from './UploadFiles';
+import CardBox from '../../../common/Card';
 
 const Pipeline = () => {
   const { clientList } = useSelector((state) => state.bids);
@@ -49,19 +50,8 @@ const Pipeline = () => {
     contactNumber: '',
     propertyType: ''
   };
-  const initialEstimateState = {
-    startEndDate: '',
-    customerProvidingPaintMaterial: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    contactMethod: '',
-    email: '',
-    contactNumber: '',
-    propertyType: ''
-  };
-  const [selectedValue, setSelectedvalue] = React.useState(initialState);
 
+  const [selectedValue, setSelectedvalue] = React.useState(initialState);
   const handleChange = (newDate) => {
     setDate(newDate);
   };
@@ -158,6 +148,7 @@ const Pipeline = () => {
               </Card>
             </Grid>
           </Grid>
+          {/* <CardBox /> */}
         </Box>
       </Box>
     </>

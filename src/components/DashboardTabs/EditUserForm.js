@@ -21,7 +21,6 @@ export default function Edit(props) {
     phone: editFormData.phone ? editFormData.phone : '',
     role: 'Admin'
   };
-  console.log(editFormData);
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
 
   const userDetail = JSON.parse(localStorage.getItem('user'));
