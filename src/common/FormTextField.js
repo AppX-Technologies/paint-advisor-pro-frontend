@@ -10,8 +10,7 @@ export const AddNewClientTextField = [
     name: 'address',
     id: 'Address',
     label: 'Address',
-    dataType: 'text',
-
+    dataType: 'text'
   },
   {
     name: 'city',
@@ -53,18 +52,15 @@ export const AddNewClientTextField = [
     label: 'Contact Number',
     dataType: 'text'
   },
-  
+
   {
     name: 'propertyType',
     id: 'property-type',
     label: 'Property Type',
     dataType: 'dropDown',
     option: ['Home', 'Business']
-  },
-  
+  }
 ];
-
-
 
 export const InteriorManByManFormFields = [
   {
@@ -131,7 +127,7 @@ export const ExteriorManByManFormFields = [
       }
     ]
   },
-  
+
   {
     label: 'How much Coating in the walls?',
     name: 'wallCoating',
@@ -162,56 +158,57 @@ export const RoomInfofields = [
   },
 
   {
-    label: 'Paint Walls?',
-    name: 'paintWall',
+    label: 'Walls',
+    name: 'wall',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
-    label: 'Paint Baseboard trim? ',
+    label: 'Baseboard trim',
     name: 'baseboardTrim',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
-    label: 'Paint Ceiling?',
-    name: 'paintCeiling',
+    label: 'Ceiling',
+    name: 'ceiling',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
-    label: 'Paint Window? ',
-    name: 'paintWindow',
+    label: 'Windows ',
+    name: 'window',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
-    label: 'Paint Window trim?',
-    name: 'paintWindowTrim',
+    label: 'Window trim',
+    name: 'windowTrim',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
-    label: 'Paint Door Jambs? ',
-    name: 'paintDoorjambs',
+    label: 'Door Jambs',
+    name: 'doorjambs',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
-    label: 'Paint Doors?',
-    name: 'paintDoor',
+    label: 'Doors',
+    name: 'door',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
-    label: 'Paint Crown Modeling?',
-    name: 'paintCrownModeling',
+    label: 'Crown Modeling',
+    name: 'crownModeling',
     dataType: 'dropDown',
     option: booleanOption
-  },{
-    label: 'Closet?',
-    name: 'paintCloset',
-    dataType: 'dropDown',
-    option:booleanOption
   },
+  {
+    label: 'Closet',
+    name: 'closet',
+    dataType: 'dropDown',
+    option: booleanOption
+  }
 ];

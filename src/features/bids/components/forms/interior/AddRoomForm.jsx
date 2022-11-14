@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import InputLabel from '@mui/material/InputLabel';
 import Switch from '@mui/material/Switch';
 import * as React from 'react';
+import { useState } from 'react';
 import AddMoreButton from '../../../../../common/AddMoreButton';
 import Card from '../../../../../common/Card';
 import { RoomInfofields } from '../../../../../common/FormTextField';
@@ -15,6 +16,7 @@ import { findRoomRelatedInfo } from '../formHelper';
 import AddMoreDetails from './AddMoreDetails';
 
 export default function AddRoomForm(props) {
+  const [currentAddMore, setCurentAddMore] = useState('');
   const {
     open,
     setOpen,
@@ -25,14 +27,29 @@ export default function AddRoomForm(props) {
     addWall,
     setAddWall,
     wallStats,
-    setWallStats
+    setWallStats,
+    clearWallStats,
+    windowStats,
+    setWindowStats
   } = props;
 
+  console.log(wallStats, windowStats);
   const roomRelatedInfo = [
     {
-      name: 'paintWall',
+      name: 'wall',
       countToShow: roomStats.walls.length,
-      infoToShow: roomStats.walls
+      infoToShow: roomStats.walls,
+      currentStats: wallStats,
+      onCurrentStatsChange: setWallStats,
+      addIn: roomStats.walls
+    },
+    {
+      name: 'window',
+      countToShow: roomStats.windows.length,
+      infoToShow: roomStats.windows,
+      currentStats: windowStats,
+      onCurrentStatsChange: setWindowStats,
+      addIn: roomStats.windows
     }
   ];
 
@@ -42,10 +59,10 @@ export default function AddRoomForm(props) {
   const onAddWallChange = (value) => {
     setAddWall(value);
   };
-  console.log(wallStats);
   const onCardDelete = (id) => {
-    roomStats.walls.splice(
-      roomStats.walls.findIndex((x) => x._id === id),
+    const { addIn } = roomRelatedInfo.find((roomInfo) => roomInfo.name === currentAddMore);
+    addIn.splice(
+      addIn.findIndex((x) => x._id === id),
       1
     );
     setRoomStats({ ...roomStats });
@@ -98,7 +115,9 @@ export default function AddRoomForm(props) {
                         justifyContent: 'space-between',
                         alignItems: 'center'
                       }}>
-                      <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                      <InputLabel
+                        id='demo-select-small'
+                        sx={{ fontSize: '14px', color: roomStats[fieldType] ? 'black' : 'gray' }}>
                         <BrushIcon
                           sx={{
                             color: roomStats[fieldType]
@@ -111,7 +130,7 @@ export default function AddRoomForm(props) {
                         />
                         {item.label}
                         {findRoomRelatedInfo(roomRelatedInfo, item.name) &&
-                          `(${findRoomRelatedInfo(roomRelatedInfo, item.name).countToShow})`}
+                          ` (${findRoomRelatedInfo(roomRelatedInfo, item.name).countToShow})`}
                       </InputLabel>
                       <Switch
                         checked={roomStats[fieldType]}
@@ -130,13 +149,8 @@ export default function AddRoomForm(props) {
                               return (
                                 <Grid xs={10} md={3}>
                                   <Card
-                                    items={{
-                                      id: wall._id,
-                                      Dimensions: `${wall.length}x${wall.height}`,
-                                      WallType: wall.wallType,
-                                      Coats: wall.coats
-                                    }}
-                                    title={wall.wallName}
+                                    items={wall}
+                                    title={wall[currentAddMore]}
                                     onCardDelete={onCardDelete}
                                   />
                                 </Grid>
@@ -145,9 +159,9 @@ export default function AddRoomForm(props) {
                           )}
                         <Grid xs={3} md={3}>
                           <AddMoreButton
-                            onAddWallChange={
-                              item.name === 'paintWall' ? onAddWallChange : () => null
-                            }
+                            onAddWallChange={onAddWallChange}
+                            setCurentAddMore={setCurentAddMore}
+                            currentFieldType={item.name}
                           />
                         </Grid>
                       </Grid>
@@ -176,8 +190,15 @@ export default function AddRoomForm(props) {
             roomStat={roomStats}
             setRoomStat={setRoomStats}
             setAddWall={setAddWall}
-            wallStats={wallStats}
-            setWallStats={setWallStats}
+            titleField={currentAddMore}
+            currentStats={
+              roomRelatedInfo.find((info) => info.name === currentAddMore)?.currentStats
+            }
+            setCurrentStats={
+              roomRelatedInfo.find((info) => info.name === currentAddMore)?.onCurrentStatsChange
+            }
+            addIn={roomRelatedInfo.find((info) => info.name === currentAddMore)?.addIn}
+            clearWallStats={clearWallStats}
           />
         )}
       </Dialog>

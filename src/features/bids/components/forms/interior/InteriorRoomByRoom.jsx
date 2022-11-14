@@ -20,7 +20,8 @@ const InteriorRoomByRoom = ({
   wallStats,
   setWallStats,
   windowStats,
-  setWindowStats
+  setWindowStats,
+  clearWallStats
 }) => {
   const [addRoom, setAddRoom] = useState(false);
 
@@ -47,7 +48,7 @@ const InteriorRoomByRoom = ({
             return (
               <Card
                 items={{
-                  PaintWall: room.paintWall ? 'Yes' : 'No',
+                  wall: room.wall ? 'Yes' : 'No',
                   WallNumber: room.walls.length,
                   WallDetails: findSameTypeOfWall(room.walls)
                 }}
@@ -68,6 +69,9 @@ const InteriorRoomByRoom = ({
         wallStats={wallStats}
         setWallStats={setWallStats}
         setAddWall={setAddWall}
+        clearWallStats={clearWallStats}
+        windowStats={windowStats}
+        setWindowStats={setWindowStats}
       />
     </Box>
   );

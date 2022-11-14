@@ -16,28 +16,23 @@ import React from 'react';
 import Button from '../../../../../components/Button';
 
 const AddMoreDetails = ({
-  roomStat,
-  setRoomStat,
   setAddWall,
   addWall,
-  title,
-  wallStats,
-  setWallStats
+  currentStats,
+  setCurrentStats,
+  clearWallStats,
+  addIn,
+  titleField
 }) => {
-  const wallFields = Object.keys(wallStats).filter((item) => item !== '_id' && item !== 'wallName');
+  const currentFields = Object.keys(currentStats).filter(
+    (item) => item !== '_id' && item !== titleField
+  );
 
   const handleCreate = () => {
-    roomStat.walls.push({ ...wallStats, _id: new Date().getTime().toString() });
-    setWallStats({
-      _id: '',
-      wallName: '',
-      prepHour: '',
-      height: '',
-      length: '',
-      wallType: '',
-      coats: ''
-    });
+    addIn.push({ ...currentStats, _id: new Date().getTime().toString() });
+    clearWallStats();
   };
+
   return (
     <Dialog
       open={addWall}
@@ -55,7 +50,7 @@ const AddMoreDetails = ({
         <Grid container spacing={2} mt={0.5}>
           <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
             <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-              Wall Name
+              {`${titleField.toUpperCase()} NAME`}
             </InputLabel>
 
             <TextField
@@ -67,39 +62,24 @@ const AddMoreDetails = ({
               variant='outlined'
               id='outlined-basic'
               autoFocus
-              value={wallStats.wallName}
+              value={currentStats[titleField]}
               onChange={(event) => {
-                wallStats.wallName = event.target.value;
-                setWallStats({ ...wallStats });
+                currentStats[titleField] = event.target.value;
+                setCurrentStats({ ...currentStats });
               }}
-            />
-          </Grid>
-          <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
-            <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-              Room Name
-            </InputLabel>
-
-            <TextField
-              InputProps={{
-                style: { height: '30px' }
-              }}
-              disabled
-              name='name'
-              fullWidth
-              variant='outlined'
-              id='outlined-basic'
-              autoFocus
-              value={roomStat.roomName}
             />
           </Grid>
         </Grid>
-        <Typography sx={{color:"gray",fontWeight:'500',fontSize:'14px',mt:1}}>General Info:</Typography>
+        <Typography sx={{ color: 'gray', fontWeight: '500', fontSize: '14px', mt: 1 }}>
+          General Info:
+        </Typography>
         <Grid container spacing={2} mt={0.5}>
-          {wallFields.map((wallField) => {
+          {currentFields.map((currentField) => {
+            console.log(currentField, 'currentStats');
             return (
               <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
                 <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                  {wallField.toUpperCase()}
+                  {currentField.toUpperCase()}
                 </InputLabel>
 
                 <TextField
@@ -111,10 +91,10 @@ const AddMoreDetails = ({
                   variant='outlined'
                   id='outlined-basic'
                   autoFocus
-                  value={wallStats[wallField]}
+                  value={currentStats[currentField]}
                   onChange={(event) => {
-                    wallStats[wallField] = event.target.value;
-                    setWallStats({ ...wallStats });
+                    currentStats[currentField] = event.target.value;
+                    setCurrentStats({ ...currentStats });
                   }}
                 />
               </Grid>

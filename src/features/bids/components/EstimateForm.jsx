@@ -42,7 +42,8 @@ export default function EstimateForm(props) {
     wallStats,
     setWallStats,
     windowStats,
-    setWindowStats
+    setWindowStats,
+    clearWallStats
   } = props;
 
   const [addWall, setAddWall] = React.useState(false);
@@ -229,7 +230,8 @@ export default function EstimateForm(props) {
               setAddWall={setAddWall}
               setWallStats={setWallStats}
               windowStats={windowStats}
-              setWindowStats={setWindowStats}
+              setWindowStats={setWindowStats}s
+              clearWallStats={clearWallStats}
             />
           )}
           {initialBidInfo.bidType === 'Interior' && initialBidInfo.subType === 'Man Hour' && (

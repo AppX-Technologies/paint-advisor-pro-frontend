@@ -36,23 +36,22 @@ const Pipeline = () => {
   };
   const initialRoomState = {
     roomName: '',
-    paintWall: false,
+    wall: false,
     baseboardTrim: false,
-    paintCeiling: false,
-    paintWindow: false,
-    paintWindowTrim: false,
-    paintDoorjambs: false,
-    paintDoor: false,
-    paintCrownModeling: false,
-    paintCloset: false,
+    ceiling: false,
+    window: false,
+    windowTrim: false,
+    doorjambs: false,
+    door: false,
+    crownModeling: false,
+    closet: false,
     walls: [],
-    ceiling: [],
-    window: []
+    ceilings: [],
+    windows: []
   };
 
   const initilWallInfo = {
     _id: '',
-    wallName: '',
     prepHour: '',
     height: '',
     length: '',
@@ -103,6 +102,10 @@ const Pipeline = () => {
     setSelectedListItem(itemValue);
   };
 
+  const clearWallStats = () => {
+    setWallStats(initilWallInfo);
+  };
+
   useEffect(() => {
     if (clientList.length === 1) {
       setSelectedListItem(clientList[0] ? clientList[0].customerName : '');
@@ -134,6 +137,7 @@ const Pipeline = () => {
         initialState={initialState}
       />{' '}
       <EstimateForm
+        clearWallStats={clearWallStats}
         open={openEstimate}
         setOpen={setOpenEstimate}
         handleClose={handleClose}
