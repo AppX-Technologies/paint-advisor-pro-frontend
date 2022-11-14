@@ -1,19 +1,12 @@
 import AddIcon from '@mui/icons-material/Add';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
-import HomeIcon from '@mui/icons-material/Home';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { Box, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import Card from '../../../../../common/Card';
 import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
-import { findSameTypeOfWall } from '../formHelper';
-import Card from '../../../../../common/Card';
 
 const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
   const [addRoom, setAddRoom] = useState(false);
-  const handleDelete = (name) => {
-    setAllRoom(allRoom.filter((room) => room.roomName !== name));
-  };
 
   return (
     <Box>

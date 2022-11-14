@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const Card = ({ items, title, onCardDelete }) => {
   const dimension = `${items.length}x${items.height}`;
-
+  console.log(items._id);
 
   return (
     <Box className='card-box' p={1}>
@@ -33,7 +33,7 @@ const Card = ({ items, title, onCardDelete }) => {
               cursor: 'pointer'
             }}
             size='small'
-            onClick={() => onCardDelete(items.id)}
+            onClick={() => onCardDelete(items._id)}
           />
         </Box>
       </Box>
@@ -45,7 +45,7 @@ const Card = ({ items, title, onCardDelete }) => {
             <>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>{item}</Typography>
-                
+
                 <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
                   {items[item]}
                 </Typography>

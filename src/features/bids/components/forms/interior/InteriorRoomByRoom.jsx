@@ -1,12 +1,9 @@
 import AddIcon from '@mui/icons-material/Add';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
-import HomeIcon from '@mui/icons-material/Home';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { Box, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
 import Card from '../../../../../common/Card';
+import Button from '../../../../../components/Button';
 import { findSameTypeOfWall } from '../formHelper';
 
 const InteriorRoomByRoom = ({
@@ -21,7 +18,9 @@ const InteriorRoomByRoom = ({
   setWallStats,
   windowStats,
   setWindowStats,
-  clearWallStats
+  clearWallStats,
+  doorsStats,
+  setDoorStats
 }) => {
   const [addRoom, setAddRoom] = useState(false);
 
@@ -47,17 +46,16 @@ const InteriorRoomByRoom = ({
           {allRoom.map((room) => {
             return (
               <Grid xs={6} md={6}>
-
-              <Card
-                items={{
-                  Wall: room.wall ? 'Yes' : 'No',
-                  WallNumber: room.walls.length,
-                  WallDetails: findSameTypeOfWall(room.walls),
-                  WindowNumber: room.windows.length
-                }}
-                title={room.roomName}
+                <Card
+                  items={{
+                    Wall: room.wall ? 'Yes' : 'No',
+                    WallNumber: room.walls.length,
+                    WallDetails: findSameTypeOfWall(room.walls),
+                    WindowNumber: room.windows.length
+                  }}
+                  title={room.roomName}
                 />
-                </Grid>
+              </Grid>
             );
           })}
         </Grid>
@@ -77,6 +75,8 @@ const InteriorRoomByRoom = ({
         windowStats={windowStats}
         setWindowStats={setWindowStats}
         onRoomDetailsReset={onRoomDetailsReset}
+        doorsStats={doorsStats}
+        setDoorStats={setDoorStats}
       />
     </Box>
   );
