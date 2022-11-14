@@ -1,10 +1,13 @@
 import {
+  Checkbox,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
+  FormControlLabel,
+  FormGroup,
   Grid,
   InputLabel,
   Slide,
@@ -24,7 +27,9 @@ const AddMoreDetails = ({
   wallStats,
   setWallStats
 }) => {
-  const wallFields = Object.keys(wallStats).filter((item) => item !== '_id' && item !== 'wallName');
+  const wallFields = Object.keys(wallStats).filter(
+    (item) => item !== '_id' && item !== 'wallName' && item !== 'paint'
+  );
 
   const handleCreate = () => {
     roomStat.walls.push({ ...wallStats, _id: new Date().getTime().toString() });
@@ -38,6 +43,7 @@ const AddMoreDetails = ({
       coats: ''
     });
   };
+  const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   return (
     <Dialog
       open={addWall}
@@ -53,7 +59,7 @@ const AddMoreDetails = ({
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} mt={0.5}>
-          <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
+          <Grid item xs={12} md={12} sx={{ marginTop: '-10px' }}>
             <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
               Wall Name
             </InputLabel>
@@ -74,26 +80,10 @@ const AddMoreDetails = ({
               }}
             />
           </Grid>
-          <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
-            <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-              Room Name
-            </InputLabel>
-
-            <TextField
-              InputProps={{
-                style: { height: '30px' }
-              }}
-              disabled
-              name='name'
-              fullWidth
-              variant='outlined'
-              id='outlined-basic'
-              autoFocus
-              value={roomStat.roomName}
-            />
-          </Grid>
         </Grid>
-        <Typography sx={{color:"gray",fontWeight:'500',fontSize:'14px',mt:1}}>General Info:</Typography>
+        <Typography sx={{ color: 'gray', fontWeight: '500', fontSize: '14px', mt: 1 }}>
+          General Info:
+        </Typography>
         <Grid container spacing={2} mt={0.5}>
           {wallFields.map((wallField) => {
             return (
@@ -120,6 +110,24 @@ const AddMoreDetails = ({
               </Grid>
             );
           })}
+          <Grid xs={6} md={6} mt={2}>
+            <FormGroup>
+              <FormControlLabel
+                sx={{ position: 'relative',ml:0.8 }}
+                control={<Checkbox defaultChecked />}
+                checked={wallStats.paint}
+                onChange={(event) => {
+                  wallStats.paint = event.target.checked;
+                  setWallStats({ ...wallStats });
+                }}
+                label={
+                  <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                    PAINT
+                  </InputLabel>
+                }
+              />
+            </FormGroup>
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>

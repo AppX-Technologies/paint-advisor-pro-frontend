@@ -57,7 +57,8 @@ const Pipeline = () => {
     height: '',
     length: '',
     wallType: '',
-    coats: ''
+    coats: '',
+    paint:false
   };
 
   const initialWindowInfo = {

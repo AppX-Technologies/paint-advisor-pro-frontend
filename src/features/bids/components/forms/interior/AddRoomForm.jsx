@@ -98,7 +98,12 @@ export default function AddRoomForm(props) {
                         justifyContent: 'space-between',
                         alignItems: 'center'
                       }}>
-                      <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                      <InputLabel
+                        id='demo-select-small'
+                        sx={{
+                          fontSize: '14px',
+                          color: roomStats[fieldType] ? 'black' : 'gray'
+                        }}>
                         <BrushIcon
                           sx={{
                             color: roomStats[fieldType]
@@ -134,7 +139,8 @@ export default function AddRoomForm(props) {
                                       id: wall._id,
                                       Dimensions: `${wall.length}x${wall.height}`,
                                       WallType: wall.wallType,
-                                      Coats: wall.coats
+                                      Coats: wall.coats,
+                                      Paint: wall.paint ? 'Yes' : 'No'
                                     }}
                                     title={wall.wallName}
                                     onCardDelete={onCardDelete}
