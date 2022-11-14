@@ -16,8 +16,8 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import * as React from 'react';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
@@ -104,10 +104,10 @@ export default function EstimateForm(props) {
                           InputProps={{
                             style: { height: '30px' }
                           }}
-                          value={value}
-                          minDate='2017-01-01'
+                          value={initialBidInfo[item.name]}
                           onChange={(newValue) => {
-                            setValue(newValue);
+                            initialBidInfo[item.name] = newValue;
+                            setInitialBidInfo({ ...initialBidInfo });
                           }}
                           renderInput={(params) => (
                             <TextField

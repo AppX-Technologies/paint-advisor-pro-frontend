@@ -212,7 +212,7 @@ export default function AddRoomForm(props) {
                     </Box>
                     {showCards[item.name] && (
                       <>
-                        {roomStats[fieldType] && (
+                        {
                           <Grid container alignItems='center' justify='center'>
                             {findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow !== 0 &&
                               findRoomRelatedInfo(roomRelatedInfo, item.name)?.infoToShow.map(
@@ -229,7 +229,7 @@ export default function AddRoomForm(props) {
                                 }
                               )}
                           </Grid>
-                        )}
+                        }
                       </>
                     )}
                   </Grid>

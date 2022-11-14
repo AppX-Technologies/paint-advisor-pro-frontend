@@ -43,7 +43,7 @@ const AddMoreDetails = ({
       <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
         <Stack direction='row' spacing={2}>
           <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
-            Add New Wall
+            Add New {titleField.toUpperCase()}
           </Typography>
           <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
         </Stack>
