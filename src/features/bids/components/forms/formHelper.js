@@ -10,5 +10,9 @@ export const findSameTypeOfWall = (walls) => {
       wallsWithSameDim.count += 1;
     }
   });
-  return wallsDimensionsAndCount;
+  let strings = '';
+  wallsDimensionsAndCount.forEach((obj) => {
+    strings = strings.concat(`${obj.count} wall of ${obj.length}x${obj.height}`, ',');
+  });
+  return strings;
 };

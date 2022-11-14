@@ -3,8 +3,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
+  Divider,
   Grid,
   InputLabel,
   Slide,
@@ -25,7 +25,19 @@ const AddMoreDetails = ({
   setWallStats
 }) => {
   const wallFields = Object.keys(wallStats).filter((item) => item !== '_id' && item !== 'wallName');
-  console.log(wallStats);
+
+  const handleCreate = () => {
+    roomStat.walls.push({ ...wallStats, _id: new Date().getTime().toString() });
+    setWallStats({
+      _id: '',
+      wallName: '',
+      prepHour: '',
+      height: '',
+      length: '',
+      wallType: '',
+      coats: ''
+    });
+  };
   return (
     <Dialog
       open={addWall}
@@ -80,6 +92,9 @@ const AddMoreDetails = ({
               value={roomStat.roomName}
             />
           </Grid>
+        </Grid>
+        <Typography sx={{color:"gray",fontWeight:'500',fontSize:'14px',mt:1}}>General Info:</Typography>
+        <Grid container spacing={2} mt={0.5}>
           {wallFields.map((wallField) => {
             return (
               <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
@@ -112,7 +127,7 @@ const AddMoreDetails = ({
         <Button
           onClick={() => {
             setAddWall(false);
-            roomStat.walls.push({ ...wallStats, _id: new Date().getTime().toString() });
+            handleCreate();
           }}>
           Save
         </Button>

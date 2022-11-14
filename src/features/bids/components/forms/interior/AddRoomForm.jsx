@@ -32,8 +32,8 @@ export default function AddRoomForm(props) {
   const onAddWallChange = (value) => {
     setAddWall(value);
   };
+  console.log(wallStats);
   const onCardDelete = (id) => {
-    console.log(id);
     roomStats.walls.splice(
       roomStats.walls.findIndex((x) => x._id === id),
       1

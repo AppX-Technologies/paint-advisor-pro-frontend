@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
 import Card from '../../../../../common/Card';
+import { findSameTypeOfWall } from '../formHelper';
 
 const InteriorRoomByRoom = ({
   roomStats,
@@ -42,8 +43,17 @@ const InteriorRoomByRoom = ({
           />
         </Tooltip>
         <Grid container spacing={1} mt={2}>
-          {allRoom.map((room,index) => {
-            return <Card items={{WallNumber:room.walls.length}} title={room.roomName}  />;
+          {allRoom.map((room) => {
+            return (
+              <Card
+                items={{
+                  PaintWall: room.paintWall ? 'Yes' : 'No',
+                  WallNumber: room.walls.length,
+                  WallDetails: findSameTypeOfWall(room.walls)
+                }}
+                title={room.roomName}
+              />
+            );
           })}
         </Grid>
       </Box>

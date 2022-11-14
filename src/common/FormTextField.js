@@ -68,8 +68,14 @@ export const AddNewClientTextField = [
 
 export const InteriorManByManFormFields = [
   {
-    label: 'What will be Start date/End Date?',
-    name: 'startEndDate',
+    label: 'What will be Start date',
+    name: 'startDate',
+    dataType: 'dateTime',
+    option: ['Interior', 'Exterior']
+  },
+  {
+    label: 'What will be End date',
+    name: 'endDate',
     dataType: 'dateTime',
     option: ['Interior', 'Exterior']
   },
@@ -92,7 +98,7 @@ export const InteriorManByManFormFields = [
       }
     ]
   },
-  
+
   {
     label: 'Will you offer any Discount?',
     name: 'discount',
