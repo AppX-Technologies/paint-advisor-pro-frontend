@@ -45,7 +45,7 @@ const Card = ({ items, title, onCardDelete }) => {
               cursor: 'pointer'
             }}
             size='small'
-            onClick={() => onCardDelete(items.id)}
+            onClick={() => onCardDelete(items._id)}
           />
         </Box>
       </Box>

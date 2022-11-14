@@ -46,7 +46,8 @@ const Pipeline = () => {
     closet: false,
     walls: [],
     ceilings: [],
-    windows: []
+    windows: [],
+    doors: []
   };
 
   const initilWallInfo = {
@@ -57,6 +58,14 @@ const Pipeline = () => {
     wallType: '',
     coats: '',
     paint: false
+  };
+
+  const initialDoorInfo = {
+    style: '',
+    quantity: '',
+    length: '',
+    height: '',
+    coats: ''
   };
 
   const initialWindowInfo = {
@@ -88,6 +97,7 @@ const Pipeline = () => {
   const [selectedValue, setSelectedvalue] = React.useState(initialState);
   const [wallStats, setWallStats] = useState(initilWallInfo);
   const [windowStats, setWindowStats] = useState(initialWindowInfo);
+  const [doorsStats, setDoorStats] = useState(initialDoorInfo);
 
   const handleSearch = (keyword) => {
     setFilteredClietsList(searchedResult(clientList, keyword));
@@ -161,6 +171,8 @@ const Pipeline = () => {
         windowStats={windowStats}
         setWindowStats={setWindowStats}
         onRoomDetailsReset={onRoomDetailsReset}
+        doorsStats={doorsStats}
+        setDoorStats={setDoorStats}
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>

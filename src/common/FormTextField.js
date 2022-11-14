@@ -164,6 +164,18 @@ export const RoomInfofields = [
     option: booleanOption
   },
   {
+    label: 'Windows ',
+    name: 'window',
+    dataType: 'dropDown',
+    option: booleanOption
+  },
+  {
+    label: 'Doors',
+    name: 'door',
+    dataType: 'dropDown',
+    option: booleanOption
+  },
+  {
     label: 'Baseboard trim',
     name: 'baseboardTrim',
     dataType: 'dropDown',
@@ -172,12 +184,6 @@ export const RoomInfofields = [
   {
     label: 'Ceiling',
     name: 'ceiling',
-    dataType: 'dropDown',
-    option: booleanOption
-  },
-  {
-    label: 'Windows ',
-    name: 'window',
     dataType: 'dropDown',
     option: booleanOption
   },
@@ -194,12 +200,6 @@ export const RoomInfofields = [
     option: booleanOption
   },
   {
-    label: 'Doors',
-    name: 'door',
-    dataType: 'dropDown',
-    option: booleanOption
-  },
-  {
     label: 'Crown Modeling',
     name: 'crownModeling',
     dataType: 'dropDown',
@@ -208,6 +208,12 @@ export const RoomInfofields = [
   {
     label: 'Closet',
     name: 'closet',
+    dataType: 'dropDown',
+    option: booleanOption
+  },
+  {
+    label: 'Non-Paintable Area',
+    name: 'nonPaintableArea',
     dataType: 'dropDown',
     option: booleanOption
   }

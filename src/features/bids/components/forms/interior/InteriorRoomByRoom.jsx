@@ -1,10 +1,10 @@
 import AddIcon from '@mui/icons-material/Add';
 import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
 import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
 import RoomCard from '../../../../../common/RoomCard';
+import Button from '../../../../../components/Button';
 
 const InteriorRoomByRoom = ({
   roomStats,
@@ -18,7 +18,9 @@ const InteriorRoomByRoom = ({
   setWallStats,
   windowStats,
   setWindowStats,
-  clearWallStats
+  clearWallStats,
+  doorsStats,
+  setDoorStats
 }) => {
   const [addRoom, setAddRoom] = useState(false);
   const [editRoom, setEditRoom] = useState(false);
@@ -111,6 +113,8 @@ const InteriorRoomByRoom = ({
         windowStats={windowStats}
         setWindowStats={setWindowStats}
         onRoomDetailsReset={onRoomDetailsReset}
+        doorsStats={doorsStats}
+        setDoorStats={setDoorStats}
       />
     </Box>
   );

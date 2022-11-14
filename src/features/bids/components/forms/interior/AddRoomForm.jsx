@@ -1,8 +1,21 @@
+/* eslint-disable */
+
 import BrushIcon from '@mui/icons-material/Brush';
-import { Box, CircularProgress, Divider, Grid, Stack, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  Divider,
+  Grid,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
+import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
+import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import InputLabel from '@mui/material/InputLabel';
@@ -17,6 +30,13 @@ import AddMoreDetails from './AddMoreDetails';
 
 export default function AddRoomForm(props) {
   const [currentAddMore, setCurentAddMore] = useState('');
+  const [showCards, setShowCards] = useState({
+    wall: true,
+    window: true,
+    door: true
+  });
+
+  console.log(showCards);
   const {
     open,
     setOpen,
@@ -31,7 +51,9 @@ export default function AddRoomForm(props) {
     clearWallStats,
     windowStats,
     setWindowStats,
-    onRoomDetailsReset
+    onRoomDetailsReset,
+    doorsStats,
+    setDoorStats
   } = props;
 
   const roomRelatedInfo = [
@@ -50,6 +72,14 @@ export default function AddRoomForm(props) {
       currentStats: windowStats,
       onCurrentStatsChange: setWindowStats,
       addIn: roomStats.windows
+    },
+    {
+      name: 'door',
+      countToShow: roomStats.doors.length,
+      infoToShow: roomStats.doors,
+      currentStats: doorsStats,
+      onCurrentStatsChange: setDoorStats,
+      addIn: roomStats.doors
     }
   ];
 
@@ -62,6 +92,7 @@ export default function AddRoomForm(props) {
   };
   const filteredRoomInfo = roomRelatedInfo.find((roomInfo) => roomInfo.name === currentAddMore);
   const onCardDelete = (id) => {
+    console.log(id);
     filteredRoomInfo.addIn.splice(
       filteredRoomInfo.addIn.findIndex((x) => x._id === id),
       1
@@ -69,6 +100,13 @@ export default function AddRoomForm(props) {
     setRoomStats({ ...roomStats });
   };
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
+  const expandMoreAndLessStyles = {
+    fontSize: '30px',
+    cursor: 'pointer',
+    mr: 1.5,
+    color: '#D50000'
+  };
 
   return (
     <div>
@@ -107,6 +145,7 @@ export default function AddRoomForm(props) {
             <Divider />
             {RoomInfofields.map((item) => {
               const fieldType = item.name;
+
               return (
                 item.dataType === 'dropDown' && (
                   <Grid item xs={12} md={12} sx={{ marginTop: '-10px' }}>
@@ -116,56 +155,90 @@ export default function AddRoomForm(props) {
                         justifyContent: 'space-between',
                         alignItems: 'center'
                       }}>
-                      <InputLabel
-                        id='demo-select-small'
-                        sx={{ fontSize: '14px', color: roomStats[fieldType] ? 'black' : 'gray' }}>
-                        <BrushIcon
-                          sx={{
-                            color: roomStats[fieldType]
-                              ? (theme) => theme.deleteicon.color.main
-                              : 'gray',
-                            fontSize: '18px',
-                            marginBottom: '-5px',
-                            mr: 1
-                          }}
-                        />
-                        {item.label}
-                        {findRoomRelatedInfo(roomRelatedInfo, item.name) &&
-                          ` (${findRoomRelatedInfo(roomRelatedInfo, item.name).countToShow})`}
-                      </InputLabel>
-                      <Switch
-                        checked={roomStats[fieldType]}
-                        onChange={(event) => {
-                          roomStats[fieldType] = event.target.checked;
-                          setRoomStats({ ...roomStats });
-                        }}
-                        {...label}
-                      />
-                    </Box>
-                    {roomStats[fieldType] && (
-                      <Grid container alignItems='center' justify='center'>
-                        {findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow !== 0 &&
-                          findRoomRelatedInfo(roomRelatedInfo, item.name)?.infoToShow.map(
-                            (roomComponent) => {
-                              return (
-                                <Grid xs={10} md={3}>
-                                  <Card
-                                    items={roomComponent}
-                                    title={roomComponent[currentAddMore]}
-                                    onCardDelete={onCardDelete}
-                                  />
-                                </Grid>
-                              );
-                            }
-                          )}
-                        <Grid xs={3} md={3}>
-                          <AddMoreButton
-                            onopenAddMoreDetailsChange={onopenAddMoreDetailsChange}
-                            setCurentAddMore={setCurentAddMore}
-                            currentFieldType={item.name}
+                      <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                        <InputLabel
+                          id='demo-select-small'
+                          sx={{ fontSize: '14px', color: roomStats[fieldType] ? 'black' : 'gray' }}>
+                          <BrushIcon
+                            sx={{
+                              color: roomStats[fieldType]
+                                ? (theme) => theme.deleteicon.color.main
+                                : 'gray',
+                              fontSize: '18px',
+                              marginBottom: '-5px',
+                              mr: 1
+                            }}
                           />
-                        </Grid>
-                      </Grid>
+                          {item.label}
+
+                          {findRoomRelatedInfo(roomRelatedInfo, item.name) &&
+                            ` (${findRoomRelatedInfo(roomRelatedInfo, item.name).countToShow})`}
+                        </InputLabel>
+
+                        <AddMoreButton
+                          onopenAddMoreDetailsChange={onopenAddMoreDetailsChange}
+                          setCurentAddMore={setCurentAddMore}
+                          currentFieldType={item.name}
+                          enabled={roomStats[fieldType]}
+                        />
+                      </Box>
+                      {findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow === 0 ||
+                      !findRoomRelatedInfo(roomRelatedInfo, item.name) ? (
+                        <Switch
+                          checked={roomStats[fieldType]}
+                          onChange={(event) => {
+                            roomStats[fieldType] = event.target.checked;
+                            setRoomStats({ ...roomStats });
+                          }}
+                          {...label}
+                        />
+                      ) : showCards[fieldType] ? (
+                        <Tooltip title='Less'>
+                          <ExpandLessOutlinedIcon
+                            sx={{
+                              ...expandMoreAndLessStyles
+                            }}
+                            onClick={() => {
+                              showCards[fieldType] = false;
+                              setShowCards({ ...showCards });
+                            }}
+                          />
+                        </Tooltip>
+                      ) : (
+                        <Tooltip title='More'>
+                          <ExpandMoreOutlinedIcon
+                            sx={{
+                              ...expandMoreAndLessStyles
+                            }}
+                            onClick={() => {
+                              showCards[fieldType] = true;
+                              setShowCards({ ...showCards });
+                            }}
+                          />
+                        </Tooltip>
+                      )}
+                    </Box>
+                    {showCards[item.name] && (
+                      <>
+                        {roomStats[fieldType] && (
+                          <Grid container alignItems='center' justify='center'>
+                            {findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow !== 0 &&
+                              findRoomRelatedInfo(roomRelatedInfo, item.name)?.infoToShow.map(
+                                (roomComponent) => {
+                                  return (
+                                    <Grid xs={10} md={3}>
+                                      <Card
+                                        items={roomComponent}
+                                        title={roomComponent[currentAddMore]}
+                                        onCardDelete={onCardDelete}
+                                      />
+                                    </Grid>
+                                  );
+                                }
+                              )}
+                          </Grid>
+                        )}
+                      </>
                     )}
                   </Grid>
                 )

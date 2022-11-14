@@ -1,28 +1,28 @@
-import { Box, Tooltip } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import { IconButton, IconButtonBox, Tooltip } from '@mui/material';
 import React from 'react';
 
-const AddMoreButton = ({ onopenAddMoreDetailsChange, setCurentAddMore, currentFieldType }) => {
+const AddMoreButton = ({
+  onopenAddMoreDetailsChange,
+  setCurentAddMore,
+  currentFieldType,
+  enabled
+}) => {
   return (
     <Tooltip title='Add More' placement='right'>
-      <Box
+      <AddCircleOutlineOutlinedIcon
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '50px',
+          fontSize: '18px',
+          color: 'green',
           cursor: 'pointer',
-          bgcolor: (theme) => theme.chip.background.main,
-          width: '50px',
-          border: '2px dotted #a9aaab',
-          borderRadius: '10px'
+          ml: 1,
+          display: enabled ? 'block' : 'none'
         }}
         onClick={() => {
           onopenAddMoreDetailsChange(true);
           setCurentAddMore(currentFieldType);
-        }}>
-        <AddIcon sx={{ fontSize: '35px', color: '#a9aaab' }} />
-      </Box>
+        }}
+      />
     </Tooltip>
   );
 };
