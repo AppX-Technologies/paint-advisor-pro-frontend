@@ -1,10 +1,13 @@
 import {
+  Checkbox,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
+  FormControlLabel,
+  FormGroup,
   Grid,
   InputLabel,
   Slide,
@@ -25,14 +28,14 @@ const AddMoreDetails = ({
   titleField
 }) => {
   const currentFields = Object.keys(currentStats).filter(
-    (item) => item !== '_id' && item !== titleField
+    (item) => item !== '_id' && item !== titleField && item !== 'paint'
   );
 
   const handleCreate = () => {
     addIn.push({ ...currentStats, _id: new Date().getTime().toString() });
     clearWallStats();
   };
-
+  const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   return (
     <Dialog
       open={addWall}
@@ -48,7 +51,7 @@ const AddMoreDetails = ({
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} mt={0.5}>
-          <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
+          <Grid item xs={12} md={12} sx={{ marginTop: '-10px' }}>
             <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
               {`${titleField.toUpperCase()} NAME`}
             </InputLabel>
@@ -100,6 +103,24 @@ const AddMoreDetails = ({
               </Grid>
             );
           })}
+          <Grid xs={6} md={6} mt={2}>
+            <FormGroup>
+              <FormControlLabel
+                sx={{ position: 'relative', ml: 0.8 }}
+                control={<Checkbox defaultChecked />}
+                checked={currentStats.paint}
+                onChange={(event) => {
+                  currentStats.paint = event.target.checked;
+                  setCurrentStats({ ...currentStats });
+                }}
+                label={
+                  <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                    PAINT
+                  </InputLabel>
+                }
+              />
+            </FormGroup>
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
