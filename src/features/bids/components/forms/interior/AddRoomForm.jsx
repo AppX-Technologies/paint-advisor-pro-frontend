@@ -11,6 +11,7 @@ import * as React from 'react';
 import AddMoreButton from '../../../../../common/AddMoreButton';
 import Card from '../../../../../common/Card';
 import { RoomInfofields } from '../../../../../common/FormTextField';
+import { findRoomRelatedInfo } from '../formHelper';
 import AddMoreDetails from './AddMoreDetails';
 
 export default function AddRoomForm(props) {
@@ -26,6 +27,15 @@ export default function AddRoomForm(props) {
     wallStats,
     setWallStats
   } = props;
+
+  const roomRelatedInfo = [
+    {
+      name: 'paintWall',
+      countToShow: roomStats.walls.length,
+      infoToShow: roomStats.walls
+    }
+  ];
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -41,6 +51,7 @@ export default function AddRoomForm(props) {
     setRoomStats({ ...roomStats });
   };
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { minWidth: '80%' } }}>
@@ -99,6 +110,8 @@ export default function AddRoomForm(props) {
                           }}
                         />
                         {item.label}
+                        {findRoomRelatedInfo(roomRelatedInfo, item.name) &&
+                          `(${findRoomRelatedInfo(roomRelatedInfo, item.name).countToShow})`}
                       </InputLabel>
                       <Switch
                         checked={roomStats[fieldType]}
@@ -111,23 +124,25 @@ export default function AddRoomForm(props) {
                     </Box>
                     {roomStats[fieldType] && (
                       <Grid container alignItems='center' justify='center'>
-                        {roomStats.walls.length !== 0 &&
-                          roomStats.walls.map((wall) => {
-                            return (
-                              <Grid xs={10} md={3}>
-                                <Card
-                                  items={{
-                                    id: wall._id,
-                                    Dimensions: `${wall.length}x${wall.height}`,
-                                    WallType: wall.wallType,
-                                    Coats: wall.coats
-                                  }}
-                                  title={wall.wallName}
-                                  onCardDelete={onCardDelete}
-                                />
-                              </Grid>
-                            );
-                          })}
+                        {findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow !== 0 &&
+                          findRoomRelatedInfo(roomRelatedInfo, item.name)?.infoToShow.map(
+                            (wall) => {
+                              return (
+                                <Grid xs={10} md={3}>
+                                  <Card
+                                    items={{
+                                      id: wall._id,
+                                      Dimensions: `${wall.length}x${wall.height}`,
+                                      WallType: wall.wallType,
+                                      Coats: wall.coats
+                                    }}
+                                    title={wall.wallName}
+                                    onCardDelete={onCardDelete}
+                                  />
+                                </Grid>
+                              );
+                            }
+                          )}
                         <Grid xs={3} md={3}>
                           <AddMoreButton
                             onAddWallChange={

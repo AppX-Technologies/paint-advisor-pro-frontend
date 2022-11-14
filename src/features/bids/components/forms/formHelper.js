@@ -16,3 +16,7 @@ export const findSameTypeOfWall = (walls) => {
   });
   return strings;
 };
+
+export const findRoomRelatedInfo = (roomRelatedInfo, name) => {
+  return roomRelatedInfo.find((roomInfo) => roomInfo.name === name);
+};
