@@ -24,16 +24,16 @@ export default function AddRoomForm(props) {
     setRoomStats,
     allRoom,
     setAllRoom,
-    addWall,
-    setAddWall,
+    openAddMoreDetails,
+    setOpenAddMoreDetails,
     wallStats,
     setWallStats,
     clearWallStats,
     windowStats,
-    setWindowStats
+    setWindowStats,
+    onRoomDetailsReset
   } = props;
 
-  console.log(wallStats, windowStats);
   const roomRelatedInfo = [
     {
       name: 'wall',
@@ -55,14 +55,15 @@ export default function AddRoomForm(props) {
 
   const handleClose = () => {
     setOpen(false);
+    onRoomDetailsReset();
   };
-  const onAddWallChange = (value) => {
-    setAddWall(value);
+  const onopenAddMoreDetailsChange = (value) => {
+    setOpenAddMoreDetails(value);
   };
+  const filteredRoomInfo = roomRelatedInfo.find((roomInfo) => roomInfo.name === currentAddMore);
   const onCardDelete = (id) => {
-    const { addIn } = roomRelatedInfo.find((roomInfo) => roomInfo.name === currentAddMore);
-    addIn.splice(
-      addIn.findIndex((x) => x._id === id),
+    filteredRoomInfo.addIn.splice(
+      filteredRoomInfo.addIn.findIndex((x) => x._id === id),
       1
     );
     setRoomStats({ ...roomStats });
@@ -145,12 +146,12 @@ export default function AddRoomForm(props) {
                       <Grid container alignItems='center' justify='center'>
                         {findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow !== 0 &&
                           findRoomRelatedInfo(roomRelatedInfo, item.name)?.infoToShow.map(
-                            (wall) => {
+                            (roomComponent) => {
                               return (
                                 <Grid xs={10} md={3}>
                                   <Card
-                                    items={wall}
-                                    title={wall[currentAddMore]}
+                                    items={roomComponent}
+                                    title={roomComponent[currentAddMore]}
                                     onCardDelete={onCardDelete}
                                   />
                                 </Grid>
@@ -159,7 +160,7 @@ export default function AddRoomForm(props) {
                           )}
                         <Grid xs={3} md={3}>
                           <AddMoreButton
-                            onAddWallChange={onAddWallChange}
+                            onopenAddMoreDetailsChange={onopenAddMoreDetailsChange}
                             setCurentAddMore={setCurentAddMore}
                             currentFieldType={item.name}
                           />
@@ -184,20 +185,17 @@ export default function AddRoomForm(props) {
             Add Room
           </Button>
         </DialogActions>
-        {addWall && (
+
+        {openAddMoreDetails && filteredRoomInfo && (
           <AddMoreDetails
-            addWall={addWall}
+            openAddMoreDetails={openAddMoreDetails}
             roomStat={roomStats}
             setRoomStat={setRoomStats}
-            setAddWall={setAddWall}
+            setOpenAddMoreDetails={setOpenAddMoreDetails}
             titleField={currentAddMore}
-            currentStats={
-              roomRelatedInfo.find((info) => info.name === currentAddMore)?.currentStats
-            }
-            setCurrentStats={
-              roomRelatedInfo.find((info) => info.name === currentAddMore)?.onCurrentStatsChange
-            }
-            addIn={roomRelatedInfo.find((info) => info.name === currentAddMore)?.addIn}
+            currentStats={filteredRoomInfo?.currentStats}
+            setCurrentStats={filteredRoomInfo?.onCurrentStatsChange}
+            addIn={filteredRoomInfo?.addIn}
             clearWallStats={clearWallStats}
           />
         )}

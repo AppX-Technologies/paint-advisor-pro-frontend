@@ -5,12 +5,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   FormControlLabel,
   FormGroup,
   Grid,
   InputLabel,
-  Slide,
   Stack,
   TextField,
   Typography
@@ -19,27 +17,28 @@ import React from 'react';
 import Button from '../../../../../components/Button';
 
 const AddMoreDetails = ({
-  setAddWall,
-  addWall,
+  setOpenAddMoreDetails,
+  openAddMoreDetails,
   currentStats,
   setCurrentStats,
   clearWallStats,
   addIn,
   titleField
 }) => {
-  const currentFields = Object.keys(currentStats).filter(
-    (item) => item !== '_id' && item !== titleField && item !== 'paint'
-  );
+  const currentFields =
+    currentStats &&
+    Object.keys(currentStats).filter(
+      (item) => item !== '_id' && item !== titleField && item !== 'paint'
+    );
 
   const handleCreate = () => {
     addIn.push({ ...currentStats, _id: new Date().getTime().toString() });
     clearWallStats();
   };
-  const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   return (
     <Dialog
-      open={addWall}
-      onClose={() => setAddWall(false)}
+      open={openAddMoreDetails}
+      onClose={() => setOpenAddMoreDetails(false)}
       PaperProps={{ sx: { minWidth: '60%' } }}>
       <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
         <Stack direction='row' spacing={2}>
@@ -124,10 +123,10 @@ const AddMoreDetails = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setAddWall(false)}>Cancel</Button>{' '}
+        <Button onClick={() => setOpenAddMoreDetails(false)}>Cancel</Button>{' '}
         <Button
           onClick={() => {
-            setAddWall(false);
+            setOpenAddMoreDetails(false);
             handleCreate();
           }}>
           Save

@@ -3,7 +3,10 @@ import React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-const Card = ({ items, title, onCardDelete}) => {
+const Card = ({ items, title, onCardDelete }) => {
+  const dimension = `${items.length}x${items.height}`;
+
+
   return (
     <Box className='card-box' p={1}>
       {/* Header-section */}
@@ -35,16 +38,27 @@ const Card = ({ items, title, onCardDelete}) => {
         </Box>
       </Box>
       {/* Body-section */}
-      {Object.keys(items).filter(x=>x!=='id').map((item) => {
-        return (
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>{item}</Typography>
-            <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
-              {items[item]}
-            </Typography>
-          </Box>
-        );
-      })}
+      {Object.keys(items)
+        .filter((x) => x === 'paint' || x === 'coats')
+        .map((item) => {
+          return (
+            <>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>{item}</Typography>
+                
+                <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
+                  {items[item]}
+                </Typography>
+              </Box>
+            </>
+          );
+        })}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Dimensions</Typography>
+        <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
+          {dimension}
+        </Typography>
+      </Box>
     </Box>
   );
 };

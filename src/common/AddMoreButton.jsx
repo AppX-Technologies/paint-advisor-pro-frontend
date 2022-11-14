@@ -2,7 +2,7 @@ import { Box, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import React from 'react';
 
-const AddMoreButton = ({ onAddWallChange, setCurentAddMore, currentFieldType }) => {
+const AddMoreButton = ({ onopenAddMoreDetailsChange, setCurentAddMore, currentFieldType }) => {
   return (
     <Tooltip title='Add More' placement='right'>
       <Box
@@ -18,7 +18,7 @@ const AddMoreButton = ({ onAddWallChange, setCurentAddMore, currentFieldType }) 
           borderRadius: '10px'
         }}
         onClick={() => {
-          onAddWallChange(true);
+          onopenAddMoreDetailsChange(true);
           setCurentAddMore(currentFieldType);
         }}>
         <AddIcon sx={{ fontSize: '35px', color: '#a9aaab' }} />

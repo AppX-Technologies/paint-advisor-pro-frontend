@@ -2,7 +2,6 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Box, Button, Card, Divider, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import AddMoreButton from '../../../common/AddMoreButton';
 import { STAGE_1 } from '../../../helpers/contants';
 import { findCurrentClient, searchedResult } from '../helpers/generalHepers';
 import AddNewClientForm from './AddNewClientForm';
@@ -57,7 +56,7 @@ const Pipeline = () => {
     length: '',
     wallType: '',
     coats: '',
-    paint:false
+    paint: false
   };
 
   const initialWindowInfo = {
@@ -105,6 +104,10 @@ const Pipeline = () => {
 
   const clearWallStats = () => {
     setWallStats(initilWallInfo);
+  };
+
+  const onRoomDetailsReset = () => {
+    setRoomStats(initialRoomState);
   };
 
   useEffect(() => {
@@ -156,6 +159,7 @@ const Pipeline = () => {
         setWallStats={setWallStats}
         windowStats={windowStats}
         setWindowStats={setWindowStats}
+        onRoomDetailsReset={onRoomDetailsReset}
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>

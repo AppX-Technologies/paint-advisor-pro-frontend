@@ -14,9 +14,9 @@ const InteriorRoomByRoom = ({
   setRoomStats,
   allRoom,
   setAllRoom,
-  addWall,
-  setAddWall,
-  onAddWallsChange,
+  openAddMoreDetails,
+  setOpenAddMoreDetails,
+  onRoomDetailsReset,
   wallStats,
   setWallStats,
   windowStats,
@@ -65,13 +65,14 @@ const InteriorRoomByRoom = ({
         setRoomStats={setRoomStats}
         allRoom={allRoom}
         setAllRoom={setAllRoom}
-        addWall={addWall}
+        openAddMoreDetails={openAddMoreDetails}
         wallStats={wallStats}
         setWallStats={setWallStats}
-        setAddWall={setAddWall}
+        setOpenAddMoreDetails={setOpenAddMoreDetails}
         clearWallStats={clearWallStats}
         windowStats={windowStats}
         setWindowStats={setWindowStats}
+        onRoomDetailsReset={onRoomDetailsReset}
       />
     </Box>
   );
