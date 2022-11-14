@@ -12,3 +12,7 @@ export const findSameTypeOfWall = (walls) => {
   });
   return wallsDimensionsAndCount;
 };
+
+export const findRoomRelatedInfo = (roomRelatedInfo, name) => {
+  return roomRelatedInfo.find((roomInfo) => roomInfo.name === name);
+};
