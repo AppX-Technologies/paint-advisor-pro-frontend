@@ -1,13 +1,10 @@
 import AddIcon from '@mui/icons-material/Add';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
-import HomeIcon from '@mui/icons-material/Home';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { Box, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
-import Card from '../../../../../common/Card';
-import { findSameTypeOfWall } from '../formHelper';
+import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
+import RoomCard from '../../../../../common/RoomCard';
 
 const InteriorRoomByRoom = ({
   roomStats,
@@ -24,11 +21,18 @@ const InteriorRoomByRoom = ({
   clearWallStats
 }) => {
   const [addRoom, setAddRoom] = useState(false);
-
-  const handleDelete = (name) => {
-    setAllRoom(allRoom.filter((room) => room.roomName !== name));
+  const [editRoom, setEditRoom] = useState(false);
+  const onCardDelete = (name) => {
+    allRoom.splice(
+      allRoom.findIndex((room) => room.roomName === name),
+      1
+    );
+    setAllRoom([...allRoom]);
   };
-
+  const onCardEdit = (name) => {
+    setEditRoom(true);
+    console.log(name, editRoom);
+  };
   return (
     <Box>
       {/* Main Form Body  */}
@@ -44,24 +48,54 @@ const InteriorRoomByRoom = ({
           />
         </Tooltip>
         <Grid container spacing={1} mt={2}>
-          {allRoom.map((room) => {
-            return (
-              <Grid xs={6} md={6}>
-
-              <Card
-                items={{
-                  Wall: room.wall ? 'Yes' : 'No',
-                  WallNumber: room.walls.length,
-                  WallDetails: findSameTypeOfWall(room.walls),
-                  WindowNumber: room.windows.length
-                }}
-                title={room.roomName}
-                />
+          {allRoom.length !== 0 &&
+            allRoom.map((room) => {
+              return (
+                <Grid xs={6} md={6} mt={1}>
+                  <RoomCard
+                    items={{
+                      roomName: room.roomName,
+                      WallDetail:
+                        room.walls.length !== 0 ? findSameTypeOfWall(room.walls) : 'No Walls',
+                      WindowDetail:
+                        room.windows.length !== 0 ? findSameTypeOfWall(room.windows) : 'No Windows',
+                      PaintableArea: `${
+                        findPaintableAndNonPaintableArea([...room.walls, ...room.windows]).paintable
+                      } sq.feet`,
+                      NonPaintableArea: `${
+                        findPaintableAndNonPaintableArea([...room.walls, ...room.windows])
+                          .nonPaintable
+                      } sq.feet`
+                    }}
+                    title={room.roomName}
+                    onCardDelete={onCardDelete}
+                    onCardEdit={onCardEdit}
+                    setAddRoom={setAddRoom}
+                  />
                 </Grid>
-            );
-          })}
+              );
+            })}
         </Grid>
       </Box>
+      {editRoom && (
+        <AddRoomForm
+          open={addRoom}
+          setOpen={setAddRoom}
+          roomStats={roomStats}
+          setRoomStats={setRoomStats}
+          allRoom={allRoom}
+          setAllRoom={setAllRoom}
+          openAddMoreDetails={openAddMoreDetails}
+          wallStats={wallStats}
+          setWallStats={setWallStats}
+          setOpenAddMoreDetails={setOpenAddMoreDetails}
+          clearWallStats={clearWallStats}
+          windowStats={windowStats}
+          setWindowStats={setWindowStats}
+          onRoomDetailsReset={onRoomDetailsReset}
+        />
+      )}
+
       <AddRoomForm
         open={addRoom}
         setOpen={setAddRoom}
