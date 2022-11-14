@@ -46,14 +46,18 @@ const InteriorRoomByRoom = ({
         <Grid container spacing={1} mt={2}>
           {allRoom.map((room) => {
             return (
+              <Grid xs={6} md={6}>
+
               <Card
                 items={{
-                  wall: room.wall ? 'Yes' : 'No',
+                  Wall: room.wall ? 'Yes' : 'No',
                   WallNumber: room.walls.length,
-                  WallDetails: findSameTypeOfWall(room.walls)
+                  WallDetails: findSameTypeOfWall(room.walls),
+                  WindowNumber: room.windows.length
                 }}
                 title={room.roomName}
-              />
+                />
+                </Grid>
             );
           })}
         </Grid>
