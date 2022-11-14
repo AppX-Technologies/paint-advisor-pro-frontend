@@ -41,6 +41,18 @@ export default function AddRoomForm(props) {
     setRoomStats({ ...roomStats });
   };
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
+  const roomRelatedInfo = [
+    {
+      name: 'paintWall',
+      infoToShow: roomStats.walls.length
+    }
+  ];
+
+  const findRoomRelatedInfo = (name) => {
+    return roomRelatedInfo.find((roomInfo) => roomInfo.name === name);
+  };
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { minWidth: '80%' } }}>
@@ -99,6 +111,8 @@ export default function AddRoomForm(props) {
                           }}
                         />
                         {item.label}
+                        {findRoomRelatedInfo(item.name) &&
+                          `(${findRoomRelatedInfo(item.name).infoToShow})`}
                       </InputLabel>
                       <Switch
                         checked={roomStats[fieldType]}
