@@ -45,7 +45,8 @@ export default function AddRoomForm(props) {
   const roomRelatedInfo = [
     {
       name: 'paintWall',
-      infoToShow: roomStats.walls.length
+      countToShow: roomStats.walls.length,
+      infoToShow: roomStats.walls
     }
   ];
 
@@ -112,7 +113,7 @@ export default function AddRoomForm(props) {
                         />
                         {item.label}
                         {findRoomRelatedInfo(item.name) &&
-                          `(${findRoomRelatedInfo(item.name).infoToShow})`}
+                          `(${findRoomRelatedInfo(item.name).countToShow})`}
                       </InputLabel>
                       <Switch
                         checked={roomStats[fieldType]}
@@ -125,8 +126,8 @@ export default function AddRoomForm(props) {
                     </Box>
                     {roomStats[fieldType] && (
                       <Grid container alignItems='center' justify='center'>
-                        {roomStats.walls.length !== 0 &&
-                          roomStats.walls.map((wall) => {
+                        {findRoomRelatedInfo(item.name)?.countToShow !== 0 &&
+                          findRoomRelatedInfo(item.name)?.infoToShow.map((wall) => {
                             return (
                               <Grid xs={10} md={3}>
                                 <Card
