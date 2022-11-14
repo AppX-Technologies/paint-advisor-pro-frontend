@@ -99,7 +99,6 @@ export default function AddRoomForm(props) {
     );
     setRoomStats({ ...roomStats });
   };
-  const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
   const expandMoreAndLessStyles = {
     fontSize: '30px',
@@ -148,7 +147,7 @@ export default function AddRoomForm(props) {
 
               return (
                 item.dataType === 'dropDown' && (
-                  <Grid item xs={12} md={12} sx={{ marginTop: '-10px' }}>
+                  <Grid item xs={12} md={12} sx={{ marginTop: '5px' }}>
                     <Box
                       sx={{
                         display: 'flex',
@@ -184,14 +183,7 @@ export default function AddRoomForm(props) {
                       </Box>
                       {findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow === 0 ||
                       !findRoomRelatedInfo(roomRelatedInfo, item.name) ? (
-                        <Switch
-                          checked={roomStats[fieldType]}
-                          onChange={(event) => {
-                            roomStats[fieldType] = event.target.checked;
-                            setRoomStats({ ...roomStats });
-                          }}
-                          {...label}
-                        />
+                        <></>
                       ) : showCards[fieldType] ? (
                         <Tooltip title='Less'>
                           <ExpandLessOutlinedIcon

@@ -15,8 +15,7 @@ const AddMoreButton = ({
           fontSize: '18px',
           color: 'green',
           cursor: 'pointer',
-          ml: 1,
-          display: enabled ? 'block' : 'none'
+          ml: 1
         }}
         onClick={() => {
           onopenAddMoreDetailsChange(true);
