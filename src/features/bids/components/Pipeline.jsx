@@ -66,7 +66,8 @@ const Pipeline = () => {
     height: '',
     length: '',
     coats: '',
-    wall: ''
+    wall: '',
+    paint: false
   };
 
   const initialState = {

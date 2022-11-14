@@ -146,6 +146,7 @@ export default function AddRoomForm(props) {
                         {findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow !== 0 &&
                           findRoomRelatedInfo(roomRelatedInfo, item.name)?.infoToShow.map(
                             (wall) => {
+                              console.log(wall);
                               return (
                                 <Grid xs={10} md={3}>
                                   <Card
