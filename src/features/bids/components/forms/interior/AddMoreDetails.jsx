@@ -17,7 +17,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { validationInfo } from '../../../../../common/FormTextField';
 import Button from '../../../../../components/Button';
@@ -31,18 +31,27 @@ const AddMoreDetails = ({
   clearWallStats,
   addIn,
   titleField,
-  roomStats
+  roomStats,
+  roomInfoToEdit,
+  setRoomInfoToEdit,
+  initialStats
 }) => {
   const dispatch = useDispatch();
   const currentFields =
     currentStats &&
     Object.keys(currentStats).filter(
-      (item) => item !== '_id' && item !== titleField && item !== 'paint' && item !== 'name'
+      (item) =>
+        item !== '_id' &&
+        item !== titleField &&
+        item !== 'paint' &&
+        item !== 'name' &&
+        item !== 'isTotal'
     );
+
   const handleCreate = () => {
-    console.log(currentStats);
     // For empty fields
-    const emptyFields = currentFields.some((item) => !currentStats[item]);
+
+    const emptyFields = currentFields && currentFields.some((item) => !currentStats[item]);
     if (emptyFields) {
       return dispatch(
         showMessage({
@@ -52,25 +61,47 @@ const AddMoreDetails = ({
       );
     }
 
-    // for invalid inputs
-    // currentFields.forEach((item) => {
-    //   console.log(typeof currentStats[item], typeof validationInfo[item], item);
-    //   if (typeof currentStats[item] !== typeof validationInfo[item]) {
-    //     throw dispatch(
-    //       showMessage({
-    //         message: `Please enter a valid ${item}`,
-    //         severity: 'error'
-    //       })
-    //     );
-    //   }
-    // });
     setOpenAddMoreDetails(false);
 
-    addIn.push({ ...currentStats, _id: new Date().getTime().toString() });
+    if (!roomInfoToEdit) {
+      if (titleField === 'nonPaintableArea') {
+        addIn.push({ ...currentStats, _id: new Date().getTime().toString(), isTotal: false });
+
+        return setCurrentStats(initialStats);
+      }
+      addIn.push({ ...currentStats, _id: new Date().getTime().toString() });
+      return setCurrentStats(initialStats);
+    }
+
+    if (titleField === 'nonPaintableArea') {
+      addIn.splice(
+        addIn.findIndex((item) => item._id === roomInfoToEdit._id),
+        1,
+        { ...currentStats, isTotal: false }
+      );
+      setRoomInfoToEdit(null);
+      return setCurrentStats(initialStats);
+    }
+
+    addIn.splice(
+      addIn.findIndex((item) => item._id === roomInfoToEdit._id),
+      1,
+      currentStats
+    );
+    setRoomInfoToEdit(null);
+    setCurrentStats(initialStats);
     clearWallStats();
   };
 
   const wallOptions = ['North', 'South', 'East', 'West'];
+  useEffect(() => {
+    if (roomInfoToEdit) {
+      Object.keys(roomInfoToEdit).forEach((stats) => {
+        currentStats[stats] = roomInfoToEdit[stats];
+      });
+      setCurrentStats({ ...currentStats });
+    }
+  }, []);
 
   return (
     <Dialog
@@ -80,53 +111,55 @@ const AddMoreDetails = ({
       <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
         <Stack direction='row' spacing={2}>
           <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
-            Add New {titleField.toUpperCase()}
+            {roomInfoToEdit ? 'Edit' : 'Add New'} {titleField.toUpperCase()}
           </Typography>
           <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
         </Stack>
       </DialogTitle>
       <DialogContent>
-        <Grid container spacing={2} mt={0.5}>
-          <Grid item xs={12} md={12} sx={{ marginTop: '-10px' }}>
-            <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-              {`${titleField.toUpperCase()} NAME`}
-            </InputLabel>
-            {titleField === 'wall' ? (
-              <Stack spacing={2} sx={{ width: '100%' }}>
-                <Autocomplete
-                  id='free-solo-demo'
-                  size='small'
-                  inputValue={currentStats.name}
-                  freeSolo
-                  onInputChange={(event, newInputValue) => {
-                    currentStats.name = newInputValue;
+        {titleField !== 'nonPaintableArea' && (
+          <Grid container spacing={2} mt={0.5}>
+            <Grid item xs={12} md={12} sx={{ marginTop: '-10px' }}>
+              <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                {`${titleField.toUpperCase()} NAME`}
+              </InputLabel>
+              {titleField === 'wall' ? (
+                <Stack spacing={2} sx={{ width: '100%' }}>
+                  <Autocomplete
+                    id='free-solo-demo'
+                    size='small'
+                    inputValue={currentStats.name}
+                    freeSolo
+                    onInputChange={(event, newInputValue) => {
+                      currentStats.name = newInputValue;
+                      setCurrentStats({ ...currentStats });
+                    }}
+                    sx={{ width: '100%' }}
+                    options={wallOptions.map((option) => option)}
+                    renderInput={(params) => <TextField {...params} label='Wall' />}
+                  />
+                </Stack>
+              ) : (
+                <TextField
+                  InputProps={{
+                    style: { height: '30px' }
+                  }}
+                  fullWidth
+                  variant='outlined'
+                  list='browsers'
+                  name='browser'
+                  id='browser'
+                  autoFocus
+                  value={currentStats.name}
+                  onChange={(event) => {
+                    currentStats.name = event.target.value;
                     setCurrentStats({ ...currentStats });
                   }}
-                  sx={{ width: '100%' }}
-                  options={wallOptions.map((option) => option)}
-                  renderInput={(params) => <TextField {...params} label='Wall' />}
                 />
-              </Stack>
-            ) : (
-              <TextField
-                InputProps={{
-                  style: { height: '30px' }
-                }}
-                fullWidth
-                variant='outlined'
-                list='browsers'
-                name='browser'
-                id='browser'
-                autoFocus
-                value={currentStats.name}
-                onChange={(event) => {
-                  currentStats.name = event.target.value;
-                  setCurrentStats({ ...currentStats });
-                }}
-              />
-            )}
+              )}
+            </Grid>
           </Grid>
-        </Grid>
+        )}
         <Typography sx={{ color: 'gray', fontWeight: '500', fontSize: '14px', mt: 1 }}>
           General Info:
         </Typography>
@@ -181,6 +214,7 @@ const AddMoreDetails = ({
                             roomStats.walls.map((wall) => {
                               return <MenuItem value={wall.height}>{wall.name}</MenuItem>;
                             })}
+                          <MenuItem value='Wall-1'>Wall-1</MenuItem>
                         </Select>
                       </FormControl>
                     </Grid>
@@ -189,7 +223,7 @@ const AddMoreDetails = ({
               </>
             );
           })}
-          {titleField !== 'wall' && (
+          {titleField !== 'wall' && titleField !== 'nonPaintableArea' && (
             <Grid xs={6} md={6} mt={2}>
               <FormGroup>
                 <FormControlLabel

@@ -6,7 +6,7 @@ const AddMoreButton = ({
   onopenAddMoreDetailsChange,
   setCurentAddMore,
   currentFieldType,
-  enabled
+  setRoomInfoToEdit
 }) => {
   return (
     <Tooltip title='Add More' placement='right'>
@@ -18,6 +18,7 @@ const AddMoreButton = ({
           ml: 1
         }}
         onClick={() => {
+          setRoomInfoToEdit(null);
           onopenAddMoreDetailsChange(true);
           setCurentAddMore(currentFieldType);
         }}

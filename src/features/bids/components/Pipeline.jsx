@@ -35,32 +35,33 @@ const Pipeline = () => {
   };
 
   const initialNonPaintableStats = {
+    _id: '',
     description: '',
     area: ''
   };
 
   const initialRoomState = {
     roomName: '',
-    wall: false,
-    baseboardTrim: false,
-    ceiling: false,
-    window: false,
-    windowTrim: false,
-    doorjambs: false,
-    door: false,
-    crownModeling: false,
-    closet: false,
+    wall: true,
+    baseboardTrim: true,
+    ceiling: true,
+    window: true,
+    windowTrim: true,
+    doorjambs: true,
+    door: true,
+    crownModeling: true,
+    closet: true,
     walls: [],
     ceilings: [],
     windows: [],
     doors: [],
-    nonPaintableArea: []
+    nonPaintableAreas: [{ description: 'Current Total', area: 0, isTotal: true }],
+    nonPaintableArea: false
   };
 
   const initilWallInfo = {
     _id: '',
-        name: '',
-
+    name: '',
     prepHour: 0,
     height: 0,
     length: 0,
@@ -111,6 +112,7 @@ const Pipeline = () => {
   const [windowStats, setWindowStats] = useState(initialWindowInfo);
   const [doorsStats, setDoorStats] = useState(initialDoorInfo);
   const [nonPaintableAreaStats, setNonPaintableAreaStats] = useState(initialNonPaintableStats);
+  const [openEditForm, setOpenEditForm] = useState(false);
 
   const handleSearch = (keyword) => {
     setFilteredClietsList(searchedResult(clientList, keyword));
@@ -188,6 +190,11 @@ const Pipeline = () => {
         setDoorStats={setDoorStats}
         nonPaintableAreaStats={nonPaintableAreaStats}
         setNonPaintableAreaStats={setNonPaintableAreaStats}
+        openEditForm={openEditForm}
+        setOpenEditForm={setOpenEditForm}
+        initilWallInfo={initilWallInfo}
+        initialNonPaintableStats={initialNonPaintableStats}
+        initialWindowInfo={initialWindowInfo}
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>

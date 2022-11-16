@@ -22,8 +22,14 @@ const InteriorRoomByRoom = ({
   doorsStats,
   setDoorStats,
   nonPaintableAreaStats,
-  setNonPaintableAreaStats
+  setNonPaintableAreaStats,
+  openEditForm,
+  setOpenEditForm,
+  initilWallInfo,
+  initialNonPaintableStats,
+  initialWindowInfo
 }) => {
+  console.log(initialWindowInfo);
   const [addRoom, setAddRoom] = useState(false);
   const [editRoom, setEditRoom] = useState(false);
   const onCardDelete = (name) => {
@@ -117,6 +123,13 @@ const InteriorRoomByRoom = ({
         onRoomDetailsReset={onRoomDetailsReset}
         doorsStats={doorsStats}
         setDoorStats={setDoorStats}
+        nonPaintableAreaStats={nonPaintableAreaStats}
+        setNonPaintableAreaStats={setNonPaintableAreaStats}
+        openEditForm={openEditForm}
+        setOpenEditForm={setOpenEditForm}
+        initilWallInfo={initilWallInfo}
+        initialNonPaintableStats={initialNonPaintableStats}
+        initialWindowInfo={initialWindowInfo}
       />
     </Box>
   );

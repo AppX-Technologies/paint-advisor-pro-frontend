@@ -32,7 +32,8 @@ export default function AddRoomForm(props) {
   const [showCards, setShowCards] = useState({
     wall: true,
     window: true,
-    door: true
+    door: true,
+    nonPaintableArea: true
   });
 
   const {
@@ -53,8 +54,12 @@ export default function AddRoomForm(props) {
     doorsStats,
     setDoorStats,
     nonPaintableAreaStats,
-    setNonPaintableAreaStats
+    setNonPaintableAreaStats,
+    initilWallInfo,
+    initialNonPaintableStats,
+    initialWindowInfo
   } = props;
+  const [roomInfoToEdit, setRoomInfoToEdit] = useState(null);
 
   const roomRelatedInfo = [
     {
@@ -63,7 +68,8 @@ export default function AddRoomForm(props) {
       infoToShow: roomStats.walls,
       currentStats: wallStats,
       onCurrentStatsChange: setWallStats,
-      addIn: roomStats.walls
+      addIn: roomStats.walls,
+      initialStats: initilWallInfo
     },
     {
       name: 'window',
@@ -71,7 +77,8 @@ export default function AddRoomForm(props) {
       infoToShow: roomStats.windows,
       currentStats: windowStats,
       onCurrentStatsChange: setWindowStats,
-      addIn: roomStats.windows
+      addIn: roomStats.windows,
+      initialStats: initialWindowInfo
     },
     {
       name: 'door',
@@ -83,11 +90,15 @@ export default function AddRoomForm(props) {
     },
     {
       name: 'nonPaintableArea',
-      countToShow: roomStats.nonPaintableArea.length,
-      infoToShow: roomStats.nonPaintableArea,
+      countToShow: roomStats.nonPaintableAreas.length,
+      infoToShow: roomStats.nonPaintableAreas,
       currentStats: nonPaintableAreaStats,
       onCurrentStatsChange: setNonPaintableAreaStats,
-      addIn: roomStats.nonPaintableArea
+      addIn: roomStats.nonPaintableAreas,
+      initialStats: initialNonPaintableStats,
+      totalArea: roomStats.nonPaintableAreas.reduce((total, currArea) => {
+        return total + Number(currArea.area);
+      }, 0)
     }
   ];
 
@@ -180,7 +191,7 @@ export default function AddRoomForm(props) {
                           {item.label}
 
                           {findRoomRelatedInfo(roomRelatedInfo, item.name) &&
-                            ` (${findRoomRelatedInfo(roomRelatedInfo, item.name).countToShow})`}
+                            ` (${findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow})`}
                         </InputLabel>
 
                         <AddMoreButton
@@ -188,6 +199,7 @@ export default function AddRoomForm(props) {
                           setCurentAddMore={setCurentAddMore}
                           currentFieldType={item.name}
                           enabled={roomStats[fieldType]}
+                          setRoomInfoToEdit={setRoomInfoToEdit}
                         />
                       </Box>
                       {findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow === 0 ||
@@ -228,10 +240,15 @@ export default function AddRoomForm(props) {
                                 return (
                                   <Grid xs={10} md={3}>
                                     <Card
+                                      setRoomInfoToEdit={setRoomInfoToEdit}
+                                      onopenAddMoreDetailsChange={onopenAddMoreDetailsChange}
                                       items={roomComponent}
                                       title={roomComponent.name}
                                       onCardDelete={onCardDelete}
                                       field={findRoomRelatedInfo(roomRelatedInfo, item.name)?.name}
+                                      totalArea={
+                                        findRoomRelatedInfo(roomRelatedInfo, item.name)?.totalArea
+                                      }
                                     />
                                   </Grid>
                                 );
@@ -271,6 +288,9 @@ export default function AddRoomForm(props) {
             setCurrentStats={filteredRoomInfo?.onCurrentStatsChange}
             addIn={filteredRoomInfo?.addIn}
             clearWallStats={clearWallStats}
+            roomInfoToEdit={roomInfoToEdit && roomInfoToEdit}
+            setRoomInfoToEdit={setRoomInfoToEdit}
+            initialStats={filteredRoomInfo?.initialStats}
           />
         )}
       </Dialog>

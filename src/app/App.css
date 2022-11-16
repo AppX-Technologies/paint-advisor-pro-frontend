@@ -21,9 +21,8 @@ body {
 }
 
 .card-box {
-  height: auto;
   min-width: 150px;
   border-radius: 10px;
-  margin-right:10px;
+  margin-right: 10px;
   box-shadow: 5px 5px 6px #dad3d1, -5px -5px 6px #ffffff;
 }

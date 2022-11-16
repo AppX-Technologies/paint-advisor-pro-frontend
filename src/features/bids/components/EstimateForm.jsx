@@ -46,7 +46,12 @@ export default function EstimateForm(props) {
     doorsStats,
     setDoorStats,
     nonPaintableAreaStats,
-    setNonPaintableAreaStats
+    setNonPaintableAreaStats,
+    openEditForm,
+    setOpenEditForm,
+    initilWallInfo,
+    initialNonPaintableStats,
+    initialWindowInfo
   } = props;
 
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
@@ -240,6 +245,11 @@ export default function EstimateForm(props) {
               setDoorStats={setDoorStats}
               nonPaintableAreaStats={nonPaintableAreaStats}
               setNonPaintableAreaStats={setNonPaintableAreaStats}
+              openEditForm={openEditForm}
+              setOpenEditForm={setOpenEditForm}
+              initilWallInfo={initilWallInfo}
+              initialNonPaintableStats={initialNonPaintableStats}
+              initialWindowInfo={initialWindowInfo}
             />
           )}
           {initialBidInfo.bidType === 'Interior' && initialBidInfo.subType === 'Man Hour' && (

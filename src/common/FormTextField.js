@@ -221,7 +221,7 @@ export const RoomInfofields = [
 
 export const validationInfo = {
   _id: '',
-  name:'',
+  name: '',
   prepHour: 0,
   wallType: '',
   quantity: 0,
@@ -229,5 +229,6 @@ export const validationInfo = {
   style: '',
   height: 0,
   length: 0,
-  wall: ''
+  wall: '',
+  description: ''
 };
