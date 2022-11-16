@@ -170,15 +170,7 @@ export default function AddRoomForm(props) {
             </Grid>
             <Divider />
             {RoomInfofields.filter((i) =>
-              seeMore
-                ? i.name === 'wall' ||
-                  i.name === 'window' ||
-                  i.name === 'door' ||
-                  i.name === 'baseboardTrim' ||
-                  i.name === 'ceiling' ||
-                  i.name === 'windowTrim' ||
-                  i.name === 'nonPaintableArea'
-                : i.name === 'wall' || i.name === 'nonPaintableArea'
+              seeMore ? true : i.name === 'wall' || i.name === 'nonPaintableArea'
             ).map((item) => {
               const fieldType = item.name;
 
