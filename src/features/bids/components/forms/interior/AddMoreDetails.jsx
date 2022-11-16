@@ -14,7 +14,10 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { validationInfo } from '../../../../../common/FormTextField';
 import Button from '../../../../../components/Button';
+import { showMessage } from '../../../../snackbar/snackbarSlice';
 
 const AddMoreDetails = ({
   setOpenAddMoreDetails,
@@ -25,13 +28,39 @@ const AddMoreDetails = ({
   addIn,
   titleField
 }) => {
+  const dispatch = useDispatch();
   const currentFields =
     currentStats &&
     Object.keys(currentStats).filter(
       (item) => item !== '_id' && item !== titleField && item !== 'paint'
     );
-
   const handleCreate = () => {
+    console.log(currentStats);
+    // For empty fields
+    const emptyFields = currentFields.some((item) => !currentStats[item]);
+    if (emptyFields) {
+      return dispatch(
+        showMessage({
+          message: 'Please fill all details',
+          severity: 'error'
+        })
+      );
+    }
+
+    // for invalid inputs
+    // currentFields.forEach((item) => {
+    //   console.log(typeof currentStats[item], typeof validationInfo[item], item);
+    //   if (typeof currentStats[item] !== typeof validationInfo[item]) {
+    //     throw dispatch(
+    //       showMessage({
+    //         message: `Please enter a valid ${item}`,
+    //         severity: 'error'
+    //       })
+    //     );
+    //   }
+    // });
+    setOpenAddMoreDetails(false);
+
     addIn.push({ ...currentStats, _id: new Date().getTime().toString() });
     clearWallStats();
   };
@@ -77,7 +106,6 @@ const AddMoreDetails = ({
         </Typography>
         <Grid container spacing={2} mt={0.5}>
           {currentFields.map((currentField) => {
-            console.log(currentField, 'currentStats');
             return (
               <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
                 <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
@@ -90,6 +118,7 @@ const AddMoreDetails = ({
                   }}
                   name='name'
                   fullWidth
+                  type={typeof validationInfo[currentField] === 'string' ? 'text' : 'number'}
                   variant='outlined'
                   id='outlined-basic'
                   autoFocus
@@ -102,31 +131,32 @@ const AddMoreDetails = ({
               </Grid>
             );
           })}
-          <Grid xs={6} md={6} mt={2}>
-            <FormGroup>
-              <FormControlLabel
-                sx={{ position: 'relative', ml: 0.8 }}
-                control={<Checkbox defaultChecked />}
-                checked={currentStats.paint}
-                onChange={(event) => {
-                  currentStats.paint = event.target.checked;
-                  setCurrentStats({ ...currentStats });
-                }}
-                label={
-                  <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                    PAINT
-                  </InputLabel>
-                }
-              />
-            </FormGroup>
-          </Grid>
+          {titleField !== 'wall' && (
+            <Grid xs={6} md={6} mt={2}>
+              <FormGroup>
+                <FormControlLabel
+                  sx={{ position: 'relative', ml: 0.8 }}
+                  control={<Checkbox defaultChecked />}
+                  checked={currentStats.paint}
+                  onChange={(event) => {
+                    currentStats.paint = event.target.checked;
+                    setCurrentStats({ ...currentStats });
+                  }}
+                  label={
+                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                      PAINT
+                    </InputLabel>
+                  }
+                />
+              </FormGroup>
+            </Grid>
+          )}
         </Grid>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setOpenAddMoreDetails(false)}>Cancel</Button>{' '}
         <Button
           onClick={() => {
-            setOpenAddMoreDetails(false);
             handleCreate();
           }}>
           Save

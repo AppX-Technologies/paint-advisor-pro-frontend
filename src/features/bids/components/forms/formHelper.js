@@ -14,19 +14,19 @@ export const findSameTypeOfWall = (walls) => {
   wallsDimensionsAndCount.forEach((obj) => {
     strings = strings.concat(`${obj.count} of ${obj.length}x${obj.height}`, ',');
   });
-  return strings.slice(0,strings.length-1);
+  return strings.slice(0, strings.length - 1);
 };
 
 export const findRoomRelatedInfo = (roomRelatedInfo, name) => {
   return roomRelatedInfo.find((roomInfo) => roomInfo.name === name);
 };
 
-export const findPaintableAndNonPaintableArea = (walls) => {
+export const findPaintableAndNonPaintableArea = (surface) => {
   const area = {
     paintable: 0,
     nonPaintable: 0
   };
-  walls.forEach((wall) => {
+  surface.forEach((wall) => {
     if (wall.paint) {
       area.paintable += wall.length * wall.height;
     } else {

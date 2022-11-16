@@ -36,7 +36,6 @@ export default function AddRoomForm(props) {
     door: true
   });
 
-  console.log(showCards);
   const {
     open,
     setOpen,
@@ -92,7 +91,6 @@ export default function AddRoomForm(props) {
   };
   const filteredRoomInfo = roomRelatedInfo.find((roomInfo) => roomInfo.name === currentAddMore);
   const onCardDelete = (id) => {
-    console.log(id);
     filteredRoomInfo.addIn.splice(
       filteredRoomInfo.addIn.findIndex((x) => x._id === id),
       1
@@ -259,6 +257,7 @@ export default function AddRoomForm(props) {
             setOpenAddMoreDetails={setOpenAddMoreDetails}
             titleField={currentAddMore}
             currentStats={filteredRoomInfo?.currentStats}
+            initialStat={filteredRoomInfo?.currentStats}
             setCurrentStats={filteredRoomInfo?.onCurrentStatsChange}
             addIn={filteredRoomInfo?.addIn}
             clearWallStats={clearWallStats}

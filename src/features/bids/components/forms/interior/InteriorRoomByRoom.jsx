@@ -33,7 +33,6 @@ const InteriorRoomByRoom = ({
   };
   const onCardEdit = (name) => {
     setEditRoom(true);
-    console.log(name, editRoom);
   };
   return (
     <Box>
@@ -65,8 +64,7 @@ const InteriorRoomByRoom = ({
                         findPaintableAndNonPaintableArea([...room.walls, ...room.windows]).paintable
                       } sq.feet`,
                       NonPaintableArea: `${
-                        findPaintableAndNonPaintableArea([...room.walls, ...room.windows])
-                          .nonPaintable
+                        findPaintableAndNonPaintableArea([...room.windows]).nonPaintable
                       } sq.feet`
                     }}
                     title={room.roomName}

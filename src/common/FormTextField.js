@@ -218,3 +218,16 @@ export const RoomInfofields = [
     option: booleanOption
   }
 ];
+
+export const validationInfo = {
+  _id: '',
+  name:'',
+  prepHour: 0,
+  wallType: '',
+  quantity: 0,
+  coats: 0,
+  style: '',
+  height: 0,
+  length: 0,
+  wall: ''
+};

@@ -52,28 +52,28 @@ const Pipeline = () => {
 
   const initilWallInfo = {
     _id: '',
-    prepHour: '',
-    height: '',
-    length: '',
+    prepHour: 0,
+    height: 0,
+    length: 0,
     wallType: '',
-    coats: '',
-    paint: false
+    coats: 0
   };
 
   const initialDoorInfo = {
     style: '',
-    quantity: '',
-    length: '',
-    height: '',
-    coats: ''
+    quantity: 0,
+    length: 0,
+    height: 0,
+    coats: 0,
+    paint: false
   };
 
   const initialWindowInfo = {
     _id: '',
     style: '',
-    height: '',
-    length: '',
-    coats: '',
+    height: 0,
+    length: 0,
+    coats: 0,
     wall: '',
     paint: false
   };
