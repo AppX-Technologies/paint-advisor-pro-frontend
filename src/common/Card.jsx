@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
 
-const Card = ({ items, title, onCardDelete }) => {
+const Card = ({ items, title, onCardDelete, field }) => {
   const dimension = `${items.length}x${items.height}`;
 
   return (
@@ -17,18 +17,17 @@ const Card = ({ items, title, onCardDelete }) => {
 
         {/* Action */}
         <Box sx={{ display: 'flex' }}>
-          {
-            items.paint &&
-          <FormatPaintIcon
-          sx={{
-            color: 'green',
-            fontSize: '18px',
-            mr: 0.5,
-            cursor: 'pointer'
-          }}
-          size='small'
-          />
-        }
+          {items.paint && (
+            <FormatPaintIcon
+              sx={{
+                color: 'green',
+                fontSize: '18px',
+                mr: 0.5,
+                cursor: 'pointer'
+              }}
+              size='small'
+            />
+          )}
           <EditIcon
             sx={{
               color: (theme) => theme.editicon.color.main,
@@ -45,7 +44,7 @@ const Card = ({ items, title, onCardDelete }) => {
               cursor: 'pointer'
             }}
             size='small'
-            onClick={() => onCardDelete(items._id)}
+            onClick={() => onCardDelete(items._id, field)}
           />
         </Box>
       </Box>

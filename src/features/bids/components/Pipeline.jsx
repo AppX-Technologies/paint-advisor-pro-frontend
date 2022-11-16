@@ -33,6 +33,12 @@ const Pipeline = () => {
     bidType: '',
     subType: ''
   };
+
+  const initialNonPaintableStats = {
+    description: '',
+    area: ''
+  };
+
   const initialRoomState = {
     roomName: '',
     wall: false,
@@ -47,11 +53,14 @@ const Pipeline = () => {
     walls: [],
     ceilings: [],
     windows: [],
-    doors: []
+    doors: [],
+    nonPaintableArea: []
   };
 
   const initilWallInfo = {
     _id: '',
+        name: '',
+
     prepHour: 0,
     height: 0,
     length: 0,
@@ -60,6 +69,8 @@ const Pipeline = () => {
   };
 
   const initialDoorInfo = {
+    name: '',
+    door: '',
     style: '',
     quantity: 0,
     length: 0,
@@ -70,11 +81,12 @@ const Pipeline = () => {
 
   const initialWindowInfo = {
     _id: '',
+    name: '',
     style: '',
     height: 0,
     length: 0,
     coats: 0,
-    wall: '',
+    wallInfo: '',
     paint: false
   };
 
@@ -98,6 +110,7 @@ const Pipeline = () => {
   const [wallStats, setWallStats] = useState(initilWallInfo);
   const [windowStats, setWindowStats] = useState(initialWindowInfo);
   const [doorsStats, setDoorStats] = useState(initialDoorInfo);
+  const [nonPaintableAreaStats, setNonPaintableAreaStats] = useState(initialNonPaintableStats);
 
   const handleSearch = (keyword) => {
     setFilteredClietsList(searchedResult(clientList, keyword));
@@ -173,6 +186,8 @@ const Pipeline = () => {
         onRoomDetailsReset={onRoomDetailsReset}
         doorsStats={doorsStats}
         setDoorStats={setDoorStats}
+        nonPaintableAreaStats={nonPaintableAreaStats}
+        setNonPaintableAreaStats={setNonPaintableAreaStats}
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>
