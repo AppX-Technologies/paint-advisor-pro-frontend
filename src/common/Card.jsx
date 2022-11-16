@@ -11,7 +11,8 @@ const Card = ({
   field,
   totalArea = 0,
   setRoomInfoToEdit,
-  onopenAddMoreDetailsChange
+  onopenAddMoreDetailsChange,
+  setOpenDeleteModal
 }) => {
   const dimension = `${items.length}x${items.height}`;
 
@@ -63,7 +64,10 @@ const Card = ({
                   cursor: 'pointer'
                 }}
                 size='small'
-                onClick={() => onCardDelete(items._id, field)}
+                onClick={() => {
+                  onCardDelete(items._id, field);
+                  setOpenDeleteModal(true);
+                }}
               />
             </Box>
           </>
@@ -136,7 +140,10 @@ const Card = ({
                       cursor: 'pointer'
                     }}
                     size='small'
-                    onClick={() => onCardDelete(items._id, field)}
+                    onClick={() => {
+                      onCardDelete(items._id, field);
+                      setOpenDeleteModal(true);
+                    }}
                   />
                 </>
               )}

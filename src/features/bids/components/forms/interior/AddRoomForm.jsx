@@ -26,6 +26,8 @@ import Card from '../../../../../common/Card';
 import { RoomInfofields } from '../../../../../common/FormTextField';
 import { findRoomRelatedInfo } from '../formHelper';
 import AddMoreDetails from './AddMoreDetails';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { DeleteItemModel } from '../DeleteModel';
 
 export default function AddRoomForm(props) {
   const [currentAddMore, setCurentAddMore] = useState('');
@@ -60,7 +62,13 @@ export default function AddRoomForm(props) {
     initialWindowInfo
   } = props;
   const [roomInfoToEdit, setRoomInfoToEdit] = useState(null);
+  const [seeMore, setSeeMore] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
+  const [itemToBEDeleted, setItemToBeDeleted] = useState({
+    _id: '',
+    field: ''
+  });
   const roomRelatedInfo = [
     {
       name: 'wall',
@@ -112,13 +120,12 @@ export default function AddRoomForm(props) {
   const filteredRoomInfo = roomRelatedInfo.find((roomInfo) => roomInfo.name === currentAddMore);
 
   const onCardDelete = (id, field) => {
-    const roomReference = roomRelatedInfo.find((room) => room.name === field);
-    roomReference.addIn.splice(
-      roomReference.addIn.findIndex((x) => x._id === id),
-      1
-    );
-    setRoomStats({ ...roomStats });
+    setItemToBeDeleted({ ...itemToBEDeleted, _id: id, field: field });
   };
+
+  React.useEffect(() => {
+    setItemToBeDeleted({ ...itemToBEDeleted });
+  }, [openDeleteModal]);
 
   const expandMoreAndLessStyles = {
     fontSize: '30px',
@@ -162,7 +169,17 @@ export default function AddRoomForm(props) {
               />
             </Grid>
             <Divider />
-            {RoomInfofields.map((item) => {
+            {RoomInfofields.filter((i) =>
+              seeMore
+                ? i.name === 'wall' ||
+                  i.name === 'window' ||
+                  i.name === 'door' ||
+                  i.name === 'baseboardTrim' ||
+                  i.name === 'ceiling' ||
+                  i.name === 'windowTrim' ||
+                  i.name === 'nonPaintableArea'
+                : i.name === 'wall' || i.name === 'nonPaintableArea'
+            ).map((item) => {
               const fieldType = item.name;
 
               return (
@@ -241,6 +258,8 @@ export default function AddRoomForm(props) {
                                   <Grid xs={10} md={3}>
                                     <Card
                                       setRoomInfoToEdit={setRoomInfoToEdit}
+                                      openDeleteModal={openDeleteModal}
+                                      setOpenDeleteModal={setOpenDeleteModal}
                                       onopenAddMoreDetailsChange={onopenAddMoreDetailsChange}
                                       items={roomComponent}
                                       title={roomComponent.name}
@@ -256,6 +275,42 @@ export default function AddRoomForm(props) {
                             )}
                         </Grid>
                       </>
+                    )}
+                    {item.name === 'wall' && (
+                      <Typography
+                        sx={{
+                          color: 'gray',
+                          mt: 2,
+                          fontWeight: '400',
+                          fontSize: '14px',
+                          cursor: 'pointer'
+                        }}>
+                        <VisibilityIcon
+                          sx={{
+                            fontSize: '18px',
+                            marginBottom: '-5px',
+                            mr: 1
+                          }}
+                        />
+                        {seeMore ? 'See less' : 'See more'}
+                        {seeMore ? (
+                          <ExpandLessOutlinedIcon
+                            sx={{
+                              marginBottom: '-8px',
+                              color: 'red'
+                            }}
+                            onClick={() => setSeeMore(!seeMore)}
+                          />
+                        ) : (
+                          <ExpandMoreOutlinedIcon
+                            sx={{
+                              marginBottom: '-8px',
+                              color: 'red'
+                            }}
+                            onClick={() => setSeeMore(!seeMore)}
+                          />
+                        )}
+                      </Typography>
                     )}
                   </Grid>
                 )
@@ -275,7 +330,17 @@ export default function AddRoomForm(props) {
             Add Room
           </Button>
         </DialogActions>
-
+        {openDeleteModal && (
+          <DeleteItemModel
+            openDeleteModal={openDeleteModal}
+            setOpenDeleteModal={setOpenDeleteModal}
+            roomRelatedInfo={roomRelatedInfo}
+            id={itemToBEDeleted._id}
+            field={itemToBEDeleted.field}
+            roomStats={roomStats}
+            setRoomStats={setRoomStats}
+          />
+        )}
         {openAddMoreDetails && filteredRoomInfo && (
           <AddMoreDetails
             openAddMoreDetails={openAddMoreDetails}
