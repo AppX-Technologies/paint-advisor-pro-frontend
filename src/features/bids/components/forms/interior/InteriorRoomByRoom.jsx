@@ -20,7 +20,9 @@ const InteriorRoomByRoom = ({
   setWindowStats,
   clearWallStats,
   doorsStats,
-  setDoorStats
+  setDoorStats,
+  nonPaintableAreaStats,
+  setNonPaintableAreaStats
 }) => {
   const [addRoom, setAddRoom] = useState(false);
   const [editRoom, setEditRoom] = useState(false);
@@ -95,6 +97,8 @@ const InteriorRoomByRoom = ({
           windowStats={windowStats}
           setWindowStats={setWindowStats}
           onRoomDetailsReset={onRoomDetailsReset}
+          nonPaintableAreaStats={nonPaintableAreaStats}
+          setNonPaintableAreaStats={setNonPaintableAreaStats}
         />
       )}
 

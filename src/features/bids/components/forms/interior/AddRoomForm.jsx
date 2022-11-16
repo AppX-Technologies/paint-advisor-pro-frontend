@@ -19,7 +19,6 @@ import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import InputLabel from '@mui/material/InputLabel';
-import Switch from '@mui/material/Switch';
 import * as React from 'react';
 import { useState } from 'react';
 import AddMoreButton from '../../../../../common/AddMoreButton';
@@ -36,7 +35,6 @@ export default function AddRoomForm(props) {
     door: true
   });
 
-  console.log(showCards);
   const {
     open,
     setOpen,
@@ -53,7 +51,9 @@ export default function AddRoomForm(props) {
     setWindowStats,
     onRoomDetailsReset,
     doorsStats,
-    setDoorStats
+    setDoorStats,
+    nonPaintableAreaStats,
+    setNonPaintableAreaStats
   } = props;
 
   const roomRelatedInfo = [
@@ -80,6 +80,14 @@ export default function AddRoomForm(props) {
       currentStats: doorsStats,
       onCurrentStatsChange: setDoorStats,
       addIn: roomStats.doors
+    },
+    {
+      name: 'nonPaintableArea',
+      countToShow: roomStats.nonPaintableArea.length,
+      infoToShow: roomStats.nonPaintableArea,
+      currentStats: nonPaintableAreaStats,
+      onCurrentStatsChange: setNonPaintableAreaStats,
+      addIn: roomStats.nonPaintableArea
     }
   ];
 
@@ -91,10 +99,11 @@ export default function AddRoomForm(props) {
     setOpenAddMoreDetails(value);
   };
   const filteredRoomInfo = roomRelatedInfo.find((roomInfo) => roomInfo.name === currentAddMore);
-  const onCardDelete = (id) => {
-    console.log(id);
-    filteredRoomInfo.addIn.splice(
-      filteredRoomInfo.addIn.findIndex((x) => x._id === id),
+
+  const onCardDelete = (id, field) => {
+    const roomReference = roomRelatedInfo.find((room) => room.name === field);
+    roomReference.addIn.splice(
+      roomReference.addIn.findIndex((x) => x._id === id),
       1
     );
     setRoomStats({ ...roomStats });
@@ -212,24 +221,23 @@ export default function AddRoomForm(props) {
                     </Box>
                     {showCards[item.name] && (
                       <>
-                        {
-                          <Grid container alignItems='center' justify='center'>
-                            {findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow !== 0 &&
-                              findRoomRelatedInfo(roomRelatedInfo, item.name)?.infoToShow.map(
-                                (roomComponent) => {
-                                  return (
-                                    <Grid xs={10} md={3}>
-                                      <Card
-                                        items={roomComponent}
-                                        title={roomComponent[currentAddMore]}
-                                        onCardDelete={onCardDelete}
-                                      />
-                                    </Grid>
-                                  );
-                                }
-                              )}
-                          </Grid>
-                        }
+                        <Grid container alignItems='center' justify='center'>
+                          {findRoomRelatedInfo(roomRelatedInfo, item.name)?.countToShow !== 0 &&
+                            findRoomRelatedInfo(roomRelatedInfo, item.name)?.infoToShow.map(
+                              (roomComponent) => {
+                                return (
+                                  <Grid xs={10} md={3}>
+                                    <Card
+                                      items={roomComponent}
+                                      title={roomComponent.name}
+                                      onCardDelete={onCardDelete}
+                                      field={findRoomRelatedInfo(roomRelatedInfo, item.name)?.name}
+                                    />
+                                  </Grid>
+                                );
+                              }
+                            )}
+                        </Grid>
                       </>
                     )}
                   </Grid>
@@ -254,7 +262,7 @@ export default function AddRoomForm(props) {
         {openAddMoreDetails && filteredRoomInfo && (
           <AddMoreDetails
             openAddMoreDetails={openAddMoreDetails}
-            roomStat={roomStats}
+            roomStats={roomStats}
             setRoomStat={setRoomStats}
             setOpenAddMoreDetails={setOpenAddMoreDetails}
             titleField={currentAddMore}
