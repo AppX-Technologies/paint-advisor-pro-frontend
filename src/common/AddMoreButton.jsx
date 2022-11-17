@@ -2,12 +2,7 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
 import { IconButton, IconButtonBox, Tooltip } from '@mui/material';
 import React from 'react';
 
-const AddMoreButton = ({
-  onopenAddMoreDetailsChange,
-  setCurentAddMore,
-  currentFieldType,
-  setRoomInfoToEdit
-}) => {
+const AddMoreButton = ({ onClick }) => {
   return (
     <Tooltip title='Add More' placement='right'>
       <AddCircleOutlineOutlinedIcon
@@ -17,11 +12,7 @@ const AddMoreButton = ({
           cursor: 'pointer',
           ml: 1
         }}
-        onClick={() => {
-          setRoomInfoToEdit(null);
-          onopenAddMoreDetailsChange(true);
-          setCurentAddMore(currentFieldType);
-        }}
+        onClick={onClick}
       />
     </Tooltip>
   );

@@ -3,6 +3,7 @@ import React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
+import { useDispatch } from 'react-redux';
 
 const Card = ({
   items,
@@ -12,16 +13,24 @@ const Card = ({
   totalArea = 0,
   setRoomInfoToEdit,
   onopenAddMoreDetailsChange,
-  setOpenDeleteModal
+  setOpenDeleteModal,
+  setCurentAddMore
 }) => {
-  const dimension = `${items.length}x${items.height}`;
+  const dimension = `${items.length}x${items.height ? items.height : items.width}`;
+  const dispatch = useDispatch();
 
+  // dispatch(
+  //   showMessage({
+  //     message: `${titleField.toUpperCase()} Is Updated Successfully.`,
+  //     severity: 'success'
+  //   })
+  // );
   return (
     <Box
       className='card-box'
       bgcolor={items.isTotal ? '#f0f0f0' : '#faf2f0'}
       p={1}
-      sx={{ height: field === 'nonPaintableArea' ? '30px' : 'auto' }}>
+      sx={{ height: field === 'nonPaintableAreas' ? '30px' : 'auto' }}>
       {/* Header-section */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography sx={{ color: (theme) => theme.palette.primary.main, fontWeight: '700' }}>
@@ -29,7 +38,7 @@ const Card = ({
         </Typography>
 
         {/* Action */}
-        {field !== 'nonPaintableArea' && (
+        {field !== 'nonPaintableAreas' && (
           <>
             <Box sx={{ display: 'flex' }}>
               {items.paint && (
@@ -55,6 +64,7 @@ const Card = ({
                 onClick={() => {
                   setRoomInfoToEdit(items);
                   onopenAddMoreDetailsChange(true);
+                  setCurentAddMore(field);
                 }}
               />
               <DeleteIcon
@@ -65,6 +75,7 @@ const Card = ({
                 }}
                 size='small'
                 onClick={() => {
+                  setCurentAddMore(field);
                   onCardDelete(items._id, field);
                   setOpenDeleteModal(true);
                 }}
@@ -75,7 +86,7 @@ const Card = ({
       </Box>
       {/* Body-section */}
 
-      {field !== 'nonPaintableArea' ? (
+      {field !== 'nonPaintableAreas' ? (
         <>
           {Object.keys(items)
             .filter((x) => x === 'coats')

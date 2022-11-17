@@ -15,17 +15,15 @@ export function DeleteItemModel({
   setRoomStats,
   openDeleteModal,
   roomStats,
-  roomRelatedInfo,
-  field
+  roomRelatedInfo
 }) {
   const handleClose = () => {
     setOpenDeleteModal(false);
   };
 
   const handleDelete = () => {
-    const roomReference = roomRelatedInfo.find((room) => room.name === field);
-    roomReference.addIn.splice(
-      roomReference.addIn.findIndex((x) => x._id === id),
+    roomRelatedInfo.splice(
+      roomRelatedInfo.findIndex((x) => x._id === id),
       1
     );
     setRoomStats({ ...roomStats });

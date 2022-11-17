@@ -25,11 +25,8 @@ const InteriorRoomByRoom = ({
   setNonPaintableAreaStats,
   openEditForm,
   setOpenEditForm,
-  initilWallInfo,
-  initialNonPaintableStats,
-  initialWindowInfo
+  roomRelatedInfo
 }) => {
-  console.log(initialWindowInfo);
   const [addRoom, setAddRoom] = useState(false);
   const [editRoom, setEditRoom] = useState(false);
   const onCardDelete = (name) => {
@@ -85,26 +82,6 @@ const InteriorRoomByRoom = ({
             })}
         </Grid>
       </Box>
-      {editRoom && (
-        <AddRoomForm
-          open={addRoom}
-          setOpen={setAddRoom}
-          roomStats={roomStats}
-          setRoomStats={setRoomStats}
-          allRoom={allRoom}
-          setAllRoom={setAllRoom}
-          openAddMoreDetails={openAddMoreDetails}
-          wallStats={wallStats}
-          setWallStats={setWallStats}
-          setOpenAddMoreDetails={setOpenAddMoreDetails}
-          clearWallStats={clearWallStats}
-          windowStats={windowStats}
-          setWindowStats={setWindowStats}
-          onRoomDetailsReset={onRoomDetailsReset}
-          nonPaintableAreaStats={nonPaintableAreaStats}
-          setNonPaintableAreaStats={setNonPaintableAreaStats}
-        />
-      )}
 
       <AddRoomForm
         open={addRoom}
@@ -127,9 +104,7 @@ const InteriorRoomByRoom = ({
         setNonPaintableAreaStats={setNonPaintableAreaStats}
         openEditForm={openEditForm}
         setOpenEditForm={setOpenEditForm}
-        initilWallInfo={initilWallInfo}
-        initialNonPaintableStats={initialNonPaintableStats}
-        initialWindowInfo={initialWindowInfo}
+        roomRelatedInfo={roomRelatedInfo}
       />
     </Box>
   );

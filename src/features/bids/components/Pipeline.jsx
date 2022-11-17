@@ -2,6 +2,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Box, Button, Card, Divider, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { booleanOption } from '../../../common/FormTextField';
 import { STAGE_1 } from '../../../helpers/contants';
 import { findCurrentClient, searchedResult } from '../helpers/generalHepers';
 import AddNewClientForm from './AddNewClientForm';
@@ -70,8 +71,9 @@ const Pipeline = () => {
   };
 
   const initialDoorInfo = {
+    _id: '',
     name: '',
-    door: '',
+
     style: '',
     quantity: 0,
     length: 0,
@@ -89,6 +91,14 @@ const Pipeline = () => {
     coats: 0,
     wallInfo: '',
     paint: false
+  };
+
+  const initialCeilingInfo = {
+    length: '',
+    width: '',
+    type: '',
+    coats: '',
+    product: []
   };
 
   const initialState = {
@@ -112,7 +122,86 @@ const Pipeline = () => {
   const [windowStats, setWindowStats] = useState(initialWindowInfo);
   const [doorsStats, setDoorStats] = useState(initialDoorInfo);
   const [nonPaintableAreaStats, setNonPaintableAreaStats] = useState(initialNonPaintableStats);
+  const [ceilingStats, setCeilingStats] = useState(initialCeilingInfo);
   const [openEditForm, setOpenEditForm] = useState(false);
+
+  const roomRelatedInfo = [
+    {
+      label: 'Room Name',
+      name: 'roomName',
+      dataType: 'text'
+    },
+    {
+      label: 'Walls',
+      name: 'walls',
+      option: booleanOption,
+      currentStats: wallStats,
+      onCurrentStatsChange: setWallStats,
+      initialStats: initilWallInfo,
+      fields: ['prepHour', 'height', 'length', 'wallType', 'coats']
+    },
+    {
+      label: 'Windows ',
+      name: 'windows',
+      option: booleanOption,
+      currentStats: windowStats,
+      onCurrentStatsChange: setWindowStats,
+      initialStats: initialWindowInfo,
+      fields: ['style', 'height', 'length', 'coats', 'wallInfo']
+    },
+    {
+      label: 'Doors',
+      name: 'doors',
+      option: booleanOption,
+      currentStats: doorsStats,
+      onCurrentStatsChange: setDoorStats,
+      initialStats: initialDoorInfo,
+      fields: ['style', 'height', 'length', 'coats', 'quantity']
+    },
+    {
+      label: 'Ceiling',
+      name: 'ceilings',
+      option: booleanOption,
+      currentStats: ceilingStats,
+      onCurrentStatsChange: setCeilingStats,
+      initialStats: initialCeilingInfo,
+      fields: ['type', 'width', 'length', 'coats']
+    },
+    {
+      label: 'Baseboard trim',
+      name: 'baseboardTrims',
+      option: booleanOption
+    },
+    {
+      label: 'Window trim',
+      name: 'windowTrims',
+      option: booleanOption
+    },
+    {
+      label: 'Door Jambs',
+      name: 'doorjambss',
+      option: booleanOption
+    },
+    {
+      label: 'Crown Molding',
+      name: 'crownModelings',
+      option: booleanOption
+    },
+    {
+      label: 'Closet',
+      name: 'closets',
+      option: booleanOption
+    },
+    {
+      label: 'Non-Paintable Area',
+      name: 'nonPaintableAreas',
+      option: booleanOption,
+      currentStats: nonPaintableAreaStats,
+      onCurrentStatsChange: setNonPaintableAreaStats,
+      initialStats: initialNonPaintableStats,
+      fields: ['description', 'area']
+    }
+  ];
 
   const handleSearch = (keyword) => {
     setFilteredClietsList(searchedResult(clientList, keyword));
@@ -192,9 +281,7 @@ const Pipeline = () => {
         setNonPaintableAreaStats={setNonPaintableAreaStats}
         openEditForm={openEditForm}
         setOpenEditForm={setOpenEditForm}
-        initilWallInfo={initilWallInfo}
-        initialNonPaintableStats={initialNonPaintableStats}
-        initialWindowInfo={initialWindowInfo}
+        roomRelatedInfo={roomRelatedInfo}
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>

@@ -21,6 +21,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { validationInfo } from '../../../../../common/FormTextField';
 import Button from '../../../../../components/Button';
+import { NONPAINTABLEAREAFIELD, WALL_OPTIONS } from '../../../../../helpers/contants';
 import { showMessage } from '../../../../snackbar/snackbarSlice';
 
 const AddMoreDetails = ({
@@ -34,24 +35,15 @@ const AddMoreDetails = ({
   roomStats,
   roomInfoToEdit,
   setRoomInfoToEdit,
-  initialStats
+  initialStats,
+  fields
 }) => {
   const dispatch = useDispatch();
-  const currentFields =
-    currentStats &&
-    Object.keys(currentStats).filter(
-      (item) =>
-        item !== '_id' &&
-        item !== titleField &&
-        item !== 'paint' &&
-        item !== 'name' &&
-        item !== 'isTotal'
-    );
 
   const handleCreate = () => {
     // For empty fields
 
-    const emptyFields = currentFields && currentFields.some((item) => !currentStats[item]);
+    const emptyFields = fields && fields.some((item) => !currentStats[item]);
     if (emptyFields) {
       return dispatch(
         showMessage({
@@ -61,45 +53,35 @@ const AddMoreDetails = ({
       );
     }
 
-    setOpenAddMoreDetails(false);
-
     if (!roomInfoToEdit) {
-      if (titleField === 'nonPaintableArea') {
-        addIn.push({ ...currentStats, _id: new Date().getTime().toString(), isTotal: false });
-
-        return setCurrentStats(initialStats);
-      }
-      addIn.push({ ...currentStats, _id: new Date().getTime().toString() });
-      return setCurrentStats(initialStats);
-    }
-
-    if (titleField === 'nonPaintableArea') {
+      addIn.push({
+        ...currentStats,
+        _id: new Date().getTime().toString(),
+        isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
+      });
+    } else {
       addIn.splice(
         addIn.findIndex((item) => item._id === roomInfoToEdit._id),
         1,
-        { ...currentStats, isTotal: false }
+        { ...currentStats, isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined }
       );
-      setRoomInfoToEdit(null);
-      return setCurrentStats(initialStats);
     }
-
-    addIn.splice(
-      addIn.findIndex((item) => item._id === roomInfoToEdit._id),
-      1,
-      currentStats
+    dispatch(
+      showMessage({
+        message: `${titleField.toUpperCase()} Is Updated Successfully.`,
+        severity: 'success'
+      })
     );
+
     setRoomInfoToEdit(null);
     setCurrentStats(initialStats);
+    setOpenAddMoreDetails(false);
     clearWallStats();
   };
 
-  const wallOptions = ['North', 'South', 'East', 'West'];
   useEffect(() => {
     if (roomInfoToEdit) {
-      Object.keys(roomInfoToEdit).forEach((stats) => {
-        currentStats[stats] = roomInfoToEdit[stats];
-      });
-      setCurrentStats({ ...currentStats });
+      setCurrentStats({ ...roomInfoToEdit });
     }
   }, []);
 
@@ -117,13 +99,13 @@ const AddMoreDetails = ({
         </Stack>
       </DialogTitle>
       <DialogContent>
-        {titleField !== 'nonPaintableArea' && (
+        {titleField !== NONPAINTABLEAREAFIELD && (
           <Grid container spacing={2} mt={0.5}>
             <Grid item xs={12} md={12} sx={{ marginTop: '-10px' }}>
               <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                 {`${titleField.toUpperCase()} NAME`}
               </InputLabel>
-              {titleField === 'wall' ? (
+              {titleField === 'walls' ? (
                 <Stack spacing={2} sx={{ width: '100%' }}>
                   <Autocomplete
                     id='free-solo-demo'
@@ -135,7 +117,7 @@ const AddMoreDetails = ({
                       setCurrentStats({ ...currentStats });
                     }}
                     sx={{ width: '100%' }}
-                    options={wallOptions.map((option) => option)}
+                    options={WALL_OPTIONS.map((option) => option)}
                     renderInput={(params) => <TextField {...params} label='Wall' />}
                   />
                 </Stack>
@@ -164,7 +146,7 @@ const AddMoreDetails = ({
           General Info:
         </Typography>
         <Grid container spacing={2} mt={0.5}>
-          {currentFields.map((currentField) => {
+          {fields?.map((currentField) => {
             return (
               <>
                 {/* Wall Info Dropdown */}
@@ -214,7 +196,7 @@ const AddMoreDetails = ({
                             roomStats.walls.map((wall) => {
                               return <MenuItem value={wall.height}>{wall.name}</MenuItem>;
                             })}
-                          <MenuItem value='Wall-1'>Wall-1</MenuItem>
+                          <MenuItem value='Wall-1'>None</MenuItem>
                         </Select>
                       </FormControl>
                     </Grid>
@@ -223,7 +205,7 @@ const AddMoreDetails = ({
               </>
             );
           })}
-          {titleField !== 'wall' && titleField !== 'nonPaintableArea' && (
+          {titleField !== 'wall' && titleField !== NONPAINTABLEAREAFIELD && (
             <Grid xs={6} md={6} mt={2}>
               <FormGroup>
                 <FormControlLabel

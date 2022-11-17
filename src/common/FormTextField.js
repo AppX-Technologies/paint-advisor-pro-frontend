@@ -1,4 +1,4 @@
-const booleanOption = ['Yes', 'No'];
+export const booleanOption = ['Yes', 'No'];
 export const AddNewClientTextField = [
   {
     name: 'customerName',
@@ -156,64 +156,63 @@ export const RoomInfofields = [
     name: 'roomName',
     dataType: 'text'
   },
-
   {
     label: 'Walls',
-    name: 'wall',
+    name: 'walls',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
     label: 'Windows ',
-    name: 'window',
+    name: 'windows',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
     label: 'Doors',
-    name: 'door',
+    name: 'doors',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
     label: 'Baseboard trim',
-    name: 'baseboardTrim',
+    name: 'baseboardTrims',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
     label: 'Ceiling',
-    name: 'ceiling',
+    name: 'ceilings',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
     label: 'Window trim',
-    name: 'windowTrim',
+    name: 'windowTrims',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
     label: 'Door Jambs',
-    name: 'doorjambs',
+    name: 'doorjambss',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
-    label: 'Crown Modeling',
-    name: 'crownModeling',
+    label: 'Crown Molding',
+    name: 'crownModelings',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
     label: 'Closet',
-    name: 'closet',
+    name: 'closets',
     dataType: 'dropDown',
     option: booleanOption
   },
   {
     label: 'Non-Paintable Area',
-    name: 'nonPaintableArea',
+    name: 'nonPaintableAreas',
     dataType: 'dropDown',
     option: booleanOption
   }

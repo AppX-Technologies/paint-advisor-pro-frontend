@@ -50,3 +50,7 @@ export const BIDS_STAGES = [
   STAGE_9,
   STAGE_10
 ];
+
+export const NONPAINTABLEAREAFIELD = 'nonPaintableAreas';
+
+export const WALL_OPTIONS = ['North', 'South', 'East', 'West'];
