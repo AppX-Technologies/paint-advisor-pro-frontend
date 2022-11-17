@@ -42,16 +42,23 @@ const AddMoreDetails = ({
 
   const handleCreate = () => {
     // For empty fields
-
-    const emptyFields = fields && fields.some((item) => !currentStats[item]);
-    if (emptyFields) {
+    let allFields;
+    if (fields.includes('description')) {
+      allFields = [...fields];
+    } else {
+      allFields = [...fields, 'name'];
+    }
+    const emptyFields = allFields.filter((x) => !currentStats[x]);
+    if (emptyFields.length !== 0) {
       return dispatch(
         showMessage({
-          message: 'Please fill all details',
+          message: `${emptyFields[0].toUpperCase()} cannot be empty`,
           severity: 'error'
         })
       );
     }
+
+    setOpenAddMoreDetails(false);
 
     if (!roomInfoToEdit) {
       addIn.push({

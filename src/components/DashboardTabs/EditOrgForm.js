@@ -59,6 +59,14 @@ export default function Edit(props) {
   };
   const handleEdit = (e) => {
     e.preventDefault();
+    if (!formStateWithToken.name || !formStateWithToken.email) {
+      return dispatch(
+        showMessage({
+          message: `Fields cannot be empty`,
+          severity: 'error'
+        })
+      );
+    }
     dispatch(updateOrg(formStateWithToken));
     // dispatch(reset());
   };
