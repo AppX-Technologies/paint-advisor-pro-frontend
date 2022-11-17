@@ -109,7 +109,6 @@ export default function FormDialog(props) {
             <Grid item xs={12}>
               <TextField
                 name='address'
-                required
                 fullWidth
                 variant='standard'
                 id='address'
@@ -122,7 +121,6 @@ export default function FormDialog(props) {
             <Grid item xs={12}>
               <TextField
                 name='phone'
-                required
                 fullWidth
                 variant='standard'
                 id='phone'

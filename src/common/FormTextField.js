@@ -200,7 +200,7 @@ export const RoomInfofields = [
     option: booleanOption
   },
   {
-    label: 'Crown Modeling',
+    label: 'Crown Molding',
     name: 'crownModeling',
     dataType: 'dropDown',
     option: booleanOption

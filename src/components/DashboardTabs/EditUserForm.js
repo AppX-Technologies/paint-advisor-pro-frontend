@@ -56,6 +56,14 @@ export default function Edit(props) {
       ...formState,
       token: userDetail.token
     };
+    if (!formStateWithToken.name || !formStateWithToken.email) {
+      return dispatch(
+        showMessage({
+          message: `Fields cannot be empty`,
+          severity: 'error'
+        })
+      );
+    }
     dispatch(updateUser(formStateWithToken));
     dispatch(reset());
   };

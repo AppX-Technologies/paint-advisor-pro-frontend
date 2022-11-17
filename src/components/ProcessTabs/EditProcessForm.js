@@ -11,6 +11,7 @@ import Select from '@mui/material/Select';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProcess } from '../../features/process/processSlice';
+import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { ALL_PROCESS_STAGES } from '../../helpers/contants';
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
@@ -54,6 +55,14 @@ export default function Edit(props) {
 
   const handleEdit = (e) => {
     e.preventDefault();
+    if (!formState.description || !formState.bidType || !formState.stage) {
+      return dispatch(
+        showMessage({
+          message: `Description cannot be empty`,
+          severity: 'error'
+        })
+      );
+    }
     const formStateWithToken = {
       ...formState,
       ID: processList[0]._id,
@@ -105,11 +114,13 @@ export default function Edit(props) {
                   value={formState.stage ? formState.stage : editFormData.stage}
                   label='stage'
                   onChange={(e) => handleTextChange(e)}>
-                 {
-                    ALL_PROCESS_STAGES.map((stage)=>{
-                      return <MenuItem key={stage} value={stage}>{stage}</MenuItem>;
-                    })
-                  }
+                  {ALL_PROCESS_STAGES.map((stage) => {
+                    return (
+                      <MenuItem key={stage} value={stage}>
+                        {stage}
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
               </FormControl>
             </Grid>

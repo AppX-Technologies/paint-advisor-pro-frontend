@@ -45,6 +45,14 @@ export default function FormDialog(props) {
 
   const handleCreate = (e) => {
     e.preventDefault();
+    if (!formState.description || !formState.bidType || !formState.stage) {
+      return dispatch(
+        showMessage({
+          message: `Description cannot be empty`,
+          severity: 'error'
+        })
+      );
+    }
     const formStateWithToken = {
       ...formState,
       ID: processList[0]._id,

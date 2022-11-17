@@ -44,6 +44,14 @@ export default function CreateUserForm(props) {
   };
   const handleCreate = (e) => {
     e.preventDefault();
+    if (!formState.name) {
+      return dispatch(
+        showMessage({
+          message: `Name cannot be empty`,
+          severity: 'error'
+        })
+      );
+    }
     const formStateWithToken = {
       ...formState,
       token: userDetail.token
@@ -108,7 +116,6 @@ export default function CreateUserForm(props) {
             <Grid item xs={12}>
               <TextField
                 name='phone'
-                required
                 fullWidth
                 variant='standard'
                 id='phone'

@@ -50,19 +50,22 @@ const AddMoreDetails = ({
 
   const handleCreate = () => {
     // For empty fields
-
-    const emptyFields = currentFields && currentFields.some((item) => !currentStats[item]);
-    if (emptyFields) {
+    let allFields;
+    if (currentFields.includes('description')) {
+      allFields = [...currentFields];
+    } else {
+      allFields = [...currentFields, 'name'];
+    }
+    const emptyFields = allFields.filter((x) => !currentStats[x]);
+    if (emptyFields.length !== 0) {
       return dispatch(
         showMessage({
-          message: 'Please fill all details',
+          message: `${emptyFields[0].toUpperCase()} cannot be empty`,
           severity: 'error'
         })
       );
     }
-
     setOpenAddMoreDetails(false);
-
     if (!roomInfoToEdit) {
       if (titleField === 'nonPaintableArea') {
         addIn.push({ ...currentStats, _id: new Date().getTime().toString(), isTotal: false });

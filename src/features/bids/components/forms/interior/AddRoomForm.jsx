@@ -28,9 +28,12 @@ import { findRoomRelatedInfo } from '../formHelper';
 import AddMoreDetails from './AddMoreDetails';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DeleteItemModel } from '../DeleteModel';
+import { useDispatch } from 'react-redux';
+import { showMessage } from '../../../../snackbar/snackbarSlice';
 
 export default function AddRoomForm(props) {
   const [currentAddMore, setCurentAddMore] = useState('');
+  const dispatch = useDispatch();
   const [showCards, setShowCards] = useState({
     wall: true,
     window: true,
@@ -114,6 +117,18 @@ export default function AddRoomForm(props) {
     setOpen(false);
     onRoomDetailsReset();
   };
+  const handleCreate = () => {
+    if (!roomStats.roomName) {
+      return dispatch(
+        showMessage({
+          message: 'Room Name cannot be empty',
+          severity: 'error'
+        })
+      );
+    }
+    handleClose();
+    setAllRoom([...allRoom, roomStats]);
+  };
   const onopenAddMoreDetailsChange = (value) => {
     setOpenAddMoreDetails(value);
   };
@@ -132,6 +147,11 @@ export default function AddRoomForm(props) {
     cursor: 'pointer',
     mr: 1.5,
     color: '#D50000'
+  };
+  const buttonSX = {
+    '&:hover': {
+      borderColor: 'rgba(255,240,10,0.8)'
+    }
   };
 
   return (
@@ -168,7 +188,7 @@ export default function AddRoomForm(props) {
                 }}
               />
             </Grid>
-            <Divider />
+
             {RoomInfofields.filter((i) =>
               seeMore ? true : i.name === 'wall' || i.name === 'nonPaintableArea'
             ).map((item) => {
@@ -176,7 +196,23 @@ export default function AddRoomForm(props) {
 
               return (
                 item.dataType === 'dropDown' && (
-                  <Grid item xs={12} md={12} sx={{ marginTop: '5px' }}>
+                  <Grid item xs={12} md={12}>
+                    {item.name === 'wall' && (
+                      <Box sx={{ mb: 2 }}>
+                        <Typography sx={{ color: 'gray', fontSize: '14px' }}>
+                          Paintable Sections
+                        </Typography>
+                        <Divider />
+                      </Box>
+                    )}{' '}
+                    {item.name === 'nonPaintableArea' && (
+                      <Box sx={{ mb: 1 }}>
+                        <Typography sx={{ color: 'gray', fontSize: '14px' }}>
+                          Non Paintable Sections
+                        </Typography>
+                        <Divider />
+                      </Box>
+                    )}
                     <Box
                       sx={{
                         display: 'flex',
@@ -186,7 +222,11 @@ export default function AddRoomForm(props) {
                       <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
                         <InputLabel
                           id='demo-select-small'
-                          sx={{ fontSize: '14px', color: roomStats[fieldType] ? 'black' : 'gray' }}>
+                          sx={{
+                            fontSize: '14px',
+                            color: roomStats[fieldType] ? 'black' : 'gray',
+                            display: 'flex'
+                          }}>
                           <BrushIcon
                             sx={{
                               color: roomStats[fieldType]
@@ -271,20 +311,15 @@ export default function AddRoomForm(props) {
                     {item.name === 'wall' && (
                       <Typography
                         sx={{
-                          color: 'gray',
+                          color: '#D50000',
                           mt: 2,
                           fontWeight: '400',
                           fontSize: '14px',
-                          cursor: 'pointer'
-                        }}>
-                        <VisibilityIcon
-                          sx={{
-                            fontSize: '18px',
-                            marginBottom: '-5px',
-                            mr: 1
-                          }}
-                        />
-                        {seeMore ? 'See less' : 'See more'}
+                          cursor: 'pointer',
+                          float: 'right'
+                        }}
+                        onClick={() => setSeeMore(!seeMore)}>
+                        {seeMore ? 'Show Less Sections' : 'Show More Sections'}
                         {seeMore ? (
                           <ExpandLessOutlinedIcon
                             sx={{
@@ -316,8 +351,7 @@ export default function AddRoomForm(props) {
             type='submit'
             variant='contained'
             onClick={() => {
-              setAllRoom([...allRoom, roomStats]);
-              handleClose();
+              handleCreate();
             }}>
             Add Room
           </Button>

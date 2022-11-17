@@ -2,6 +2,16 @@ import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   components: {
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          '&:-webkit-autofill': {
+            '-webkit-box-shadow': '0 0 0 100px white inset',
+            height: '0px'
+          }
+        }
+      }
+    },
     MuiCssBaseline: {
       defaultProps: {
         enableColorScheme: true
