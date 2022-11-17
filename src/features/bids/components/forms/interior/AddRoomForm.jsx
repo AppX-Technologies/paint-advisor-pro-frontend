@@ -26,10 +26,13 @@ import Card from '../../../../../common/Card';
 import AddMoreDetails from './AddMoreDetails';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DeleteItemModel } from '../DeleteModel';
+import { useDispatch } from 'react-redux';
+import { showMessage } from '../../../../snackbar/snackbarSlice';
 import { NONPAINTABLEAREAFIELD } from '../../../../../helpers/contants';
 
 export default function AddRoomForm(props) {
   const [currentAddMore, setCurentAddMore] = useState('');
+  const dispatch = useDispatch();
   const [showCards, setShowCards] = useState({
     walls: true,
     windows: true,
@@ -64,6 +67,18 @@ export default function AddRoomForm(props) {
     setOpen(false);
     onRoomDetailsReset();
   };
+  const handleCreate = () => {
+    if (!roomStats.roomName) {
+      return dispatch(
+        showMessage({
+          message: 'Room Name cannot be empty',
+          severity: 'error'
+        })
+      );
+    }
+    handleClose();
+    setAllRoom([...allRoom, roomStats]);
+  };
   const onopenAddMoreDetailsChange = (value) => {
     setOpenAddMoreDetails(value);
   };
@@ -82,6 +97,13 @@ export default function AddRoomForm(props) {
     mr: 1.5,
     color: '#D50000'
   };
+  const buttonSX = {
+    '&:hover': {
+      borderColor: 'rgba(255,240,10,0.8)'
+    }
+  };
+
+  const filteredRoomInfo = roomRelatedInfo.find((room) => room.name === currentAddMore);
 
   return (
     <div>
@@ -119,9 +141,10 @@ export default function AddRoomForm(props) {
             </Grid>
             <Divider />
             {roomRelatedInfo
-              .filter((i) =>
-                seeMore ? true : i.name === 'walls' || i.name === 'nonPaintableAreas'
-              )
+              .filter((i) => {
+                if (i.name === 'roomName') return false;
+                return seeMore || i.name === 'walls' || i.name === 'nonPaintableAreas';
+              })
               .map((item) => {
                 const fieldType = item.name;
 
@@ -160,7 +183,7 @@ export default function AddRoomForm(props) {
                           onClick={() => {
                             setRoomInfoToEdit(null);
                             onopenAddMoreDetailsChange(true);
-                            setCurentAddMore(currentFieldType);
+                            setCurentAddMore(fieldType);
                           }}
                         />
                       </Box>
@@ -222,20 +245,15 @@ export default function AddRoomForm(props) {
                     {item.name === 'walls' && (
                       <Typography
                         sx={{
-                          color: 'gray',
+                          color: '#D50000',
                           mt: 2,
                           fontWeight: '400',
                           fontSize: '14px',
-                          cursor: 'pointer'
-                        }}>
-                        <VisibilityIcon
-                          sx={{
-                            fontSize: '18px',
-                            marginBottom: '-5px',
-                            mr: 1
-                          }}
-                        />
-                        {seeMore ? 'See less' : 'See more'}
+                          cursor: 'pointer',
+                          float: 'right'
+                        }}
+                        onClick={() => setSeeMore(!seeMore)}>
+                        {seeMore ? 'Show Less Sections' : 'Show More Sections'}
                         {seeMore ? (
                           <ExpandLessOutlinedIcon
                             sx={{
@@ -266,8 +284,7 @@ export default function AddRoomForm(props) {
             type='submit'
             variant='contained'
             onClick={() => {
-              setAllRoom([...allRoom, roomStats]);
-              handleClose();
+              handleCreate();
             }}>
             Add Room
           </Button>
