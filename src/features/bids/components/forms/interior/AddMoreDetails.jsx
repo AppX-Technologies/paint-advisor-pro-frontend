@@ -36,29 +36,43 @@ const AddMoreDetails = ({
   roomInfoToEdit,
   setRoomInfoToEdit,
   initialStats,
-  fields
+  fields,
+  currentLabel
 }) => {
   const dispatch = useDispatch();
-
   const handleCreate = () => {
     // For empty fields
     let allFields;
-    if (fields.includes('description')) {
+    if (fields.some((x) => x.name === 'description')) {
       allFields = [...fields];
     } else {
-      allFields = [...fields, 'name'];
+      allFields = [...fields, { name: 'name', label: 'Name' }];
     }
-    const emptyFields = allFields.filter((x) => !currentStats[x]);
+    const emptyFields = allFields.filter((x) => !currentStats[x.name]);
     if (emptyFields.length !== 0) {
       return dispatch(
         showMessage({
-          message: `${emptyFields[0].toUpperCase()} cannot be empty`,
+          message: `${emptyFields[0].name.toUpperCase()} cannot be empty`,
+          severity: 'error'
+        })
+      );
+    }
+
+    if (
+      titleField !== NONPAINTABLEAREAFIELD &&
+      addIn.some((item) => item.name === currentStats.name)
+    ) {
+      return dispatch(
+        showMessage({
+          message: `Name '${currentStats.name}' already exists`,
           severity: 'error'
         })
       );
     }
 
     setOpenAddMoreDetails(false);
+
+    delete currentStats.clone;
 
     if (!roomInfoToEdit) {
       addIn.push({
@@ -67,23 +81,44 @@ const AddMoreDetails = ({
         isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
       });
     } else {
-      addIn.splice(
-        addIn.findIndex((item) => item._id === roomInfoToEdit._id),
-        1,
-        { ...currentStats, isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined }
-      );
+      if (roomInfoToEdit.clone) {
+        addIn.push({
+          ...currentStats,
+          _id: new Date().getTime().toString(),
+          isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
+        });
+      } else {
+        addIn.splice(
+          addIn.findIndex((item) => item._id === roomInfoToEdit._id),
+          1,
+          { ...currentStats, isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined }
+        );
+      }
     }
     dispatch(
       showMessage({
-        message: `${titleField.toUpperCase()} Is Updated Successfully.`,
+        message: `${currentLabel.toUpperCase()} Is Updated Successfully.`,
         severity: 'success'
       })
     );
-
     setRoomInfoToEdit(null);
-    setCurrentStats(initialStats);
+    setCurrentStats(
+      titleField !== NONPAINTABLEAREAFIELD
+        ? { ...initialStats, name: '' }
+        : { ...initialStats, description: '', area: '' }
+    );
     setOpenAddMoreDetails(false);
     clearWallStats();
+  };
+
+  const onDialogClose = () => {
+    setRoomInfoToEdit(null);
+    setCurrentStats(
+      titleField !== NONPAINTABLEAREAFIELD
+        ? { ...initialStats, name: '' }
+        : { ...initialStats, description: '', area: '' }
+    );
+    setOpenAddMoreDetails(false);
   };
 
   useEffect(() => {
@@ -95,12 +130,12 @@ const AddMoreDetails = ({
   return (
     <Dialog
       open={openAddMoreDetails}
-      onClose={() => setOpenAddMoreDetails(false)}
+      onClose={onDialogClose}
       PaperProps={{ sx: { minWidth: '60%' } }}>
       <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
         <Stack direction='row' spacing={2}>
           <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
-            {roomInfoToEdit ? 'Edit' : 'Add New'} {titleField.toUpperCase()}
+            {roomInfoToEdit ? (!roomInfoToEdit.clone ? 'Edit' : 'Clone') : 'Add New'} {currentLabel}
           </Typography>
           <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
         </Stack>
@@ -110,7 +145,7 @@ const AddMoreDetails = ({
           <Grid container spacing={2} mt={0.5}>
             <Grid item xs={12} md={12} sx={{ marginTop: '-10px' }}>
               <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                {`${titleField.toUpperCase()} NAME`}
+                {`${currentLabel.toUpperCase()} NAME`}
               </InputLabel>
               {titleField === 'walls' ? (
                 <Stack spacing={2} sx={{ width: '100%' }}>
@@ -153,15 +188,15 @@ const AddMoreDetails = ({
           General Info:
         </Typography>
         <Grid container spacing={2} mt={0.5}>
-          {fields?.map((currentField) => {
+          {fields?.map(({ name, label }) => {
             return (
               <>
                 {/* Wall Info Dropdown */}
-                {currentField !== 'wallInfo' ? (
+                {name !== 'wallInfo' ? (
                   <>
                     <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
                       <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                        {currentField.toUpperCase()}
+                        {label}
                       </InputLabel>
 
                       <TextField
@@ -170,13 +205,13 @@ const AddMoreDetails = ({
                         }}
                         name='name'
                         fullWidth
-                        type={typeof validationInfo[currentField] === 'string' ? 'text' : 'number'}
+                        type={typeof validationInfo[name] === 'string' ? 'text' : 'number'}
                         variant='outlined'
                         id='outlined-basic'
                         autoFocus
-                        value={currentStats[currentField]}
+                        value={currentStats[name]}
                         onChange={(event) => {
-                          currentStats[currentField] = event.target.value;
+                          currentStats[name] = event.target.value;
                           setCurrentStats({ ...currentStats });
                         }}
                       />
@@ -187,15 +222,15 @@ const AddMoreDetails = ({
                     <Grid item xs={6} md={6} mt={1}>
                       <FormControl sx={{ width: '100%' }} size='small'>
                         <InputLabel id='demo-select-small' sx={{ marginTop: '-5px' }}>
-                          WALLINFO
+                          Wall
                         </InputLabel>
                         <Select
                           labelId='demo-select-small'
                           id='demo-select-small'
                           label='WALLINFO'
-                          value={currentStats[currentField]}
+                          value={currentStats[name]}
                           onChange={(event) => {
-                            currentStats[currentField] = event.target.value;
+                            currentStats[name] = event.target.value;
                             setCurrentStats({ ...currentStats });
                           }}
                           sx={{ height: '30px' }}>
@@ -212,7 +247,7 @@ const AddMoreDetails = ({
               </>
             );
           })}
-          {titleField !== 'wall' && titleField !== NONPAINTABLEAREAFIELD && (
+          {titleField !== 'walls' && titleField !== NONPAINTABLEAREAFIELD && (
             <Grid xs={6} md={6} mt={2}>
               <FormGroup>
                 <FormControlLabel
@@ -235,7 +270,7 @@ const AddMoreDetails = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setOpenAddMoreDetails(false)}>Cancel</Button>{' '}
+        <Button onClick={onDialogClose}>Cancel</Button>{' '}
         <Button
           onClick={() => {
             handleCreate();

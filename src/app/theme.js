@@ -50,6 +50,9 @@ const theme = createTheme({
   editicon: {
     color: { main: '#9B29AB' }
   },
+  cloneIcon: {
+    color: { main: '#008100' }
+  },
   palette: {
     primary: { main: '#d50000' },
     background: { default: '#f9f6f6' }

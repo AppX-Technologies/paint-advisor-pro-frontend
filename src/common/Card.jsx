@@ -1,9 +1,9 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 import React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
-import { useDispatch } from 'react-redux';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 const Card = ({
   items,
@@ -17,14 +17,7 @@ const Card = ({
   setCurentAddMore
 }) => {
   const dimension = `${items.length}x${items.height ? items.height : items.width}`;
-  const dispatch = useDispatch();
 
-  // dispatch(
-  //   showMessage({
-  //     message: `${titleField.toUpperCase()} Is Updated Successfully.`,
-  //     severity: 'success'
-  //   })
-  // );
   return (
     <Box
       className='card-box'
@@ -52,34 +45,53 @@ const Card = ({
                   size='small'
                 />
               )}
-
-              <EditIcon
-                sx={{
-                  color: (theme) => theme.editicon.color.main,
-                  fontSize: '18px',
-                  mr: 0.5,
-                  cursor: 'pointer'
-                }}
-                size='small'
-                onClick={() => {
-                  setRoomInfoToEdit(items);
-                  onopenAddMoreDetailsChange(true);
-                  setCurentAddMore(field);
-                }}
-              />
-              <DeleteIcon
-                sx={{
-                  color: (theme) => theme.deleteicon.color.main,
-                  fontSize: '18px',
-                  cursor: 'pointer'
-                }}
-                size='small'
-                onClick={() => {
-                  setCurentAddMore(field);
-                  onCardDelete(items._id, field);
-                  setOpenDeleteModal(true);
-                }}
-              />
+              <Tooltip title='Clone' placement='top'>
+                <ContentCopyIcon
+                  sx={{
+                    color: '#458c2b',
+                    fontSize: '18px',
+                    mr: 0.5,
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => {
+                    setRoomInfoToEdit({ ...items, clone: true });
+                    onopenAddMoreDetailsChange(true);
+                    setCurentAddMore(field);
+                  }}
+                  size='small'
+                />
+              </Tooltip>
+              <Tooltip title='Edit' placement='top'>
+                <EditIcon
+                  sx={{
+                    color: (theme) => theme.editicon.color.main,
+                    fontSize: '18px',
+                    mr: 0.5,
+                    cursor: 'pointer'
+                  }}
+                  size='small'
+                  onClick={() => {
+                    setRoomInfoToEdit({ ...items, clone: false });
+                    onopenAddMoreDetailsChange(true);
+                    setCurentAddMore(field);
+                  }}
+                />
+              </Tooltip>
+              <Tooltip title='Delete' placement='top'>
+                <DeleteIcon
+                  sx={{
+                    color: (theme) => theme.deleteicon.color.main,
+                    fontSize: '18px',
+                    cursor: 'pointer'
+                  }}
+                  size='small'
+                  onClick={() => {
+                    setCurentAddMore(field);
+                    onCardDelete(items._id, field);
+                    setOpenDeleteModal(true);
+                  }}
+                />
+              </Tooltip>
             </Box>
           </>
         )}
@@ -131,6 +143,22 @@ const Card = ({
               )}
               {!items.isTotal && (
                 <>
+                  <Tooltip title='Clone' placement='top'>
+                    <ContentCopyIcon
+                      sx={{
+                        color: '#458c2b',
+                        fontSize: '18px',
+                        mr: 0.5,
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => {
+                        setRoomInfoToEdit({ ...items, clone: true });
+                        onopenAddMoreDetailsChange(true);
+                        setCurentAddMore(field);
+                      }}
+                      size='small'
+                    />
+                  </Tooltip>
                   <EditIcon
                     sx={{
                       color: (theme) => theme.editicon.color.main,

@@ -7,7 +7,9 @@ import {
   Stack,
   Typography
 } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import Button from '../../../../components/Button';
+import { showMessage } from '../../../snackbar/snackbarSlice';
 
 export function DeleteItemModel({
   id,
@@ -17,6 +19,7 @@ export function DeleteItemModel({
   roomStats,
   roomRelatedInfo
 }) {
+  const dispatch = useDispatch();
   const handleClose = () => {
     setOpenDeleteModal(false);
   };
@@ -28,6 +31,12 @@ export function DeleteItemModel({
     );
     setRoomStats({ ...roomStats });
     setOpenDeleteModal(false);
+    dispatch(
+      showMessage({
+        message: `Successfully Deleted`,
+        severity: 'success'
+      })
+    );
   };
 
   return (

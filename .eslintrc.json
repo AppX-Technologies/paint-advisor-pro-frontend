@@ -27,7 +27,8 @@
     "jsx-curly-brace-presence": "off",
     "prefer-arrow-callback": "off",
     "no-plusplus": "off",
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "no-lonely-if": "off"
   },
   "globals": {
     "window": true,

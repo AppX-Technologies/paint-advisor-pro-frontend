@@ -24,7 +24,6 @@ import { useState } from 'react';
 import AddMoreButton from '../../../../../common/AddMoreButton';
 import Card from '../../../../../common/Card';
 import AddMoreDetails from './AddMoreDetails';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DeleteItemModel } from '../DeleteModel';
 import { useDispatch } from 'react-redux';
 import { showMessage } from '../../../../snackbar/snackbarSlice';
@@ -38,7 +37,12 @@ export default function AddRoomForm(props) {
     windows: true,
     doors: true,
     nonPaintableAreas: true,
-    ceilings: true
+    ceilings: true,
+    baseboardTrims: true,
+    windowTrims: true,
+    doorjambs: true,
+    crownMoldings: true,
+    closets: true
   });
 
   const {
@@ -55,6 +59,7 @@ export default function AddRoomForm(props) {
     roomRelatedInfo
   } = props;
   const [roomInfoToEdit, setRoomInfoToEdit] = useState(null);
+
   const [seeMore, setSeeMore] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
@@ -96,11 +101,6 @@ export default function AddRoomForm(props) {
     cursor: 'pointer',
     mr: 1.5,
     color: '#D50000'
-  };
-  const buttonSX = {
-    '&:hover': {
-      borderColor: 'rgba(255,240,10,0.8)'
-    }
   };
 
   const filteredRoomInfo = roomRelatedInfo.find((room) => room.name === currentAddMore);
@@ -314,6 +314,11 @@ export default function AddRoomForm(props) {
             setRoomInfoToEdit={setRoomInfoToEdit}
             initialStats={filteredRoomInfo.initialStats}
             fields={filteredRoomInfo.fields}
+            currentLabel={
+              filteredRoomInfo.label[filteredRoomInfo.label.length - 1] === 's'
+                ? filteredRoomInfo.label.slice(0, filteredRoomInfo.label.length - 1)
+                : filteredRoomInfo.label
+            }
           />
         )}
       </Dialog>

@@ -4,6 +4,21 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { booleanOption } from '../../../common/FormTextField';
 import { STAGE_1 } from '../../../helpers/contants';
+import {
+  estimationFormInitialInfo,
+  initialBaseBoardTrimInfo,
+  initialCeilingInfo,
+  initialClosetInfo,
+  initialCrownMoldingInfo,
+  initialDoorInfo,
+  initialDoorjambsInfo,
+  initialNonPaintableStats,
+  initialRoomState,
+  initialState,
+  initialWindowInfo,
+  initialWindowTrimInfo,
+  initilWallInfo
+} from '../common/roomsInitialStats';
 import { findCurrentClient, searchedResult } from '../helpers/generalHepers';
 import AddNewClientForm from './AddNewClientForm';
 import ClientInfo from './ClientInfo';
@@ -28,91 +43,6 @@ const Pipeline = () => {
   );
   const [commentList, setCommentList] = useState([]);
 
-  const estimationFormInitialInfo = {
-    startDate: '',
-    endDate: '',
-    bidType: '',
-    subType: ''
-  };
-
-  const initialNonPaintableStats = {
-    _id: '',
-    description: '',
-    area: ''
-  };
-
-  const initialRoomState = {
-    roomName: '',
-    wall: true,
-    baseboardTrim: true,
-    ceiling: true,
-    window: true,
-    windowTrim: true,
-    doorjambs: true,
-    door: true,
-    crownModeling: true,
-    closet: true,
-    walls: [],
-    ceilings: [],
-    windows: [],
-    doors: [],
-    nonPaintableAreas: [{ description: 'Current Total', area: 0, isTotal: true }],
-    nonPaintableArea: false
-  };
-
-  const initilWallInfo = {
-    _id: '',
-    name: '',
-    prepHour: 0,
-    height: 0,
-    length: 0,
-    wallType: '',
-    coats: 0
-  };
-
-  const initialDoorInfo = {
-    _id: '',
-    name: '',
-
-    style: '',
-    quantity: 0,
-    length: 0,
-    height: 0,
-    coats: 0,
-    paint: false
-  };
-
-  const initialWindowInfo = {
-    _id: '',
-    name: '',
-    style: '',
-    height: 0,
-    length: 0,
-    coats: 0,
-    wallInfo: '',
-    paint: false
-  };
-
-  const initialCeilingInfo = {
-    length: '',
-    width: '',
-    type: '',
-    coats: '',
-    product: []
-  };
-
-  const initialState = {
-    customerName: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    contactMethod: '',
-    email: '',
-    contactNumber: '',
-    propertyType: ''
-  };
-
   const [initialEstimateBidInfo, setInitialEstimateBidInfo] = useState(estimationFormInitialInfo);
   const [allRoom, setAllRoom] = React.useState([]);
   const [value, setValue] = React.useState([null, null]);
@@ -124,6 +54,11 @@ const Pipeline = () => {
   const [nonPaintableAreaStats, setNonPaintableAreaStats] = useState(initialNonPaintableStats);
   const [ceilingStats, setCeilingStats] = useState(initialCeilingInfo);
   const [openEditForm, setOpenEditForm] = useState(false);
+  const [baseboardTrimStats, setBaseboardTrimStats] = useState(initialBaseBoardTrimInfo);
+  const [windowTrimStats, setWindowTrimStats] = useState(initialWindowTrimInfo);
+  const [doorJambsStats, setDoorJambsStats] = useState(initialDoorjambsInfo);
+  const [crownMoldingStats, setCrownMoldingStats] = useState(initialCrownMoldingInfo);
+  const [closetStats, setClosetStats] = useState(initialClosetInfo);
 
   const roomRelatedInfo = [
     {
@@ -138,7 +73,13 @@ const Pipeline = () => {
       currentStats: wallStats,
       onCurrentStatsChange: setWallStats,
       initialStats: initilWallInfo,
-      fields: ['prepHour', 'height', 'length', 'wallType', 'coats']
+      fields: [
+        { name: 'prepHour', label: 'Prep Hour' },
+        { name: 'height', label: 'Height' },
+        { name: 'length', label: 'Length' },
+        { name: 'wallType', label: 'Wall Type' },
+        { name: 'coats', label: 'Coats' }
+      ]
     },
     {
       label: 'Windows ',
@@ -147,7 +88,13 @@ const Pipeline = () => {
       currentStats: windowStats,
       onCurrentStatsChange: setWindowStats,
       initialStats: initialWindowInfo,
-      fields: ['style', 'height', 'length', 'coats', 'wallInfo']
+      fields: [
+        { name: 'style', label: 'Style' },
+        { name: 'height', label: 'Height' },
+        { name: 'length', label: 'Length' },
+        { name: 'coats', label: 'Coats' },
+        { name: 'wallInfo', label: 'Wall Info' }
+      ]
     },
     {
       label: 'Doors',
@@ -156,7 +103,13 @@ const Pipeline = () => {
       currentStats: doorsStats,
       onCurrentStatsChange: setDoorStats,
       initialStats: initialDoorInfo,
-      fields: ['style', 'height', 'length', 'coats', 'quantity']
+      fields: [
+        { name: 'style', label: 'Style' },
+        { name: 'height', label: 'Height' },
+        { name: 'length', label: 'Length' },
+        { name: 'coats', label: 'Coats' },
+        { name: 'quantity', label: 'Quantity' }
+      ]
     },
     {
       label: 'Ceiling',
@@ -165,32 +118,86 @@ const Pipeline = () => {
       currentStats: ceilingStats,
       onCurrentStatsChange: setCeilingStats,
       initialStats: initialCeilingInfo,
-      fields: ['type', 'width', 'length', 'coats']
+      fields: [
+        { name: 'type', label: 'Type' },
+        { name: 'width', label: 'Width' },
+        { name: 'length', label: 'Length' },
+        { name: 'coats', label: 'Coats' }
+      ]
     },
     {
-      label: 'Baseboard trim',
+      label: 'Baseboard Trim',
       name: 'baseboardTrims',
-      option: booleanOption
+      option: booleanOption,
+      currentStats: baseboardTrimStats,
+      onCurrentStatsChange: setBaseboardTrimStats,
+      initialStats: initialBaseBoardTrimInfo,
+      fields: [
+        { name: 'prepHour', label: 'Prep Hour' },
+        { name: 'linearFeet', label: 'Linear Feet' },
+        { name: 'length', label: 'Length' },
+        { name: 'height', label: 'Height' },
+        { name: 'coats', label: 'Coats' }
+      ]
     },
     {
-      label: 'Window trim',
+      label: 'Window Trim',
       name: 'windowTrims',
-      option: booleanOption
+      option: booleanOption,
+      currentStats: windowTrimStats,
+      onCurrentStatsChange: setWindowTrimStats,
+      initialStats: initialWindowTrimInfo,
+      fields: [
+        { name: 'prepHour', label: 'Prep Hour' },
+        { name: 'quantity', label: 'Quantity' },
+        { name: 'length', label: 'Length' },
+        { name: 'height', label: 'Height' },
+        { name: 'coats', label: 'Coats' },
+        { name: 'style', label: 'Style' }
+      ]
     },
     {
       label: 'Door Jambs',
-      name: 'doorjambss',
-      option: booleanOption
+      name: 'doorjambs',
+      option: booleanOption,
+      currentStats: doorJambsStats,
+      onCurrentStatsChange: setDoorJambsStats,
+      initialStats: initialDoorjambsInfo,
+      fields: [
+        { name: 'prepHour', label: 'Prep Hour' },
+        { name: 'linearFeet', label: 'Linear Feet' },
+        { name: 'width', label: 'Width' },
+        { name: 'coats', label: 'Coats' }
+      ]
     },
     {
       label: 'Crown Molding',
-      name: 'crownModelings',
-      option: booleanOption
+      name: 'crownMoldings',
+      option: booleanOption,
+      currentStats: crownMoldingStats,
+      onCurrentStatsChange: setCrownMoldingStats,
+      initialStats: initialCrownMoldingInfo,
+      fields: [
+        { name: 'prepHour', label: 'Prep Hour' },
+        { name: 'linearFeet', label: 'Linear Feet' },
+        { name: 'width', label: 'Width' },
+        { name: 'coats', label: 'Coats' }
+      ]
     },
     {
       label: 'Closet',
       name: 'closets',
-      option: booleanOption
+      option: booleanOption,
+      currentStats: closetStats,
+      onCurrentStatsChange: setClosetStats,
+      initialStats: initialClosetInfo,
+      fields: [
+        { name: 'prepHour', label: 'Prep Hour' },
+        { name: 'length', label: 'Length' },
+        { name: 'width', label: 'Width' },
+        { name: 'avgerageHeight', label: 'AverageHeight' },
+        { name: 'coats', label: 'Coats' }
+      ]
     },
     {
       label: 'Non-Paintable Area',
@@ -199,7 +206,10 @@ const Pipeline = () => {
       currentStats: nonPaintableAreaStats,
       onCurrentStatsChange: setNonPaintableAreaStats,
       initialStats: initialNonPaintableStats,
-      fields: ['description', 'area']
+      fields: [
+        { name: 'description', label: 'Description' },
+        { name: 'area', label: 'Area' }
+      ]
     }
   ];
 
