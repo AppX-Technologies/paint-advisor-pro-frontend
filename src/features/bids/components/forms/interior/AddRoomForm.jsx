@@ -103,7 +103,9 @@ export default function AddRoomForm(props) {
     color: '#D50000'
   };
 
-  const filteredRoomInfo = roomRelatedInfo.find((room) => room.name === currentAddMore);
+  const filteredRoomInfo = React.useMemo(() => {
+    return roomRelatedInfo && roomRelatedInfo.find((room) => room.name === currentAddMore);
+  }, [currentAddMore, roomRelatedInfo]);
 
   return (
     <div>
@@ -140,142 +142,145 @@ export default function AddRoomForm(props) {
               />
             </Grid>
             <Divider />
-            {roomRelatedInfo
-              .filter((i) => {
-                if (i.name === 'roomName') return false;
-                return seeMore || i.name === 'walls' || i.name === 'nonPaintableAreas';
-              })
-              .map((item) => {
-                const fieldType = item.name;
+            {roomRelatedInfo &&
+              roomRelatedInfo
+                .filter((i) => {
+                  if (i.name === 'roomName') return false;
+                  return seeMore || i.name === 'walls' || i.name === 'nonPaintableAreas';
+                })
+                .map((item) => {
+                  const fieldType = item.name;
 
-                return (
-                  <Grid item xs={12} md={12} sx={{ marginTop: '5px' }}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                      }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                        <InputLabel
-                          id='demo-select-small'
-                          sx={{
-                            fontSize: '14px',
-                            color: 'black'
-                          }}>
-                          <BrushIcon
-                            sx={{
-                              color:
-                                item.name !== NONPAINTABLEAREAFIELD
-                                  ? (theme) => theme.deleteicon.color.main
-                                  : 'gray',
-                              fontSize: '18px',
-                              marginBottom: '-5px',
-                              mr: 1
-                            }}
-                          />
-                          {item.label}
-
-                          {` (${roomStats[fieldType]?.length ? roomStats[fieldType]?.length : 0})`}
-                        </InputLabel>
-
-                        <AddMoreButton
-                          onClick={() => {
-                            setRoomInfoToEdit(null);
-                            onopenAddMoreDetailsChange(true);
-                            setCurentAddMore(fieldType);
-                          }}
-                        />
-                      </Box>
-                      {roomStats[fieldType]?.length === 0 || !roomStats[fieldType] ? (
-                        <></>
-                      ) : showCards[fieldType] ? (
-                        <Tooltip title='Less'>
-                          <ExpandLessOutlinedIcon
-                            sx={{
-                              ...expandMoreAndLessStyles
-                            }}
-                            onClick={() => {
-                              showCards[fieldType] = false;
-                              setShowCards({ ...showCards });
-                            }}
-                          />
-                        </Tooltip>
-                      ) : (
-                        <Tooltip title='More'>
-                          <ExpandMoreOutlinedIcon
-                            sx={{
-                              ...expandMoreAndLessStyles
-                            }}
-                            onClick={() => {
-                              showCards[fieldType] = true;
-                              setShowCards({ ...showCards });
-                            }}
-                          />
-                        </Tooltip>
-                      )}
-                    </Box>
-                    {showCards[item.name] && (
-                      <>
-                        <Grid container alignItems='center' justify='center'>
-                          {roomStats[fieldType].length !== 0 &&
-                            roomStats[fieldType].map((roomComponent) => {
-                              return (
-                                <Grid xs={10} md={3}>
-                                  <Card
-                                    setCurentAddMore={setCurentAddMore}
-                                    setRoomInfoToEdit={setRoomInfoToEdit}
-                                    openDeleteModal={openDeleteModal}
-                                    setOpenDeleteModal={setOpenDeleteModal}
-                                    onopenAddMoreDetailsChange={onopenAddMoreDetailsChange}
-                                    items={roomComponent}
-                                    title={roomComponent.name}
-                                    onCardDelete={onCardDelete}
-                                    field={item.name}
-                                    totalArea={roomStats[fieldType].reduce((total, currItem) => {
-                                      return total + Number(currItem.area);
-                                    }, 0)}
-                                  />
-                                </Grid>
-                              );
-                            })}
-                        </Grid>
-                      </>
-                    )}
-                    {item.name === 'walls' && (
-                      <Typography
+                  return (
+                    <Grid item xs={12} md={12} sx={{ marginTop: '5px' }}>
+                      <Box
                         sx={{
-                          color: '#D50000',
-                          mt: 2,
-                          fontWeight: '400',
-                          fontSize: '14px',
-                          cursor: 'pointer',
-                          float: 'right'
-                        }}
-                        onClick={() => setSeeMore(!seeMore)}>
-                        {seeMore ? 'Show Less Sections' : 'Show More Sections'}
-                        {seeMore ? (
-                          <ExpandLessOutlinedIcon
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center'
+                        }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                          <InputLabel
+                            id='demo-select-small'
                             sx={{
-                              marginBottom: '-8px',
-                              color: 'red'
+                              fontSize: '14px',
+                              color: 'black'
+                            }}>
+                            <BrushIcon
+                              sx={{
+                                color:
+                                  item.name !== NONPAINTABLEAREAFIELD
+                                    ? (theme) => theme.deleteicon.color.main
+                                    : 'gray',
+                                fontSize: '18px',
+                                marginBottom: '-5px',
+                                mr: 1
+                              }}
+                            />
+                            {item.label}
+
+                            {` (${
+                              roomStats[fieldType]?.length ? roomStats[fieldType]?.length : 0
+                            })`}
+                          </InputLabel>
+
+                          <AddMoreButton
+                            onClick={() => {
+                              setRoomInfoToEdit(null);
+                              onopenAddMoreDetailsChange(true);
+                              setCurentAddMore(fieldType);
                             }}
-                            onClick={() => setSeeMore(!seeMore)}
                           />
+                        </Box>
+                        {roomStats[fieldType]?.length === 0 || !roomStats[fieldType] ? (
+                          <></>
+                        ) : showCards[fieldType] ? (
+                          <Tooltip title='Less'>
+                            <ExpandLessOutlinedIcon
+                              sx={{
+                                ...expandMoreAndLessStyles
+                              }}
+                              onClick={() => {
+                                showCards[fieldType] = false;
+                                setShowCards({ ...showCards });
+                              }}
+                            />
+                          </Tooltip>
                         ) : (
-                          <ExpandMoreOutlinedIcon
-                            sx={{
-                              marginBottom: '-8px',
-                              color: 'red'
-                            }}
-                            onClick={() => setSeeMore(!seeMore)}
-                          />
+                          <Tooltip title='More'>
+                            <ExpandMoreOutlinedIcon
+                              sx={{
+                                ...expandMoreAndLessStyles
+                              }}
+                              onClick={() => {
+                                showCards[fieldType] = true;
+                                setShowCards({ ...showCards });
+                              }}
+                            />
+                          </Tooltip>
                         )}
-                      </Typography>
-                    )}
-                  </Grid>
-                );
-              })}
+                      </Box>
+                      {showCards[item.name] && (
+                        <>
+                          <Grid container alignItems='center' justify='center'>
+                            {roomStats[fieldType].length !== 0 &&
+                              roomStats[fieldType].map((roomComponent) => {
+                                return (
+                                  <Grid xs={10} md={3}>
+                                    <Card
+                                      setCurentAddMore={setCurentAddMore}
+                                      setRoomInfoToEdit={setRoomInfoToEdit}
+                                      openDeleteModal={openDeleteModal}
+                                      setOpenDeleteModal={setOpenDeleteModal}
+                                      onopenAddMoreDetailsChange={onopenAddMoreDetailsChange}
+                                      items={roomComponent}
+                                      title={roomComponent.name}
+                                      onCardDelete={onCardDelete}
+                                      field={item.name}
+                                      totalArea={roomStats[fieldType].reduce((total, currItem) => {
+                                        return total + Number(currItem.area);
+                                      }, 0)}
+                                    />
+                                  </Grid>
+                                );
+                              })}
+                          </Grid>
+                        </>
+                      )}
+                      {item.name === 'walls' && (
+                        <Typography
+                          sx={{
+                            color: '#D50000',
+                            mt: 2,
+                            fontWeight: '400',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            float: 'right'
+                          }}
+                          onClick={() => setSeeMore(!seeMore)}>
+                          {seeMore ? 'Show Less Sections' : 'Show More Sections'}
+                          {seeMore ? (
+                            <ExpandLessOutlinedIcon
+                              sx={{
+                                marginBottom: '-8px',
+                                color: 'red'
+                              }}
+                              onClick={() => setSeeMore(!seeMore)}
+                            />
+                          ) : (
+                            <ExpandMoreOutlinedIcon
+                              sx={{
+                                marginBottom: '-8px',
+                                color: 'red'
+                              }}
+                              onClick={() => setSeeMore(!seeMore)}
+                            />
+                          )}
+                        </Typography>
+                      )}
+                    </Grid>
+                  );
+                })}
           </Grid>
         </DialogContent>
         <DialogActions>

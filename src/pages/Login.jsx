@@ -42,7 +42,7 @@ export default function Login() {
   const userDetail = JSON.parse(localStorage.getItem('user'));
 
   React.useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && userDetail) {
       if (
         userDetail.role === 'Org Admin' ||
         userDetail.role === 'Estimator' ||

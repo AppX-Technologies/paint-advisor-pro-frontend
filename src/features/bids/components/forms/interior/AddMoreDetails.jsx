@@ -70,8 +70,6 @@ const AddMoreDetails = ({
       );
     }
 
-    setOpenAddMoreDetails(false);
-
     delete currentStats.clone;
 
     if (!roomInfoToEdit) {
@@ -101,11 +99,12 @@ const AddMoreDetails = ({
         severity: 'success'
       })
     );
+
     setRoomInfoToEdit(null);
     setCurrentStats(
       titleField !== NONPAINTABLEAREAFIELD
         ? { ...initialStats, name: '' }
-        : { ...initialStats, description: '', area: '' }
+        : { ...initialStats, description: '' }
     );
     setOpenAddMoreDetails(false);
     clearWallStats();
@@ -116,7 +115,7 @@ const AddMoreDetails = ({
     setCurrentStats(
       titleField !== NONPAINTABLEAREAFIELD
         ? { ...initialStats, name: '' }
-        : { ...initialStats, description: '', area: '' }
+        : { ...initialStats, description: '' }
     );
     setOpenAddMoreDetails(false);
   };
