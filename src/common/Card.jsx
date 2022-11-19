@@ -168,8 +168,9 @@ const Card = ({
                     }}
                     size='small'
                     onClick={() => {
-                      setRoomInfoToEdit(items);
+                      setRoomInfoToEdit({ ...items, clone: false });
                       onopenAddMoreDetailsChange(true);
+                      setCurentAddMore(field);
                     }}
                   />
                   <DeleteIcon
@@ -180,6 +181,7 @@ const Card = ({
                     }}
                     size='small'
                     onClick={() => {
+                      setCurentAddMore(field);
                       onCardDelete(items._id, field);
                       setOpenDeleteModal(true);
                     }}

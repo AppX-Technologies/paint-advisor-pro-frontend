@@ -39,6 +39,8 @@ export function DeleteItemModel({
     );
   };
 
+  console.log(roomRelatedInfo, 'roomRelatedInfo');
+
   return (
     <Dialog open={openDeleteModal} onClose={handleClose}>
       <DialogTitle>
