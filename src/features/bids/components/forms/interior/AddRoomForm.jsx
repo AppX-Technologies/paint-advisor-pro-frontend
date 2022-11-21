@@ -91,7 +91,11 @@ export default function AddRoomForm(props) {
       );
     }
 
-    if (allRoom.some((room) => room.roomName === roomStats.roomName)) {
+    if (
+      allRoom
+        .filter((room) => room._id !== roomStats._id)
+        .some((room) => room.roomName === roomStats.roomName)
+    ) {
       return dispatch(
         showMessage({
           message: `Room Name '${roomStats.roomName}' Already Exists`,
