@@ -23,7 +23,10 @@ const Card = ({
       className='card-box'
       bgcolor={items.isTotal ? '#f0f0f0' : '#faf2f0'}
       p={1}
-      sx={{ height: field === 'nonPaintableAreas' ? '30px' : 'auto' }}>
+      sx={{
+        height: field === 'nonPaintableAreas' ? '30px' : 'auto',
+        width: field === 'nonPaintableAreas' ? '97%' : 'auto'
+      }}>
       {/* Header-section */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography sx={{ color: (theme) => theme.palette.primary.main, fontWeight: '700' }}>
@@ -123,9 +126,14 @@ const Card = ({
       ) : (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography sx={{ fontSize: '14px', mb: 2, color: '#736f6f', fontWeight: '600' }}>
-              {items.description} :
-            </Typography>
+            <Tooltip title={items.description} placement='top'>
+              <Typography sx={{ fontSize: '14px', mb: 2, color: '#736f6f', fontWeight: '600' }}>
+                {items.description.length >= 15
+                  ? `${items.description.slice(0, 15)}...`
+                  : items.description}{' '}
+                :
+              </Typography>
+            </Tooltip>
             <Typography sx={{ fontSize: '14px', mb: 2, color: '#736f6f', fontWeight: '600' }}>
               {items.isTotal ? totalArea : items.area}
             </Typography>
@@ -159,33 +167,37 @@ const Card = ({
                       size='small'
                     />
                   </Tooltip>
-                  <EditIcon
-                    sx={{
-                      color: (theme) => theme.editicon.color.main,
-                      fontSize: '18px',
-                      mr: 0.5,
-                      cursor: 'pointer'
-                    }}
-                    size='small'
-                    onClick={() => {
-                      setRoomInfoToEdit({ ...items, clone: false });
-                      onopenAddMoreDetailsChange(true);
-                      setCurentAddMore(field);
-                    }}
-                  />
-                  <DeleteIcon
-                    sx={{
-                      color: (theme) => theme.deleteicon.color.main,
-                      fontSize: '18px',
-                      cursor: 'pointer'
-                    }}
-                    size='small'
-                    onClick={() => {
-                      setCurentAddMore(field);
-                      onCardDelete(items._id, field);
-                      setOpenDeleteModal(true);
-                    }}
-                  />
+                  <Tooltip title='Edit' placement='top'>
+                    <EditIcon
+                      sx={{
+                        color: (theme) => theme.editicon.color.main,
+                        fontSize: '18px',
+                        mr: 0.5,
+                        cursor: 'pointer'
+                      }}
+                      size='small'
+                      onClick={() => {
+                        setRoomInfoToEdit({ ...items, clone: false });
+                        onopenAddMoreDetailsChange(true);
+                        setCurentAddMore(field);
+                      }}
+                    />
+                  </Tooltip>
+                  <Tooltip title='Delete' placement='top'>
+                    <DeleteIcon
+                      sx={{
+                        color: (theme) => theme.deleteicon.color.main,
+                        fontSize: '18px',
+                        cursor: 'pointer'
+                      }}
+                      size='small'
+                      onClick={() => {
+                        setCurentAddMore(field);
+                        onCardDelete(items._id, field);
+                        setOpenDeleteModal(true);
+                      }}
+                    />
+                  </Tooltip>
                 </>
               )}
             </Box>

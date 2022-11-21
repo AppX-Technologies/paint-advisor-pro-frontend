@@ -226,18 +226,18 @@ const AddMoreDetails = ({
                         <Select
                           labelId='demo-select-small'
                           id='demo-select-small'
-                          label='WALLINFO'
+                          label='Wall'
                           value={currentStats[name]}
                           onChange={(event) => {
                             currentStats[name] = event.target.value;
                             setCurrentStats({ ...currentStats });
                           }}
                           sx={{ height: '30px' }}>
+                          <MenuItem value='Wall-1'>None</MenuItem>
                           {roomStats &&
                             roomStats.walls.map((wall) => {
-                              return <MenuItem value={wall.height}>{wall.name}</MenuItem>;
+                              return <MenuItem value={wall.name}>{wall.name}</MenuItem>;
                             })}
-                          <MenuItem value='Wall-1'>None</MenuItem>
                         </Select>
                       </FormControl>
                     </Grid>
