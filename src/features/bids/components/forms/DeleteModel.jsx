@@ -17,7 +17,10 @@ export function DeleteItemModel({
   setRoomStats,
   openDeleteModal,
   roomStats,
-  roomRelatedInfo
+  roomRelatedInfo,
+  onCardDelete,
+  selectedRoomInfo,
+  setSelectedRoomInfo
 }) {
   const dispatch = useDispatch();
   const handleClose = () => {
@@ -25,11 +28,16 @@ export function DeleteItemModel({
   };
 
   const handleDelete = () => {
-    roomRelatedInfo.splice(
-      roomRelatedInfo.findIndex((x) => x._id === id),
-      1
-    );
-    setRoomStats({ ...roomStats });
+    if (selectedRoomInfo) {
+      onCardDelete(selectedRoomInfo._id);
+      setSelectedRoomInfo(null);
+    } else {
+      roomRelatedInfo.splice(
+        roomRelatedInfo.findIndex((x) => x._id === id),
+        1
+      );
+      setRoomStats({ ...roomStats });
+    }
     setOpenDeleteModal(false);
     dispatch(
       showMessage({
@@ -37,9 +45,8 @@ export function DeleteItemModel({
         severity: 'success'
       })
     );
+    
   };
-
-  console.log(roomRelatedInfo, 'roomRelatedInfo');
 
   return (
     <Dialog open={openDeleteModal} onClose={handleClose}>

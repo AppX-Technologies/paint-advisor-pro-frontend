@@ -21,9 +21,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import * as React from 'react';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
+import { initialRoomState } from '../common/roomsInitialStats';
 import ExteriorManByMan from './forms/exterior/ExteriorManByMan';
 import InteriorManByMan from './forms/interior/InteriorManByMan';
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
+
 
 export default function EstimateForm(props) {
   const {
@@ -31,10 +33,9 @@ export default function EstimateForm(props) {
     setOpen,
     initialBidInfo,
     setInitialBidInfo,
-    estimationFormInitialInfo,
     allRoom,
     setAllRoom,
-    initialRoomState,
+    onRoomDetailsReset,
     roomStats,
     setRoomStats,
     wallStats,
@@ -42,7 +43,6 @@ export default function EstimateForm(props) {
     windowStats,
     setWindowStats,
     clearWallStats,
-    onRoomDetailsReset,
     doorsStats,
     setDoorStats,
     nonPaintableAreaStats,
@@ -57,8 +57,8 @@ export default function EstimateForm(props) {
   const handleClose = () => {
     setOpen(false);
     setRoomStats(initialRoomState);
-    setInitialBidInfo(estimationFormInitialInfo);
   };
+
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>
@@ -231,13 +231,13 @@ export default function EstimateForm(props) {
               setRoomStats={setRoomStats}
               allRoom={allRoom}
               setAllRoom={setAllRoom}
+              onRoomDetailsReset={onRoomDetailsReset}
               wallStats={wallStats}
               openAddMoreDetails={openAddMoreDetails}
               setOpenAddMoreDetails={setOpenAddMoreDetails}
               setWallStats={setWallStats}
               windowStats={windowStats}
               setWindowStats={setWindowStats}
-              onRoomDetailsReset={onRoomDetailsReset}
               clearWallStats={clearWallStats}
               doorsStats={doorsStats}
               setDoorStats={setDoorStats}

@@ -11,17 +11,9 @@ export const initialNonPaintableStats = {
   area: 0
 };
 
+
 export const initialRoomState = {
   roomName: '',
-  wall: true,
-  baseboardTrim: true,
-  ceiling: true,
-  window: true,
-  windowTrim: true,
-  doorjamb: true,
-  door: true,
-  crownModeling: true,
-  closet: true,
   walls: [],
   ceilings: [],
   windows: [],
@@ -31,8 +23,7 @@ export const initialRoomState = {
   doorjambs: [],
   crownMoldings: [],
   closets: [],
-  nonPaintableAreas: [{ description: 'Current Total', area: 0, isTotal: true }],
-  nonPaintableArea: false
+  nonPaintableAreas: [{ description: 'Current Total', area: 0, isTotal: true }]
 };
 
 export const initilWallInfo = {

@@ -17,6 +17,7 @@
     "axios": "^0.27.2",
     "dayjs": "^1.11.6",
     "dotenv": "^16.0.2",
+    "lodash": "^4.17.21",
     "mui-datatables": "^4.2.2",
     "muibox": "^2.0.0",
     "prop-types": "^15.8.1",

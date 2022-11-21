@@ -42,11 +42,11 @@ const Pipeline = () => {
     findCurrentClient(clientList, selectedListItem)
   );
   const [commentList, setCommentList] = useState([]);
-
   const [initialEstimateBidInfo, setInitialEstimateBidInfo] = useState(estimationFormInitialInfo);
   const [allRoom, setAllRoom] = React.useState([]);
   const [value, setValue] = React.useState([null, null]);
   const [roomStats, setRoomStats] = React.useState(initialRoomState);
+  // TODO rename
   const [selectedValue, setSelectedvalue] = React.useState(initialState);
   const [wallStats, setWallStats] = useState(initilWallInfo);
   const [windowStats, setWindowStats] = useState(initialWindowInfo);
@@ -279,7 +279,6 @@ const Pipeline = () => {
         setValue={setValue}
         roomStats={roomStats}
         setRoomStats={setRoomStats}
-        initialRoomState={initialRoomState}
         wallStats={wallStats}
         setWallStats={setWallStats}
         windowStats={windowStats}

@@ -1,10 +1,13 @@
 import AddIcon from '@mui/icons-material/Add';
 import { Box, Grid, Tooltip, Typography } from '@mui/material';
+import { cloneDeep } from 'lodash';
 import React, { useState } from 'react';
-import AddRoomForm from './AddRoomForm';
-import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
 import RoomCard from '../../../../../common/RoomCard';
 import Button from '../../../../../components/Button';
+import { initialRoomState } from '../../../common/roomsInitialStats';
+import { DeleteItemModel } from '../DeleteModel';
+import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
+import AddRoomForm from './AddRoomForm';
 
 const InteriorRoomByRoom = ({
   roomStats,
@@ -29,16 +32,30 @@ const InteriorRoomByRoom = ({
 }) => {
   const [addRoom, setAddRoom] = useState(false);
   const [editRoom, setEditRoom] = useState(false);
-  const onCardDelete = (name) => {
+  const [currentAddMore, setCurentAddMore] = useState('');
+  const [selectedRoomInfo, setSelectedRoomInfo] = useState(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [itemToBEDeleted, setItemToBeDeleted] = useState({
+    _id: '',
+    field: ''
+  });
+
+  const onCardDelete = (id) => {
     allRoom.splice(
-      allRoom.findIndex((room) => room.roomName === name),
+      allRoom.findIndex((room) => room._id === id),
       1
     );
     setAllRoom([...allRoom]);
   };
-  const onCardEdit = (name) => {
+  const onCardEdit = () => {
     setEditRoom(true);
   };
+
+  const onSelectedRoomInfoChange = (value) => {
+    setSelectedRoomInfo(value);
+  };
+
+
   return (
     <Box>
       {/* Main Form Body  */}
@@ -50,7 +67,10 @@ const InteriorRoomByRoom = ({
             variant='contained'
             startIcon={<AddIcon sx={{ ml: 1 }} />}
             color='info'
-            onClick={() => setAddRoom(true)}
+            onClick={() => {
+              setAddRoom(true);
+              setRoomStats(cloneDeep(initialRoomState));
+            }}
           />
         </Tooltip>
         <Grid container spacing={1} mt={2}>
@@ -59,6 +79,9 @@ const InteriorRoomByRoom = ({
               return (
                 <Grid xs={6} md={6} mt={1}>
                   <RoomCard
+                    onSelectedRoomInfoChange={onSelectedRoomInfoChange}
+                    completeRoomInfo={room}
+                    setOpenDeleteModal={setOpenDeleteModal}
                     items={{
                       roomName: room.roomName,
                       WallDetail:
@@ -73,7 +96,6 @@ const InteriorRoomByRoom = ({
                       } sq.feet`
                     }}
                     title={room.roomName}
-                    onCardDelete={onCardDelete}
                     onCardEdit={onCardEdit}
                     setAddRoom={setAddRoom}
                   />
@@ -83,11 +105,26 @@ const InteriorRoomByRoom = ({
         </Grid>
       </Box>
 
+      {openDeleteModal && (
+        <DeleteItemModel
+          openDeleteModal={openDeleteModal}
+          setOpenDeleteModal={setOpenDeleteModal}
+          roomRelatedInfo={roomStats[currentAddMore]}
+          id={itemToBEDeleted._id}
+          roomStats={roomStats}
+          setRoomStats={setRoomStats}
+          selectedRoomInfo={selectedRoomInfo}
+          onCardDelete={onCardDelete}
+          setSelectedRoomInfo={setSelectedRoomInfo}
+        />
+      )}
+
       <AddRoomForm
         open={addRoom}
         setOpen={setAddRoom}
         roomStats={roomStats}
         setRoomStats={setRoomStats}
+        initialRoomState={initialRoomState}
         allRoom={allRoom}
         setAllRoom={setAllRoom}
         openAddMoreDetails={openAddMoreDetails}
@@ -105,6 +142,14 @@ const InteriorRoomByRoom = ({
         openEditForm={openEditForm}
         setOpenEditForm={setOpenEditForm}
         roomRelatedInfo={roomRelatedInfo}
+        selectedRoomInfo={selectedRoomInfo}
+        onSelectedRoomInfoChange={onSelectedRoomInfoChange}
+        openDeleteModal={openDeleteModal}
+        setOpenDeleteModal={setOpenDeleteModal}
+        currentAddMore={currentAddMore}
+        itemToBEDeleted={itemToBEDeleted}
+        setItemToBeDeleted={setItemToBeDeleted}
+        setCurentAddMore={setCurentAddMore}
       />
     </Box>
   );

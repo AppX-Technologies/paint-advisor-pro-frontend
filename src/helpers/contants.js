@@ -54,3 +54,7 @@ export const BIDS_STAGES = [
 export const NONPAINTABLEAREAFIELD = 'nonPaintableAreas';
 
 export const WALL_OPTIONS = ['North', 'South', 'East', 'West'];
+
+export const WALL_TYPES = ['Smooth', 'Orange Peel', 'Knockdown'];
+
+export const CEILING_TYPES = [...WALL_TYPES, 'Popcorn'];

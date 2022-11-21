@@ -1,6 +1,6 @@
-/* eslint-disable */
-
 import BrushIcon from '@mui/icons-material/Brush';
+import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
+import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import {
   Box,
   CircularProgress,
@@ -14,23 +14,27 @@ import {
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
-import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import InputLabel from '@mui/material/InputLabel';
 import * as React from 'react';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import AddMoreButton from '../../../../../common/AddMoreButton';
 import Card from '../../../../../common/Card';
-import AddMoreDetails from './AddMoreDetails';
-import { DeleteItemModel } from '../DeleteModel';
-import { useDispatch } from 'react-redux';
-import { showMessage } from '../../../../snackbar/snackbarSlice';
 import { NONPAINTABLEAREAFIELD } from '../../../../../helpers/contants';
+import { showMessage } from '../../../../snackbar/snackbarSlice';
+import { initialRoomState } from '../../../common/roomsInitialStats';
+import AddMoreDetails from './AddMoreDetails';
+
+const expandMoreAndLessStyles = {
+  fontSize: '30px',
+  cursor: 'pointer',
+  mr: 1.5,
+  color: '#D50000'
+};
 
 export default function AddRoomForm(props) {
-  const [currentAddMore, setCurentAddMore] = useState('');
   const dispatch = useDispatch();
   const [showCards, setShowCards] = useState({
     walls: true,
@@ -56,21 +60,26 @@ export default function AddRoomForm(props) {
     setOpenAddMoreDetails,
     clearWallStats,
     onRoomDetailsReset,
-    roomRelatedInfo
+    roomRelatedInfo,
+    selectedRoomInfo,
+    onSelectedRoomInfoChange,
+    openDeleteModal,
+    setOpenDeleteModal,
+    currentAddMore,
+    itemToBEDeleted,
+    setItemToBeDeleted,
+    setCurentAddMore
   } = props;
+
   const [roomInfoToEdit, setRoomInfoToEdit] = useState(null);
 
   const [seeMore, setSeeMore] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-  const [itemToBEDeleted, setItemToBeDeleted] = useState({
-    _id: '',
-    field: ''
-  });
 
   const handleClose = () => {
     setOpen(false);
     onRoomDetailsReset();
+    setRoomStats({ ...initialRoomState });
+    onSelectedRoomInfoChange(null);
   };
   const handleCreate = () => {
     if (!roomStats.roomName) {
@@ -81,31 +90,59 @@ export default function AddRoomForm(props) {
         })
       );
     }
+
+    if (allRoom.some((room) => room.roomName === roomStats.roomName)) {
+      return dispatch(
+        showMessage({
+          message: `Room Name '${roomStats.roomName}' Already Exists`,
+          severity: 'error'
+        })
+      );
+    }
+    if (!roomStats.edit) {
+      delete roomStats.edit;
+      setAllRoom([...allRoom, { ...roomStats, _id: Date.now().toString() }]);
+    } else {
+      delete roomStats.edit;
+
+      allRoom.splice(
+        allRoom.findIndex((room) => room._id === roomStats._id),
+        1,
+        roomStats
+      );
+      setAllRoom([...allRoom]);
+    }
+    dispatch(
+      showMessage({
+        message: `Room Updated Successfully.`,
+        severity: 'success'
+      })
+    );
     handleClose();
-    setAllRoom([...allRoom, roomStats]);
+    setRoomStats({ ...initialRoomState });
+    onSelectedRoomInfoChange(null);
   };
   const onopenAddMoreDetailsChange = (value) => {
     setOpenAddMoreDetails(value);
   };
 
   const onCardDelete = (id, field) => {
-    setItemToBeDeleted({ ...itemToBEDeleted, _id: id, field: field });
+    setItemToBeDeleted({ ...itemToBEDeleted, _id: id, field });
   };
 
   React.useEffect(() => {
     setItemToBeDeleted({ ...itemToBEDeleted });
   }, [openDeleteModal]);
 
-  const expandMoreAndLessStyles = {
-    fontSize: '30px',
-    cursor: 'pointer',
-    mr: 1.5,
-    color: '#D50000'
-  };
-
   const filteredRoomInfo = React.useMemo(() => {
     return roomRelatedInfo && roomRelatedInfo.find((room) => room.name === currentAddMore);
   }, [currentAddMore, roomRelatedInfo]);
+
+  React.useEffect(() => {
+    if (selectedRoomInfo) {
+      setRoomStats({ ...selectedRoomInfo });
+    }
+  }, [open]);
 
   return (
     <div>
@@ -294,16 +331,7 @@ export default function AddRoomForm(props) {
             Add Room
           </Button>
         </DialogActions>
-        {openDeleteModal && (
-          <DeleteItemModel
-            openDeleteModal={openDeleteModal}
-            setOpenDeleteModal={setOpenDeleteModal}
-            roomRelatedInfo={roomStats[currentAddMore]}
-            id={itemToBEDeleted._id}
-            roomStats={roomStats}
-            setRoomStats={setRoomStats}
-          />
-        )}
+
         {openAddMoreDetails && filteredRoomInfo && (
           <AddMoreDetails
             openAddMoreDetails={openAddMoreDetails}

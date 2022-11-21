@@ -18,10 +18,16 @@ import {
   Typography
 } from '@mui/material';
 import React, { useEffect } from 'react';
+import { cloneDeep } from 'lodash';
 import { useDispatch } from 'react-redux';
 import { validationInfo } from '../../../../../common/FormTextField';
 import Button from '../../../../../components/Button';
-import { NONPAINTABLEAREAFIELD, WALL_OPTIONS } from '../../../../../helpers/contants';
+import {
+  CEILING_TYPES,
+  NONPAINTABLEAREAFIELD,
+  WALL_OPTIONS,
+  WALL_TYPES
+} from '../../../../../helpers/contants';
 import { showMessage } from '../../../../snackbar/snackbarSlice';
 
 const AddMoreDetails = ({
@@ -102,9 +108,11 @@ const AddMoreDetails = ({
 
     setRoomInfoToEdit(null);
     setCurrentStats(
-      titleField !== NONPAINTABLEAREAFIELD
-        ? { ...initialStats, name: '' }
-        : { ...initialStats, description: '' }
+      cloneDeep(
+        titleField !== NONPAINTABLEAREAFIELD
+          ? { ...initialStats, name: '' }
+          : { ...initialStats, description: '' }
+      )
     );
     setOpenAddMoreDetails(false);
     clearWallStats();
@@ -113,9 +121,11 @@ const AddMoreDetails = ({
   const onDialogClose = () => {
     setRoomInfoToEdit(null);
     setCurrentStats(
-      titleField !== NONPAINTABLEAREAFIELD
-        ? { ...initialStats, name: '' }
-        : { ...initialStats, description: '' }
+      cloneDeep(
+        titleField !== NONPAINTABLEAREAFIELD
+          ? { ...initialStats, name: '' }
+          : { ...initialStats, description: '' }
+      )
     );
     setOpenAddMoreDetails(false);
   };
@@ -191,30 +201,57 @@ const AddMoreDetails = ({
             return (
               <>
                 {/* Wall Info Dropdown */}
-                {name !== 'wallInfo' ? (
-                  <>
-                    <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
-                      <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                        {label}
+                {(name === 'wallType' || name === 'type') && (
+                  <Grid item xs={6} md={6} mt={1}>
+                    <FormControl sx={{ width: '100%' }} size='small'>
+                      <InputLabel id='demo-select-small' sx={{ marginTop: '-5px' }}>
+                        {name === 'wallType' ? 'Wall Types' : 'Ceiling Types'}
                       </InputLabel>
-
-                      <TextField
-                        InputProps={{
-                          style: { height: '30px' }
-                        }}
-                        name='name'
-                        fullWidth
-                        type={typeof validationInfo[name] === 'string' ? 'text' : 'number'}
-                        variant='outlined'
-                        id='outlined-basic'
-                        autoFocus
+                      <Select
+                        labelId='demo-select-small'
+                        id='demo-select-small'
+                        label={name === 'wallType' ? 'Wall Types' : 'Ceiling Types'}
                         value={currentStats[name]}
                         onChange={(event) => {
                           currentStats[name] = event.target.value;
                           setCurrentStats({ ...currentStats });
                         }}
-                      />
-                    </Grid>
+                        sx={{ height: '30px' }}>
+                        {(name === 'wallType' ? WALL_TYPES : CEILING_TYPES).map((wall) => {
+                          return <MenuItem value={wall}>{wall}</MenuItem>;
+                        })}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                )}
+
+                {/* Wall Info Dropdown */}
+                {name !== 'wallInfo' ? (
+                  <>
+                    {name !== 'type' && name !== 'wallType' && (
+                      <Grid item xs={6} md={6} sx={{ marginTop: '-10px' }}>
+                        <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                          {label}
+                        </InputLabel>
+
+                        <TextField
+                          InputProps={{
+                            style: { height: '30px' }
+                          }}
+                          name='name'
+                          fullWidth
+                          type={typeof validationInfo[name] === 'string' ? 'text' : 'number'}
+                          variant='outlined'
+                          id='outlined-basic'
+                          autoFocus
+                          value={currentStats[name]}
+                          onChange={(event) => {
+                            currentStats[name] = event.target.value;
+                            setCurrentStats({ ...currentStats });
+                          }}
+                        />
+                      </Grid>
+                    )}
                   </>
                 ) : (
                   <>
@@ -246,6 +283,7 @@ const AddMoreDetails = ({
               </>
             );
           })}
+
           {titleField !== 'walls' && titleField !== NONPAINTABLEAREAFIELD && (
             <Grid xs={6} md={6} mt={2}>
               <FormGroup>
