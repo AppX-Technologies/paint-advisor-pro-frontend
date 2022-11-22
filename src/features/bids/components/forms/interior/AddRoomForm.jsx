@@ -177,7 +177,7 @@ export default function AddRoomForm(props) {
                   }}
                   sx={{ width: '100%' }}
                   options={ROOM_TYPES.map((option) => option)}
-                  renderInput={(params) => <TextField {...params} label='Wall' />}
+                  renderInput={(params) => <TextField {...params} label='Room Name' />}
                 />
               </Stack>
             </Grid>
