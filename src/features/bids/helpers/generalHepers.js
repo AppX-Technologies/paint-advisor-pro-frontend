@@ -5,13 +5,13 @@ export const findCurrentStageButtonInfo = (stageName) => {
 };
 
 export const findCurrentClient = (clientList, selectedListItem) => {
-  return clientList.find((client) => client.customerName === selectedListItem);
+  return clientList.find((client) => client._id === selectedListItem);
 };
 
 export const searchedResult = (list, keyword) => {
-  return list.filter((item) => item.customerName.toLowerCase().includes(keyword.toLowerCase()));
+  return list.filter((item) => item.name.toLowerCase().includes(keyword.toLowerCase()));
 };
 
 export const findCommentsUniquely = (originalCommentList, searchValue) => {
-  return originalCommentList.filter((comment) => comment.customerName === searchValue);
+  return originalCommentList.filter((comment) => comment.name === searchValue);
 };

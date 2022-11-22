@@ -1,5 +1,10 @@
-import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
-import { Box, Card, FormControl, MenuItem, Select, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CircularProgress,
+  TextField,
+  Typography
+} from '@mui/material';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import SearchListItems from './SearchListItems';
@@ -10,8 +15,9 @@ const QuickSearch = ({
   handleSearch,
   filteredClietsList
 }) => {
-  const { clientList } = useSelector((state) => state.bids);
+  const { clientList, isLoading } = useSelector((state) => state.bids);
 
+  
   useEffect(() => {
     handleSearch('');
   }, [clientList]);
@@ -38,7 +44,11 @@ const QuickSearch = ({
             size='small'
           />
         </Box>
-
+        {isLoading && (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <CircularProgress size={20} sx={{ margin: '5px auto' }} />
+          </Box>
+        )}
         {/* ListItems */}
         <Box sx={{ overflowY: 'auto', height: '66vh' }}>
           {filteredClietsList.length === 0 && (

@@ -1,10 +1,11 @@
 import EditIcon from '@mui/icons-material/Edit';
 import { Box, Button, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 import { bidsStages } from '../../../helpers/bidsStages';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
+import { showMessage } from '../../snackbar/snackbarSlice';
 import { findCurrentClient, findCurrentStageButtonInfo } from '../helpers/generalHepers';
 
 const ClientInfo = ({
@@ -14,14 +15,27 @@ const ClientInfo = ({
   setOpen,
   selectedListItem,
   currentClientInfo,
-  setCurrentClientInfo
+  setCurrentClientInfo,
+  onClientFormChange,
+  setCurrentClientInfoToEdit
 }) => {
-  const { clientList } = useSelector((state) => state.bids);
+  const { clientList, isSuccess } = useSelector((state) => state.bids);
 
+  const dispatch = useDispatch();
   useEffect(() => {
     setCurrentClientInfo(findCurrentClient(clientList, selectedListItem));
   }, [selectedListItem]);
 
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(
+        showMessage({
+          message: `Client Successfully Updated`,
+          severity: 'success'
+        })
+      );
+    }
+  }, [isSuccess]);
   return (
     <Box>
       {selectedListItem ? (
@@ -30,7 +44,13 @@ const ClientInfo = ({
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <Typography sx={{ width: '100%' }}>Client Info</Typography>
 
-              <Tooltip title="Edit Client's Info" placement='top'>
+              <Tooltip
+                title="Edit Client's Info"
+                placement='top'
+                onClick={() => {
+                  onClientFormChange(true);
+                  setCurrentClientInfoToEdit({ ...currentClientInfo });
+                }}>
                 <EditIcon sx={{ cursor: 'pointer', ml: 1, width: '20px', height: '20px' }} />
               </Tooltip>
             </Box>
@@ -69,42 +89,52 @@ const ClientInfo = ({
           {/* Client's Info Card */}
           <Grid container>
             {currentClientInfo &&
-              Object.keys(currentClientInfo && currentClientInfo).map((field) => {
-                return (
-                  <Grid md={2} xs={10}>
-                    <Box
-                      p={0.5}
-                      sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                        margin: '5px 4px'
-                      }}>
-                      <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
-                        {AddNewClientTextField.map((item) => {
-                          return item.name === field && <>{item.label}</>;
-                        })}
-                      </Typography>
-                      <Chip
+              Object.keys(currentClientInfo && currentClientInfo)
+                .filter(
+                  (item) =>
+                    item !== 'status' &&
+                    item !== 'bid' &&
+                    item !== 'organization' &&
+                    item !== 'materials' &&
+                    item !== 'files' &&
+                    item !== '_id' &&
+                    item !== 'rooms' &&
+                    item !== '__v'
+                )
+                .map((field) => {
+                  return (
+                    <Grid md={2} xs={10}>
+                      <Box
+                        p={0.5}
                         sx={{
-                          bgcolor: (theme) => theme.chip.background.main,
-                          WebkitJustifyContent: 'left',
-                          justifyContent: 'left'
-                        }}
-                        label={
-                          <Typography
-                            sx={{ textAlign: 'left', fontWeight: '400', fontSize: '10px' }}>
-                            {currentClientInfo[field] !== '' && field !== 'email'
-                              ? convertStringCase(currentClientInfo[field])
-                              : currentClientInfo[field]}
-                          </Typography>
-                        }
-                        size='small'
-                      />
-                    </Box>
-                  </Grid>
-                );
-              })}
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'flex-start',
+                          margin: '5px 4px'
+                        }}>
+                        <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
+                          {AddNewClientTextField.map((item) => {
+                            return item.name === field && <>{item.label}</>;
+                          })}
+                        </Typography>
+                        <Chip
+                          sx={{
+                            bgcolor: (theme) => theme.chip.background.main,
+                            WebkitJustifyContent: 'left',
+                            justifyContent: 'left'
+                          }}
+                          label={
+                            <Typography
+                              sx={{ textAlign: 'left', fontWeight: '400', fontSize: '10px' }}>
+                              {currentClientInfo[field] !== '' ? currentClientInfo[field] : null}
+                            </Typography>
+                          }
+                          size='small'
+                        />
+                      </Box>
+                    </Grid>
+                  );
+                })}
           </Grid>
         </>
       ) : (

@@ -1,5 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import {
+  CircularProgress,
   FormControl,
   Grid,
   InputLabel,
@@ -16,16 +17,31 @@ import TextField from '@mui/material/TextField';
 import { DateTimePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { AddNewClientTextField } from '../../../common/FormTextField';
+import { isSystemUser } from '../../../helpers/roles';
+import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
-import { createClient } from '../bidsSlice';
-import { findSameTypeOfWall } from './forms/formHelper';
+import { createClient, reset, updateClient } from '../bidsSlice';
 
 export default function AddNewClientForm(props) {
-  const { open, handleClose, selectedValue, setSelectedvalue, initialState } = props;
+  const {
+    open,
+    handleClose,
+    selectedValue,
+    setSelectedvalue,
+    currentClientInfoToEdit,
+    setCurrentClientInfoToEdit
+  } = props;
 
   const dispatch = useDispatch();
+  const { isLoading, isSuccess } = useSelector((state) => state.bids);
+  const { user } = useSelector(authSelector);
+  const { companyId } = useParams();
+
+  const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
 
   const handleFormSubmission = () => {
     const emptyFields = Object.keys(selectedValue).some((item) => selectedValue[item] === '');
@@ -38,21 +54,46 @@ export default function AddNewClientForm(props) {
       );
     }
 
-    handleClose();
-    dispatch(createClient(selectedValue));
-    setSelectedvalue(initialState);
+    if (selectedValue._id) {
+      dispatch(updateClient({ ...selectedValue, id: selectedValue._id, token: user.token }));
+    } else {
+      dispatch(createClient({ ...selectedValue, organization: orgId, token: user.token }));
+    }
+
+    setCurrentClientInfoToEdit(null);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      handleClose();
+      dispatch(reset());
+    }
+  }, [isSuccess]);
+  useEffect(() => {
+    if (open && currentClientInfoToEdit) {
+      setSelectedvalue({ ...currentClientInfoToEdit });
+    }
+  }, [open]);
 
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>
         <Toolbar sx={{ backgroundColor: '#D50000' }}>
           <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
-            Add New Client
+            Add New Client{' '}
+            {isLoading && (
+              <CircularProgress
+                color='inherit'
+                size={21}
+                sx={{ marginLeft: '5px', marginTop: '1px' }}
+              />
+            )}
           </Typography>
+
           <Button
             variant='contained'
             color='info'
+            disabled={isLoading}
             style={{
               height: '30px',
               padding: '3px'
@@ -165,8 +206,14 @@ export default function AddNewClientForm(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type='submit' variant='contained' onClick={handleFormSubmission}>
+          <Button onClick={handleClose} disabled={isLoading}>
+            Cancel
+          </Button>
+          <Button
+            type='submit'
+            variant='contained'
+            disabled={isLoading}
+            onClick={handleFormSubmission}>
             Save
           </Button>
         </DialogActions>

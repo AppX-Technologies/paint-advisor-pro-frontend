@@ -1,7 +1,7 @@
 export const booleanOption = ['Yes', 'No'];
 export const AddNewClientTextField = [
   {
-    name: 'customerName',
+    name: 'name',
     id: 'customer-name',
     label: 'Customer Name',
     dataType: 'text'
@@ -27,14 +27,14 @@ export const AddNewClientTextField = [
     resizeable: true
   },
   {
-    name: 'zipCode',
+    name: 'zip',
     id: 'zip-code',
     label: 'Zip Code',
     resizeable: true,
     dataType: 'text'
   },
   {
-    name: 'contactMethod',
+    name: 'preferredContactMethod',
     id: 'prefered-contact-method',
     label: 'Prefered Contact Method',
     dataType: 'dropDown',

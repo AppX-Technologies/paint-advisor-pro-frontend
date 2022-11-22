@@ -1,9 +1,12 @@
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Box, Button, Card, Divider, Grid } from '@mui/material';
+import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { booleanOption } from '../../../common/FormTextField';
 import { STAGE_1 } from '../../../helpers/contants';
+import { authSelector } from '../../auth/authSlice';
+import { fetchAllClients } from '../bidsSlice';
 import {
   estimationFormInitialInfo,
   initialBaseBoardTrimInfo,
@@ -47,6 +50,8 @@ const Pipeline = () => {
   const [value, setValue] = React.useState([null, null]);
   const [roomStats, setRoomStats] = React.useState(initialRoomState);
   // TODO rename
+  const { user } = useSelector(authSelector);
+
   const [selectedValue, setSelectedvalue] = React.useState(initialState);
   const [wallStats, setWallStats] = useState(initilWallInfo);
   const [windowStats, setWindowStats] = useState(initialWindowInfo);
@@ -59,6 +64,7 @@ const Pipeline = () => {
   const [doorJambsStats, setDoorJambsStats] = useState(initialDoorjambsInfo);
   const [crownMoldingStats, setCrownMoldingStats] = useState(initialCrownMoldingInfo);
   const [closetStats, setClosetStats] = useState(initialClosetInfo);
+  const [currentClientInfoToEdit, setCurrentClientInfoToEdit] = useState(null);
 
   const roomRelatedInfo = [
     {
@@ -219,6 +225,7 @@ const Pipeline = () => {
   };
   const handleClose = () => {
     setOpen(false);
+    setCurrentClientInfoToEdit(null);
   };
   const onFilterOptionsClose = () => {
     setShowFilter(false);
@@ -237,10 +244,18 @@ const Pipeline = () => {
   };
 
   useEffect(() => {
-    if (clientList.length === 1) {
-      setSelectedListItem(clientList[0] ? clientList[0].customerName : '');
+    if (clientList) {
+      setSelectedListItem(clientList[0] ? clientList[0]._id : '');
     }
   }, [clientList]);
+
+  const onClientFormChange = (formValue) => {
+    setOpen(formValue);
+  };
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAllClients({ token: user.token }));
+  }, []);
 
   return (
     <>
@@ -254,7 +269,10 @@ const Pipeline = () => {
             bottom: 10,
             height: '25px'
           }}
-          onClick={() => setOpen(true)}>
+          onClick={() => {
+            setOpen(true);
+            setSelectedvalue(cloneDeep(initialState));
+          }}>
           <GroupAddIcon sx={{ mr: 1 }} /> Add new client
         </Button>
       )}
@@ -265,6 +283,8 @@ const Pipeline = () => {
         selectedValue={selectedValue}
         setSelectedvalue={setSelectedvalue}
         initialState={initialState}
+        currentClientInfoToEdit={currentClientInfoToEdit}
+        setCurrentClientInfoToEdit={setCurrentClientInfoToEdit}
       />{' '}
       <EstimateForm
         clearWallStats={clearWallStats}
@@ -320,6 +340,9 @@ const Pipeline = () => {
                   selectedListItem={selectedListItem}
                   currentClientInfo={currentClientInfo}
                   setCurrentClientInfo={setCurrentClientInfo}
+                  onClientFormChange={onClientFormChange}
+                  currentClientInfoToEdit={currentClientInfoToEdit}
+                  setCurrentClientInfoToEdit={setCurrentClientInfoToEdit}
                 />
                 {selectedListItem && (
                   <>

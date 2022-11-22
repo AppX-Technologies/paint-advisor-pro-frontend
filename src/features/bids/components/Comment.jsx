@@ -11,13 +11,13 @@ const Comment = ({ currentClientInfo, onCommentListChange, commentList }) => {
   const dispatch = useDispatch();
 
   const handleCommentSubmission = () => {
-    dispatch(createAComment({ customerName: currentClientInfo.customerName, comment }));
+    dispatch(createAComment({ name: currentClientInfo.name, comment }));
     setComment('');
   };
 
   useEffect(() => {
     onCommentListChange(
-      findCommentsUniquely(comments, currentClientInfo && currentClientInfo.customerName)
+      findCommentsUniquely(comments, currentClientInfo && currentClientInfo.name)
     );
   }, [comments, currentClientInfo]);
   return (
@@ -48,7 +48,7 @@ const Comment = ({ currentClientInfo, onCommentListChange, commentList }) => {
                     }}
                     variant='h6'
                     component='div'>
-                    {info.customerName}
+                    {info.name}
                   </Typography>
                   <Typography
                     sx={{ ml: 2, mb: 1, flex: 1, fontSize: '14px' }}

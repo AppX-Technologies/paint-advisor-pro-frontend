@@ -124,12 +124,12 @@ export const initialCeilingInfo = {
 };
 
 export const initialState = {
-  customerName: '',
+  name: '',
   address: '',
   city: '',
   state: '',
-  zipCode: '',
-  contactMethod: '',
+  zip: '',
+  preferredContactMethod: '',
   email: '',
   contactNumber: '',
   propertyType: ''
