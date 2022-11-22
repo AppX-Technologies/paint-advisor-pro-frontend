@@ -6,7 +6,7 @@ const endpoint = 'https://painting-app-backend.herokuapp.com/clients';
 
 const CREATE_CLIENTS = `${endpoint}/`;
 const FETCH_CLIENTS = `${endpoint}/search`;
-const UPDATE_CLIENT = `${endpoint}/`;
+const UPDATE_CLIENT = `${endpoint}`;
 const DELETE_CLIENT = `${endpoint}/`;
 
 export const fetchAllClientsService = async (userData) => {
@@ -47,7 +47,7 @@ export const updateClientService = async (userData) => {
     }
   };
   const response = await axios.put(
-    `${endpoint}/${userData.id}`,
+    `${UPDATE_CLIENT}/${userData.id}`,
     {
       ...userData,
       token: userData.token
