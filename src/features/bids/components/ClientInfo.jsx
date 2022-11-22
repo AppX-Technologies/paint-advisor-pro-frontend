@@ -1,5 +1,14 @@
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Button, Chip, Divider, Grid, Tooltip, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Divider,
+  Grid,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddNewClientTextField } from '../../../common/FormTextField';
@@ -19,12 +28,12 @@ const ClientInfo = ({
   onClientFormChange,
   setCurrentClientInfoToEdit
 }) => {
-  const { clientList, isSuccess } = useSelector((state) => state.bids);
+  const { clientList, isSuccess, isLoading } = useSelector((state) => state.bids);
 
   const dispatch = useDispatch();
   useEffect(() => {
     setCurrentClientInfo(findCurrentClient(clientList, selectedListItem));
-  }, [selectedListItem]);
+  }, [selectedListItem, clientList]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -138,7 +147,13 @@ const ClientInfo = ({
           </Grid>
         </>
       ) : (
-        <Typography sx={{ fontSize: '14px', p: 2 }}>No Client Information</Typography>
+        <>
+          {!isLoading && <Typography sx={{ fontSize: '14px', p: 2 }}>No Client</Typography>}
+
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            {isLoading && <CircularProgress size={20} sx={{ ml: 2 }} />}
+          </Box>
+        </>
       )}
     </Box>
   );

@@ -1,10 +1,4 @@
-import {
-  Box,
-  Card,
-  CircularProgress,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Box, Card, CircularProgress, TextField, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import SearchListItems from './SearchListItems';
@@ -17,7 +11,6 @@ const QuickSearch = ({
 }) => {
   const { clientList, isLoading } = useSelector((state) => state.bids);
 
-  
   useEffect(() => {
     handleSearch('');
   }, [clientList]);
@@ -51,7 +44,7 @@ const QuickSearch = ({
         )}
         {/* ListItems */}
         <Box sx={{ overflowY: 'auto', height: '66vh' }}>
-          {filteredClietsList.length === 0 && (
+          {!isLoading && filteredClietsList.length === 0 && (
             <Typography sx={{ textAlign: 'center', fontWeight: '500', mt: 1 }}>
               No Clients
             </Typography>

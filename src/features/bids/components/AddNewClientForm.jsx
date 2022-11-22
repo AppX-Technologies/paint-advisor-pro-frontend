@@ -4,6 +4,7 @@ import {
   FormControl,
   Grid,
   InputLabel,
+  LinearProgress,
   MenuItem,
   Select,
   Toolbar,
@@ -37,18 +38,18 @@ export default function AddNewClientForm(props) {
   } = props;
 
   const dispatch = useDispatch();
-  const { isLoading, isSuccess } = useSelector((state) => state.bids);
+  const { isLoading, isSuccess, isError } = useSelector((state) => state.bids);
   const { user } = useSelector(authSelector);
   const { companyId } = useParams();
 
   const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
 
   const handleFormSubmission = () => {
-    const emptyFields = Object.keys(selectedValue).some((item) => selectedValue[item] === '');
+    const emptyFields = Object.keys(selectedValue).find((item) => selectedValue[item] === '');
     if (emptyFields) {
       return dispatch(
         showMessage({
-          message: 'Fields Cannot Be Empty',
+          message: `'${emptyFields.toUpperCase()}' Field Cannot Be Empty`,
           severity: 'error'
         })
       );
@@ -64,7 +65,7 @@ export default function AddNewClientForm(props) {
   };
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && isError) {
       handleClose();
       dispatch(reset());
     }
@@ -81,13 +82,6 @@ export default function AddNewClientForm(props) {
         <Toolbar sx={{ backgroundColor: '#D50000' }}>
           <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
             Add New Client{' '}
-            {isLoading && (
-              <CircularProgress
-                color='inherit'
-                size={21}
-                sx={{ marginLeft: '5px', marginTop: '1px' }}
-              />
-            )}
           </Typography>
 
           <Button
@@ -102,6 +96,7 @@ export default function AddNewClientForm(props) {
             Close <CloseIcon sx={{ height: '15px' }} />
           </Button>
         </Toolbar>
+        {isLoading && <LinearProgress color='success' />}
 
         <DialogContent>
           <Grid container spacing={2}>

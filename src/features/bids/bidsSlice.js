@@ -18,7 +18,8 @@ const initialState = {
   isLoading: false,
   isSuccess: false,
   message: '',
-  response: null
+  response: null,
+  isAdded: false
 };
 
 // Fetch Client Info
@@ -169,12 +170,14 @@ export const bidsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.response = addOrUpdateItemInArray(state.clientList, payload.data);
+        state.isAdded = true;
       })
       .addCase(createClient.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload;
+        state.isAdded = false;
       })
       .addCase(fetchSingleClient.pending, (state) => {
         state.isLoading = true;
