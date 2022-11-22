@@ -1,33 +1,31 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import authService from "./authService";
-import { showMessage, onClose } from "../snackbar/snackbarSlice";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import authService from './authService';
+import { showMessage } from '../snackbar/snackbarSlice';
 
 // initial states
 
 const initialState = {
-  user: null,
-  userType: null,
+  user: authService.getLoggedInUser(),
   isError: false,
   isLoading: false,
   isSuccess: false,
   isSuccessOtp: false,
-  isResetSuccess:false,
-  message: "",
+  isResetSuccess: false,
+  message: ''
 };
 
 export const generateRegistrationOtp = createAsyncThunk(
-  "auth/generateRegistrationOtp",
+  'auth/generateRegistrationOtp',
   async (userData, thunkAPI) => {
     try {
       const response = await authService.generateRegistrationOtp(userData);
-      console.log(response);
       return response;
     } catch (err) {
       const message =
-      (err.response && err.response.data && err.response.data.message) ||
-      err.message ||
-      err.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+        (err.response && err.response.data && err.response.data.message) ||
+        err.message ||
+        err.toString();
+      thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -35,29 +33,23 @@ export const generateRegistrationOtp = createAsyncThunk(
 
 //  for register
 
-export const register = createAsyncThunk(
-  "auth/register",
-  async (user, thunkAPI) => {
-    try {
-      const response = await authService.register(user);
-      console.log(response);
-      return response;
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
-      return thunkAPI.rejectWithValue(message);
-    }
+export const register = createAsyncThunk('auth/register', async (user, thunkAPI) => {
+  try {
+    const response = await authService.register(user);
+    return response;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 // for login
 
-export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
+export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
   try {
     return await authService.login(user);
   } catch (error) {
@@ -71,52 +63,43 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
 });
 
 // for logout
-export const logout = createAsyncThunk("auth/logout", async () => {
+export const logout = createAsyncThunk('auth/logout', async () => {
   authService.logout();
 });
 
 export const sendForgotPasswordLink = createAsyncThunk(
-  "auth/sendForgotPasswordLink",
+  'auth/sendForgotPasswordLink',
   async (user, thunkAPI) => {
     try {
       const response = await authService.sendForgotPasswordLink(user);
-      console.log(response);
       return response;
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.response && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
+      thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-export const resetPassword = createAsyncThunk(
-  "auth/resetPassword",
-  async (user, thunkAPI) => {
-    try {
-      const response = await authService.resetPassword(user);
-      console.log(response);
-      return response;
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      thunkAPI.dispatch(showMessage({message: message, severity: 'error'}))
-      return thunkAPI.rejectWithValue(message);
-        }
+export const resetPassword = createAsyncThunk('auth/resetPassword', async (user, thunkAPI) => {
+  try {
+    const response = await authService.resetPassword(user);
+    return response;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     reset: (state) => {
@@ -124,8 +107,8 @@ export const authSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.isSuccessOtp = false;
-      state.message = "";
-    },
+      state.message = '';
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -175,36 +158,33 @@ export const authSlice = createSlice({
       })
       .addCase(sendForgotPasswordLink.pending, (state) => {
         state.isLoading = true;
-      }
-      )
+      })
       .addCase(sendForgotPasswordLink.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isSuccessOtp  = true;
+        state.isSuccessOtp = true;
         state.message = action.payload;
       })
-      .addCase(sendForgotPasswordLink.rejected, (state,action)=>{
-        state.isLoading= false;
+      .addCase(sendForgotPasswordLink.rejected, (state, action) => {
+        state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
       .addCase(resetPassword.pending, (state) => {
         state.isLoading = true;
-      }
-      )
+      })
       .addCase(resetPassword.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isResetSuccess = true;
         state.message = action.payload;
-      }
-      )
-      .addCase(resetPassword.rejected, (state,action)=>{
-        state.isLoading= false;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       });
-  },
+  }
 });
 
 export const { reset } = authSlice.actions;
-
+export const authSelector = (state) => state.auth;
 export default authSlice.reducer;

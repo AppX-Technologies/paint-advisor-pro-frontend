@@ -8,16 +8,21 @@
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.4",
     "@mui/styles": "^5.10.3",
+    "@mui/x-date-pickers": "^5.0.7",
+    "@mui/x-date-pickers-pro": "^5.0.8",
     "@reduxjs/toolkit": "^1.8.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "axios": "^0.27.2",
+    "dayjs": "^1.11.6",
     "dotenv": "^16.0.2",
+    "lodash": "^4.17.21",
     "mui-datatables": "^4.2.2",
     "muibox": "^2.0.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-otp-input": "^2.4.0",
     "react-redux": "^8.0.2",
@@ -29,7 +34,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc.json"
   },
   "eslintConfig": {
     "extends": [
@@ -50,6 +58,13 @@
     ]
   },
   "devDependencies": {
-    "prettier": "2.7.1"
+    "eslint": "^8.26.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.10",
+    "prettier": "^2.7.1"
   }
 }
