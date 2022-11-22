@@ -93,7 +93,6 @@ export const deleteProcess = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await processService.deleteProcess(userData);
-      console.log(response);
       return response;
     } catch (error) {
       const message =

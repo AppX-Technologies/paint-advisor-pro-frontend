@@ -8,9 +8,8 @@ export const estimationFormInitialInfo = {
 export const initialNonPaintableStats = {
   _id: '',
   description: '',
-  area: 0
+  area: null
 };
-
 
 export const initialRoomState = {
   roomName: '',
@@ -23,27 +22,28 @@ export const initialRoomState = {
   doorjambs: [],
   crownMoldings: [],
   closets: [],
-  nonPaintableAreas: [{ description: 'Current Total', area: 0, isTotal: true }]
+  nonPaintableAreas: [{ description: 'Current Total', area: null, isTotal: true }]
 };
 
 export const initilWallInfo = {
   _id: '',
   name: '',
-  prepHour: 0,
-  height: 0,
-  length: 0,
+  prepHour: null,
+  height: null,
+  length: null,
   wallType: '',
-  coats: 0
+  coats: null
 };
 
 export const initialDoorInfo = {
   _id: '',
   name: '',
   style: '',
-  quantity: 0,
-  length: 0,
-  height: 0,
-  coats: 0,
+  wallInfo: '',
+  quantity: null,
+  length: null,
+  height: null,
+  coats: null,
   paint: false
 };
 
@@ -51,9 +51,9 @@ export const initialWindowInfo = {
   _id: '',
   name: '',
   style: '',
-  height: 0,
-  length: 0,
-  coats: 0,
+  height: null,
+  length: null,
+  coats: null,
   wallInfo: '',
   paint: false
 };
@@ -63,9 +63,10 @@ export const initialBaseBoardTrimInfo = {
   name: '',
   prepHour: '',
   linearFeet: '',
-  height: 0,
-  length: 0,
-  coats: 0,
+  height: null,
+  length: null,
+  coats: null,
+
   prducts: []
 };
 
@@ -74,10 +75,10 @@ export const initialWindowTrimInfo = {
   prepHour: '',
   name: '',
   style: '',
-  height: 0,
-  length: 0,
-  coats: 0,
-  quantity: 0,
+  height: null,
+  length: null,
+  coats: null,
+  quantity: null,
   prducts: []
 };
 
@@ -86,8 +87,8 @@ export const initialDoorjambsInfo = {
   name: '',
   prepHour: '',
   linearFeet: '',
-  width: 0,
-  coats: 0,
+  width: null,
+  coats: null,
   prducts: []
 };
 
@@ -96,8 +97,8 @@ export const initialCrownMoldingInfo = {
   name: '',
   prepHour: '',
   linearFeet: '',
-  width: 0,
-  coats: 0,
+  width: null,
+  coats: null,
   prducts: []
 };
 
@@ -106,9 +107,9 @@ export const initialClosetInfo = {
   name: '',
   prepHour: '',
   length: '',
-  width: 0,
-  averageHeight: 0,
-  coats: 0,
+  width: null,
+  averageHeight: null,
+  coats: null,
   prducts: []
 };
 

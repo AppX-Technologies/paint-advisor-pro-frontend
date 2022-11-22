@@ -108,7 +108,8 @@ const Pipeline = () => {
         { name: 'height', label: 'Height' },
         { name: 'length', label: 'Length' },
         { name: 'coats', label: 'Coats' },
-        { name: 'quantity', label: 'Quantity' }
+        { name: 'quantity', label: 'Quantity' },
+        { name: 'wallInfo', label: 'Wall Info' }
       ]
     },
     {

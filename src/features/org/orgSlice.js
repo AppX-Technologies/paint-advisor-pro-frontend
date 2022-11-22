@@ -53,7 +53,6 @@ export const fetchSingleOrg = createAsyncThunk('org/fetchSingleOrg', async (user
 export const createOrgs = createAsyncThunk('auth/createOrgs', async (userData, thunkAPI) => {
   try {
     const response = await orgService.createOrgs(userData);
-    console.log(response);
     return response;
   } catch (error) {
     const message =
@@ -70,7 +69,6 @@ export const createOrgs = createAsyncThunk('auth/createOrgs', async (userData, t
 export const updateOrg = createAsyncThunk('auth/updateOrg', async (userData, thunkAPI) => {
   try {
     const response = await orgService.updateOrg(userData);
-    console.log(response);
     return response;
   } catch (error) {
     const message =
@@ -85,7 +83,6 @@ export const updateOrg = createAsyncThunk('auth/updateOrg', async (userData, thu
 export const deleteOrg = createAsyncThunk('auth/deleteOrg', async (userData, thunkAPI) => {
   try {
     const response = await orgService.deleteOrg(userData);
-    console.log(response);
     return response;
   } catch (error) {
     const message =

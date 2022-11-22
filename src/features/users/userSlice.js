@@ -37,7 +37,6 @@ export const fetchUsers = createAsyncThunk('org/fetchUsers', async (userData, th
 export const createUsers = createAsyncThunk('auth/createUsers', async (userData, thunkAPI) => {
   try {
     const response = await userService.createUsers(userData);
-    console.log(response);
     return response;
   } catch (error) {
     const message =
@@ -52,7 +51,6 @@ export const createUsers = createAsyncThunk('auth/createUsers', async (userData,
 export const updateUser = createAsyncThunk('auth/updateUser', async (userData, thunkAPI) => {
   try {
     const response = await userService.updateUser(userData);
-    console.log(response);
     return response;
   } catch (error) {
     const message =
@@ -67,7 +65,6 @@ export const updateUser = createAsyncThunk('auth/updateUser', async (userData, t
 export const deleteUser = createAsyncThunk('auth/deleteUser', async (userData, thunkAPI) => {
   try {
     const response = await userService.deleteUser(userData);
-    console.log(response);
     return response;
   } catch (error) {
     const message =

@@ -9,7 +9,6 @@ const DELETE_USER = `${endpoint}/`;
 // const {token} = JSON.parse(localStorage.getItem("user"));
 
 const fetchUsers = async (userData) => {
-  console.log(userData, 'yess');
   const config = {
     headers: {
       'Content-Type': 'application/json',

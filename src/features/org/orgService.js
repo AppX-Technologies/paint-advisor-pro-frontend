@@ -16,7 +16,6 @@ const fetchOrgs = async (userData) => {
       Authorization: `Bearer ${userData}`
     }
   };
-  console.log(userData);
   const response = await axios.post(FETCH_ORGS, {}, config);
   return response.data;
 };

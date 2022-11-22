@@ -33,7 +33,6 @@ export const fetchAllClients = createAsyncThunk('bids/fetchClients', async (user
 //  Create Client
 
 export const createClient = createAsyncThunk('bids/createClient', async (userData, thunkAPI) => {
-  console.log(userData);
   try {
     const response = await createClientService(userData);
     return response;

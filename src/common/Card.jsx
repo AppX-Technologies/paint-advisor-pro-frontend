@@ -1,5 +1,5 @@
 import { Box, Tooltip, Typography } from '@mui/material';
-import React from 'react';
+import React, { useMemo } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
@@ -16,7 +16,9 @@ const Card = ({
   setOpenDeleteModal,
   setCurentAddMore
 }) => {
-  const dimension = `${items.length}x${items.height ? items.height : items.width}`;
+  const dimension = useMemo(() => {
+    return `${items.length}x${items.height ? items.height : items.width}`;
+  }, [items]);
 
   return (
     <Box
@@ -57,7 +59,7 @@ const Card = ({
                     cursor: 'pointer'
                   }}
                   onClick={() => {
-                    setRoomInfoToEdit({ ...items, clone: true });
+                    setRoomInfoToEdit({ ...items, _id: null });
                     onopenAddMoreDetailsChange(true);
                     setCurentAddMore(field);
                   }}
@@ -74,7 +76,7 @@ const Card = ({
                   }}
                   size='small'
                   onClick={() => {
-                    setRoomInfoToEdit({ ...items, clone: false });
+                    setRoomInfoToEdit({ ...items });
                     onopenAddMoreDetailsChange(true);
                     setCurentAddMore(field);
                   }}
@@ -160,7 +162,7 @@ const Card = ({
                         cursor: 'pointer'
                       }}
                       onClick={() => {
-                        setRoomInfoToEdit({ ...items, clone: true });
+                        setRoomInfoToEdit({ ...items, _id: null });
                         onopenAddMoreDetailsChange(true);
                         setCurentAddMore(field);
                       }}
@@ -177,7 +179,7 @@ const Card = ({
                       }}
                       size='small'
                       onClick={() => {
-                        setRoomInfoToEdit({ ...items, clone: false });
+                        setRoomInfoToEdit({ ...items });
                         onopenAddMoreDetailsChange(true);
                         setCurentAddMore(field);
                       }}

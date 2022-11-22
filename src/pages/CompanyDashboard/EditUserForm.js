@@ -27,7 +27,6 @@ import {
 
 export default function Edit(props) {
   const dispatch = useDispatch();
-  console.log('sadsad');
   const { openEditForm, setOpenEditForm, editFormData, getId } = props;
   const initialFormState = {
     name: editFormData.name ? editFormData.name : '',

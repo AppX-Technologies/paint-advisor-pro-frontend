@@ -64,7 +64,9 @@ const AddMoreDetails = ({
 
     if (
       titleField !== NONPAINTABLEAREAFIELD &&
-      addIn.some((item) => item.name === currentStats.name)
+      addIn
+        .filter((item) => item._id !== currentStats._id)
+        .some((item) => item.name === currentStats.name)
     ) {
       return dispatch(
         showMessage({
@@ -74,8 +76,6 @@ const AddMoreDetails = ({
       );
     }
 
-    delete currentStats.clone;
-
     if (!roomInfoToEdit) {
       addIn.push({
         ...currentStats,
@@ -83,7 +83,7 @@ const AddMoreDetails = ({
         isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
       });
     } else {
-      if (roomInfoToEdit.clone) {
+      if (!roomInfoToEdit._id) {
         addIn.push({
           ...currentStats,
           _id: new Date().getTime().toString(),
@@ -105,14 +105,12 @@ const AddMoreDetails = ({
     );
 
     setRoomInfoToEdit(null);
-
     setOpenAddMoreDetails(false);
     clearWallStats();
   };
 
   const onDialogClose = () => {
     setRoomInfoToEdit(null);
-
     setOpenAddMoreDetails(false);
   };
 
@@ -123,14 +121,11 @@ const AddMoreDetails = ({
   }, []);
 
   return (
-    <Dialog
-      open={openAddMoreDetails}
-      onClose={onDialogClose}
-      PaperProps={{ sx: { minWidth: '60%' } }}>
+    <Dialog open={openAddMoreDetails} PaperProps={{ sx: { minWidth: '60%' } }}>
       <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
         <Stack direction='row' spacing={2}>
           <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
-            {roomInfoToEdit ? (!roomInfoToEdit.clone ? 'Edit' : 'Clone') : 'Add New'} {currentLabel}
+            {roomInfoToEdit ? (!roomInfoToEdit._id ? 'Edit' : 'Clone') : 'Add New'} {currentLabel}
           </Typography>
           <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
         </Stack>
@@ -222,7 +217,8 @@ const AddMoreDetails = ({
 
                         <TextField
                           InputProps={{
-                            style: { height: '30px' }
+                            style: { height: '30px' },
+                            inputProps: { min: 0 }
                           }}
                           name='name'
                           fullWidth

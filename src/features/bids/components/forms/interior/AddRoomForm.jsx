@@ -2,6 +2,7 @@ import BrushIcon from '@mui/icons-material/Brush';
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import {
+  Autocomplete,
   Box,
   CircularProgress,
   Divider,
@@ -23,7 +24,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import AddMoreButton from '../../../../../common/AddMoreButton';
 import Card from '../../../../../common/Card';
-import { NONPAINTABLEAREAFIELD } from '../../../../../helpers/contants';
+import { NONPAINTABLEAREAFIELD, ROOM_TYPES } from '../../../../../helpers/contants';
 import { showMessage } from '../../../../snackbar/snackbarSlice';
 import { initialRoomState } from '../../../common/roomsInitialStats';
 import AddMoreDetails from './AddMoreDetails';
@@ -148,7 +149,7 @@ export default function AddRoomForm(props) {
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { minWidth: '80%' } }}>
+      <Dialog open={open} PaperProps={{ sx: { minWidth: '80%' } }}>
         <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
           <Stack direction='row' spacing={2}>
             <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
@@ -164,21 +165,21 @@ export default function AddRoomForm(props) {
                 Room Name
               </InputLabel>
 
-              <TextField
-                InputProps={{
-                  style: { height: '30px' }
-                }}
-                name='name'
-                fullWidth
-                variant='outlined'
-                id='outlined-basic'
-                autoFocus
-                value={roomStats.roomName}
-                onChange={(event) => {
-                  roomStats.roomName = event.target.value;
-                  setRoomStats({ ...roomStats });
-                }}
-              />
+              <Stack spacing={2} sx={{ width: '100%' }}>
+                <Autocomplete
+                  id='free-solo-demo'
+                  size='small'
+                  value={roomStats.roomName}
+                  freeSolo
+                  onInputChange={(event, newInputValue) => {
+                    roomStats.roomName = newInputValue;
+                    setRoomStats({ ...roomStats });
+                  }}
+                  sx={{ width: '100%' }}
+                  options={ROOM_TYPES.map((option) => option)}
+                  renderInput={(params) => <TextField {...params} label='Wall' />}
+                />
+              </Stack>
             </Grid>
             <Divider />
             {roomRelatedInfo &&
