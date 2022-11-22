@@ -17,6 +17,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import InputLabel from '@mui/material/InputLabel';
+import { cloneDeep } from 'lodash';
 import * as React from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -103,12 +104,9 @@ export default function AddRoomForm(props) {
         })
       );
     }
-    if (!roomStats.edit) {
-      delete roomStats.edit;
+    if (!roomStats._id) {
       setAllRoom([...allRoom, { ...roomStats, _id: Date.now().toString() }]);
     } else {
-      delete roomStats.edit;
-
       allRoom.splice(
         allRoom.findIndex((room) => room._id === roomStats._id),
         1,
@@ -227,6 +225,7 @@ export default function AddRoomForm(props) {
 
                           <AddMoreButton
                             onClick={() => {
+                              item.onCurrentStatsChange(cloneDeep(item.initialStats));
                               setRoomInfoToEdit(null);
                               onopenAddMoreDetailsChange(true);
                               setCurentAddMore(fieldType);

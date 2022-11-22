@@ -43,7 +43,8 @@ const RoomCard = ({
                 cursor: 'pointer'
               }}
               onClick={() => {
-                onSelectedRoomInfoChange({ ...completeRoomInfo, edit: false });
+                onSelectedRoomInfoChange({ ...completeRoomInfo, _id: null });
+
                 setAddRoom(true);
               }}
               size='small'
@@ -60,7 +61,7 @@ const RoomCard = ({
               size='small'
               onClick={() => {
                 onCardEdit(items.roomName);
-                onSelectedRoomInfoChange({ ...completeRoomInfo, edit: true });
+                onSelectedRoomInfoChange({ ...completeRoomInfo });
                 setAddRoom(true);
               }}
             />

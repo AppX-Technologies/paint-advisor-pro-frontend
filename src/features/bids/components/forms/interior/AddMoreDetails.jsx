@@ -18,7 +18,6 @@ import {
   Typography
 } from '@mui/material';
 import React, { useEffect } from 'react';
-import { cloneDeep } from 'lodash';
 import { useDispatch } from 'react-redux';
 import { validationInfo } from '../../../../../common/FormTextField';
 import Button from '../../../../../components/Button';
@@ -41,7 +40,6 @@ const AddMoreDetails = ({
   roomStats,
   roomInfoToEdit,
   setRoomInfoToEdit,
-  initialStats,
   fields,
   currentLabel
 }) => {
@@ -107,26 +105,14 @@ const AddMoreDetails = ({
     );
 
     setRoomInfoToEdit(null);
-    setCurrentStats(
-      cloneDeep(
-        titleField !== NONPAINTABLEAREAFIELD
-          ? { ...initialStats, name: '' }
-          : { ...initialStats, description: '' }
-      )
-    );
+
     setOpenAddMoreDetails(false);
     clearWallStats();
   };
 
   const onDialogClose = () => {
     setRoomInfoToEdit(null);
-    setCurrentStats(
-      cloneDeep(
-        titleField !== NONPAINTABLEAREAFIELD
-          ? { ...initialStats, name: '' }
-          : { ...initialStats, description: '' }
-      )
-    );
+
     setOpenAddMoreDetails(false);
   };
 
