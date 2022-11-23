@@ -8,7 +8,7 @@ const SearchListItems = ({ selectedListItem, onSelecetedListItemChange, idx, cli
       <Box
         mt={idx === 0 ? 1 : 0}
         onClick={() => onSelecetedListItemChange(client._id)}
-        bgcolor={selectedListItem === client._id ? '#D50000' : '#F5F5F5'}
+        bgcolor={selectedListItem === client._id ? '#D50000' : 'background.paper'}
         color={selectedListItem === client._id ? 'white' : 'dark'}
         sx={{ cursor: 'pointer' }}>
         <Divider light />

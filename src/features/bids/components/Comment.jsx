@@ -2,16 +2,19 @@ import { Box, TextareaAutosize, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { authSelector } from '../../auth/authSlice';
 import { createAComment } from '../bidsSlice';
 import { findCommentsUniquely } from '../helpers/generalHepers';
 
 const Comment = ({ currentClientInfo, onCommentListChange, commentList }) => {
   const { comments } = useSelector((state) => state.bids);
+  const { user } = useSelector(authSelector);
+
   const [comment, setComment] = useState('');
   const dispatch = useDispatch();
 
   const handleCommentSubmission = () => {
-    dispatch(createAComment({ name: currentClientInfo.name, comment }));
+    dispatch(createAComment({ comment, token: user.token, currentClientInfo }));
     setComment('');
   };
 
@@ -23,13 +26,13 @@ const Comment = ({ currentClientInfo, onCommentListChange, commentList }) => {
   return (
     <>
       <Box>
-        <Typography sx={{ mt: 1, flex: 1, fontSize: '16px', ml: 3 }} variant='h6' component='div'>
+        <Typography sx={{ mt: 3, flex: 1, fontSize: '16px', ml: 3 }} variant='h6' component='div'>
           Comments
         </Typography>
-        {commentList &&
-          commentList.map((info, idx) => {
+        {/* {currentClientInfo.comments &&
+          currentClientInfo.comments.map((individualComment, idx) => {
             return (
-              <>
+              <Box key={currentClientInfo._id}>
                 <Box
                   sx={{
                     mt: idx === 0 ? 1 : 3,
@@ -48,13 +51,13 @@ const Comment = ({ currentClientInfo, onCommentListChange, commentList }) => {
                     }}
                     variant='h6'
                     component='div'>
-                    {info.name}
+                    {currentClientInfo.name}
                   </Typography>
                   <Typography
                     sx={{ ml: 2, mb: 1, flex: 1, fontSize: '14px' }}
                     variant='h3'
                     component='div'>
-                    {info.comment}
+                    {individualComment.comment}
                   </Typography>
                 </Box>
                 <Typography
@@ -69,9 +72,9 @@ const Comment = ({ currentClientInfo, onCommentListChange, commentList }) => {
                   component='div'>
                   On November 11th 2022,12:34 pm
                 </Typography>
-              </>
+              </Box>
             );
-          })}
+          })} */}
         <TextareaAutosize
           minRows={4}
           aria-label='maximum height'

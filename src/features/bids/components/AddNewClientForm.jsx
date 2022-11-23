@@ -65,7 +65,7 @@ export default function AddNewClientForm(props) {
   };
 
   useEffect(() => {
-    if (isSuccess && isError) {
+    if (isSuccess) {
       handleClose();
       dispatch(reset());
     }
@@ -81,7 +81,7 @@ export default function AddNewClientForm(props) {
       <Dialog fullScreen open={open} onClose={handleClose}>
         <Toolbar sx={{ backgroundColor: '#D50000' }}>
           <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
-            Add New Client{' '}
+            {selectedValue._id ? 'Edit' : 'Add New'} Client{' '}
           </Typography>
 
           <Button

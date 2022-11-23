@@ -121,7 +121,7 @@ const ClientInfo = ({
                           justifyContent: 'flex-start',
                           margin: '5px 4px'
                         }}>
-                        <Typography sx={{ fontSize: '12px', textAlign: 'left' }}>
+                        <Typography sx={{ fontSize: '10px', textAlign: 'left' }}>
                           {AddNewClientTextField.map((item) => {
                             return item.name === field && <>{item.label}</>;
                           })}
@@ -134,7 +134,7 @@ const ClientInfo = ({
                           }}
                           label={
                             <Typography
-                              sx={{ textAlign: 'left', fontWeight: '400', fontSize: '10px' }}>
+                              sx={{ textAlign: 'left', fontWeight: '400', fontSize: '12px' }}>
                               {currentClientInfo[field] !== '' ? currentClientInfo[field] : null}
                             </Typography>
                           }

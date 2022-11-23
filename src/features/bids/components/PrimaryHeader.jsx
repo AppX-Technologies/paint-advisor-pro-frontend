@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 
-const PrimaryHeader = ({ onFilterChange }) => {
+const PrimaryHeader = ({ onFilterChange, primaryHeaderSearch, setPrimaryHeaderSearch }) => {
   const [selectOption, setSelectOption] = useState('');
   const [sortOption, setSortOption] = useState('');
   const menuItems = [
@@ -50,6 +50,8 @@ const PrimaryHeader = ({ onFilterChange }) => {
                   </InputAdornment>
                 )
               }}
+              value={primaryHeaderSearch}
+              onChange={(e) => setPrimaryHeaderSearch(e.target.value)}
               id='outlined-basic'
               label={<Typography sx={{ marginTop: '-2.7px' }}>Search</Typography>}
               variant='outlined'

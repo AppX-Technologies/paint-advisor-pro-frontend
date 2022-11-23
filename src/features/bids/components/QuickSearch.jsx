@@ -16,7 +16,7 @@ const QuickSearch = ({
   }, [clientList]);
 
   return (
-    <Card>
+    <Card sx={{ bgcolor: 'background.paper' }}>
       <Box>
         {/* Searchbox and Pins */}
 

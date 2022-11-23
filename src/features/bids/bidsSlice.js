@@ -5,7 +5,8 @@ import {
   createClientService,
   createACommentService,
   fetchAllClientsService,
-  updateClientService
+  updateClientService,
+  uploadAFileService
 } from './bidsService';
 
 // initial states
@@ -14,12 +15,14 @@ const initialState = {
   clientList: [],
   client: {},
   comments: [],
+  files: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
   message: '',
   response: null,
-  isAdded: false
+  isAdded: false,
+  isFileUploadLoading: false
 };
 
 // Fetch Client Info
@@ -126,6 +129,22 @@ export const createAComment = createAsyncThunk(
   }
 );
 
+//  Create A Comment
+
+export const uploadAFile = createAsyncThunk('bids/uploadAFile', async (userData, thunkAPI) => {
+  try {
+    const response = await uploadAFileService(userData);
+    return response;
+  } catch (err) {
+    const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const bidsSlice = createSlice({
   name: 'bids',
   initialState,
@@ -177,7 +196,21 @@ export const bidsSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload;
-        state.isAdded = false;
+      })
+      .addCase(uploadAFile.pending, (state) => {
+        state.isFileUploadLoading = true;
+      })
+      .addCase(uploadAFile.fulfilled, (state, { payload }) => {
+        state.isFileUploadLoading = false;
+        state.isLoading = false;
+      })
+      .addCase(uploadAFile.rejected, (state, action) => {
+        state.isFileUploadLoading = false;
+
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
       })
       .addCase(fetchSingleClient.pending, (state) => {
         state.isLoading = true;
@@ -195,8 +228,7 @@ export const bidsSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(createAComment.fulfilled, (state, { payload }) => {
-        // Test Purpose
-        state.comments = [...state.comments, payload];
+        state.response = addOrUpdateItemInArray(state.clientList, payload.data);
         state.isLoading = false;
       })
       .addCase(createAComment.rejected, (state, action) => {

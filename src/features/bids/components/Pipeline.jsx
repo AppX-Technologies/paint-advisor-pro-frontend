@@ -35,12 +35,15 @@ import UploadFiles from './UploadFiles';
 
 const Pipeline = () => {
   const { clientList } = useSelector((state) => state.bids);
+  const [primaryHeaderSearch, setPrimaryHeaderSearch] = useState('');
   const [showFilter, setShowFilter] = useState(false);
   const [open, setOpen] = useState(false);
   const [openEstimate, setOpenEstimate] = useState(false);
   const [selectedStep, setSelectedStep] = useState('new client');
   const [selectedListItem, setSelectedListItem] = useState('');
   const [filteredClietsList, setFilteredClietsList] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+
   const [currentClientInfo, setCurrentClientInfo] = useState(
     findCurrentClient(clientList, selectedListItem)
   );
@@ -315,7 +318,12 @@ const Pipeline = () => {
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>
-        <PrimaryHeader showFilter={showFilter} onFilterChange={setShowFilter} />
+        <PrimaryHeader
+          showFilter={showFilter}
+          onFilterChange={setShowFilter}
+          primaryHeaderSearch={primaryHeaderSearch}
+          setPrimaryHeaderSearch={setPrimaryHeaderSearch}
+        />
         <Divider light sx={{ margin: '10px 0 10px 5px' }} />
         <Box sx={{ flexGrow: 1 }}>
           <Grid container>
@@ -346,7 +354,11 @@ const Pipeline = () => {
                 />
                 {selectedListItem && (
                   <>
-                    <UploadFiles />
+                    <UploadFiles
+                      uploadedFiles={uploadedFiles}
+                      onUploadedFilesChange={setUploadedFiles}
+                      currentClientInfo={currentClientInfo}
+                    />
                     <Comment
                       currentClientInfo={currentClientInfo}
                       selectedListItem={selectedListItem}

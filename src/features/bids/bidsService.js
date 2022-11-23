@@ -58,18 +58,46 @@ export const updateClientService = async (userData) => {
 };
 
 export const createACommentService = async (userData) => {
-  // const config = {
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     Authorization: `Bearer ${userData.token}`
-  //   }
-  // };
-  // const response = await axios.post(
-  //   FETCH_PROCESS,
-  //   {
-  //     filter: userData.id ? { _id: userData.id } : { global: true }
-  //   },
-  //   config
-  // );
-  return userData;
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+  const updatedClientInfo = userData.currentClientInfo.comments.push(userData.comment);
+  const response = await axios.put(
+    `${UPDATE_CLIENT}/${userData.id}`,
+    {
+      ...updatedClientInfo,
+      token: userData.token
+    },
+    config
+  );
+  return response;
+};
+
+export const uploadAFileService = async (userData) => {
+  console.log(userData.currentClientInfo, 'userData.currentClientInfo');
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+
+  const filteredFileInfo = userData.files.map((file) => {
+    return file.id;
+  });
+  const updatedClientInfo = {
+    files: [...userData.currentClientInfo.files, ...filteredFileInfo]
+  };
+  const response = await axios.put(
+    `${UPDATE_CLIENT}/${userData.currentClientInfo._id}`,
+    {
+      ...updatedClientInfo,
+      token: userData.token
+    },
+    config
+  );
+  return response;
 };
