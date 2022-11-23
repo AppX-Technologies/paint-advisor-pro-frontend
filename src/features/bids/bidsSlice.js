@@ -6,7 +6,8 @@ import {
   createACommentService,
   fetchAllClientsService,
   updateClientService,
-  uploadAFileService
+  uploadAFileService,
+  deleteFileService
 } from './bidsService';
 
 // initial states
@@ -21,8 +22,8 @@ const initialState = {
   isSuccess: false,
   message: '',
   response: null,
-  isAdded: false,
-  isFileUploadLoading: false
+  isFileUploadLoading: false,
+  fileDeletedSuccessfully: false
 };
 
 // Fetch Client Info
@@ -145,6 +146,20 @@ export const uploadAFile = createAsyncThunk('bids/uploadAFile', async (userData,
   }
 });
 
+export const deleteAFIle = createAsyncThunk('bids/deleteAFile', async (userData, thunkAPI) => {
+  try {
+    const response = await deleteFileService(userData);
+    return response;
+  } catch (err) {
+    const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const bidsSlice = createSlice({
   name: 'bids',
   initialState,
@@ -153,6 +168,7 @@ export const bidsSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
+      state.fileDeletedSuccessfully = false;
     }
   },
   extraReducers: (builder) => {
@@ -202,11 +218,14 @@ export const bidsSlice = createSlice({
       })
       .addCase(uploadAFile.fulfilled, (state, { payload }) => {
         state.isFileUploadLoading = false;
+        state.isSuccess = true;
+
         state.isLoading = false;
+        state.response = addOrUpdateItemInArray(state.clientList, payload.data);
       })
       .addCase(uploadAFile.rejected, (state, action) => {
         state.isFileUploadLoading = false;
-
+        state.isSuccess = false;
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
@@ -223,6 +242,17 @@ export const bidsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(deleteAFIle.pending, (state) => {
+        state.isFileUploadLoading = true;
+      })
+      .addCase(deleteAFIle.fulfilled, (state, action) => {
+        state.isFileUploadLoading = false;
+        state.fileDeletedSuccessfully = true;
+      })
+      .addCase(deleteAFIle.rejected, (state, action) => {
+        state.isFileUploadLoading = false;
+        state.fileDeletedSuccessfully = false;
       })
       .addCase(createAComment.pending, (state) => {
         state.isLoading = true;

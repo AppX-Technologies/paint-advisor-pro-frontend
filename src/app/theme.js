@@ -45,7 +45,7 @@ const theme = createTheme({
     background: { main: '#FAF2F0' }
   },
   deleteicon: {
-    color: { main: '#CD2C63' }
+    color: { main: '#D50000' }
   },
   editicon: {
     color: { main: '#9B29AB' }

@@ -1,33 +1,45 @@
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ErrorIcon from '@mui/icons-material/Error';
-import { Box, Chip, CircularProgress, Typography } from '@mui/material';
+import { Box, Chip, CircularProgress, Tooltip, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import useFileUpload from 'react-use-file-upload';
 import { authSelector } from '../../auth/authSlice';
 import Button from '../../../components/Button';
-import { uploadAFile } from '../bidsSlice';
+import { deleteAFIle, reset, uploadAFile } from '../bidsSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 
-const UploadFiles = ({ uploadedFiles, onUploadedFilesChange, currentClientInfo }) => {
+const UploadFiles = ({
+  uploadedFiles,
+  onUploadedFilesChange,
+  currentClientInfo,
+  fileToDelete,
+  setFileToDelete
+}) => {
   const { files, handleDragDropEvent, setFiles } = useFileUpload();
+
   const { user } = useSelector(authSelector);
-  const { isFileUploadLoading } = useSelector((state) => state.bids);
+  const { isFileUploadLoading, isSuccess, fileDeletedSuccessfully } = useSelector(
+    (state) => state.bids
+  );
 
   const inputRef = useRef();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const newFiles = [];
+    let newFiles = [];
     files.forEach((f) => {
       const fileToBeUploaded = { file: f, status: 'WAITING_FOR_UPLOAD', id: Date.now().toString() };
+
       newFiles.push(fileToBeUploaded);
     });
     if (onUploadedFilesChange) {
       onUploadedFilesChange([...uploadedFiles, ...newFiles]);
     }
+    newFiles = [];
   }, [files]);
 
   const updateUploadedFiles = (fileObject, status, response = {}) => {
@@ -52,6 +64,7 @@ const UploadFiles = ({ uploadedFiles, onUploadedFilesChange, currentClientInfo }
         Authorization: `Bearer ${user.token}`
       }
     });
+
     if (error) {
       updateUploadedFiles(fileToBeUploaded, 'ERROR');
     } else {
@@ -66,28 +79,61 @@ const UploadFiles = ({ uploadedFiles, onUploadedFilesChange, currentClientInfo }
     console.info('You clicked the Chip.');
   };
 
-  const handleDelete = () => {
-    console.info('You clicked the delete icon.');
+  const handleFileUploadDelete = async (id) => {
+    setFileToDelete(id);
+    dispatch(deleteAFIle({ token: user.token, id }));
   };
 
-  const FileButton = ({ fileObject, onRemoveFile }) => (
-    <Chip
-      sx={{ mx: 0.5 }}
-      label={
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography sx={{ fontSize: '12px' }}>{fileObject.file.name}</Typography>
-          {fileObject.status === 'UPLOADING' && <CircularProgress size={10} sx={{ ml: 1 }} />}
-          {fileObject.status === 'UPLOADED' && <CheckCircleIcon sx={{ fontSize: '15px', ml: 1 }} />}
-          {fileObject.status === 'ERROR' && <ErrorIcon sx={{ fontSize: '15px', ml: 1 }} />}
-        </Box>
-      }
-      size='small'
-      variant='outlined'
-      onClick={handleClick}
-      color='success'
-    />
-  );
+  useEffect(() => {
+    if (fileDeletedSuccessfully) {
+      uploadedFiles.splice(
+        uploadedFiles.findIndex((file) => file.filename === fileToDelete),
+        1
+      );
+      onUploadedFilesChange([...uploadedFiles]);
+      dispatch(
+        showMessage({
+          message: `Successfully Deleted`,
+          severity: 'success'
+        })
+      );
+      dispatch(reset());
+      setFileToDelete(null);
+    }
+  }, [fileDeletedSuccessfully]);
 
+  const FileButton = ({ fileObject, onRemoveFile, onFileRemove }) => {
+    console.log(fileObject, 'fileObject');
+    return (
+      <Chip
+        sx={{ mx: 0.5 }}
+        label={
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {fileObject.filename !== fileToDelete ? (
+              <Tooltip title='Delete' placement='top'>
+                <HighlightOffIcon
+                  sx={{ fontSize: '15px', mr: 1, color: 'red' }}
+                  onClick={onFileRemove}
+                />
+              </Tooltip>
+            ) : (
+              <CircularProgress size={14} sx={{ mr: 1 }} />
+            )}
+            <Typography sx={{ fontSize: '12px' }}>{fileObject.file.name}</Typography>
+            {fileObject.status === 'UPLOADING' && <CircularProgress size={10} sx={{ ml: 1 }} />}
+            {fileObject.status === 'UPLOADED' && (
+              <CheckCircleIcon sx={{ fontSize: '15px', ml: 1 }} />
+            )}
+            {fileObject.status === 'ERROR' && <ErrorIcon sx={{ fontSize: '15px', ml: 1 }} />}
+          </Box>
+        }
+        size='small'
+        variant='outlined'
+        onClick={handleClick}
+        color='success'
+      />
+    );
+  };
   const handleFilesSave = () => {
     if (uploadedFiles.some((f) => f.status === 'ERROR')) {
       return dispatch(
@@ -109,13 +155,32 @@ const UploadFiles = ({ uploadedFiles, onUploadedFilesChange, currentClientInfo }
     dispatch(uploadAFile({ files: uploadedFiles, token: user.token, currentClientInfo }));
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(
+        showMessage({
+          message: 'File Uploaded Successfully',
+          severity: 'success'
+        })
+      );
+      uploadedFiles.splice(0, uploadedFiles.length);
+      onUploadedFilesChange([...uploadedFiles]);
+      dispatch(reset());
+    }
+  }, [isSuccess]);
+
   return (
     <>
       <Typography ml={3}>Upload Files</Typography>
       <Box sx={{ my: 2, ml: 2 }}>
         {uploadedFiles &&
           uploadedFiles.map((file) => {
-            return <FileButton fileObject={file} />;
+            return (
+              <FileButton
+                fileObject={file}
+                onFileRemove={() => handleFileUploadDelete(file.filename)}
+              />
+            );
           })}
       </Box>
       <input
@@ -170,7 +235,11 @@ const UploadFiles = ({ uploadedFiles, onUploadedFilesChange, currentClientInfo }
             sx={{ p: 0, my: 1 }}
             onClick={handleFilesSave}
             disaabled={uploadedFiles[uploadedFiles.length - 1].status === 'UPLOADING'}>
-            Save {isFileUploadLoading && <CircularProgress size={10} />}
+            {isFileUploadLoading ? (
+              <CircularProgress size={21} sx={{ color: 'white', my: 0.3 }} />
+            ) : (
+              'Save'
+            )}
           </Button>
         </Box>
       )}

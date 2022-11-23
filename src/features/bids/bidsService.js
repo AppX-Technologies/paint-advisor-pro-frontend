@@ -8,6 +8,7 @@ const CREATE_CLIENTS = `${endpoint}/`;
 const FETCH_CLIENTS = `${endpoint}/search`;
 const UPDATE_CLIENT = `${endpoint}`;
 const DELETE_CLIENT = `${endpoint}/`;
+const DELETE_FILE = `https://painting-app-backend.herokuapp.com/api/files/`;
 
 export const fetchAllClientsService = async (userData) => {
   const config = {
@@ -99,5 +100,18 @@ export const uploadAFileService = async (userData) => {
     },
     config
   );
+  return response;
+};
+
+export const deleteFileService = async (userData) => {
+  const response = await axios({
+    method: 'delete',
+    url: `https://painting-app-backend.herokuapp.com/api/files/${userData.id}`,
+    data: {},
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${userData.token}`
+    }
+  });
   return response;
 };

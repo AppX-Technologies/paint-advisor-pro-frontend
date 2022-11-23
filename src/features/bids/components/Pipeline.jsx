@@ -32,6 +32,7 @@ import PrimaryHeader from './PrimaryHeader';
 import QuickSearch from './QuickSearch';
 import Steps from './Steps';
 import UploadFiles from './UploadFiles';
+import ViewFiles from './ViewFiles';
 
 const Pipeline = () => {
   const { clientList } = useSelector((state) => state.bids);
@@ -43,7 +44,7 @@ const Pipeline = () => {
   const [selectedListItem, setSelectedListItem] = useState('');
   const [filteredClietsList, setFilteredClietsList] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-
+  const [showFilesToView, setShowFilesToView] = useState(null);
   const [currentClientInfo, setCurrentClientInfo] = useState(
     findCurrentClient(clientList, selectedListItem)
   );
@@ -68,6 +69,7 @@ const Pipeline = () => {
   const [crownMoldingStats, setCrownMoldingStats] = useState(initialCrownMoldingInfo);
   const [closetStats, setClosetStats] = useState(initialClosetInfo);
   const [currentClientInfoToEdit, setCurrentClientInfoToEdit] = useState(null);
+  const [fileToDelete, setFileToDelete] = useState(null);
 
   const roomRelatedInfo = [
     {
@@ -317,6 +319,14 @@ const Pipeline = () => {
         roomRelatedInfo={roomRelatedInfo}
       />
       <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
+      <ViewFiles
+        showFilesToView={showFilesToView}
+        setShowFilesToView={setShowFilesToView}
+        currentClientInfo={currentClientInfo}
+        setCurrentClientInfo={setCurrentClientInfo}
+        fileToDelete={fileToDelete}
+        setFileToDelete={setFileToDelete}
+      />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>
         <PrimaryHeader
           showFilter={showFilter}
@@ -340,6 +350,7 @@ const Pipeline = () => {
               <Steps selectedStep={selectedStep} onSelectedStepChange={setSelectedStep} />
               <Card sx={{ padding: 1, marginTop: 1 }}>
                 <ClientInfo
+                  setShowFilesToView={setShowFilesToView}
                   onSelectedStepChange={setSelectedStep}
                   selectedValue={selectedValue}
                   selectedStep={selectedStep}
@@ -358,6 +369,8 @@ const Pipeline = () => {
                       uploadedFiles={uploadedFiles}
                       onUploadedFilesChange={setUploadedFiles}
                       currentClientInfo={currentClientInfo}
+                      fileToDelete={fileToDelete}
+                      setFileToDelete={setFileToDelete}
                     />
                     <Comment
                       currentClientInfo={currentClientInfo}

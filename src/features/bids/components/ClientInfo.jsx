@@ -1,5 +1,6 @@
 import EditIcon from '@mui/icons-material/Edit';
 import {
+  Badge,
   Box,
   Button,
   Chip,
@@ -13,12 +14,13 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 import { bidsStages } from '../../../helpers/bidsStages';
-import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { showMessage } from '../../snackbar/snackbarSlice';
+import { reset } from '../bidsSlice';
 import { findCurrentClient, findCurrentStageButtonInfo } from '../helpers/generalHepers';
 
 const ClientInfo = ({
   onSelectedStepChange,
+  setShowFilesToView,
   selectedStep,
   open,
   setOpen,
@@ -43,6 +45,8 @@ const ClientInfo = ({
           severity: 'success'
         })
       );
+
+      dispatch(reset());
     }
   }, [isSuccess]);
   return (
@@ -73,21 +77,37 @@ const ClientInfo = ({
                       variant='outlined'
                       startIcon={info.icon}
                       color={info.color}
-                      onClick={() => setOpen(!open)}
+                      onClick={() => {
+                        setOpen(!open);
+                      }}
                     />
                   </Tooltip>
                 ) : (
                   <Tooltip title={info.text} placement='top'>
-                    <Button
-                      sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
-                      variant='outlined'
-                      startIcon={info.icon}
-                      color={info.color}
-                      onClick={() =>
-                        info.nextState &&
-                        onSelectedStepChange(bidsStages[bidsStages.indexOf(selectedStep) + 1])
+                    <Badge
+                      badgeContent={
+                        info.text === 'View Files' ? currentClientInfo?.files?.length : 0
                       }
-                    />
+                      color='primary'
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left'
+                      }}>
+                      <Button
+                        sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
+                        variant='outlined'
+                        startIcon={info.icon}
+                        color={info.color}
+                        onClick={() => {
+                          if (info.nextState) {
+                            onSelectedStepChange(bidsStages[bidsStages.indexOf(selectedStep) + 1]);
+                          }
+                          if (info.text === 'View Files') {
+                            setShowFilesToView(true);
+                          }
+                        }}
+                      />
+                    </Badge>
                   </Tooltip>
                 );
               })}
