@@ -65,12 +65,11 @@ export const createACommentService = async (userData) => {
       Authorization: `Bearer ${userData.token}`
     }
   };
-  const updatedClientInfo = userData.currentClientInfo.comments.push(userData.comment);
+  userData.currentClientInfo.comments.push(userData.comment);
   const response = await axios.put(
     `${UPDATE_CLIENT}/${userData.id}`,
     {
-      ...updatedClientInfo,
-      token: userData.token
+      comments: [...userData.currentClientInfo.comments]
     },
     config
   );
@@ -78,7 +77,6 @@ export const createACommentService = async (userData) => {
 };
 
 export const uploadAFileService = async (userData) => {
-  console.log(userData.currentClientInfo, 'userData.currentClientInfo');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -113,5 +111,23 @@ export const deleteFileService = async (userData) => {
       Authorization: `Bearer ${userData.token}`
     }
   });
+  return response;
+};
+
+export const updateClientStatusService = async (userData) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+
+  const response = await axios.put(
+    `${UPDATE_CLIENT}/${userData.id}`,
+    {
+      status: userData.status
+    },
+    config
+  );
   return response;
 };

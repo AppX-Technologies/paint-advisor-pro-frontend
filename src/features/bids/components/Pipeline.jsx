@@ -53,7 +53,7 @@ const Pipeline = () => {
   const [allRoom, setAllRoom] = React.useState([]);
   const [value, setValue] = React.useState([null, null]);
   const [roomStats, setRoomStats] = React.useState(initialRoomState);
-  // TODO rename
+  // ! TODO rename
   const { user } = useSelector(authSelector);
 
   const [selectedValue, setSelectedvalue] = React.useState(initialState);
@@ -69,6 +69,8 @@ const Pipeline = () => {
   const [crownMoldingStats, setCrownMoldingStats] = useState(initialCrownMoldingInfo);
   const [closetStats, setClosetStats] = useState(initialClosetInfo);
   const [currentClientInfoToEdit, setCurrentClientInfoToEdit] = useState(null);
+  const [openFileDeleteModel, setOpenFileDeleteModel] = useState(false);
+
   const [fileToDelete, setFileToDelete] = useState(null);
 
   const roomRelatedInfo = [
@@ -248,11 +250,11 @@ const Pipeline = () => {
     setRoomStats(initialRoomState);
   };
 
-  useEffect(() => {
-    if (clientList) {
-      setSelectedListItem(clientList[0] ? clientList[0]._id : '');
-    }
-  }, [clientList]);
+  // useEffect(() => {
+  //   if (clientList) {
+  //     setSelectedListItem(clientList[0] ? clientList[0]._id : '');
+  //   }
+  // }, [clientList]);
 
   const onClientFormChange = (formValue) => {
     setOpen(formValue);
@@ -326,6 +328,8 @@ const Pipeline = () => {
         setCurrentClientInfo={setCurrentClientInfo}
         fileToDelete={fileToDelete}
         setFileToDelete={setFileToDelete}
+        openFileDeleteModel={openFileDeleteModel}
+        setOpenFileDeleteModel={setOpenFileDeleteModel}
       />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>
         <PrimaryHeader
@@ -371,6 +375,7 @@ const Pipeline = () => {
                       currentClientInfo={currentClientInfo}
                       fileToDelete={fileToDelete}
                       setFileToDelete={setFileToDelete}
+                      selectedListItem={selectedListItem}
                     />
                     <Comment
                       currentClientInfo={currentClientInfo}

@@ -17,7 +17,8 @@ const UploadFiles = ({
   onUploadedFilesChange,
   currentClientInfo,
   fileToDelete,
-  setFileToDelete
+  setFileToDelete,
+  selectedListItem
 }) => {
   const { files, handleDragDropEvent, setFiles } = useFileUpload();
 
@@ -32,8 +33,12 @@ const UploadFiles = ({
   useEffect(() => {
     let newFiles = [];
     files.forEach((f) => {
-      const fileToBeUploaded = { file: f, status: 'WAITING_FOR_UPLOAD', id: Date.now().toString() };
-
+      const fileToBeUploaded = {
+        file: f,
+        status: 'WAITING_FOR_UPLOAD',
+        id: Date.now().toString(),
+        client: currentClientInfo._id
+      };
       newFiles.push(fileToBeUploaded);
     });
     if (onUploadedFilesChange) {
@@ -103,13 +108,12 @@ const UploadFiles = ({
   }, [fileDeletedSuccessfully]);
 
   const FileButton = ({ fileObject, onRemoveFile, onFileRemove }) => {
-    console.log(fileObject, 'fileObject');
     return (
       <Chip
         sx={{ mx: 0.5 }}
         label={
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            {fileObject.filename !== fileToDelete ? (
+            {fileObject.filename !== fileToDelete && fileObject.status === 'UPLOADED' ? (
               <Tooltip title='Delete' placement='top'>
                 <HighlightOffIcon
                   sx={{ fontSize: '15px', mr: 1, color: 'red' }}
@@ -176,10 +180,14 @@ const UploadFiles = ({
         {uploadedFiles &&
           uploadedFiles.map((file) => {
             return (
-              <FileButton
-                fileObject={file}
-                onFileRemove={() => handleFileUploadDelete(file.filename)}
-              />
+              <>
+                {file.client === selectedListItem && (
+                  <FileButton
+                    fileObject={file}
+                    onFileRemove={() => handleFileUploadDelete(file.filename)}
+                  />
+                )}
+              </>
             );
           })}
       </Box>

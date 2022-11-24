@@ -17,7 +17,7 @@ body {
 
 ::placeholder {
   color: rgb(0, 0, 0) !important;
-  padding: 5px;
+  padding: '5px 10px';
 }
 
 .card-box {

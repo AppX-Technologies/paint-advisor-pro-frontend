@@ -14,8 +14,9 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 import { bidsStages } from '../../../helpers/bidsStages';
+import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
-import { reset } from '../bidsSlice';
+import { reset, updateClientStatus } from '../bidsSlice';
 import { findCurrentClient, findCurrentStageButtonInfo } from '../helpers/generalHepers';
 
 const ClientInfo = ({
@@ -30,7 +31,10 @@ const ClientInfo = ({
   onClientFormChange,
   setCurrentClientInfoToEdit
 }) => {
-  const { clientList, isSuccess, isLoading } = useSelector((state) => state.bids);
+  const { clientList, isSuccess, isLoading, jobSuccessFullyCanceled } = useSelector(
+    (state) => state.bids
+  );
+  const { user } = useSelector(authSelector);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -49,6 +53,18 @@ const ClientInfo = ({
       dispatch(reset());
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (jobSuccessFullyCanceled) {
+      dispatch(
+        showMessage({
+          message: `Job cancelled Sucessfully`,
+          severity: 'success'
+        })
+      );
+      dispatch(reset());
+    }
+  }, [jobSuccessFullyCanceled]);
   return (
     <Box>
       {selectedListItem ? (
@@ -104,6 +120,15 @@ const ClientInfo = ({
                           }
                           if (info.text === 'View Files') {
                             setShowFilesToView(true);
+                          }
+                          if (info.text === 'Cancel The Job') {
+                            dispatch(
+                              updateClientStatus({
+                                token: user.token,
+                                id: currentClientInfo._id,
+                                status: 'Cancel The Job'
+                              })
+                            );
                           }
                         }}
                       />

@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { authSelector } from '../../auth/authSlice';
+import { showMessage } from '../../snackbar/snackbarSlice';
 import { createAComment } from '../bidsSlice';
 import { findCommentsUniquely } from '../helpers/generalHepers';
 
@@ -14,6 +15,14 @@ const Comment = ({ currentClientInfo, onCommentListChange, commentList }) => {
   const dispatch = useDispatch();
 
   const handleCommentSubmission = () => {
+    if (comment.trim() === '') {
+      return dispatch(
+        showMessage({
+          message: `Cannot Post Empty Comment.`,
+          severity: 'error'
+        })
+      );
+    }
     dispatch(createAComment({ comment, token: user.token, currentClientInfo }));
     setComment('');
   };
@@ -84,7 +93,9 @@ const Comment = ({ currentClientInfo, onCommentListChange, commentList }) => {
             borderRadius: '15px',
             marginLeft: '11px',
             marginTop: '5px',
-            border: '1px solid lightgray'
+            border: '1px solid lightgray',
+            padding: '5px 10px',
+            fontWeight: '600'
           }}
           value={comment}
           onChange={(e) => setComment(e.target.value)}

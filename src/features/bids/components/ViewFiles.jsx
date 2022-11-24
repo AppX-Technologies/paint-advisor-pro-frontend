@@ -1,7 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlinedIcon from '@mui/icons-material/Delete';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
-import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import {
   AppBar,
   Backdrop,
@@ -15,8 +14,9 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import DeleteModel from '../../../common/DeleteModel';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { deleteAFIle, reset } from '../bidsSlice';
@@ -36,10 +36,11 @@ const ViewFiles = ({
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { isFileUploadLoading, fileDeletedSuccessfully } = useSelector((state) => state.bids);
+  const [openFileDeleteModel, setOpenFileDeleteModel] = useState(false);
 
   const deleteFile = (filename) => {
-    setFileToDelete(filename);
     dispatch(deleteAFIle({ token: user.token, id: filename }));
+    setOpenFileDeleteModel(false);
   };
 
   useEffect(() => {
@@ -61,6 +62,14 @@ const ViewFiles = ({
 
   return (
     <>
+      {openFileDeleteModel && (
+        <DeleteModel
+          openFileDeleteModel={openFileDeleteModel}
+          setOpenFileDeleteModel={setOpenFileDeleteModel}
+          deleteFile={deleteFile}
+          fileToDelete={fileToDelete}
+        />
+      )}
       {showFilesToView && (
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -115,7 +124,10 @@ const ViewFiles = ({
                             color: (theme) =>
                               !isFileUploadLoading ? theme.deleteicon.color.main : 'lightgray'
                           }}
-                          onClick={() => (!isFileUploadLoading ? deleteFile(item.filename) : null)}
+                          onClick={() => {
+                            setOpenFileDeleteModel(true);
+                            setFileToDelete(item.filename);
+                          }}
                         />
                       </Tooltip>
                     </Box>

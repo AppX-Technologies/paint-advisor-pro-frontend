@@ -19,7 +19,10 @@ const Steps = ({ selectedStep, onSelectedStepChange }) => {
             return (
               <>
                 {idx !== 0 && (
-                  <ArrowCircleRightOutlinedIcon sx={{ width: '15px', height: '15px' }} style={{marginBottom:'-4px'}} />
+                  <ArrowCircleRightOutlinedIcon
+                    sx={{ width: '15px', height: '15px' }}
+                    style={{ marginBottom: '-4px' }}
+                  />
                 )}
                 <Chip
                   label={convertStringCase(bidStage)}

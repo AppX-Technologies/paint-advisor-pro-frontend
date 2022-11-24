@@ -7,7 +7,8 @@ import {
   fetchAllClientsService,
   updateClientService,
   uploadAFileService,
-  deleteFileService
+  deleteFileService,
+  updateClientStatusService
 } from './bidsService';
 
 // initial states
@@ -23,7 +24,8 @@ const initialState = {
   message: '',
   response: null,
   isFileUploadLoading: false,
-  fileDeletedSuccessfully: false
+  fileDeletedSuccessfully: false,
+  jobSuccessFullyCanceled: false
 };
 
 // Fetch Client Info
@@ -160,6 +162,22 @@ export const deleteAFIle = createAsyncThunk('bids/deleteAFile', async (userData,
   }
 });
 
+export const updateClientStatus = createAsyncThunk(
+  'bids/updateClientStatus',
+  async (userData, thunkAPI) => {
+    try {
+      const response = await updateClientStatusService(userData);
+      return response;
+    } catch (err) {
+      const message =
+        (err.response && err.response.data && err.response.data.message) ||
+        err.message ||
+        err.toString();
+      thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const bidsSlice = createSlice({
   name: 'bids',
   initialState,
@@ -184,6 +202,22 @@ export const bidsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(updateClientStatus.pending, (state) => {
+        // state.isLoading = true;
+      })
+      .addCase(updateClientStatus.fulfilled, (state, { payload }) => {
+        // state.isLoading = false;
+        state.jobSuccessFullyCanceled = true;
+        // state.clientList = action.payload.data;
+        state.response = addOrUpdateItemInArray(state.clientList, payload.data);
+      })
+      .addCase(updateClientStatus.rejected, (state, action) => {
+        state.jobSuccessFullyCanceled = false;
+
+        // *state.isLoading = false;
+        // *state.isError = true;
+        // *state.message = action.payload;
       })
       .addCase(updateClient.pending, (state) => {
         state.isLoading = true;
