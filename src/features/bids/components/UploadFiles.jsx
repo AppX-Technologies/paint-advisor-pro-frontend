@@ -4,7 +4,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ErrorIcon from '@mui/icons-material/Error';
 import { Box, Chip, CircularProgress, Tooltip, Typography } from '@mui/material';
 import axios from 'axios';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import useFileUpload from 'react-use-file-upload';
 import { authSelector } from '../../auth/authSlice';
@@ -173,6 +173,11 @@ const UploadFiles = ({
     }
   }, [isSuccess]);
 
+  const showSaveButtonOrNot = useMemo(() => {
+    return uploadedFiles.some((file) => file.client === selectedListItem);
+  }, [uploadedFiles,selectedListItem]);
+
+
   return (
     <>
       <Typography ml={3}>Upload Files</Typography>
@@ -235,14 +240,9 @@ const UploadFiles = ({
           </Box>
         </Box>
       </label>
-      {uploadedFiles.length > 0 && (
+      {showSaveButtonOrNot && (
         <Box mb={2} sx={{ mr: 'auto', float: 'right' }}>
-          <Button
-            variant='contained'
-            color='error'
-            sx={{ p: 0, my: 1 }}
-            onClick={handleFilesSave}
-            disaabled={uploadedFiles[uploadedFiles.length - 1].status === 'UPLOADING'}>
+          <Button variant='contained' color='error' sx={{ p: 0, my: 1 }} onClick={handleFilesSave}>
             {isFileUploadLoading ? (
               <CircularProgress size={21} sx={{ color: 'white', my: 0.3 }} />
             ) : (
