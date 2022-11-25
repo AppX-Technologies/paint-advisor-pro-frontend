@@ -14,7 +14,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const PrimaryHeader = ({ onFilterChange, primaryHeaderSearch, setPrimaryHeaderSearch }) => {
   const [selectOption, setSelectOption] = useState('');
@@ -24,7 +24,7 @@ const PrimaryHeader = ({ onFilterChange, primaryHeaderSearch, setPrimaryHeaderSe
       name: 'Max-Limit',
       value: selectOption,
       changeValue: setSelectOption,
-      options: ['10', '20', '30', 'All']
+      options: ['10', '20', '50', '100', 'All']
     },
     {
       name: 'Sort By',
@@ -33,6 +33,9 @@ const PrimaryHeader = ({ onFilterChange, primaryHeaderSearch, setPrimaryHeaderSe
       options: ['Created At', 'Updated At', 'Project Start Date', 'Schedule Date']
     }
   ];
+
+  const handlePrimaryFilter = () => {};
+
   return (
     <>
       <Box mt={2} sx={{ width: '100%' }}>
@@ -53,7 +56,11 @@ const PrimaryHeader = ({ onFilterChange, primaryHeaderSearch, setPrimaryHeaderSe
               value={primaryHeaderSearch}
               onChange={(e) => setPrimaryHeaderSearch(e.target.value)}
               id='outlined-basic'
-              label={<Typography sx={{ marginTop: '-2.7px' }}>Search</Typography>}
+              label={
+                <Typography sx={{ marginTop: '-2.7px' }} onClick={handlePrimaryFilter}>
+                  Search
+                </Typography>
+              }
               variant='outlined'
               sx={{ width: '100%' }}
               size='small'
@@ -72,7 +79,11 @@ const PrimaryHeader = ({ onFilterChange, primaryHeaderSearch, setPrimaryHeaderSe
                     id='demo-select-small'
                     label={menuItem.name}
                     value={menuItem.value}
-                    onChange={(e) => menuItem.changeValue(e.target.value)}
+                    defaultValue={menuItem.name === 'Max-Limit' ? 100 : 'Created At'}
+                    onChange={(e) => {
+                      menuItem.changeValue(e.target.value);
+                      handlePrimaryFilter();
+                    }}
                     sx={{ height: '35px' }}>
                     {menuItem.options.map((option) => (
                       <MenuItem value={option}>{option}</MenuItem>

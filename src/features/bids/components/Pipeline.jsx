@@ -3,6 +3,7 @@ import { Box, Button, Card, Divider, Grid } from '@mui/material';
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { bidStageFilter } from '../../../common/bidStageFilters';
 import { booleanOption } from '../../../common/FormTextField';
 import { STAGE_1 } from '../../../helpers/contants';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
@@ -50,6 +51,7 @@ const Pipeline = () => {
   const [filteredClietsList, setFilteredClietsList] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [showFilesToView, setShowFilesToView] = useState(null);
+
   const [currentClientInfo, setCurrentClientInfo] = useState(
     findCurrentClient(clientList, selectedListItem)
   );
@@ -78,6 +80,7 @@ const Pipeline = () => {
   const [scheduleTheJob, setScheduleTheJob] = useState(false);
   const [schedueJobDate, setScheduleJobDate] = useState(null);
   const [fileToDelete, setFileToDelete] = useState(null);
+  const [bidFilterValues, setBidFilterValues] = useState(cloneDeep(bidStageFilter));
 
   const roomRelatedInfo = [
     {
@@ -328,7 +331,12 @@ const Pipeline = () => {
         setOpenEditForm={setOpenEditForm}
         roomRelatedInfo={roomRelatedInfo}
       />
-      <Filter showFilter={showFilter} onFilterOptionsClose={onFilterOptionsClose} />
+      <Filter
+        showFilter={showFilter}
+        onFilterOptionsClose={onFilterOptionsClose}
+        bidFilterValues={bidFilterValues}
+        onBidFilterValueChange={setBidFilterValues}
+      />
       <ViewFiles
         showFilesToView={showFilesToView}
         setShowFilesToView={setShowFilesToView}

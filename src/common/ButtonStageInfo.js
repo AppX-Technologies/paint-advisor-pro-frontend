@@ -3,6 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ArticleIcon from '@mui/icons-material/Article';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 
 export const buttonStageInfo = [
   {
@@ -11,7 +12,7 @@ export const buttonStageInfo = [
       {
         text: 'View Files',
         color: 'warning',
-        icon: <InsertDriveFileIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
+        icon: <FolderOutlinedIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
       },
       {
         text: 'Cancel The Job',

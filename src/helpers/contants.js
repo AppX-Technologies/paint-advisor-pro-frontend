@@ -71,3 +71,5 @@ export const ROOM_TYPES = [
 ];
 
 export const BID_TYPES = ['Interior', 'Exterior'];
+
+export const STATUS_VALUES = ['New Client'];

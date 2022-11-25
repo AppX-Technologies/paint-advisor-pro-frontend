@@ -8,7 +8,8 @@ import {
   updateClientService,
   uploadAFileService,
   deleteFileService,
-  updateClientStatusService
+  updateClientStatusService,
+  primarySearchService
 } from './bidsService';
 
 // initial states
@@ -179,6 +180,21 @@ export const updateClientStatus = createAsyncThunk(
     }
   }
 );
+
+export const primarySearch = createAsyncThunk('bids/primarySearch', async (userData, thunkAPI) => {
+  try {
+    const response = await primarySearchService(userData);
+    return response;
+  } catch (err) {
+    const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const bidsSlice = createSlice({
   name: 'bids',
   initialState,
@@ -301,6 +317,18 @@ export const bidsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(primarySearch.pending, (state) => {
+        // state.isLoading = true;
+      })
+      .addCase(primarySearch.fulfilled, (state, { payload }) => {
+        // state.response = addOrUpdateItemInArray(state.clientList, payload.data);
+        // state.isLoading = false;
+      })
+      .addCase(primarySearch.rejected, (state, action) => {
+        // state.isLoading = false;
+        // state.isError = true;
+        // state.message = action.payload;
       });
   }
 });

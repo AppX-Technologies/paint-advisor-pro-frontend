@@ -50,7 +50,7 @@ export const updateClientService = async (userData) => {
   const response = await axios.put(
     `${UPDATE_CLIENT}/${userData.id}`,
     {
-      ...userData,
+      ...userData
     },
     config
   );
@@ -110,6 +110,24 @@ export const deleteFileService = async (userData) => {
       Authorization: `Bearer ${userData.token}`
     }
   });
+  return response;
+};
+
+export const primarySearchService = async (userData) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+
+  const response = await axios.put(
+    `${UPDATE_CLIENT}/${userData.id}`,
+    {
+      status: userData.status
+    },
+    config
+  );
   return response;
 };
 
