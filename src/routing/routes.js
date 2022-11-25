@@ -13,10 +13,12 @@ export const systemAdminRoutes = [
   { relLink: 'dashboard', icon: Dashboard, text: 'Dashboard' },
   { relLink: 'processes', icon: FormatListBulleted, text: 'Processes' }
 ].map((l) => ({ ...l, link: `/${l.relLink}` }));
-
+ 
+ // to-do materials
 export const companyRoutes = (id) =>
   [
     { relLink: 'bids', icon: Dashboard, text: 'Bids', element: Bids },
     { relLink: 'processes', icon: FormatListBulleted, text: 'Processes', element: Processes },
     { relLink: 'users', icon: People, text: 'Users', element: UsersFromCompany }
   ].map((l) => ({ ...l, link: id ? `/${id}/${l.relLink}` : `/${l.relLink}` }));
+
