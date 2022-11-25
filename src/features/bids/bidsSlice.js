@@ -25,7 +25,8 @@ const initialState = {
   response: null,
   isFileUploadLoading: false,
   fileDeletedSuccessfully: false,
-  jobSuccessFullyCanceled: false
+  jobSuccessFullyCanceled: false,
+  isJobCanceledLoading: false
 };
 
 // Fetch Client Info
@@ -187,6 +188,8 @@ export const bidsSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.fileDeletedSuccessfully = false;
+      state.jobSuccessFullyCanceled = false;
+      state.isJobCanceledLoading = false;
     }
   },
   extraReducers: (builder) => {
@@ -205,19 +208,18 @@ export const bidsSlice = createSlice({
       })
       .addCase(updateClientStatus.pending, (state) => {
         // state.isLoading = true;
+        state.isJobCanceledLoading = true;
       })
       .addCase(updateClientStatus.fulfilled, (state, { payload }) => {
         // state.isLoading = false;
         state.jobSuccessFullyCanceled = true;
+        state.isJobCanceledLoading = false;
         // state.clientList = action.payload.data;
         state.response = addOrUpdateItemInArray(state.clientList, payload.data);
       })
       .addCase(updateClientStatus.rejected, (state, action) => {
         state.jobSuccessFullyCanceled = false;
-
-        // *state.isLoading = false;
-        // *state.isError = true;
-        // *state.message = action.payload;
+        state.isJobCanceledLoading = false;
       })
       .addCase(updateClient.pending, (state) => {
         state.isLoading = true;

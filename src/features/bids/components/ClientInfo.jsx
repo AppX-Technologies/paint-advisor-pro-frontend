@@ -1,5 +1,6 @@
 import EditIcon from '@mui/icons-material/Edit';
 import {
+  Backdrop,
   Badge,
   Box,
   Button,
@@ -10,7 +11,7 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 import { bidsStages } from '../../../helpers/bidsStages';
@@ -31,10 +32,10 @@ const ClientInfo = ({
   onClientFormChange,
   setCurrentClientInfoToEdit
 }) => {
-  const { clientList, isSuccess, isLoading, jobSuccessFullyCanceled } = useSelector(
-    (state) => state.bids
-  );
+  const { clientList, isSuccess, isLoading, jobSuccessFullyCanceled, isJobCanceledLoading } =
+    useSelector((state) => state.bids);
   const { user } = useSelector(authSelector);
+  const [openClientLoadingBackdrop, setOpenClientLoadingBackdrop] = useState(false);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -55,6 +56,12 @@ const ClientInfo = ({
   }, [isSuccess]);
 
   useEffect(() => {
+    if (isJobCanceledLoading) {
+      setOpenClientLoadingBackdrop(true);
+    }
+  }, [isJobCanceledLoading]);
+
+  useEffect(() => {
     if (jobSuccessFullyCanceled) {
       dispatch(
         showMessage({
@@ -65,6 +72,7 @@ const ClientInfo = ({
       dispatch(reset());
     }
   }, [jobSuccessFullyCanceled]);
+  console.log(currentClientInfo, 'ClientInfo');
   return (
     <Box>
       {selectedListItem ? (
@@ -83,6 +91,13 @@ const ClientInfo = ({
                 <EditIcon sx={{ cursor: 'pointer', ml: 1, width: '20px', height: '20px' }} />
               </Tooltip>
             </Box>
+            {isJobCanceledLoading && (
+              <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={openClientLoadingBackdrop}>
+                <CircularProgress color='inherit' />
+              </Backdrop>
+            )}
 
             <Box sx={{ display: 'flex' }}>
               {findCurrentStageButtonInfo(selectedStep).actions.map((info) => {
@@ -99,41 +114,72 @@ const ClientInfo = ({
                     />
                   </Tooltip>
                 ) : (
-                  <Tooltip title={info.text} placement='top'>
-                    <Badge
-                      badgeContent={
-                        info.text === 'View Files' ? currentClientInfo?.files?.length : 0
-                      }
-                      color='primary'
-                      anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left'
-                      }}>
-                      <Button
-                        sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
-                        variant='outlined'
-                        startIcon={info.icon}
-                        color={info.color}
-                        onClick={() => {
-                          if (info.nextState) {
-                            onSelectedStepChange(bidsStages[bidsStages.indexOf(selectedStep) + 1]);
-                          }
-                          if (info.text === 'View Files') {
-                            setShowFilesToView(true);
-                          }
-                          if (info.text === 'Cancel The Job') {
-                            dispatch(
-                              updateClientStatus({
-                                token: user.token,
-                                id: currentClientInfo._id,
-                                status: 'Cancel The Job'
-                              })
-                            );
-                          }
-                        }}
-                      />
-                    </Badge>
-                  </Tooltip>
+                  <>
+                    {info.text === 'Cancel The Job' &&
+                      currentClientInfo.status !== 'Cancel The Job' && (
+                        <>
+                          <Tooltip title={info.text} placement='top'>
+                            <Badge
+                              badgeContent={
+                                info.text === 'View Files' ? currentClientInfo?.files?.length : 0
+                              }
+                              color='primary'
+                              anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left'
+                              }}>
+                              <Button
+                                sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
+                                variant='outlined'
+                                startIcon={info.icon}
+                                color={info.color}
+                                onClick={() => {
+                                  dispatch(
+                                    updateClientStatus({
+                                      token: user.token,
+                                      id: currentClientInfo._id,
+                                      status: 'Cancel The Job'
+                                    })
+                                  );
+                                }}
+                              />
+                            </Badge>
+                          </Tooltip>
+                        </>
+                      )}
+                    {info.text !== 'Cancel The Job' && (
+                      <>
+                        <Tooltip title={info.text} placement='top'>
+                          <Badge
+                            badgeContent={
+                              info.text === 'View Files' ? currentClientInfo?.files?.length : 0
+                            }
+                            color='primary'
+                            anchorOrigin={{
+                              vertical: 'top',
+                              horizontal: 'left'
+                            }}>
+                            <Button
+                              sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
+                              variant='outlined'
+                              startIcon={info.icon}
+                              color={info.color}
+                              onClick={() => {
+                                if (info.nextState) {
+                                  onSelectedStepChange(
+                                    bidsStages[bidsStages.indexOf(selectedStep) + 1]
+                                  );
+                                }
+                                if (info.text === 'View Files') {
+                                  setShowFilesToView(true);
+                                }
+                              }}
+                            />
+                          </Badge>
+                        </Tooltip>
+                      </>
+                    )}
+                  </>
                 );
               })}
             </Box>
@@ -153,6 +199,7 @@ const ClientInfo = ({
                     item !== 'files' &&
                     item !== '_id' &&
                     item !== 'rooms' &&
+                    item !== 'comments' &&
                     item !== '__v'
                 )
                 .map((field) => {
