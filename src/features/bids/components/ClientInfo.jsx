@@ -1,6 +1,5 @@
 import EditIcon from '@mui/icons-material/Edit';
 import {
-  Backdrop,
   Badge,
   Box,
   Button,
@@ -11,14 +10,21 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import ConfirmationModel from '../../../common/ConfirmationModel';
 import { AddNewClientTextField } from '../../../common/FormTextField';
+import ScheduleTheJob from '../../../common/ScheduleTheJob';
 import { bidsStages } from '../../../helpers/bidsStages';
+import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { reset, updateClientStatus } from '../bidsSlice';
-import { findCurrentClient, findCurrentStageButtonInfo } from '../helpers/generalHepers';
+import {
+  filterClientsBySelectedStep,
+  findCurrentClient,
+  findCurrentStageButtonInfo
+} from '../helpers/generalHepers';
 
 const ClientInfo = ({
   onSelectedStepChange,
@@ -30,17 +36,24 @@ const ClientInfo = ({
   currentClientInfo,
   setCurrentClientInfo,
   onClientFormChange,
-  setCurrentClientInfoToEdit
+  setCurrentClientInfoToEdit,
+  setScheduleTheJob,
+  scheduleTheJob,
+  schedueJobDate,
+  setScheduleJobDate,
+  openFileDeleteModel,
+  setOpenFileDeleteModel,
+  setSelectedListItem,
+  filteredClietsList
 }) => {
   const { clientList, isSuccess, isLoading, jobSuccessFullyCanceled, isJobCanceledLoading } =
     useSelector((state) => state.bids);
   const { user } = useSelector(authSelector);
-  const [openClientLoadingBackdrop, setOpenClientLoadingBackdrop] = useState(false);
 
   const dispatch = useDispatch();
   useEffect(() => {
     setCurrentClientInfo(findCurrentClient(clientList, selectedListItem));
-  }, [selectedListItem, clientList]);
+  }, [selectedListItem, clientList, selectedStep]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -56,12 +69,6 @@ const ClientInfo = ({
   }, [isSuccess]);
 
   useEffect(() => {
-    if (isJobCanceledLoading) {
-      setOpenClientLoadingBackdrop(true);
-    }
-  }, [isJobCanceledLoading]);
-
-  useEffect(() => {
     if (jobSuccessFullyCanceled) {
       dispatch(
         showMessage({
@@ -69,12 +76,51 @@ const ClientInfo = ({
           severity: 'success'
         })
       );
+      setOpenFileDeleteModel(false);
+      setCurrentClientInfo(null);
+      const indexOfCurrentClient = filterClientsBySelectedStep(
+        filteredClietsList,
+        convertStringCase(selectedStep)
+      ).findIndex((client) => client._id === currentClientInfo._id);
+      setSelectedListItem(
+        filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[
+          indexOfCurrentClient + 1
+        ]._id
+      );
       dispatch(reset());
     }
   }, [jobSuccessFullyCanceled]);
-  console.log(currentClientInfo, 'ClientInfo');
+
   return (
     <Box>
+      {scheduleTheJob && (
+        <ScheduleTheJob
+          scheduleTheJob={scheduleTheJob}
+          setScheduleTheJob={setScheduleTheJob}
+          schedueJobDate={schedueJobDate}
+          setScheduleJobDate={setScheduleJobDate}
+          currentClientInfo={currentClientInfo}
+        />
+      )}
+      {openFileDeleteModel && (
+        <ConfirmationModel
+          openFileDeleteModel={openFileDeleteModel}
+          setOpenFileDeleteModel={setOpenFileDeleteModel}
+          isLoading={isJobCanceledLoading}
+          actionToPerform={() => {
+            dispatch(
+              updateClientStatus({
+                token: user.token,
+                id: currentClientInfo._id,
+                status: 'Cancel The Job'
+              })
+            );
+          }}
+          content='Are you sure you want to cancel this job?'
+          primaryButtonText='Save'
+          title='Cancel The Job'
+        />
+      )}
       {selectedListItem ? (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }} p={1}>
@@ -91,16 +137,9 @@ const ClientInfo = ({
                 <EditIcon sx={{ cursor: 'pointer', ml: 1, width: '20px', height: '20px' }} />
               </Tooltip>
             </Box>
-            {isJobCanceledLoading && (
-              <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={openClientLoadingBackdrop}>
-                <CircularProgress color='inherit' />
-              </Backdrop>
-            )}
 
             <Box sx={{ display: 'flex' }}>
-              {findCurrentStageButtonInfo(selectedStep).actions.map((info) => {
+              {findCurrentStageButtonInfo(selectedStep)?.actions.map((info) => {
                 return info.text === 'Begin Estimate' ? (
                   <Tooltip title={info.text} placement='top'>
                     <Button
@@ -116,7 +155,7 @@ const ClientInfo = ({
                 ) : (
                   <>
                     {info.text === 'Cancel The Job' &&
-                      currentClientInfo.status !== 'Cancel The Job' && (
+                      currentClientInfo?.status !== 'Cancel The Job' && (
                         <>
                           <Tooltip title={info.text} placement='top'>
                             <Badge
@@ -134,13 +173,7 @@ const ClientInfo = ({
                                 startIcon={info.icon}
                                 color={info.color}
                                 onClick={() => {
-                                  dispatch(
-                                    updateClientStatus({
-                                      token: user.token,
-                                      id: currentClientInfo._id,
-                                      status: 'Cancel The Job'
-                                    })
-                                  );
+                                  setOpenFileDeleteModel(true);
                                 }}
                               />
                             </Badge>
@@ -172,6 +205,9 @@ const ClientInfo = ({
                                 }
                                 if (info.text === 'View Files') {
                                   setShowFilesToView(true);
+                                }
+                                if (info.text === 'Schedule') {
+                                  setScheduleTheJob(true);
                                 }
                               }}
                             />

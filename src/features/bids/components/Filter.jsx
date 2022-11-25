@@ -4,6 +4,7 @@ import {
   Box,
   Checkbox,
   Dialog,
+  Divider,
   FormControlLabel,
   FormGroup,
   IconButton,
@@ -13,6 +14,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import { BID_TYPES } from '../../../helpers/contants';
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction='left' ref={ref} {...props} />;
@@ -46,16 +48,18 @@ const Filter = ({ showFilter, onFilterOptionsClose }) => {
                 </IconButton>
               </Toolbar>
             </AppBar>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', p: 2 }}>
-              {Array(20)
-                .fill(0)
-                .map(() => {
+            <Box>
+              <Typography sx={{ mt: 1, mx: 1 }}>Filter By Bid Types</Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', m: 1 }}>
+                {BID_TYPES.map((bid) => {
                   return (
                     <FormGroup>
-                      <FormControlLabel control={<Checkbox defaultChecked />} label='Filter' />
+                      <FormControlLabel control={<Checkbox defaultChecked />} label={bid} />
                     </FormGroup>
                   );
                 })}
+              </Box>
+              <Divider />
             </Box>
           </Dialog>
         </Backdrop>

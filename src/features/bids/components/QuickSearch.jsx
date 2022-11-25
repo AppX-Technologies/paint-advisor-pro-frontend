@@ -1,13 +1,16 @@
 import { Box, Card, CircularProgress, TextField, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { convertStringCase } from '../../../helpers/stringCaseConverter';
+import { filterClientsBySelectedStep } from '../helpers/generalHepers';
 import SearchListItems from './SearchListItems';
 
 const QuickSearch = ({
   onSelecetedListItemChange,
   selectedListItem,
   handleSearch,
-  filteredClietsList
+  filteredClietsList,
+  selectedStep
 }) => {
   const { clientList, isLoading } = useSelector((state) => state.bids);
 
@@ -44,20 +47,24 @@ const QuickSearch = ({
         )}
         {/* ListItems */}
         <Box sx={{ overflowY: 'auto', height: '66vh' }}>
-          {!isLoading && filteredClietsList.length === 0 && (
-            <Typography sx={{ textAlign: 'center', fontWeight: '500', mt: 1 }}>
-              No Clients
-            </Typography>
-          )}
+          {!isLoading &&
+            filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))
+              .length === 0 && (
+              <Typography sx={{ textAlign: 'center', fontWeight: '500', mt: 1 }}>
+                No Clients
+              </Typography>
+            )}
           {filteredClietsList &&
-            filteredClietsList.map((client, idx) => (
-              <SearchListItems
-                selectedListItem={selectedListItem}
-                client={client}
-                idx={idx}
-                onSelecetedListItemChange={onSelecetedListItemChange}
-              />
-            ))}
+            filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep)).map(
+              (client, idx) => (
+                <SearchListItems
+                  selectedListItem={selectedListItem}
+                  client={client}
+                  idx={idx}
+                  onSelecetedListItemChange={onSelecetedListItemChange}
+                />
+              )
+            )}
         </Box>
       </Box>
     </Card>

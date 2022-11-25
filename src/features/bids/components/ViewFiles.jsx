@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import DeleteModel from '../../../common/DeleteModel';
+import DeleteModel from '../../../common/ConfirmationModel';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { deleteAFIle, reset } from '../bidsSlice';
@@ -66,8 +66,11 @@ const ViewFiles = ({
         <DeleteModel
           openFileDeleteModel={openFileDeleteModel}
           setOpenFileDeleteModel={setOpenFileDeleteModel}
-          deleteFile={deleteFile}
+          actionToPerform={deleteFile}
           fileToDelete={fileToDelete}
+          content='Are you sure you want to delete this item?'
+          primaryButtonText='Delete'
+          title='Delete This Item'
         />
       )}
       {showFilesToView && (

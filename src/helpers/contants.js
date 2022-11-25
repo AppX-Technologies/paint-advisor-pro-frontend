@@ -69,3 +69,5 @@ export const ROOM_TYPES = [
   'Bathroom',
   'Laundry Room'
 ];
+
+export const BID_TYPES = ['Interior', 'Exterior'];

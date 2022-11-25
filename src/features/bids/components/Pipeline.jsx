@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { booleanOption } from '../../../common/FormTextField';
 import { STAGE_1 } from '../../../helpers/contants';
+import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { authSelector } from '../../auth/authSlice';
 import { fetchAllClients } from '../bidsSlice';
 import {
@@ -22,7 +23,11 @@ import {
   initialWindowTrimInfo,
   initilWallInfo
 } from '../common/roomsInitialStats';
-import { findCurrentClient, searchedResult } from '../helpers/generalHepers';
+import {
+  filterClientsBySelectedStep,
+  findCurrentClient,
+  searchedResult
+} from '../helpers/generalHepers';
 import AddNewClientForm from './AddNewClientForm';
 import ClientInfo from './ClientInfo';
 import Comment from './Comment';
@@ -41,7 +46,7 @@ const Pipeline = () => {
   const [open, setOpen] = useState(false);
   const [openEstimate, setOpenEstimate] = useState(false);
   const [selectedStep, setSelectedStep] = useState('new client');
-  const [selectedListItem, setSelectedListItem] = useState('');
+  const [selectedListItem, setSelectedListItem] = useState(null);
   const [filteredClietsList, setFilteredClietsList] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [showFilesToView, setShowFilesToView] = useState(null);
@@ -70,7 +75,8 @@ const Pipeline = () => {
   const [closetStats, setClosetStats] = useState(initialClosetInfo);
   const [currentClientInfoToEdit, setCurrentClientInfoToEdit] = useState(null);
   const [openFileDeleteModel, setOpenFileDeleteModel] = useState(false);
-
+  const [scheduleTheJob, setScheduleTheJob] = useState(false);
+  const [schedueJobDate, setScheduleJobDate] = useState(null);
   const [fileToDelete, setFileToDelete] = useState(null);
 
   const roomRelatedInfo = [
@@ -250,11 +256,13 @@ const Pipeline = () => {
     setRoomStats(initialRoomState);
   };
 
-  // useEffect(() => {
-  //   if (clientList) {
-  //     setSelectedListItem(clientList[0] ? clientList[0]._id : '');
-  //   }
-  // }, [clientList]);
+  useEffect(() => {
+    if (!selectedListItem) {
+      setSelectedListItem(
+        filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
+      );
+    }
+  }, [clientList, filteredClietsList, selectedStep]);
 
   const onClientFormChange = (formValue) => {
     setOpen(formValue);
@@ -348,12 +356,17 @@ const Pipeline = () => {
                 filteredClietsList={filteredClietsList}
                 setFilteredClietsList={setFilteredClietsList}
                 handleSearch={handleSearch}
+                selectedStep={selectedStep}
               />
             </Grid>
             <Grid xs={10} sx={{ height: '74vh', overflowY: 'auto', paddingLeft: 1 }}>
               <Steps selectedStep={selectedStep} onSelectedStepChange={setSelectedStep} />
               <Card sx={{ padding: 1, marginTop: 1 }}>
                 <ClientInfo
+                  schedueJobDate={schedueJobDate}
+                  setScheduleJobDate={setScheduleJobDate}
+                  scheduleTheJob={scheduleTheJob}
+                  setScheduleTheJob={setScheduleTheJob}
                   setShowFilesToView={setShowFilesToView}
                   onSelectedStepChange={setSelectedStep}
                   selectedValue={selectedValue}
@@ -366,6 +379,10 @@ const Pipeline = () => {
                   onClientFormChange={onClientFormChange}
                   currentClientInfoToEdit={currentClientInfoToEdit}
                   setCurrentClientInfoToEdit={setCurrentClientInfoToEdit}
+                  openFileDeleteModel={openFileDeleteModel}
+                  setOpenFileDeleteModel={setOpenFileDeleteModel}
+                  setSelectedListItem={setSelectedListItem}
+                  filteredClietsList={filteredClietsList}
                 />
                 {selectedListItem && (
                   <>

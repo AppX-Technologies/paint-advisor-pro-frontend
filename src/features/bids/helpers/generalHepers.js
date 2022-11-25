@@ -15,3 +15,7 @@ export const searchedResult = (list, keyword) => {
 export const findCommentsUniquely = (originalCommentList, searchValue) => {
   return originalCommentList.filter((comment) => comment.name === searchValue);
 };
+
+export const filterClientsBySelectedStep = (clients, selectedStep) => {
+  return clients.filter((client) => client.status === selectedStep);
+};

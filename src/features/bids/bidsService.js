@@ -51,7 +51,6 @@ export const updateClientService = async (userData) => {
     `${UPDATE_CLIENT}/${userData.id}`,
     {
       ...userData,
-      token: userData.token
     },
     config
   );
