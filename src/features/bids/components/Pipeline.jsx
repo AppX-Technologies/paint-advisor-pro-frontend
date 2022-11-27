@@ -276,8 +276,8 @@ const Pipeline = () => {
   };
   const dispatch = useDispatch();
 
-
   const handlePrimaryFilter = () => {
+    setSelectedListItem(null);
     dispatch(
       fetchAllClients({
         query: primaryHeaderSearch,
@@ -288,6 +288,10 @@ const Pipeline = () => {
         bidFilterValues
       })
     );
+    setSelectedListItem(
+      filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
+    );
+    setPrimaryHeaderSearch('');
   };
 
   return (
@@ -389,6 +393,7 @@ const Pipeline = () => {
                 setFilteredClietsList={setFilteredClietsList}
                 handleSearch={handleSearch}
                 selectedStep={selectedStep}
+                scheduleTheJob={scheduleTheJob}
               />
             </Grid>
             <Grid xs={10} sx={{ height: '74vh', overflowY: 'auto', paddingLeft: 1 }}>

@@ -1,5 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { Backdrop, Box, TextField, Tooltip, Typography } from '@mui/material';
+import { Backdrop, Box, CircularProgress, TextField, Tooltip, Typography } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,6 +16,8 @@ const ScheduleTheJob = ({
   setScheduleJobDate,
   currentClientInfo
 }) => {
+  const { isLoading } = useSelector((state) => state.bids);
+
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const handleChange = (newValue) => {
@@ -52,12 +54,16 @@ const ScheduleTheJob = ({
           }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
             <Typography sx={{ mb: 3 }}>Schedule The Job</Typography>
-            <Tooltip title='Cancel' placement='top'>
-              <CloseIcon
-                sx={{ ml: 2, cursor: 'pointer' }}
-                onClick={() => setScheduleTheJob(false)}
-              />
-            </Tooltip>
+            {isLoading ? (
+              <CircularProgress size={20} />
+            ) : (
+              <Tooltip title='Cancel' placement='top'>
+                <CloseIcon
+                  sx={{ ml: 2, cursor: 'pointer' }}
+                  onClick={() => setScheduleTheJob(false)}
+                />
+              </Tooltip>
+            )}
           </Box>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker

@@ -276,7 +276,9 @@ const ClientInfo = ({
         </>
       ) : (
         <>
-          {!isLoading && <Typography sx={{ fontSize: '14px', p: 2 }}>No Client</Typography>}
+          {!isLoading && (
+            <Typography sx={{ fontSize: '14px', p: 2 }}>No Client Selected</Typography>
+          )}
 
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             {isLoading && <CircularProgress size={20} sx={{ ml: 2 }} />}

@@ -1,6 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
 import {
-  CircularProgress,
   FormControl,
   Grid,
   InputLabel,
@@ -56,6 +55,7 @@ export default function AddNewClientForm(props) {
     }
 
     if (selectedValue._id) {
+      delete selectedValue.comments;
       dispatch(updateClient({ ...selectedValue, id: selectedValue._id, token: user.token }));
     } else {
       dispatch(createClient({ ...selectedValue, organization: orgId, token: user.token }));

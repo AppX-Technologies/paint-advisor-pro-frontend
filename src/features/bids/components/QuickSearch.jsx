@@ -10,19 +10,14 @@ const QuickSearch = ({
   selectedListItem,
   handleSearch,
   filteredClietsList,
-  selectedStep
+  selectedStep,
+  scheduleTheJob
 }) => {
-  const { clientList, isLoading, clientFetchSuccess } = useSelector((state) => state.bids);
+  const { clientList, isLoading } = useSelector((state) => state.bids);
 
   useEffect(() => {
     handleSearch('');
   }, [clientList]);
-
-  useEffect(() => {
-    onSelecetedListItemChange(
-      filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))?._id
-    );
-  }, [clientFetchSuccess]);
 
   return (
     <Card sx={{ bgcolor: 'background.paper' }}>
@@ -46,7 +41,7 @@ const QuickSearch = ({
             size='small'
           />
         </Box>
-        {isLoading && (
+        {isLoading && !scheduleTheJob && (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <CircularProgress size={20} sx={{ margin: '5px auto' }} />
           </Box>

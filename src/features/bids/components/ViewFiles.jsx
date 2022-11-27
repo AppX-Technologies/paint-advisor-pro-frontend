@@ -49,12 +49,14 @@ const ViewFiles = ({
         ...currentClientInfo,
         files: [...currentClientInfo.files.filter((file) => file.filename !== fileToDelete)]
       });
-      dispatch(
-        showMessage({
-          message: `File Successfully Deleted`,
-          severity: 'success'
-        })
-      );
+      if (showFilesToView) {
+        dispatch(
+          showMessage({
+            message: `File Successfully Deleted`,
+            severity: 'success'
+          })
+        );
+      }
       dispatch(reset());
       setFileToDelete(null);
     }

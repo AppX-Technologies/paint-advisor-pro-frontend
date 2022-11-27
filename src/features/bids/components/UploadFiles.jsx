@@ -87,25 +87,20 @@ const UploadFiles = ({
   const handleFileUploadDelete = async (id) => {
     setFileToDelete(id);
     dispatch(deleteAFIle({ token: user.token, id }));
+    uploadedFiles.splice(
+      uploadedFiles.findIndex((file) => file.filename === fileToDelete),
+      1
+    );
+    onUploadedFilesChange([...uploadedFiles]);
+    dispatch(
+      showMessage({
+        message: `Successfully Deleted`,
+        severity: 'success'
+      })
+    );
+    dispatch(reset());
+    setFileToDelete(null);
   };
-
-  useEffect(() => {
-    if (fileDeletedSuccessfully) {
-      uploadedFiles.splice(
-        uploadedFiles.findIndex((file) => file.filename === fileToDelete),
-        1
-      );
-      onUploadedFilesChange([...uploadedFiles]);
-      dispatch(
-        showMessage({
-          message: `Successfully Deleted`,
-          severity: 'success'
-        })
-      );
-      dispatch(reset());
-      setFileToDelete(null);
-    }
-  }, [fileDeletedSuccessfully]);
 
   const FileButton = ({ fileObject, onRemoveFile, onFileRemove }) => {
     return (
@@ -115,10 +110,7 @@ const UploadFiles = ({
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             {fileObject.filename !== fileToDelete && fileObject.status === 'UPLOADED' && (
               <Tooltip title='Delete' placement='top'>
-                <Delete
-                  sx={{ fontSize: '15px', mr: 1, color: 'red' }}
-                  onClick={onFileRemove}
-                />
+                <Delete sx={{ fontSize: '15px', mr: 1, color: 'red' }} onClick={onFileRemove} />
               </Tooltip>
             )}
             <Typography sx={{ fontSize: '12px' }}>{fileObject.file.name}</Typography>
@@ -161,7 +153,7 @@ const UploadFiles = ({
     if (isSuccess) {
       dispatch(
         showMessage({
-          message: 'File Uploaded Successfully',
+          message: 'Successfully Updated',
           severity: 'success'
         })
       );
