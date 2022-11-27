@@ -20,6 +20,7 @@ import DeleteModel from '../../../common/ConfirmationModel';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { deleteAFIle, reset } from '../bidsSlice';
+import FilePopup from './forms/FilePopup';
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction='left' ref={ref} {...props} />;
@@ -36,6 +37,7 @@ const ViewFiles = ({
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { isFileUploadLoading, fileDeletedSuccessfully } = useSelector((state) => state.bids);
+  const [visibleFile, setVisibleFile] = useState();
   const [openFileDeleteModel, setOpenFileDeleteModel] = useState(false);
 
   const deleteFile = (filename) => {
@@ -118,7 +120,9 @@ const ViewFiles = ({
                         <Tooltip title='View This File' placement='top'>
                           <InsertDriveFileOutlinedIcon />
                         </Tooltip>
-                        <Typography sx={{ fontSize: '15px', ml: 2 }}>
+                        <Typography
+                          sx={{ fontSize: '15px', ml: 2 }}
+                          onClick={() => setVisibleFile(item)}>
                           {item.metadata.originalName}
                         </Typography>
                       </Box>
@@ -142,6 +146,13 @@ const ViewFiles = ({
               })}
             </Box>
           </Dialog>
+          {visibleFile && (
+            <FilePopup
+              file={visibleFile}
+              onHide={() => setVisibleFile()}
+              currentClientInfo={currentClientInfo}
+            />
+          )}
         </Backdrop>
       )}
     </>
