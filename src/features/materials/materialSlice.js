@@ -3,7 +3,6 @@ import { showMessage } from '../snackbar/snackbarSlice';
 import { addOrUpdateItemInArray } from '../../helpers/addRemoveUpdateListHelper';
 import materialService from './materialService';
 
-// initial states
 
 const initialState = {
   materialList: [
@@ -16,21 +15,21 @@ const initialState = {
           bidType: 'Interior',
           materialName: 'Blue paint',
           unit: 'KG',
-          pricePerUnit: '340'
+          pricePerUnit: '940'
         },
         {
           _id: '1233',
           bidType: 'Exterior',
           materialName: 'Red paint',
           unit: 'KG',
-          pricePerUnit: '340'
+          pricePerUnit: '700'
         },
         {
           _id: '1234',
           bidType: 'Interior',
           materialName: 'White paint',
           unit: 'KG',
-          pricePerUnit: '340'
+          pricePerUnit: '3050'
         }
       ]
     },

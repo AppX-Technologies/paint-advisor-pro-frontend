@@ -20,7 +20,6 @@ export default function FormDialog(props) {
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const dispatch = useDispatch();
   const { open, setOpen, bidType, filteredMaterials } = props;
-
   const initialFormState = {
     materialName: '',
     unit: '',
@@ -29,7 +28,7 @@ export default function FormDialog(props) {
   };
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-
+  console.log(formState);
   const handleClose = () => {
     setOpen(false);
   };
@@ -53,7 +52,9 @@ export default function FormDialog(props) {
     };
     if (
       filteredMaterials.some((material) => {
-        return material.materialName.toLowerCase().trim() === formState.materialName.toLowerCase().trim();
+        return (
+          material.materialName.toLowerCase().trim() === formState.materialName.toLowerCase().trim()
+        );
       })
     ) {
       dispatch(
@@ -82,15 +83,15 @@ export default function FormDialog(props) {
     }
   }, [isSuccess]);
 
-  //   useEffect(() => {
-  //     ['stage', 'description'].forEach((key, i) => {
-  //       dispatchNew({
-  //         type: 'HANDLE_FORM_INPUT',
-  //         field: key,
-  //         payload: key === 'stage' ? stageCategory : ''
-  //       });
-  //     });
-  //   }, [stageType]);
+  useEffect(() => {
+    ['materialName', 'unit', 'pricePerUnit', 'bidType'].forEach((key, i) => {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: key,
+        payload: key === 'bidType' ? bidType : ''
+      });
+    });
+  }, [bidType]);
 
   const handleTextChange = (e) => {
     dispatchNew({

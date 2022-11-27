@@ -65,7 +65,6 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
   }, [isSuccess]);
 
   useEffect(() => {
-    console.log(materialList, 'Material');
     setFilteredMaterials(filterMaterialByBid(materialList, filterValue));
   }, [filterValue]);
 
