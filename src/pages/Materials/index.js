@@ -1,7 +1,8 @@
 import React from 'react';
+import MaterialTabPanel from '../../components/MaterialTabs';
 
 const Materials = () => {
-  return <h2>Materials</h2>;
+  return <MaterialTabPanel />;
 };
 
 export default Materials;

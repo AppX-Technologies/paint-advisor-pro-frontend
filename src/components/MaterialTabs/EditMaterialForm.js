@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, TextareaAutosize } from '@mui/material';
+import { CircularProgress, Grid, TextareaAutosize, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,25 +10,25 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createProcess } from '../../features/process/processSlice';
+import { createMaterial } from '../../features/materials/materialSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { ALL_PROCESS_STAGES } from '../../helpers/contants';
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function Edit(props) {
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const { openEditForm, setOpenEditForm, editFormData } = props;
-
   const initialFormState = {
-    stage: editFormData.stage ? editFormData.stage : '',
-    description: editFormData.description ? editFormData.description : '',
+    materialName: editFormData.material ? editFormData.material : '',
+    unit: editFormData.unit ? editFormData.unit : '',
+    pricePerUnit: editFormData.pricePerUnit ? editFormData.pricePerUnit : '',
     bidType: editFormData.bidType ? editFormData.bidType : ''
   };
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-  const { processList } = useSelector((state) => state.process);
+  const { materialList } = useSelector((state) => state.material);
 
   const dispatch = useDispatch();
+
   React.useEffect(() => {
     Object.keys(editFormData).forEach((key) => {
       dispatchNew({
@@ -54,25 +54,25 @@ export default function Edit(props) {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    if (!formState.description || !formState.bidType || !formState.stage) {
+    if (!formState.material) {
       return dispatch(
         showMessage({
-          message: `Description cannot be empty`,
+          message: `Material name cannot be empty`,
           severity: 'error'
         })
       );
     }
     const formStateWithToken = {
       ...formState,
-      ID: processList[0]._id,
-      previousProcesses: processList[0].processes.filter(
-        (previousProcess) => previousProcess._id !== editFormData._id
+      ID: materialList[0]._id,
+      previousMaterials: materialList[0].materials.filter(
+        (previousMaterials) => previousMaterials._id !== editFormData._id
       ),
 
       add: true,
       token: userDetail.token
     };
-    dispatch(createProcess(formStateWithToken));
+    dispatch(createMaterial(formStateWithToken));
     setOpenEditForm(false);
   };
 
@@ -80,48 +80,58 @@ export default function Edit(props) {
     <div>
       <Dialog open={openEditForm} onClose={handleClose} PaperProps={{ sx: { width: '40%' } }}>
         <DialogTitle>
-          Edit Process
+          Edit Material
           <CircularProgress style={{ display: 'none' }} size={25} />
         </DialogTitle>
         <DialogContent>
           <Grid item xs={12}>
-            <InputLabel id='demo-simple-select-standard-label'>Description</InputLabel>
-            <TextareaAutosize
-              name='description'
+            <TextField
+              name='material'
               required
               fullWidth
               aria-label='minimum height'
               minRows={3}
               variant='standard'
-              id='process'
-              label='Description'
+              id='material'
+              label='Material Name'
               autoFocus
-              placeholder={editFormData.description}
-              value={formState.description}
+              value={formState.materialName}
               onChange={(e) => handleTextChange(e)}
               style={{ width: '100%' }}
             />
           </Grid>
           <Grid container spacing={2} sx={{ marginBottom: '13px' }}>
-            <Grid item xs={6} md={6}>
-              <FormControl sx={{ m: 0, minWidth: 235, maxHeight: 30, marginTop: 3 }} size='small'>
-                <InputLabel id='demo-select-small'>stage</InputLabel>
-                <Select
-                  labelId='demo-select-small'
-                  id='demo-select-small'
-                  name='stage'
-                  value={formState.stage ? formState.stage : editFormData.stage}
-                  label='stage'
-                  onChange={(e) => handleTextChange(e)}>
-                  {ALL_PROCESS_STAGES.map((stage) => {
-                    return (
-                      <MenuItem key={stage} value={stage}>
-                        {stage}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
+            <Grid item xs={3} md={3}>
+              <TextField
+                name='unit'
+                required
+                fullWidth
+                aria-label='minimum height'
+                minRows={3}
+                variant='standard'
+                id='unit'
+                label='Unit'
+                autoFocus
+                value={formState.unit ? formState.unit : ''}
+                onChange={(e) => handleTextChange(e)}
+                style={{ width: '100%', marginTop: '13px' }}
+              />
+            </Grid>
+            <Grid item xs={3} md={3}>
+              <TextField
+                name='pricePerUnit'
+                required
+                fullWidth
+                aria-label='minimum height'
+                minRows={3}
+                variant='standard'
+                id='pricePerUnit'
+                label='Price per Unit'
+                autoFocus
+                value={formState.pricePerUnit ? formState.pricePerUnit : ''}
+                onChange={(e) => handleTextChange(e)}
+                style={{ width: '100%', marginTop: '13px' }}
+              />
             </Grid>
             <Grid item xs={6} md={6}>
               <FormControl sx={{ m: 0, minWidth: 235, maxHeight: 30, marginTop: 3 }} size='small'>

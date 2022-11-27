@@ -175,8 +175,7 @@ const UploadFiles = ({
 
   const showSaveButtonOrNot = useMemo(() => {
     return uploadedFiles.some((file) => file.client === selectedListItem);
-  }, [uploadedFiles,selectedListItem]);
-
+  }, [uploadedFiles, selectedListItem]);
 
   return (
     <>

@@ -99,3 +99,22 @@ export const processColumn = () => {
     }
   ];
 };
+export const materialColumn = () => {
+  return [
+    {
+      name: 'materialName',
+      label: 'Item Name',
+      width: '20%'
+    },
+    {
+      name: 'unit',
+      label: 'Unit',
+      width: '40%'
+    },
+    {
+      name: 'pricePerUnit',
+      label: 'Price Per Unit',
+      width: '40%'
+    }
+  ];
+};
