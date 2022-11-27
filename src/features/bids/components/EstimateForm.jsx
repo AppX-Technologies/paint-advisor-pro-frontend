@@ -20,12 +20,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
+import { showMessage } from '../../snackbar/snackbarSlice';
 import { initialRoomState } from '../common/roomsInitialStats';
-import ExteriorManByMan from './forms/exterior/ExteriorManByMan';
-import InteriorManByMan from './forms/interior/InteriorManByMan';
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
-
 
 export default function EstimateForm(props) {
   const {
@@ -53,10 +52,32 @@ export default function EstimateForm(props) {
   } = props;
 
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
-
+  const dispatch = useDispatch();
   const handleClose = () => {
     setOpen(false);
     setRoomStats(initialRoomState);
+  };
+
+  const handleBidsSubmission = () => {
+    const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
+    if (emptyField) {
+      return dispatch(
+        showMessage({
+          message: `'${emptyField.toUpperCase()}' Field Is Empty.`,
+          severity: 'error'
+        })
+      );
+    }
+
+    if (new Date(initialBidInfo.startDate).getTime() > new Date(initialBidInfo.endDate).getTime()) {
+      return dispatch(
+        showMessage({
+          message: `Start Date Should Be Less Than End Date.`,
+          severity: 'error'
+        })
+      );
+    }
+    handleClose();
   };
 
   return (
@@ -109,7 +130,7 @@ export default function EstimateForm(props) {
                           }}
                           value={initialBidInfo[item.name]}
                           onChange={(newValue) => {
-                            initialBidInfo[item.name] = newValue;
+                            initialBidInfo[item.name] = newValue?.$d?.toISOString();
                             setInitialBidInfo({ ...initialBidInfo });
                           }}
                           renderInput={(params) => (
@@ -174,13 +195,13 @@ export default function EstimateForm(props) {
                   labelId='demo-select-small'
                   id='demo-select-small'
                   name='Bid Type'
-                  value={initialBidInfo.bidType}
+                  value={initialBidInfo.type}
                   onChange={(event) => {
-                    initialBidInfo.bidType = event.target.value;
+                    initialBidInfo.type = event.target.value;
                     setInitialBidInfo({ ...initialBidInfo });
                   }}
                   renderValue={
-                    initialBidInfo.bidType === '' &&
+                    initialBidInfo.type === '' &&
                     (() => (
                       <Typography sx={{ marginTop: '1px', fontSize: '13px' }}>
                         Select One...
@@ -217,7 +238,7 @@ export default function EstimateForm(props) {
                     ))
                   }>
                   <MenuItem value='Man Hour'>Man Hour</MenuItem>
-                  {initialBidInfo.bidType === 'Interior' && (
+                  {initialBidInfo.type === 'Interior' && (
                     <MenuItem value='Room by Room'>Room by Room</MenuItem>
                   )}
                 </Select>
@@ -225,7 +246,7 @@ export default function EstimateForm(props) {
             </Grid>
           </Grid>
           <Divider sx={{ mt: 2 }} />
-          {initialBidInfo.bidType === 'Interior' && initialBidInfo.subType === 'Room by Room' && (
+          {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Room by Room' && (
             <InteriorRoomByRoom
               roomStats={roomStats}
               setRoomStats={setRoomStats}
@@ -248,21 +269,23 @@ export default function EstimateForm(props) {
               roomRelatedInfo={roomRelatedInfo}
             />
           )}
-          {initialBidInfo.bidType === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
-            <InteriorManByMan
-              roomStats={roomStats}
-              setRoomStats={setRoomStats}
-              allRoom={allRoom}
-              setAllRoom={setAllRoom}
-            />
+          {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
+            <></>
+            // <InteriorManByMan
+            //   roomStats={roomStats}
+            //   setRoomStats={setRoomStats}
+            //   allRoom={allRoom}
+            //   setAllRoom={setAllRoom}
+            // />
           )}
-          {initialBidInfo.bidType === 'Exterior' && initialBidInfo.subType === 'Man Hour' && (
-            <ExteriorManByMan />
+          {initialBidInfo.type === 'Exterior' && initialBidInfo.subType === 'Man Hour' && (
+            // <ExteriorManByMan />
+            <></>
           )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type='submit' variant='contained' onClick={handleClose}>
+          <Button type='submit' variant='contained' onClick={handleBidsSubmission}>
             Save
           </Button>
         </DialogActions>

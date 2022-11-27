@@ -1,6 +1,6 @@
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import Delete from '@mui/icons-material/Delete';
 import ErrorIcon from '@mui/icons-material/Error';
 import { Box, Chip, CircularProgress, Tooltip, Typography } from '@mui/material';
 import axios from 'axios';
@@ -113,15 +113,13 @@ const UploadFiles = ({
         sx={{ mx: 0.5 }}
         label={
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            {fileObject.filename !== fileToDelete && fileObject.status === 'UPLOADED' ? (
+            {fileObject.filename !== fileToDelete && fileObject.status === 'UPLOADED' && (
               <Tooltip title='Delete' placement='top'>
-                <HighlightOffIcon
+                <Delete
                   sx={{ fontSize: '15px', mr: 1, color: 'red' }}
                   onClick={onFileRemove}
                 />
               </Tooltip>
-            ) : (
-              <CircularProgress size={14} sx={{ mr: 1 }} />
             )}
             <Typography sx={{ fontSize: '12px' }}>{fileObject.file.name}</Typography>
             {fileObject.status === 'UPLOADING' && <CircularProgress size={10} sx={{ ml: 1 }} />}
@@ -175,8 +173,7 @@ const UploadFiles = ({
 
   const showSaveButtonOrNot = useMemo(() => {
     return uploadedFiles.some((file) => file.client === selectedListItem);
-  }, [uploadedFiles,selectedListItem]);
-
+  }, [uploadedFiles, selectedListItem]);
 
   return (
     <>

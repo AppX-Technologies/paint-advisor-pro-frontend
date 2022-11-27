@@ -12,11 +12,17 @@ const QuickSearch = ({
   filteredClietsList,
   selectedStep
 }) => {
-  const { clientList, isLoading } = useSelector((state) => state.bids);
+  const { clientList, isLoading, clientFetchSuccess } = useSelector((state) => state.bids);
 
   useEffect(() => {
     handleSearch('');
   }, [clientList]);
+
+  useEffect(() => {
+    onSelecetedListItemChange(
+      filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))?._id
+    );
+  }, [clientFetchSuccess]);
 
   return (
     <Card sx={{ bgcolor: 'background.paper' }}>
@@ -60,6 +66,7 @@ const QuickSearch = ({
                 <SearchListItems
                   selectedListItem={selectedListItem}
                   client={client}
+                  key={client._id}
                   idx={idx}
                   onSelecetedListItemChange={onSelecetedListItemChange}
                 />

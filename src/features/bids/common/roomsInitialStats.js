@@ -1,8 +1,9 @@
 export const estimationFormInitialInfo = {
   startDate: '',
   endDate: '',
-  bidType: '',
-  subType: ''
+  type: '',
+  subType: '',
+  isMaterialProvidedByCustomer: ''
 };
 
 export const initialNonPaintableStats = {

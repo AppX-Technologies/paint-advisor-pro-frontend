@@ -10,17 +10,25 @@ import {
   IconButton,
   Slide,
   Toolbar,
+  Tooltip,
   Typography
 } from '@mui/material';
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { bidStageFilter } from '../../../common/bidStageFilters';
+import Button from '../../../components/Button';
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction='left' ref={ref} {...props} />;
 });
 
-const Filter = ({ showFilter, onFilterOptionsClose, bidFilterValues, onBidFilterValueChange }) => {
+const Filter = ({
+  showFilter,
+  onFilterOptionsClose,
+  bidFilterValues,
+  onBidFilterValueChange,
+  handlePrimaryFilter
+}) => {
   const handleBidFilter = (filterValues) => {
     const { label, value } = filterValues;
     const findFilterLabel = bidFilterValues.find((bidValue) => bidValue.label === label);
@@ -52,7 +60,6 @@ const Filter = ({ showFilter, onFilterOptionsClose, bidFilterValues, onBidFilter
     }
     onBidFilterValueChange([...bidFilterValues]);
   };
-
 
   return (
     <>
@@ -102,24 +109,38 @@ const Filter = ({ showFilter, onFilterOptionsClose, bidFilterValues, onBidFilter
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', ml: 2 }}>
                     {filter.values.map((value) => {
                       return (
-                        <FormGroup sx={{ ml: 1 }}>
+                        <FormGroup sx={{ ml: 1 }} size='small'>
                           <FormControlLabel
                             checked={bidFilterValues.some(
                               (bidValue) =>
                                 bidValue.label === filter.label && bidValue.values.includes(value)
                             )}
                             onChange={() => handleBidFilter({ label: filter.label, value })}
-                            control={<Checkbox defaultChecked />}
+                            control={<Checkbox defaultChecked size='small' />}
                             label={<Typography sx={{ fontSize: '15px' }}>{value}</Typography>}
                           />
                         </FormGroup>
                       );
                     })}
                   </Box>
-                  <Divider />
+                  <Divider light />
                 </Box>
               );
             })}
+            <Tooltip title='Filter' placement='top'>
+              <Box sx={{ position: 'absolute', right: '10px', bottom: '10px' }}>
+                <Button
+                  color='error'
+                  varient='outlined'
+                  sx={{ width: '20%', my: 2 }}
+                  onClick={() => {
+                    handlePrimaryFilter();
+                    onFilterOptionsClose(false);
+                  }}>
+                  Filter
+                </Button>
+              </Box>
+            </Tooltip>
           </Dialog>
         </Backdrop>
       )}

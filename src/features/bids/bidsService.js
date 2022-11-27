@@ -1,5 +1,3 @@
-// Todo Complete API
-
 import axios from 'axios';
 
 const endpoint = 'https://painting-app-backend.herokuapp.com/clients';
@@ -7,8 +5,6 @@ const endpoint = 'https://painting-app-backend.herokuapp.com/clients';
 const CREATE_CLIENTS = `${endpoint}/`;
 const FETCH_CLIENTS = `${endpoint}/search`;
 const UPDATE_CLIENT = `${endpoint}`;
-const DELETE_CLIENT = `${endpoint}/`;
-const DELETE_FILE = `https://painting-app-backend.herokuapp.com/api/files/`;
 
 export const fetchAllClientsService = async (userData) => {
   const config = {
@@ -17,7 +13,23 @@ export const fetchAllClientsService = async (userData) => {
       Authorization: `Bearer ${userData.token}`
     }
   };
-  const response = await axios.post(FETCH_CLIENTS, {}, config);
+
+  const filterValueObj = {};
+
+  userData.bidFilterValues?.forEach((filter) => {
+    filterValueObj[filter.name] = [...filter.values];
+  });
+
+  const response = await axios.post(
+    FETCH_CLIENTS,
+    {
+      limit: Number(userData.limit),
+      query: userData.query,
+      sort: { [userData.sort]: Number(userData.isAscending) },
+      filter: filterValueObj
+    },
+    config
+  );
   return response;
 };
 
@@ -64,11 +76,10 @@ export const createACommentService = async (userData) => {
       Authorization: `Bearer ${userData.token}`
     }
   };
-  userData.currentClientInfo.comments.push(userData.comment);
   const response = await axios.put(
     `${UPDATE_CLIENT}/${userData.id}`,
     {
-      comments: [...userData.currentClientInfo.comments]
+      comments: userData.comment
     },
     config
   );
@@ -110,24 +121,6 @@ export const deleteFileService = async (userData) => {
       Authorization: `Bearer ${userData.token}`
     }
   });
-  return response;
-};
-
-export const primarySearchService = async (userData) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${userData.token}`
-    }
-  };
-
-  const response = await axios.put(
-    `${UPDATE_CLIENT}/${userData.id}`,
-    {
-      status: userData.status
-    },
-    config
-  );
   return response;
 };
 

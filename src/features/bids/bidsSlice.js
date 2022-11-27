@@ -8,8 +8,7 @@ import {
   updateClientService,
   uploadAFileService,
   deleteFileService,
-  updateClientStatusService,
-  primarySearchService
+  updateClientStatusService
 } from './bidsService';
 
 // initial states
@@ -27,7 +26,9 @@ const initialState = {
   isFileUploadLoading: false,
   fileDeletedSuccessfully: false,
   jobSuccessFullyCanceled: false,
-  isJobCanceledLoading: false
+  isJobCanceledLoading: false,
+  isMessageLoading: false,
+  clientFetchSuccess: false
 };
 
 // Fetch Client Info
@@ -181,20 +182,6 @@ export const updateClientStatus = createAsyncThunk(
   }
 );
 
-export const primarySearch = createAsyncThunk('bids/primarySearch', async (userData, thunkAPI) => {
-  try {
-    const response = await primarySearchService(userData);
-    return response;
-  } catch (err) {
-    const message =
-      (err.response && err.response.data && err.response.data.message) ||
-      err.message ||
-      err.toString();
-    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-
 export const bidsSlice = createSlice({
   name: 'bids',
   initialState,
@@ -206,21 +193,25 @@ export const bidsSlice = createSlice({
       state.fileDeletedSuccessfully = false;
       state.jobSuccessFullyCanceled = false;
       state.isJobCanceledLoading = false;
+      state.clientFetchSuccess = false;
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllClients.pending, (state) => {
         state.isLoading = true;
+        state.clientFetchSuccess = false;
       })
       .addCase(fetchAllClients.fulfilled, (state, action) => {
         state.isLoading = false;
         state.clientList = action.payload.data;
+        state.clientFetchSuccess = true;
       })
       .addCase(fetchAllClients.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+        state.clientFetchSuccess = false;
       })
       .addCase(updateClientStatus.pending, (state) => {
         // state.isLoading = true;
@@ -307,28 +298,16 @@ export const bidsSlice = createSlice({
         state.fileDeletedSuccessfully = false;
       })
       .addCase(createAComment.pending, (state) => {
-        state.isLoading = true;
+        state.isMessageLoading = true;
       })
       .addCase(createAComment.fulfilled, (state, { payload }) => {
         state.response = addOrUpdateItemInArray(state.clientList, payload.data);
-        state.isLoading = false;
+        state.isMessageLoading = false;
       })
       .addCase(createAComment.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isMessageLoading = false;
         state.isError = true;
         state.message = action.payload;
-      })
-      .addCase(primarySearch.pending, (state) => {
-        // state.isLoading = true;
-      })
-      .addCase(primarySearch.fulfilled, (state, { payload }) => {
-        // state.response = addOrUpdateItemInArray(state.clientList, payload.data);
-        // state.isLoading = false;
-      })
-      .addCase(primarySearch.rejected, (state, action) => {
-        // state.isLoading = false;
-        // state.isError = true;
-        // state.message = action.payload;
       });
   }
 });

@@ -81,6 +81,10 @@ const Pipeline = () => {
   const [schedueJobDate, setScheduleJobDate] = useState(null);
   const [fileToDelete, setFileToDelete] = useState(null);
   const [bidFilterValues, setBidFilterValues] = useState(cloneDeep(bidStageFilter));
+  const [isAscending, setIsAscending] = useState(true);
+  const [selectOption, setSelectOption] = useState('10');
+  const [sortOption, setSortOption] = useState('createdAt');
+  const [comment, setComment] = useState('');
 
   const roomRelatedInfo = [
     {
@@ -271,9 +275,20 @@ const Pipeline = () => {
     setOpen(formValue);
   };
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchAllClients({ token: user.token }));
-  }, []);
+
+
+  const handlePrimaryFilter = () => {
+    dispatch(
+      fetchAllClients({
+        query: primaryHeaderSearch,
+        limit: selectOption,
+        sort: sortOption,
+        isAscending: isAscending ? 1 : -1,
+        token: user.token,
+        bidFilterValues
+      })
+    );
+  };
 
   return (
     <>
@@ -336,6 +351,7 @@ const Pipeline = () => {
         onFilterOptionsClose={onFilterOptionsClose}
         bidFilterValues={bidFilterValues}
         onBidFilterValueChange={setBidFilterValues}
+        handlePrimaryFilter={handlePrimaryFilter}
       />
       <ViewFiles
         showFilesToView={showFilesToView}
@@ -353,6 +369,14 @@ const Pipeline = () => {
           onFilterChange={setShowFilter}
           primaryHeaderSearch={primaryHeaderSearch}
           setPrimaryHeaderSearch={setPrimaryHeaderSearch}
+          isAscending={isAscending}
+          setIsAscending={setIsAscending}
+          bidFilterValues={bidFilterValues}
+          handlePrimaryFilter={handlePrimaryFilter}
+          selectOption={selectOption}
+          setSelectOption={setSelectOption}
+          sortOption={sortOption}
+          setSortOption={setSortOption}
         />
         <Divider light sx={{ margin: '10px 0 10px 5px' }} />
         <Box sx={{ flexGrow: 1 }}>
@@ -392,7 +416,7 @@ const Pipeline = () => {
                   setSelectedListItem={setSelectedListItem}
                   filteredClietsList={filteredClietsList}
                 />
-                {selectedListItem && (
+                {selectedListItem && currentClientInfo && (
                   <>
                     <UploadFiles
                       uploadedFiles={uploadedFiles}
@@ -405,8 +429,9 @@ const Pipeline = () => {
                     <Comment
                       currentClientInfo={currentClientInfo}
                       selectedListItem={selectedListItem}
-                      commentList={commentList}
                       onCommentListChange={setCommentList}
+                      comment={comment}
+                      onCommentsChange={setComment}
                     />
                   </>
                 )}

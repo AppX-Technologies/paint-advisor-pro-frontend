@@ -1,4 +1,5 @@
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import {
@@ -14,27 +15,61 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
-const PrimaryHeader = ({ onFilterChange, primaryHeaderSearch, setPrimaryHeaderSearch }) => {
-  const [selectOption, setSelectOption] = useState('');
-  const [sortOption, setSortOption] = useState('');
+const PrimaryHeader = ({
+  onFilterChange,
+  primaryHeaderSearch,
+  setPrimaryHeaderSearch,
+  isAscending,
+  setIsAscending,
+  handlePrimaryFilter,
+  selectOption,
+  setSelectOption,
+  sortOption,
+  setSortOption
+}) => {
   const menuItems = [
     {
       name: 'Max-Limit',
       value: selectOption,
       changeValue: setSelectOption,
-      options: ['10', '20', '50', '100', 'All']
+      options: [
+        { name: '10', value: 10 },
+        { name: '20', value: 20 },
+        { name: '50', value: 50 },
+        { name: '100', value: 100 },
+        { name: 'All', value: 'All' }
+      ]
     },
     {
       name: 'Sort By',
       value: sortOption,
       changeValue: setSortOption,
-      options: ['Created At', 'Updated At', 'Project Start Date', 'Schedule Date']
+      options: [
+        {
+          name: 'Created At',
+          value: 'createdAt'
+        },
+        {
+          name: 'Updated At',
+          value: 'updatedAt'
+        },
+        {
+          name: 'Project Start Date',
+          value: 'projectStartDate'
+        },
+        {
+          name: 'Schedule Date',
+          value: 'scheduledAt'
+        }
+      ]
     }
   ];
 
-  const handlePrimaryFilter = () => {};
+  useEffect(() => {
+    handlePrimaryFilter();
+  }, [isAscending, selectOption, sortOption]);
 
   return (
     <>
@@ -48,19 +83,16 @@ const PrimaryHeader = ({ onFilterChange, primaryHeaderSearch, setPrimaryHeaderSe
                 endAdornment: (
                   <InputAdornment>
                     <IconButton>
-                      <SearchIcon />
+                      <SearchIcon onClick={handlePrimaryFilter} />
                     </IconButton>
                   </InputAdornment>
                 )
               }}
+              onKeyDown={(event) => event.key === 'Enter' && handlePrimaryFilter()}
               value={primaryHeaderSearch}
               onChange={(e) => setPrimaryHeaderSearch(e.target.value)}
               id='outlined-basic'
-              label={
-                <Typography sx={{ marginTop: '-2.7px' }} onClick={handlePrimaryFilter}>
-                  Search
-                </Typography>
-              }
+              label={<Typography sx={{ marginTop: '-2.7px' }}>Search</Typography>}
               variant='outlined'
               sx={{ width: '100%' }}
               size='small'
@@ -79,14 +111,12 @@ const PrimaryHeader = ({ onFilterChange, primaryHeaderSearch, setPrimaryHeaderSe
                     id='demo-select-small'
                     label={menuItem.name}
                     value={menuItem.value}
-                    defaultValue={menuItem.name === 'Max-Limit' ? 100 : 'Created At'}
                     onChange={(e) => {
                       menuItem.changeValue(e.target.value);
-                      handlePrimaryFilter();
                     }}
                     sx={{ height: '35px' }}>
                     {menuItem.options.map((option) => (
-                      <MenuItem value={option}>{option}</MenuItem>
+                      <MenuItem value={option.value}>{option.name}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -105,12 +135,22 @@ const PrimaryHeader = ({ onFilterChange, primaryHeaderSearch, setPrimaryHeaderSe
                       variant='contained'
                       onClick={
                         idx === 1
-                          ? () => onFilterChange((prevFilterValue) => !prevFilterValue)
-                          : undefined
+                          ? () => {
+                              onFilterChange((prevFilterValue) => !prevFilterValue);
+                            }
+                          : () => {
+                              setIsAscending((prevValue) => !prevValue);
+                            }
                       }
                       startIcon={
                         idx === 0 ? (
-                          <ArrowDownwardIcon sx={{ marginLeft: '13px' }} />
+                          <>
+                            {isAscending ? (
+                              <ArrowUpwardIcon sx={{ marginLeft: '13px' }} />
+                            ) : (
+                              <ArrowDownwardIcon sx={{ marginLeft: '13px' }} />
+                            )}
+                          </>
                         ) : (
                           <FilterAltOutlinedIcon sx={{ marginLeft: '13px' }} />
                         )

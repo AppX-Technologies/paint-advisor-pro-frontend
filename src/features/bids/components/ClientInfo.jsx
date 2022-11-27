@@ -121,7 +121,7 @@ const ClientInfo = ({
           title='Cancel The Job'
         />
       )}
-      {selectedListItem ? (
+      {selectedListItem && currentClientInfo ? (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }} p={1}>
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

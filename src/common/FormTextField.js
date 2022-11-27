@@ -75,9 +75,10 @@ export const InteriorManByManFormFields = [
     dataType: 'dateTime',
     option: ['Interior', 'Exterior']
   },
+
   {
     label: 'Will the customer be providing paint/materials for this job?',
-    name: 'customerProvidingPaintMaterial',
+    name: 'isMaterialProvidedByCustomer',
     dataType: 'dropDown',
     option: booleanOption,
     moreQuestions: [
