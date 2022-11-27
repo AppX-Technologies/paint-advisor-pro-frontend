@@ -2,9 +2,8 @@ import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
-import { materialColumn, processColumn } from '../../common/tableHead';
-import { createMaterial, deleteMaterial } from '../../features/materials/materialSlice';
-import { createProcess, reset } from '../../features/process/processSlice';
+import { materialColumn } from '../../common/tableHead';
+import { createMaterial, reset } from '../../features/materials/materialSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { filterMaterialByBid } from '../../helpers/bidFilterHelpers';
 import CustomButton from '../Button';
@@ -12,12 +11,9 @@ import { DeleteModal } from '../delete-model/DeleteModel';
 import Edit from './EditMaterialForm';
 import FormDialog from './MaterialReg';
 
-const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
+const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   const dispatch = useDispatch();
-  const { materialList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(
-    (state) => state.material
-  );
-
+  const { materialList, isDeleting, isLoading, isSuccess } = useSelector((state) => state.material);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [materialDataList, setMaterialDataList] = useState([]);
   const [openEditForm, setOpenEditForm] = useState(false);
@@ -49,7 +45,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
       add: false,
       token: userDetail.token
     };
-    dispatch(createProcess(formStateWithToken));
+    dispatch(createMaterial(formStateWithToken));
     setFilteredMaterials(dataList);
   };
 
@@ -59,7 +55,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
       setOpenDeleteModal(false);
       dispatch(
         showMessage({
-          message: 'Process list updated successfully',
+          message: 'Material list updated successfully',
           variant: 'success'
         })
       );
@@ -69,6 +65,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   }, [isSuccess]);
 
   useEffect(() => {
+    console.log(materialList, 'Material');
     setFilteredMaterials(filterMaterialByBid(materialList, filterValue));
   }, [filterValue]);
 
@@ -83,7 +80,6 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
           Create
         </CustomButton>
       </Box>
-
       <DraggableDataTable
         initialDataList={
           filteredMaterials &&
@@ -109,7 +105,6 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
         onListSort={onListSort}
         draggable={false}
       />
-
       <FormDialog
         open={open}
         setOpen={setOpen}
@@ -127,10 +122,10 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
           token: userDetail.token,
           idToBeDeleted: materialId
         }}
-        deleteProcess
         modalTitle='Material'
         deleteMethod={createMaterial}
       />
+
       <Edit
         openEditForm={openEditForm}
         setOpenEditForm={setOpenEditForm}
@@ -142,4 +137,4 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   );
 };
 
-export default ProcessTable;
+export default MaterialTable;

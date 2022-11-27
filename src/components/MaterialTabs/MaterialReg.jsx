@@ -22,7 +22,7 @@ export default function FormDialog(props) {
   const { open, setOpen, bidType, filteredMaterials } = props;
 
   const initialFormState = {
-    material: '',
+    materialName: '',
     unit: '',
     pricePerUnit: '',
     bidType
@@ -36,7 +36,7 @@ export default function FormDialog(props) {
 
   const handleCreate = (e) => {
     e.preventDefault();
-    if (!formState.material || !formState.bidType || !formState.pricePerUnit) {
+    if (!formState.materialName || !formState.bidType || !formState.pricePerUnit) {
       return dispatch(
         showMessage({
           message: `Material Name cannot be empty`,
@@ -47,13 +47,13 @@ export default function FormDialog(props) {
     const formStateWithToken = {
       ...formState,
       ID: materialList[0]._id,
-      previousMaterials: materialList[0].material,
+      previousMaterials: materialList[0].materials,
       add: true,
       token: userDetail.token
     };
     if (
       filteredMaterials.some((material) => {
-        return material.material.toLowerCase().trim() === formState.material.toLowerCase().trim();
+        return material.materialName.toLowerCase().trim() === formState.materialName.toLowerCase().trim();
       })
     ) {
       dispatch(
@@ -111,7 +111,7 @@ export default function FormDialog(props) {
         <DialogContent>
           <Grid item xs={12} md={12}>
             <TextField
-              name='material'
+              name='materialName'
               required
               fullWidth
               aria-label='minimum height'
@@ -120,7 +120,7 @@ export default function FormDialog(props) {
               id='material'
               label='Material Name'
               autoFocus
-              value={formState.material}
+              value={formState.materialName}
               onChange={(e) => handleTextChange(e)}
               style={{ width: '100%' }}
             />

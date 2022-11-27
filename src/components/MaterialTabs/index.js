@@ -1,11 +1,11 @@
-import { Box, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { processesTabLists } from '../../common/Constants';
+import { materialTabLists } from '../../common/Constants';
 import TabsNavigation from '../../common/TabsNavigation';
+import { fetchMaterial } from '../../features/materials/materialSlice';
 import { fetchSingleOrg } from '../../features/org/orgSlice';
-import { fetchProcess } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { reset } from '../../features/usersFromCompany/usersFromCompanySlice';
 import MaterialTable from './MaterialTable';
@@ -19,14 +19,14 @@ const Materials = () => {
   const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const { isDeleted } = useSelector((state) => state.process);
+  const { isDeleted } = useSelector((state) => state.material);
   const { companyId } = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
     if (isDeleted) {
       dispatch(
         showMessage({
-          message: 'Process Deleted successfully',
+          message: 'Material Deleted successfully',
           variant: 'success',
           severity: 'info'
         })
@@ -37,12 +37,12 @@ const Materials = () => {
   }, [isDeleted]);
 
   useEffect(() => {
-    dispatch(
-      fetchProcess({
-        token: userDetail.token,
-        id: companyId ? org.processes : undefined
-      })
-    );
+    // dispatch(
+    //   fetchMaterial({
+    //     token: userDetail.token,
+    //     id: companyId ? org.materials : undefined
+    //   })
+    // );
   }, []);
   useEffect(() => {
     dispatch(
@@ -58,7 +58,7 @@ const Materials = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <TabsNavigation value={value} handleTabChange={handleChange} tabList={processesTabLists} />
+        <TabsNavigation value={value} handleTabChange={handleChange} tabList={materialTabLists} />
       </Box>
       <div role='tabpanel' id={`simple-tabpanel-${0}`} aria-labelledby={`simple-tab-${0}`}>
         <Box sx={{ p: 3 }}>

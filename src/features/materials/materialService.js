@@ -36,6 +36,7 @@ const fetchSingleMaterial = async (userData) => {
 };
 
 const createMaterial = async (userData) => {
+  console.log(userData);
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -50,9 +51,9 @@ const createMaterial = async (userData) => {
         ? [
             ...userData.previousMaterials,
             {
-              description: userData.description,
-              bidType: userData.bidType,
-              stage: userData.stage
+              materialName: userData.materialName,
+              unit: userData.unit,
+              pricePerUnit: userData.pricePerUnit
             }
           ]
         : userData.previousMaterials.filter(
