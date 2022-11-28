@@ -140,7 +140,7 @@ const ClientInfo = ({
 
             <Box sx={{ display: 'flex' }}>
               {findCurrentStageButtonInfo(selectedStep)?.actions.map((info) => {
-                return info.text === 'Begin Estimate' ? (
+                return info.text === 'Begin Estimate' || info.text === 'Update Estimation Info' ? (
                   <Tooltip title={info.text} placement='top'>
                     <Button
                       sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}

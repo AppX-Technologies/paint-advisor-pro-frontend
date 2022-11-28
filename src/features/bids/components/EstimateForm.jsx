@@ -20,9 +20,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
+import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
+import { createBid } from '../bidsSlice';
 import { initialRoomState } from '../common/roomsInitialStats';
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
@@ -53,6 +55,7 @@ export default function EstimateForm(props) {
 
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
   const dispatch = useDispatch();
+  const { user } = useSelector(authSelector);
   const handleClose = () => {
     setOpen(false);
     setRoomStats(initialRoomState);
@@ -77,6 +80,8 @@ export default function EstimateForm(props) {
         })
       );
     }
+
+    dispatch(createBid({ token: user.token, bidFields: initialBidInfo }));
     handleClose();
   };
 

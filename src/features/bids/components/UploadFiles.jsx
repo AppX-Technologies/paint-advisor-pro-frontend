@@ -23,9 +23,7 @@ const UploadFiles = ({
   const { files, handleDragDropEvent, setFiles } = useFileUpload();
 
   const { user } = useSelector(authSelector);
-  const { isFileUploadLoading, isSuccess, fileDeletedSuccessfully } = useSelector(
-    (state) => state.bids
-  );
+  const { isFileUploadLoading, isSuccess } = useSelector((state) => state.bids);
 
   const inputRef = useRef();
   const dispatch = useDispatch();
@@ -102,7 +100,7 @@ const UploadFiles = ({
     setFileToDelete(null);
   };
 
-  const FileButton = ({ fileObject, onRemoveFile, onFileRemove }) => {
+  const FileButton = ({ fileObject, onFileRemove }) => {
     return (
       <Chip
         sx={{ mx: 0.5 }}
@@ -153,7 +151,7 @@ const UploadFiles = ({
     if (isSuccess) {
       dispatch(
         showMessage({
-          message: 'Successfully Updated',
+          message: 'Client Information Successfully Added.',
           severity: 'success'
         })
       );

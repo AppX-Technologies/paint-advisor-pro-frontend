@@ -37,7 +37,7 @@ export default function AddNewClientForm(props) {
   } = props;
 
   const dispatch = useDispatch();
-  const { isLoading, isSuccess, isError } = useSelector((state) => state.bids);
+  const { isLoading, isSuccess } = useSelector((state) => state.bids);
   const { user } = useSelector(authSelector);
   const { companyId } = useParams();
 

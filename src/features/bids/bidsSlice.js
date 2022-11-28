@@ -8,7 +8,8 @@ import {
   updateClientService,
   uploadAFileService,
   deleteFileService,
-  updateClientStatusService
+  updateClientStatusService,
+  createBidServices
 } from './bidsService';
 
 // initial states
@@ -28,7 +29,10 @@ const initialState = {
   jobSuccessFullyCanceled: false,
   isJobCanceledLoading: false,
   isMessageLoading: false,
-  clientFetchSuccess: false
+  clientFetchSuccess: false,
+  bidsIsLoading: false,
+  bidsIsSuccess: false,
+  bidsIsError: false
 };
 
 // Fetch Client Info
@@ -182,6 +186,22 @@ export const updateClientStatus = createAsyncThunk(
   }
 );
 
+// !Create A Bid
+
+export const createBid = createAsyncThunk('bids/createBid', async (userData, thunkAPI) => {
+  try {
+    const response = await createBidServices(userData);
+    return response;
+  } catch (err) {
+    const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const bidsSlice = createSlice({
   name: 'bids',
   initialState,
@@ -305,6 +325,20 @@ export const bidsSlice = createSlice({
         state.isMessageLoading = false;
       })
       .addCase(createAComment.rejected, (state, action) => {
+        state.isMessageLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+
+      // Bids
+      .addCase(createBid.pending, (state) => {
+        state.isMessageLoading = true;
+      })
+      .addCase(createBid.fulfilled, (state, { payload }) => {
+        state.response = addOrUpdateItemInArray(state.clientList, payload.data);
+        state.isMessageLoading = false;
+      })
+      .addCase(createBid.rejected, (state, action) => {
         state.isMessageLoading = false;
         state.isError = true;
         state.message = action.payload;

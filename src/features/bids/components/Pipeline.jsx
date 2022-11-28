@@ -2,7 +2,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Box, Button, Card, Divider, Grid } from '@mui/material';
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { bidStageFilter } from '../../../common/bidStageFilters';
 import { booleanOption } from '../../../common/FormTextField';
 import { STAGE_1 } from '../../../helpers/contants';
@@ -41,7 +41,7 @@ import UploadFiles from './UploadFiles';
 import ViewFiles from './ViewFiles';
 
 const Pipeline = () => {
-  const { clientList } = useSelector((state) => state.bids);
+  const { clientList, isSuccess } = useSelector((state) => state.bids);
   const [primaryHeaderSearch, setPrimaryHeaderSearch] = useState('');
   const [showFilter, setShowFilter] = useState(false);
   const [open, setOpen] = useState(false);
@@ -288,9 +288,7 @@ const Pipeline = () => {
         bidFilterValues
       })
     );
-    setSelectedListItem(
-      filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
-    );
+    setSelectedListItem(null);
     setPrimaryHeaderSearch('');
   };
 

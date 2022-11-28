@@ -27,9 +27,7 @@ const Comment = ({ currentClientInfo, onCommentListChange, comment, onCommentsCh
   };
 
   useEffect(() => {
-    onCommentListChange(
-      findCommentsUniquely(comments, currentClientInfo && currentClientInfo.name)
-    );
+    onCommentListChange(findCommentsUniquely(comments, currentClientInfo?.name));
   }, [comments, currentClientInfo]);
   return (
     <>

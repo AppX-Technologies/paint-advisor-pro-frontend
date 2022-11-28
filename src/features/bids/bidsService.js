@@ -2,9 +2,14 @@ import axios from 'axios';
 
 const endpoint = 'https://painting-app-backend.herokuapp.com/clients';
 
+// Client Related Endpoints
 const CREATE_CLIENTS = `${endpoint}/`;
 const FETCH_CLIENTS = `${endpoint}/search`;
 const UPDATE_CLIENT = `${endpoint}`;
+
+// Points Related Endpoints
+
+const CREATE_BIDS = '';
 
 export const fetchAllClientsService = async (userData) => {
   const config = {
@@ -136,6 +141,26 @@ export const updateClientStatusService = async (userData) => {
     `${UPDATE_CLIENT}/${userData.id}`,
     {
       status: userData.status
+    },
+    config
+  );
+  return response;
+};
+
+// *Bids Related Services
+
+export const createBidServices = async (userData) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+
+  const response = await axios.put(
+    `${UPDATE_CLIENT}/${userData.id}`,
+    {
+      ...userData.bidFields
     },
     config
   );
