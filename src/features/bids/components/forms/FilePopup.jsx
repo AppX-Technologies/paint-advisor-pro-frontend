@@ -1,5 +1,6 @@
-import { Download, TramSharp } from '@mui/icons-material';
-import { CircularProgress } from '@mui/material';
+import { Download } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Box, CircularProgress, Tooltip, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Button from '../../../../components/Button';
@@ -31,47 +32,70 @@ const FilePopup = ({ file, onHide }) => {
   return (
     <div
       style={{
-        height: '100%',
-        width: '100%',
+        height: '100vh',
+        width: '100vw',
         position: 'fixed',
-        zIndex: 20000,
+        zIndex: 2000,
         left: 0,
         top: 0,
-        overflowX: 'hidden'
+        overflowX: 'hidden',
+        backgroundColor: 'white'
       }}
       className='bg-primary p-3 p-md-5 d-flex justify-content-center'>
       {!fileHref ? (
-        <div className='align-self-center text-center'>
-          <CircularProgress size={4} />
-          <h6 className='text-muted midFont mt-3'>
+        <div
+          className='align-self-center text-center'
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            mt: 3,
+            height: '100vh',
+            flexDirection: 'column'
+          }}>
+          <CircularProgress size={40} />
+          <Typography sx={{ ml: 2, mt: 2 }}>
             <i>Loading file ({humanFileSize(file.length)})...</i>
-          </h6>
+          </Typography>
         </div>
       ) : (
         <FileRenderer fileType={file.contentType} src={fileHref} />
       )}
-
-      <Button
-        style={{
-          position: 'absolute',
-          right: 0,
-          top: 0
-        }}
-        size='sm'
-        className='m-2'
-        onClick={() => {
-          setFileHref();
-          onHide();
-        }}>
-        <TramSharp size={18} />
-      </Button>
+      <Tooltip title='Cancel'>
+        <Box
+          sx={{
+            width: '30px',
+            height: '30px',
+            position: 'absolute',
+            right: 25,
+            top: 5,
+            zIndex: 3000,
+            borderRadius: '20px',
+            backgroundColor: (theme) => theme.deleteicon.color.main
+          }}>
+          <CloseIcon
+            sx={{
+              cursor: 'pointer',
+              width: '30px',
+              height: '30px',
+              color: 'white'
+            }}
+            className='m-2'
+            onClick={() => {
+              setFileHref();
+              onHide();
+            }}
+          />
+        </Box>
+      </Tooltip>
 
       {fileHref && (
         <Button
           style={{
             position: 'absolute',
-            right: 0,
-            bottom: 0
+            right: 20,
+            bottom: 20,
+            zIndex: 3000
           }}
           size='sm'
           className='m-2'

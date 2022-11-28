@@ -37,7 +37,7 @@ const ViewFiles = ({
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { isFileUploadLoading, fileDeletedSuccessfully } = useSelector((state) => state.bids);
-  const [visibleFile, setVisibleFile] = useState();
+  const [visibleFile, setVisibleFile] = useState(null);
   const [openFileDeleteModel, setOpenFileDeleteModel] = useState(false);
 
   const deleteFile = (filename) => {
@@ -116,16 +116,16 @@ const ViewFiles = ({
                         justifyContent: 'space-between',
                         alignItems: 'center'
                       }}>
-                      <Box sx={{ width: '100%', display: 'flex', py: 2, cursor: 'pointer' }}>
-                        <Tooltip title='View This File' placement='top'>
-                          <InsertDriveFileOutlinedIcon />
-                        </Tooltip>
-                        <Typography
-                          sx={{ fontSize: '15px', ml: 2 }}
+                      <Tooltip title='View This File' placement='left'>
+                        <Box
+                          sx={{ width: '100%', display: 'flex', py: 2, cursor: 'pointer' }}
                           onClick={() => setVisibleFile(item)}>
-                          {item.metadata.originalName}
-                        </Typography>
-                      </Box>
+                          <InsertDriveFileOutlinedIcon />
+                          <Typography sx={{ fontSize: '15px', ml: 2 }}>
+                            {item.metadata.originalName}
+                          </Typography>
+                        </Box>
+                      </Tooltip>
                       <Tooltip title='Delete' placement='top'>
                         <DeleteOutlinedIcon
                           sx={{
@@ -146,14 +146,14 @@ const ViewFiles = ({
               })}
             </Box>
           </Dialog>
-          {visibleFile && (
-            <FilePopup
-              file={visibleFile}
-              onHide={() => setVisibleFile()}
-              currentClientInfo={currentClientInfo}
-            />
-          )}
         </Backdrop>
+      )}
+      {visibleFile && (
+        <FilePopup
+          file={visibleFile}
+          onHide={() => setVisibleFile()}
+          currentClientInfo={currentClientInfo}
+        />
       )}
     </>
   );
