@@ -10,11 +10,11 @@ const FileRenderer = ({ src, fileType = '' }) => {
           alt=''
           className='p-3 p-md-4 m-auto'
           style={{
+            objectFit: 'contain',
             position: 'absolute',
             border: 'none',
-            maxWidth: '100%',
-            maxHeight: '100%',
-            left: '25%',
+            width: '100%',
+            height: '100%',
             zIndex: 9,
             right: 0,
             top: 0,
