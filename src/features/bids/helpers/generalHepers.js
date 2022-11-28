@@ -29,10 +29,10 @@ export const readFile = async ({ fileName, mimeType, token }) => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
-        }
+        },
+        responseType: 'blob'
       }
     );
-    console.log(response);
     if (response.status < 200 || response.status >= 300) {
       if (response.status === 401) {
         setTimeout(() => {
@@ -42,7 +42,7 @@ export const readFile = async ({ fileName, mimeType, token }) => {
         return { error: 'Your session has expired, please try logging in again!' };
       }
     } else {
-      const blobFromResponse = await new Blob([response], { type: mimeType });
+      const blobFromResponse = await new Blob([response.data], { type: mimeType });
       const returnValue = URL.createObjectURL(blobFromResponse);
       return { response: returnValue };
     }

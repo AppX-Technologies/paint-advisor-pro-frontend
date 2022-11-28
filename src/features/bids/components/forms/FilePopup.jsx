@@ -7,7 +7,7 @@ import { authSelector } from '../../../auth/authSlice';
 import { downloadFileFromBase64, humanFileSize, readFile } from '../../helpers/generalHepers';
 import FileRenderer from '../FileRenderer';
 
-const FilePopup = ({ file, onHide, currentClientInfo }) => {
+const FilePopup = ({ file, onHide }) => {
   const { user } = useSelector(authSelector);
   const [fileHref, setFileHref] = useState();
 
@@ -15,10 +15,8 @@ const FilePopup = ({ file, onHide, currentClientInfo }) => {
     const { response, error } = await readFile({
       fileName: file.filename,
       mimeType: file.contentType,
-      token: user.token,
-      currentClientInfo
+      token: user.token
     });
-    console.log(response, error, 'response');
     if (response) {
       setFileHref(response);
     } else {
@@ -41,7 +39,7 @@ const FilePopup = ({ file, onHide, currentClientInfo }) => {
         top: 0,
         overflowX: 'hidden'
       }}
-      className='bg-light p-3 p-md-5 d-flex justify-content-center'>
+      className='bg-primary p-3 p-md-5 d-flex justify-content-center'>
       {!fileHref ? (
         <div className='align-self-center text-center'>
           <CircularProgress size={4} />
