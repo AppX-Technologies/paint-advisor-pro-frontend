@@ -10,6 +10,7 @@ import FileRenderer from '../FileRenderer';
 const FilePopup = ({ file, onHide, currentClientInfo }) => {
   const { user } = useSelector(authSelector);
   const [fileHref, setFileHref] = useState();
+
   const getFileHREF = async () => {
     const { response, error } = await readFile({
       fileName: file.filename,
@@ -17,6 +18,7 @@ const FilePopup = ({ file, onHide, currentClientInfo }) => {
       token: user.token,
       currentClientInfo
     });
+    console.log(response, error, 'response');
     if (response) {
       setFileHref(response);
     } else {

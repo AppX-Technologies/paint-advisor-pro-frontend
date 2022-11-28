@@ -42,9 +42,8 @@ export const readFile = async ({ fileName, mimeType, token }) => {
         return { error: 'Your session has expired, please try logging in again!' };
       }
     } else {
-      const blobFromResponse = await response.blob();
-      const blobWithFileMimeType = new Blob([blobFromResponse], { type: mimeType });
-      const returnValue = URL.createObjectURL(blobWithFileMimeType);
+      const blobFromResponse = await new Blob([response], { type: mimeType });
+      const returnValue = URL.createObjectURL(blobFromResponse);
       return { response: returnValue };
     }
   } catch (e) {
