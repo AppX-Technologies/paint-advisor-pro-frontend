@@ -2,7 +2,7 @@ import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Delete from '@mui/icons-material/Delete';
 import ErrorIcon from '@mui/icons-material/Error';
-import { Box, Chip, CircularProgress, Tooltip, Typography } from '@mui/material';
+import { Box, Chip, CircularProgress, Divider, Tooltip, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -167,7 +167,10 @@ const UploadFiles = ({
 
   return (
     <>
-      <Typography ml={3}>Upload Files</Typography>
+      <Typography ml={3} mb={0.8}>
+        Upload Files
+      </Typography>
+      <Divider light />
       <Box sx={{ my: 2, ml: 2 }}>
         {uploadedFiles &&
           uploadedFiles.map((file) => {

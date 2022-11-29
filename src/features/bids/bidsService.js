@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-const endpoint = 'https://painting-app-backend.herokuapp.com/clients';
+const clientEndpoint = 'https://painting-app-backend.herokuapp.com/clients';
+const bidEndPoint = 'https://painting-app-backend.herokuapp.com/bids';
 
 // Client Related Endpoints
-const CREATE_CLIENTS = `${endpoint}/`;
-const FETCH_CLIENTS = `${endpoint}/search`;
-const UPDATE_CLIENT = `${endpoint}`;
+const CREATE_CLIENTS = `${clientEndpoint}/`;
+const FETCH_CLIENTS = `${clientEndpoint}/search`;
+const UPDATE_CLIENT = `${clientEndpoint}`;
 
-// Points Related Endpoints
-
-const CREATE_BIDS = '';
+// Bids Related Endpoints
+const CREATE_BID = `${bidEndPoint}`;
 
 export const fetchAllClientsService = async (userData) => {
   const config = {
@@ -157,10 +157,11 @@ export const createBidServices = async (userData) => {
     }
   };
 
-  const response = await axios.put(
-    `${UPDATE_CLIENT}/${userData.id}`,
+  const response = await axios.post(
+    `${CREATE_BID}`,
     {
-      ...userData.bidFields
+      ...userData.bidFields,
+      organization: userData.organization
     },
     config
   );

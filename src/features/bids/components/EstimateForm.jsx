@@ -1,5 +1,4 @@
 import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
 import {
   Box,
   Divider,
@@ -19,13 +18,17 @@ import DialogContent from '@mui/material/DialogContent';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { cloneDeep } from 'lodash';
 import * as React from 'react';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
+import { isSystemUser } from '../../../helpers/roles';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
-import { createBid } from '../bidsSlice';
-import { initialRoomState } from '../common/roomsInitialStats';
+import { createBid, updateClientStatus } from '../bidsSlice';
+import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
+import { findPaintableMaterials } from '../helpers/generalHepers';
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
 export default function EstimateForm(props) {
@@ -50,16 +53,23 @@ export default function EstimateForm(props) {
     setNonPaintableAreaStats,
     openEditForm,
     setOpenEditForm,
-    roomRelatedInfo
+    roomRelatedInfo,
+    currentClientInfo
   } = props;
 
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
+  const { companyId } = useParams();
+  // console.log(findPaintableMaterials(allRoom), 'dfgsdjf');
+  const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
+
   const handleClose = () => {
     setOpen(false);
     setRoomStats(initialRoomState);
   };
+
+  console.log(findPaintableMaterials(allRoom), 'dksgsdgfhjsgdhj');
 
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
@@ -81,9 +91,36 @@ export default function EstimateForm(props) {
       );
     }
 
-    dispatch(createBid({ token: user.token, bidFields: initialBidInfo }));
+    dispatch(
+      createBid({
+        token: user.token,
+        bidFields: {
+          ...initialBidInfo,
+          rooms: [...allRoom],
+          isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'yes'
+        },
+        organization: orgId
+      })
+    );
+
+    // Client's Status Update After Creating An Estimation
+
+    // dispatch(
+    //   updateClientStatus({
+    //     token: user.token,
+    //     status: 'Estimate In Progress',
+    //     id: currentClientInfo._id
+    //   })
+    // );
+
     handleClose();
   };
+
+  React.useEffect(() => {
+    if (!open) {
+      setInitialBidInfo(cloneDeep(estimationFormInitialInfo));
+    }
+  }, [open]);
 
   return (
     <div>
@@ -92,16 +129,7 @@ export default function EstimateForm(props) {
           <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
             Estimate
           </Typography>
-          <Button
-            variant='contained'
-            color='success'
-            style={{
-              height: '30px',
-              padding: '3px',
-              marginRight: '10px'
-            }}>
-            Edit <EditIcon sx={{ height: '15px' }} />
-          </Button>
+
           <Button
             variant='contained'
             color='warning'

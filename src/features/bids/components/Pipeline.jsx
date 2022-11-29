@@ -289,7 +289,6 @@ const Pipeline = () => {
       })
     );
     setSelectedListItem(null);
-    setPrimaryHeaderSearch('');
   };
 
   return (
@@ -347,6 +346,7 @@ const Pipeline = () => {
         openEditForm={openEditForm}
         setOpenEditForm={setOpenEditForm}
         roomRelatedInfo={roomRelatedInfo}
+        currentClientInfo={currentClientInfo}
       />
       <Filter
         showFilter={showFilter}

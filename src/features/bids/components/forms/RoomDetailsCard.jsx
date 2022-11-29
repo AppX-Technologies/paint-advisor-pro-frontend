@@ -16,6 +16,7 @@ const RoomDetailsCard = () => {
       name: 'Delete'
     }
   ];
+
   return (
     <Box
       sx={{

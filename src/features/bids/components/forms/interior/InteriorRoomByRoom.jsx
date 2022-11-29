@@ -55,15 +55,16 @@ const InteriorRoomByRoom = ({
     setSelectedRoomInfo(value);
   };
 
-
   return (
     <Box>
       {/* Main Form Body  */}
-      <Typography mt={2}>Rooms({allRoom.length})</Typography>
-      <Box>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Typography mt={2} mr={1}>
+          Rooms({allRoom.length})
+        </Typography>
         <Tooltip title='Add Room' placement='top'>
           <Button
-            sx={{ marginTop: '10px', height: '30px', minWidth: '40px', p: 0 }}
+            sx={{ mt: 2, height: '30px', minWidth: '40px', p: 0 }}
             variant='contained'
             startIcon={<AddIcon sx={{ ml: 1 }} />}
             color='info'
@@ -73,6 +74,8 @@ const InteriorRoomByRoom = ({
             }}
           />
         </Tooltip>
+      </Box>
+      <Box>
         <Grid container spacing={1} mt={2}>
           {allRoom.length !== 0 &&
             allRoom.map((room) => {

@@ -10,7 +10,7 @@ export const findCurrentClient = (clientList, selectedListItem) => {
 };
 
 export const searchedResult = (list, keyword) => {
-  return list.filter((item) => item.name.toLowerCase().includes(keyword.toLowerCase()));
+  return list.filter((item) => item?.name?.toLowerCase().includes(keyword.toLowerCase()));
 };
 
 export const findCommentsUniquely = (originalCommentList, searchValue) => {
@@ -80,4 +80,23 @@ export const humanFileSize = (bytes, si = false, dp = 1) => {
   } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
 
   return `${bytes.toFixed(dp)} ${units[u]}`;
+};
+
+export const findPaintableMaterials = (rooms) => {
+  const paintableAreaOfARoom = [];
+
+  rooms.forEach((room) => {
+    const paintableElementsOfRoom = {};
+
+    Object.keys(room).forEach((roomElement) => {
+      if (Array.isArray(room[roomElement])) {
+        const roomValueWithPaintableSurface = room[roomElement].filter((item) => item.paint);
+        paintableElementsOfRoom[roomElement] = roomValueWithPaintableSurface;
+      }
+    });
+
+    paintableAreaOfARoom.push({ ...paintableElementsOfRoom, roomName: room.roomName });
+  });
+
+  return paintableAreaOfARoom;
 };

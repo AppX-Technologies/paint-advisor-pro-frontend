@@ -29,10 +29,12 @@ const initialState = {
   jobSuccessFullyCanceled: false,
   isJobCanceledLoading: false,
   isMessageLoading: false,
+  isCommentSuccess: false,
   clientFetchSuccess: false,
   bidsIsLoading: false,
   bidsIsSuccess: false,
-  bidsIsError: false
+  bidsIsError: false,
+  bidInfo: {}
 };
 
 // Fetch Client Info
@@ -186,7 +188,7 @@ export const updateClientStatus = createAsyncThunk(
   }
 );
 
-// !Create A Bid
+// Create A Bid
 
 export const createBid = createAsyncThunk('bids/createBid', async (userData, thunkAPI) => {
   try {
@@ -214,6 +216,7 @@ export const bidsSlice = createSlice({
       state.jobSuccessFullyCanceled = false;
       state.isJobCanceledLoading = false;
       state.clientFetchSuccess = false;
+      state.isCommentSuccess = false;
     }
   },
   extraReducers: (builder) => {
@@ -323,25 +326,30 @@ export const bidsSlice = createSlice({
       .addCase(createAComment.fulfilled, (state, { payload }) => {
         state.response = addOrUpdateItemInArray(state.clientList, payload.data);
         state.isMessageLoading = false;
+        state.isCommentSuccess = true;
       })
       .addCase(createAComment.rejected, (state, action) => {
         state.isMessageLoading = false;
+        state.isCommentSuccess = false;
         state.isError = true;
         state.message = action.payload;
       })
 
       // Bids
       .addCase(createBid.pending, (state) => {
-        state.isMessageLoading = true;
+        state.bidsIsLoading = true;
       })
       .addCase(createBid.fulfilled, (state, { payload }) => {
+        state.bidInfo = payload.data;
         state.response = addOrUpdateItemInArray(state.clientList, payload.data);
-        state.isMessageLoading = false;
+        state.bidsIsLoading = false;
+        state.bidsIsSuccess = true;
       })
       .addCase(createBid.rejected, (state, action) => {
-        state.isMessageLoading = false;
-        state.isError = true;
+        state.bidsIsError = true;
         state.message = action.payload;
+        state.bidsIsLoading = false;
+        state.bidsIsSuccess = false;
       });
   }
 });

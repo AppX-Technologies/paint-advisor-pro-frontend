@@ -85,12 +85,14 @@ const PrimaryHeader = ({
                 endAdornment: (
                   <InputAdornment>
                     <IconButton>
-                      <SearchIcon onClick={handlePrimaryFilter} />
+                      <SearchIcon onClick={() => primaryHeaderSearch && handlePrimaryFilter()} />
                     </IconButton>
                   </InputAdornment>
                 )
               }}
-              onKeyDown={(event) => event.key === 'Enter' && handlePrimaryFilter()}
+              onKeyDown={(event) =>
+                event.key === 'Enter' && primaryHeaderSearch && handlePrimaryFilter()
+              }
               value={primaryHeaderSearch}
               onChange={(e) => setPrimaryHeaderSearch(e.target.value)}
               id='outlined-basic'

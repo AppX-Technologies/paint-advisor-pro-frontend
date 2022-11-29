@@ -1,14 +1,14 @@
-import { Box, CircularProgress, TextareaAutosize, Typography } from '@mui/material';
+import { Box, CircularProgress, Divider, TextareaAutosize, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
-import { createAComment } from '../bidsSlice';
+import { createAComment, reset } from '../bidsSlice';
 import { findCommentsUniquely } from '../helpers/generalHepers';
 
 const Comment = ({ currentClientInfo, onCommentListChange, comment, onCommentsChange }) => {
-  const { comments, isMessageLoading } = useSelector((state) => state.bids);
+  const { comments, isMessageLoading, isCommentSuccess } = useSelector((state) => state.bids);
   const { user } = useSelector(authSelector);
 
   const dispatch = useDispatch();
@@ -29,12 +29,32 @@ const Comment = ({ currentClientInfo, onCommentListChange, comment, onCommentsCh
   useEffect(() => {
     onCommentListChange(findCommentsUniquely(comments, currentClientInfo?.name));
   }, [comments, currentClientInfo]);
+
+  useEffect(() => {
+    if (isCommentSuccess) {
+      dispatch(
+        showMessage({
+          message: 'Comment Is Successfully Posted.',
+          severity: 'success'
+        })
+      );
+      dispatch(reset());
+    }
+  }, [isCommentSuccess]);
   return (
     <>
       <Box>
-        <Typography sx={{ mt: 3, flex: 1, fontSize: '16px', ml: 3 }} variant='h6' component='div'>
+        <Typography
+          sx={{ mt: 3, flex: 1, fontSize: '16px', ml: 3, mb: 0.8 }}
+          variant='h6'
+          component='div'>
           Comments
         </Typography>
+        <Divider light />
+        {currentClientInfo?.comments?.length === 0 && (
+          <Typography sx={{ fontSize: '12px', ml: 3, my: 1 }}>(No Comments To Show !)</Typography>
+        )}
+
         {currentClientInfo?.comments?.map((individualComment, idx) => {
           return (
             <Box key={individualComment._id}>
