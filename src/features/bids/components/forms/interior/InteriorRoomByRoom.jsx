@@ -2,9 +2,11 @@ import AddIcon from '@mui/icons-material/Add';
 import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import { cloneDeep } from 'lodash';
 import React, { useState } from 'react';
+import MaterialsPickerCard from '../../../../../common/MaterialsPickerCard';
 import RoomCard from '../../../../../common/RoomCard';
 import Button from '../../../../../components/Button';
 import { initialRoomState } from '../../../common/roomsInitialStats';
+import MaterialsPicker from '../../MaterialsPicker';
 import { DeleteItemModel } from '../DeleteModel';
 import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
 import AddRoomForm from './AddRoomForm';
@@ -154,6 +156,7 @@ const InteriorRoomByRoom = ({
         setItemToBeDeleted={setItemToBeDeleted}
         setCurentAddMore={setCurentAddMore}
       />
+      <MaterialsPicker />
     </Box>
   );
 };

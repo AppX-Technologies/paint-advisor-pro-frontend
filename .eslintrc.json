@@ -28,7 +28,8 @@
     "prefer-arrow-callback": "off",
     "no-plusplus": "off",
     "no-nested-ternary": "off",
-    "no-lonely-if": "off"
+    "no-lonely-if": "off",
+    "no-useless-computed-key": "off"
   },
   "globals": {
     "window": true,

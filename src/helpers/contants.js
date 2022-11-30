@@ -73,3 +73,91 @@ export const ROOM_TYPES = [
 export const BID_TYPES = ['Interior', 'Exterior'];
 
 export const STATUS_VALUES = ['New Client'];
+
+export const MATERIALS_DROPDOWN_VALUES = ['Walls', 'Doors', 'Windows', 'Trims'];
+
+export const TEST_MATERIALS_VALUES_TO_SELECT = [
+  'Material 1',
+  'Material 2',
+  'Material 3',
+  'Material 4',
+  'Material 5',
+  'Material 6'
+];
+
+export const ROOM_RELATED_INFO = [
+  {
+    name: 'Walls',
+    mainItems: [
+      {
+        name: 'Room 1',
+        values: [
+          { name: 'Wall 1', assigned: true },
+          { name: 'Wall 2', assigned: false }
+        ]
+      },
+      {
+        name: 'Room 2',
+        values: [
+          { name: 'Wall 1', assigned: true },
+          { name: 'Wall 2', assigned: false },
+          { name: 'Wall 3', assigned: true },
+          { name: 'Wall 4', assigned: false }
+        ]
+      }
+    ]
+  },
+  {
+    name: 'Doors',
+    mainItems: [
+      {
+        name: 'Room 1',
+        values: [
+          { name: 'Door 1', assigned: true },
+          { name: 'Door 2', assigned: true }
+        ]
+      },
+      {
+        name: 'Room 2',
+        values: [
+          { name: 'Door 1', assigned: false },
+          { name: 'Door 2', assigned: true },
+          { name: 'Door 3', assigned: false },
+          { name: 'Door 4', assigned: false }
+        ]
+      }
+    ]
+  },
+  {
+    name: 'Windows',
+    mainItems: [
+      {
+        name: 'Room 1',
+        values: [
+          { name: 'Window 1', assigned: false },
+          { name: 'Window 2', assigned: false }
+        ]
+      },
+      {
+        name: 'Room 2',
+        values: [
+          { name: 'Window 1', assigned: true },
+          { name: 'Window 2', assigned: true },
+          { name: 'Window 3', assigned: true },
+          { name: 'Window 4', assigned: true }
+        ]
+      },
+      {
+        name: 'Room 4',
+        values: [
+          { name: 'Window 1', assigned: true },
+          { name: 'Window 2', assigned: true },
+          { name: 'Window 3', assigned: true },
+          { name: 'Window 4', assigned: true },
+          { name: 'Window 5', assigned: false },
+          { name: 'Window 6', assigned: false }
+        ]
+      }
+    ]
+  }
+];

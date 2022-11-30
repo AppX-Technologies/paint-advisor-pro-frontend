@@ -83,20 +83,25 @@ export const humanFileSize = (bytes, si = false, dp = 1) => {
 };
 
 export const findPaintableMaterials = (rooms) => {
-  const paintableAreaOfARoom = [];
-
-  rooms.forEach((room) => {
-    const paintableElementsOfRoom = {};
-
-    Object.keys(room).forEach((roomElement) => {
-      if (Array.isArray(room[roomElement])) {
-        const roomValueWithPaintableSurface = room[roomElement].filter((item) => item.paint);
-        paintableElementsOfRoom[roomElement] = roomValueWithPaintableSurface;
-      }
-    });
-
-    paintableAreaOfARoom.push({ ...paintableElementsOfRoom, roomName: room.roomName });
+  const paintableAreaOfARoom = rooms.map((room) => {
+    return Object.keys(room)
+      .filter((item) => Array.isArray(room[item]))
+      .reduce((total, roomEle) => {
+        return {
+          ...total,
+          [roomEle]: room[roomEle].filter((a) => a.paint),
+          roomName: room.roomName
+        };
+      }, {});
   });
 
   return paintableAreaOfARoom;
+};
+
+export const onlyWindows = (rooms) => {
+  const allPaintAbleArea = findPaintableMaterials(rooms);
+  const paintableWindows = allPaintAbleArea.map((area) => {
+    return { roomName: area.roomName, windows: area.windows };
+  });
+  return paintableWindows;
 };

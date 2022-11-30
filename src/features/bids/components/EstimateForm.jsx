@@ -28,7 +28,7 @@ import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { createBid, updateClientStatus } from '../bidsSlice';
 import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
-import { findPaintableMaterials } from '../helpers/generalHepers';
+import { findPaintableMaterials, onlyWindows } from '../helpers/generalHepers';
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
 export default function EstimateForm(props) {
@@ -69,7 +69,7 @@ export default function EstimateForm(props) {
     setRoomStats(initialRoomState);
   };
 
-  console.log(findPaintableMaterials(allRoom), 'dksgsdgfhjsgdhj');
+  console.log(findPaintableMaterials(allRoom), onlyWindows(allRoom), 'dksgsdgfhjsgdhj');
 
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
