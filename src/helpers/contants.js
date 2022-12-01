@@ -78,7 +78,7 @@ export const MATERIALS_DROPDOWN_VALUES = ['Walls', 'Doors', 'Windows', 'Trims'];
 
 export const TEST_MATERIALS_VALUES_TO_SELECT = [
   {
-    name: 'Walls',
+    name: 'walls',
     values: [
       'Wall Material 1',
       'Wall Material 2',
@@ -89,7 +89,7 @@ export const TEST_MATERIALS_VALUES_TO_SELECT = [
     ]
   },
   {
-    name: 'Windows',
+    name: 'windows',
     values: [
       'Window Material 1',
       'Window Material 2',
@@ -100,7 +100,7 @@ export const TEST_MATERIALS_VALUES_TO_SELECT = [
     ]
   },
   {
-    name: 'Doors',
+    name: 'doors',
     values: [
       'Door Material 1',
       'Door Material 2',
@@ -108,6 +108,17 @@ export const TEST_MATERIALS_VALUES_TO_SELECT = [
       'Door Material 4',
       'Door Material 5',
       'Door Material 6'
+    ]
+  },
+  {
+    name: 'ceilings',
+    values: [
+      'Ceiling Material 1',
+      'Ceiling Material 2',
+      'Ceiling Material 3',
+      'Ceiling Material 4',
+      'Ceiling Material 5',
+      'Ceiling Material 6'
     ]
   }
 ];

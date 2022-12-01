@@ -98,6 +98,31 @@ export const findPaintableMaterials = (rooms) => {
   return paintableAreaOfARoom;
 };
 
+export const groupedPaintableMaterials = (rooms) => {
+  const array = [];
+
+  const allPaintAbleArea = findPaintableMaterials(rooms);
+  allPaintAbleArea.forEach((paintableArea) => {
+    Object.keys(paintableArea)
+      .filter((a) => a !== 'roomName')
+      .forEach((paintableEle) => {
+        const foundItem = array.find((item) => item.name === paintableEle);
+        if (foundItem) {
+          foundItem.mainItems.push({
+            name: paintableArea.roomName,
+            values: [...paintableArea[paintableEle]]
+          });
+        } else {
+          array.push({
+            name: paintableEle,
+            mainItems: [{ name: paintableArea.roomName, values: [...paintableArea[paintableEle]] }]
+          });
+        }
+      });
+  });
+  return array;
+};
+
 export const onlyWindows = (rooms) => {
   const allPaintAbleArea = findPaintableMaterials(rooms);
   const paintableWindows = allPaintAbleArea.map((area) => {

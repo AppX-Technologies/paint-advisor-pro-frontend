@@ -28,7 +28,7 @@ const MaterialsPickerCard = ({
             p: 0.5
           }}>
           <Typography sx={{ fontSize: 12, textAlign: 'center' }} gutterBottom>
-            {title} Info
+            {title}
           </Typography>
           <Tooltip
             title={!assigned ? `Apply On This ${title.slice(0, title.length - 1)}` : ''}

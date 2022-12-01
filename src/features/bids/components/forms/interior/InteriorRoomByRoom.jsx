@@ -157,7 +157,9 @@ const InteriorRoomByRoom = ({
         setItemToBeDeleted={setItemToBeDeleted}
         setCurentAddMore={setCurentAddMore}
       />
-      {initialBidInfo.isMaterialProvidedByCustomer === 'Yes' && <MaterialsPicker />}
+      {initialBidInfo.isMaterialProvidedByCustomer === 'No' && allRoom.length !== 0 && (
+        <MaterialsPicker allRooms={allRoom} />
+      )}
     </Box>
   );
 };

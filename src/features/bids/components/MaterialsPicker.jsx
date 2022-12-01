@@ -20,26 +20,34 @@ import { useDispatch } from 'react-redux';
 import MaterialsPickerCard from '../../../common/MaterialsPickerCard';
 import { ROOM_RELATED_INFO, TEST_MATERIALS_VALUES_TO_SELECT } from '../../../helpers/contants';
 import { showMessage } from '../../snackbar/snackbarSlice';
-import { individualItem, roomInfo, sectionInfo } from '../helpers/generalHepers';
+import {
+  groupedPaintableMaterials,
+  individualItem,
+  roomInfo,
+  sectionInfo
+} from '../helpers/generalHepers';
 
-const MaterialsPicker = () => {
+const MaterialsPicker = ({ allRooms }) => {
   const [roomRelatedInfo, setRoomRelatedInfo] = useState(null);
   const [expandArea, setExpandArea] = useState({
-    Walls: true,
-    Doors: true,
-    Windows: true
+    walls: true,
+    doors: true,
+    windows: true,
+    ceilings: true
   });
 
   const [currentlyChoosenMaterial, setCurrentyChoosenMaterial] = useState({
-    Walls: '',
-    Doors: '',
-    Windows: ''
+    walls: '',
+    doors: '',
+    windows: '',
+    ceilings: ''
   });
 
   const [completelyFilledSection, setCompletelyFilledSection] = useState({
-    Walls: false,
-    Doors: false,
-    Windows: false
+    walls: false,
+    doors: false,
+    windows: false,
+    ceilings: false
   });
 
   const [showMaterialToPaint, setShowMaterialToPaint] = useState(true);
@@ -114,8 +122,8 @@ const MaterialsPicker = () => {
   };
 
   useEffect(() => {
-    setRoomRelatedInfo([...ROOM_RELATED_INFO]);
-  }, [ROOM_RELATED_INFO]);
+    setRoomRelatedInfo([...groupedPaintableMaterials(allRooms)]);
+  }, [allRooms]);
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -178,142 +186,150 @@ const MaterialsPicker = () => {
                     )}
                   </Box>
                   {/* Materials Picker */}
-                  {expandArea[dropdownValue.name] === true && (
-                    <Grid container gap={0.5}>
-                      <Grid md={2} xs={10} sx={{ mb: 2, mt: 1, margin: '0px auto' }}>
-                        {/* DropDown */}
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: '100%'
-                          }}>
-                          <FormControl fullWidth size='small'>
-                            <InputLabel id='demo-simple-select-label' sx={{ fontSize: '14px' }}>
-                              Materials For {dropdownValue.name}
-                            </InputLabel>
-                            <Select
-                              value={currentlyChoosenMaterial[dropdownValue.name]}
-                              onChange={(e) => {
-                                currentlyChoosenMaterial[dropdownValue.name] = e.target.value;
-                                setCurrentyChoosenMaterial({ ...currentlyChoosenMaterial });
-                              }}
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              label={
-                                <Typography
-                                  sx={{
-                                    fontSize: '10px'
-                                  }}>{`Materials For ${dropdownValue.name}`}</Typography>
-                              }>
-                              {TEST_MATERIALS_VALUES_TO_SELECT.find(
-                                (material) => material.name === dropdownValue.name
-                              ).values.map((MatValue) => {
-                                return <MenuItem value={MatValue}>{MatValue}</MenuItem>;
-                              })}
-                            </Select>
-                          </FormControl>
-                          {/* Select For All */}
-                          <Box>
-                            {/* Section Completely Filled */}
-                            {!completelyFilledSection[dropdownValue.name] ? (
-                              <>
-                                <Tooltip title={`Apply To All ${dropdownValue.name}`}>
-                                  <FormatPaintOutlinedIcon
+                  {expandArea[dropdownValue.name] === true &&
+                    !dropdownValue.mainItems.every((mainItem) => mainItem.values.length === 0) && (
+                      <Grid container gap={0.5}>
+                        <Grid md={2} xs={10} sx={{ mb: 2, mt: 1, margin: '0px auto' }}>
+                          {/* DropDown */}
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              height: '100%'
+                            }}>
+                            <FormControl fullWidth size='small'>
+                              <InputLabel id='demo-simple-select-label' sx={{ fontSize: '14px' }}>
+                                Materials For {dropdownValue.name}
+                              </InputLabel>
+                              <Select
+                                value={currentlyChoosenMaterial[dropdownValue.name]}
+                                onChange={(e) => {
+                                  currentlyChoosenMaterial[dropdownValue.name] = e.target.value;
+                                  setCurrentyChoosenMaterial({ ...currentlyChoosenMaterial });
+                                }}
+                                labelId='demo-simple-select-label'
+                                id='demo-simple-select'
+                                label={
+                                  <Typography
+                                    sx={{
+                                      fontSize: '10px'
+                                    }}>{`Materials For ${dropdownValue.name}`}</Typography>
+                                }>
+                                {TEST_MATERIALS_VALUES_TO_SELECT.find(
+                                  (material) => material.name === dropdownValue.name
+                                ).values.map((MatValue) => {
+                                  return <MenuItem value={MatValue}>{MatValue}</MenuItem>;
+                                })}
+                              </Select>
+                            </FormControl>
+                            {/* Select For All */}
+                            <Box>
+                              {/* Section Completely Filled */}
+                              {!completelyFilledSection[dropdownValue.name] ? (
+                                <>
+                                  <Tooltip title={`Apply To All ${dropdownValue.name}`}>
+                                    <FormatPaintOutlinedIcon
+                                      onClick={() =>
+                                        handleMaterialAssignmentForWholeSection(dropdownValue.name)
+                                      }
+                                      sx={{
+                                        mt: 1,
+                                        cursor: 'pointer',
+                                        color: completelyFilledSection[dropdownValue.name]
+                                          ? 'green'
+                                          : 'gray'
+                                      }}
+                                    />
+                                  </Tooltip>
+                                </>
+                              ) : (
+                                <Tooltip title={`Remove From All ${dropdownValue.name}`}>
+                                  <HighlightOffIcon
+                                    sx={{
+                                      fontSize: '25px',
+                                      cursor: 'pointer',
+                                      mt: 1,
+                                      color: (theme) => theme.deleteicon.color.main
+                                    }}
                                     onClick={() =>
                                       handleMaterialAssignmentForWholeSection(dropdownValue.name)
                                     }
-                                    sx={{
-                                      mt: 1,
-                                      cursor: 'pointer',
-                                      color: completelyFilledSection[dropdownValue.name]
-                                        ? 'green'
-                                        : 'gray'
-                                    }}
                                   />
                                 </Tooltip>
-                              </>
-                            ) : (
-                              <Tooltip title={`Remove From All ${dropdownValue.name}`}>
-                                <HighlightOffIcon
-                                  sx={{
-                                    fontSize: '25px',
-                                    cursor: 'pointer',
-                                    mt: 1,
-                                    color: (theme) => theme.deleteicon.color.main
-                                  }}
-                                  onClick={() =>
-                                    handleMaterialAssignmentForWholeSection(dropdownValue.name)
-                                  }
-                                />
-                              </Tooltip>
-                            )}
-                          </Box>
-                        </Box>
-                      </Grid>
-                      <Grid xs={10} md={9.5} sx={{ mb: 2, mt: 1, margin: '0px auto' }}>
-                        {dropdownValue.mainItems.map((mainItem, index) => {
-                          return (
-                            <>
-                              <Box
-                                sx={{
-                                  display: 'flex',
-                                  justifyContent: 'flex-start',
-                                  alignItems: 'center'
-                                }}>
-                                <Typography sx={{ fontSize: '13px' }}>{mainItem.name}</Typography>
-
-                                <Tooltip
-                                  placement='top'
-                                  title={`Apply Material To All ${dropdownValue.name} Of ${mainItem.name}`}>
-                                  <FormatPaintOutlinedIcon
-                                    onClick={() =>
-                                      handleMaterialAssignmentForWholeRoom(
-                                        mainItem.name,
-                                        dropdownValue.name
-                                      )
-                                    }
-                                    sx={{
-                                      fontSize: '14px',
-                                      ml: 1,
-                                      cursor: 'pointer',
-                                      color: 'gray'
-                                    }}
-                                  />
-                                </Tooltip>
-                              </Box>
-                              <Grid container sx={{ mb: 1 }}>
-                                {mainItem.values.map((value, idx) => {
-                                  return (
-                                    <Grid md={2.9} xs={10} sx={{ mt: 1, ml: 0.2 }}>
-                                      <MaterialsPickerCard
-                                        title={value.name}
-                                        index={idx}
-                                        assigned={value.assigned}
-                                        handleMaterialAssignment={
-                                          handleMaterialAssignmentForIndividualItem
-                                        }
-                                        roomName={mainItem.name}
-                                        section={dropdownValue.name}
-                                        handleMaterialDeletion={
-                                          handleMaterialDeletionForIndividualItem
-                                        }
-                                      />
-                                    </Grid>
-                                  );
-                                })}
-                              </Grid>
-                              {index !== dropdownValue.mainItems.length - 1 && (
-                                <Divider light sx={{ my: 1 }} />
                               )}
-                            </>
-                          );
-                        })}
+                            </Box>
+                          </Box>
+                        </Grid>
+                        <Grid xs={10} md={9.5} sx={{ mb: 2, mt: 1, margin: '0px auto' }}>
+                          {dropdownValue.mainItems.map((mainItem, index) => {
+                            return (
+                              <>
+                                {mainItem.values.length !== 0 && (
+                                  <>
+                                    <Box
+                                      sx={{
+                                        display: 'flex',
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center'
+                                      }}>
+                                      <Typography sx={{ fontSize: '13px' }}>
+                                        {mainItem.name}
+                                      </Typography>
+
+                                      <Tooltip
+                                        placement='top'
+                                        title={`Apply Material To All ${dropdownValue.name} Of ${mainItem.name}`}>
+                                        <FormatPaintOutlinedIcon
+                                          onClick={() =>
+                                            handleMaterialAssignmentForWholeRoom(
+                                              mainItem.name,
+                                              dropdownValue.name
+                                            )
+                                          }
+                                          sx={{
+                                            fontSize: '14px',
+                                            ml: 1,
+                                            cursor: 'pointer',
+                                            color: 'gray'
+                                          }}
+                                        />
+                                      </Tooltip>
+                                    </Box>
+                                    <Grid container sx={{ mb: 1 }}>
+                                      {mainItem.values.length !== 0 &&
+                                        mainItem.values.map((value, idx) => {
+                                          return (
+                                            <Grid md={2.9} xs={10} sx={{ mt: 1, ml: 0.2 }}>
+                                              <MaterialsPickerCard
+                                                title={value.name}
+                                                index={idx}
+                                                assigned={value.assigned}
+                                                handleMaterialAssignment={
+                                                  handleMaterialAssignmentForIndividualItem
+                                                }
+                                                roomName={mainItem.name}
+                                                section={dropdownValue.name}
+                                                handleMaterialDeletion={
+                                                  handleMaterialDeletionForIndividualItem
+                                                }
+                                              />
+                                            </Grid>
+                                          );
+                                        })}
+                                    </Grid>
+                                    {index !== dropdownValue.mainItems.length - 1 && (
+                                      <Divider light sx={{ my: 1 }} />
+                                    )}
+                                  </>
+                                )}
+                              </>
+                            );
+                          })}
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  )}
+                    )}
                 </Stack>
               );
             })}
