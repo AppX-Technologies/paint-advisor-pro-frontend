@@ -110,7 +110,21 @@ const Card = ({
             .map((item) => {
               return (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>{item}</Typography>
+                  <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Coat</Typography>
+
+                  <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
+                    {items[item]}
+                  </Typography>
+                </Box>
+              );
+            })}
+
+          {Object.keys(items)
+            ?.filter((x) => x === 'wallInfo')
+            ?.map((item) => {
+              return (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Wall Info</Typography>
 
                   <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
                     {items[item]}

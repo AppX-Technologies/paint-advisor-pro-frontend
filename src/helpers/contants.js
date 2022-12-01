@@ -77,12 +77,39 @@ export const STATUS_VALUES = ['New Client'];
 export const MATERIALS_DROPDOWN_VALUES = ['Walls', 'Doors', 'Windows', 'Trims'];
 
 export const TEST_MATERIALS_VALUES_TO_SELECT = [
-  'Material 1',
-  'Material 2',
-  'Material 3',
-  'Material 4',
-  'Material 5',
-  'Material 6'
+  {
+    name: 'Walls',
+    values: [
+      'Wall Material 1',
+      'Wall Material 2',
+      'Wall Material 3',
+      'Wall Material 4',
+      'Wall Material 5',
+      'Wall Material 6'
+    ]
+  },
+  {
+    name: 'Windows',
+    values: [
+      'Window Material 1',
+      'Window Material 2',
+      'Window Material 3',
+      'Window Material 4',
+      'Window Material 5',
+      'Window Material 6'
+    ]
+  },
+  {
+    name: 'Doors',
+    values: [
+      'Door Material 1',
+      'Door Material 2',
+      'Door Material 3',
+      'Door Material 4',
+      'Door Material 5',
+      'Door Material 6'
+    ]
+  }
 ];
 
 export const ROOM_RELATED_INFO = [
@@ -92,17 +119,17 @@ export const ROOM_RELATED_INFO = [
       {
         name: 'Room 1',
         values: [
-          { name: 'Wall 1', assigned: true },
-          { name: 'Wall 2', assigned: false }
+          { name: 'Wall 1', assigned: '' },
+          { name: 'Wall 2', assigned: '' }
         ]
       },
       {
         name: 'Room 2',
         values: [
-          { name: 'Wall 1', assigned: true },
-          { name: 'Wall 2', assigned: false },
-          { name: 'Wall 3', assigned: true },
-          { name: 'Wall 4', assigned: false }
+          { name: 'Wall 1', assigned: '' },
+          { name: 'Wall 2', assigned: '' },
+          { name: 'Wall 3', assigned: '' },
+          { name: 'Wall 4', assigned: '' }
         ]
       }
     ]
@@ -113,17 +140,17 @@ export const ROOM_RELATED_INFO = [
       {
         name: 'Room 1',
         values: [
-          { name: 'Door 1', assigned: true },
-          { name: 'Door 2', assigned: true }
+          { name: 'Door 1', assigned: '' },
+          { name: 'Door 2', assigned: '' }
         ]
       },
       {
         name: 'Room 2',
         values: [
-          { name: 'Door 1', assigned: false },
-          { name: 'Door 2', assigned: true },
-          { name: 'Door 3', assigned: false },
-          { name: 'Door 4', assigned: false }
+          { name: 'Door 1', assigned: '' },
+          { name: 'Door 2', assigned: '' },
+          { name: 'Door 3', assigned: '' },
+          { name: 'Door 4', assigned: '' }
         ]
       }
     ]
@@ -134,28 +161,28 @@ export const ROOM_RELATED_INFO = [
       {
         name: 'Room 1',
         values: [
-          { name: 'Window 1', assigned: false },
-          { name: 'Window 2', assigned: false }
+          { name: 'Window 1', assigned: '' },
+          { name: 'Window 2', assigned: '' }
         ]
       },
       {
         name: 'Room 2',
         values: [
-          { name: 'Window 1', assigned: true },
-          { name: 'Window 2', assigned: true },
-          { name: 'Window 3', assigned: true },
-          { name: 'Window 4', assigned: true }
+          { name: 'Window 1', assigned: '' },
+          { name: 'Window 2', assigned: '' },
+          { name: 'Window 3', assigned: '' },
+          { name: 'Window 4', assigned: '' }
         ]
       },
       {
         name: 'Room 4',
         values: [
-          { name: 'Window 1', assigned: true },
-          { name: 'Window 2', assigned: true },
-          { name: 'Window 3', assigned: true },
-          { name: 'Window 4', assigned: true },
-          { name: 'Window 5', assigned: false },
-          { name: 'Window 6', assigned: false }
+          { name: 'Window 1', assigned: '' },
+          { name: 'Window 2', assigned: '' },
+          { name: 'Window 3', assigned: '' },
+          { name: 'Window 4', assigned: '' },
+          { name: 'Window 5', assigned: '' },
+          { name: 'Window 6', assigned: '' }
         ]
       }
     ]

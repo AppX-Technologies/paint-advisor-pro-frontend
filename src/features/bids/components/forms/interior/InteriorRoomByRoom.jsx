@@ -14,6 +14,7 @@ import AddRoomForm from './AddRoomForm';
 const InteriorRoomByRoom = ({
   roomStats,
   setRoomStats,
+  initialBidInfo,
   allRoom,
   setAllRoom,
   openAddMoreDetails,
@@ -156,7 +157,7 @@ const InteriorRoomByRoom = ({
         setItemToBeDeleted={setItemToBeDeleted}
         setCurentAddMore={setCurentAddMore}
       />
-      <MaterialsPicker />
+      {initialBidInfo.isMaterialProvidedByCustomer === 'Yes' && <MaterialsPicker />}
     </Box>
   );
 };

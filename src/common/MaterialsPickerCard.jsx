@@ -1,8 +1,15 @@
-import FormatPaintOutlinedIcon from '@mui/icons-material/FormatPaintOutlined';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Box, CardContent, Chip, Tooltip, Typography } from '@mui/material';
 import React from 'react';
 
-const MaterialsPickerCard = ({ title, assigned }) => {
+const MaterialsPickerCard = ({
+  title,
+  assigned,
+  handleMaterialAssignment,
+  handleMaterialDeletion,
+  roomName,
+  section
+}) => {
   return (
     <Box
       sx={{
@@ -17,24 +24,34 @@ const MaterialsPickerCard = ({ title, assigned }) => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            mt: 0.5,
+
             p: 0.5
           }}>
           <Typography sx={{ fontSize: 12, textAlign: 'center' }} gutterBottom>
             {title} Info
           </Typography>
           <Tooltip
-            title={
-              !assigned
-                ? `Apply On This ${title.slice(0, title.length - 1)}`
-                : `Material Applied To This ${title.slice(0, title.length - 1)}`
-            }
+            title={!assigned ? `Apply On This ${title.slice(0, title.length - 1)}` : ''}
             placement='top'>
             <Chip
+              onClick={() => !assigned && handleMaterialAssignment(roomName, section, title)}
               color={assigned ? 'success' : 'default'}
               sx={{ height: '16px', cursor: 'pointer' }}
               label={
-                <Typography sx={{ fontSize: '11px' }}>{assigned ? '' : 'Not '}Assigned</Typography>
+                <Box
+                  sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography sx={{ fontSize: '11px' }}>
+                    {!assigned ? 'Not Assigned' : assigned}
+                  </Typography>
+                  {assigned && (
+                    <Tooltip title='Remove Assigned Material' placement='top'>
+                      <HighlightOffIcon
+                        sx={{ fontSize: '15px', ml: 1 }}
+                        onClick={() => handleMaterialDeletion(roomName, section, title)}
+                      />
+                    </Tooltip>
+                  )}
+                </Box>
               }
               size='small'
             />

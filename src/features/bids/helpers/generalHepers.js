@@ -105,3 +105,17 @@ export const onlyWindows = (rooms) => {
   });
   return paintableWindows;
 };
+
+export const individualItem = (roomRelatedInfo, room, section, title) => {
+  return roomRelatedInfo
+    .find((a) => a.name === section)
+    .mainItems.find((b) => b.name === room)
+    .values.find((c) => c.name === title);
+};
+
+export const roomInfo = (roomRelatedInfo, room, section) => {
+  return roomRelatedInfo.find((a) => a.name === section).mainItems.find((b) => b.name === room);
+};
+
+export const sectionInfo = (roomRelatedInfo, section) =>
+  roomRelatedInfo.find((a) => a.name === section);

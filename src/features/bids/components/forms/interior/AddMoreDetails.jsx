@@ -186,12 +186,12 @@ const AddMoreDetails = ({
                   <Grid item xs={6} md={6} mt={1}>
                     <FormControl sx={{ width: '100%' }} size='small'>
                       <InputLabel id='demo-select-small' sx={{ marginTop: '-5px' }}>
-                        {name === 'wallType' ? 'Wall Types' : 'Ceiling Types'}
+                        {name === 'wallType' ? 'Wall Type' : 'Ceiling Type'}
                       </InputLabel>
                       <Select
                         labelId='demo-select-small'
                         id='demo-select-small'
-                        label={name === 'wallType' ? 'Wall Types' : 'Ceiling Types'}
+                        label={name === 'wallType' ? 'Wall Type' : 'Ceiling Type'}
                         value={currentStats[name]}
                         onChange={(event) => {
                           currentStats[name] = event.target.value;

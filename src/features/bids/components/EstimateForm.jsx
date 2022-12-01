@@ -300,6 +300,7 @@ export default function EstimateForm(props) {
               openEditForm={openEditForm}
               setOpenEditForm={setOpenEditForm}
               roomRelatedInfo={roomRelatedInfo}
+              initialBidInfo={initialBidInfo}
             />
           )}
           {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
