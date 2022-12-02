@@ -4,6 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { cloneDeep } from 'lodash';
 
 const Card = ({
   items,
@@ -59,7 +60,7 @@ const Card = ({
                     cursor: 'pointer'
                   }}
                   onClick={() => {
-                    setRoomInfoToEdit({ ...items, _id: null });
+                    setRoomInfoToEdit({ ...cloneDeep(items), _id: null });
                     onopenAddMoreDetailsChange(true);
                     setCurentAddMore(field);
                   }}
@@ -76,7 +77,7 @@ const Card = ({
                   }}
                   size='small'
                   onClick={() => {
-                    setRoomInfoToEdit({ ...items });
+                    setRoomInfoToEdit({ ...cloneDeep(items) });
                     onopenAddMoreDetailsChange(true);
                     setCurentAddMore(field);
                   }}

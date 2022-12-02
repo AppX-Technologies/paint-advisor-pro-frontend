@@ -146,7 +146,8 @@ export default function AddRoomForm(props) {
     if (selectedRoomInfo) {
       setRoomStats({ ...selectedRoomInfo });
     }
-  }, [open]);
+  }, [open, selectedRoomInfo]);
+  console.log(selectedRoomInfo, roomStats, 'roomStats');
 
   return (
     <div>
@@ -279,6 +280,7 @@ export default function AddRoomForm(props) {
                                       title={roomComponent.name}
                                       onCardDelete={onCardDelete}
                                       field={item.name}
+                                      selectedRoomInfo={selectedRoomInfo}
                                       totalArea={roomStats[fieldType].reduce((total, currItem) => {
                                         return total + Number(currItem.area);
                                       }, 0)}

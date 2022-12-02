@@ -89,7 +89,7 @@ export const findPaintableMaterials = (rooms) => {
       .reduce((total, roomEle) => {
         return {
           ...total,
-          [roomEle]: room[roomEle].filter((a) => a.paint),
+          [roomEle]: roomEle !== 'walls' ? room[roomEle].filter((a) => a.paint) : room[roomEle],
           roomName: room.roomName
         };
       }, {});
@@ -99,28 +99,28 @@ export const findPaintableMaterials = (rooms) => {
 };
 
 export const groupedPaintableMaterials = (rooms) => {
-  const array = [];
+  const paintableAreaAccrToSection = [];
 
   const allPaintAbleArea = findPaintableMaterials(rooms);
   allPaintAbleArea.forEach((paintableArea) => {
     Object.keys(paintableArea)
       .filter((a) => a !== 'roomName')
       .forEach((paintableEle) => {
-        const foundItem = array.find((item) => item.name === paintableEle);
+        const foundItem = paintableAreaAccrToSection.find((item) => item.name === paintableEle);
         if (foundItem) {
           foundItem.mainItems.push({
             name: paintableArea.roomName,
             values: [...paintableArea[paintableEle]]
           });
         } else {
-          array.push({
+          paintableAreaAccrToSection.push({
             name: paintableEle,
             mainItems: [{ name: paintableArea.roomName, values: [...paintableArea[paintableEle]] }]
           });
         }
       });
   });
-  return array;
+  return paintableAreaAccrToSection;
 };
 
 export const onlyWindows = (rooms) => {

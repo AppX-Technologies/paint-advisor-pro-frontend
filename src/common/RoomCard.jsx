@@ -4,6 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { cloneDeep } from 'lodash';
 
 const RoomCard = ({
   items,
@@ -15,6 +16,7 @@ const RoomCard = ({
   onSelectedRoomInfoChange,
   setOpenDeleteModal
 }) => {
+  console.log(cloneDeep(completeRoomInfo), 'cloneDeep(completeRoomInfo)');
   return (
     <Box className='card-box' bgcolor='#faf2f0' p={1}>
       {/* Header-section */}
@@ -43,7 +45,7 @@ const RoomCard = ({
                 cursor: 'pointer'
               }}
               onClick={() => {
-                onSelectedRoomInfoChange({ ...completeRoomInfo, _id: null });
+                onSelectedRoomInfoChange({ ...cloneDeep(completeRoomInfo), _id: null });
 
                 setAddRoom(true);
               }}
@@ -61,7 +63,7 @@ const RoomCard = ({
               size='small'
               onClick={() => {
                 onCardEdit(items.roomName);
-                onSelectedRoomInfoChange({ ...completeRoomInfo });
+                onSelectedRoomInfoChange({ ...cloneDeep(completeRoomInfo) });
                 setAddRoom(true);
               }}
             />

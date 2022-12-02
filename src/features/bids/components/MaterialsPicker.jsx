@@ -185,6 +185,12 @@ const MaterialsPicker = ({ allRooms }) => {
                       </Tooltip>
                     )}
                   </Box>
+                  {expandArea[dropdownValue.name] === true &&
+                    dropdownValue.mainItems.every((mainItem) => mainItem.values.length === 0) && (
+                      <Typography sx={{ fontSize: '14px', textAlign: 'center' }}>
+                        No Info To Show
+                      </Typography>
+                    )}
                   {/* Materials Picker */}
                   {expandArea[dropdownValue.name] === true &&
                     !dropdownValue.mainItems.every((mainItem) => mainItem.values.length === 0) && (
