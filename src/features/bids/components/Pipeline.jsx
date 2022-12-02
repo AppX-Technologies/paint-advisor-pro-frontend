@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { bidStageFilter } from '../../../common/bidStageFilters';
 import { booleanOption } from '../../../common/FormTextField';
-import { STAGE_1 } from '../../../helpers/contants';
+import { STATUS_NEW_CLIENT } from '../../../helpers/contants';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { authSelector } from '../../auth/authSlice';
 import { fetchAllClients } from '../bidsSlice';
@@ -46,7 +46,7 @@ const Pipeline = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [open, setOpen] = useState(false);
   const [openEstimate, setOpenEstimate] = useState(false);
-  const [selectedStep, setSelectedStep] = useState('new client');
+  const [selectedStep, setSelectedStep] = useState(STATUS_NEW_CLIENT);
   const [selectedListItem, setSelectedListItem] = useState(null);
   const [filteredClietsList, setFilteredClietsList] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -293,7 +293,7 @@ const Pipeline = () => {
 
   return (
     <>
-      {selectedStep === STAGE_1 && (
+      {selectedStep === STATUS_NEW_CLIENT && (
         <Button
           variant='contained'
           color='primary'

@@ -127,7 +127,7 @@ const Card = ({
             ?.map((item) => {
               return (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Wall Info</Typography>
+                  <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Wall</Typography>
 
                   <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
                     {items[item]}

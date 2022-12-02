@@ -3,7 +3,7 @@ import { Backdrop, Box, CircularProgress, TextField, Tooltip, Typography } from 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../components/Button';
 import { authSelector } from '../features/auth/authSlice';
@@ -14,9 +14,10 @@ const ScheduleTheJob = ({
   setScheduleTheJob,
   schedueJobDate,
   setScheduleJobDate,
-  currentClientInfo
+  currentClientInfo,
+  scheduleDateExistsOrNot
 }) => {
-  const { isLoading } = useSelector((state) => state.bids);
+  const { isLoading, isSuccess } = useSelector((state) => state.bids);
 
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
@@ -27,13 +28,18 @@ const ScheduleTheJob = ({
   const handleSchedulingDate = () => {
     dispatch(
       updateClient({
-        schedueJobDate: schedueJobDate?.$d?.toString(),
+        estimateScheduledDate: schedueJobDate?.$d?.toISOString(),
         token: user.token,
         id: currentClientInfo._id
       })
     );
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      setScheduleTheJob(false);
+    }
+  }, [isSuccess]);
   return (
     <>
       <Backdrop
@@ -53,7 +59,9 @@ const ScheduleTheJob = ({
             mb: 5
           }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-            <Typography sx={{ mb: 3 }}>Schedule The Job</Typography>
+            <Typography sx={{ mb: 3 }}>
+              {scheduleDateExistsOrNot ? 'Update' : 'Schedule'} The Date Of Job
+            </Typography>
             {isLoading ? (
               <CircularProgress size={20} />
             ) : (

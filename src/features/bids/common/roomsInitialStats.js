@@ -23,7 +23,7 @@ export const initialRoomState = {
   doorjambs: [],
   crownMoldings: [],
   closets: [],
-  nonPaintableAreas: [{ description: 'Current Total', area: null, isTotal: true }]
+  nonPaintableAreas: [{ description: 'Current Total', area: 0, isTotal: true }]
 };
 
 export const initilWallInfo = {
@@ -67,7 +67,6 @@ export const initialBaseBoardTrimInfo = {
   height: null,
   length: null,
   coats: null,
-
   prducts: []
 };
 
@@ -90,7 +89,8 @@ export const initialDoorjambsInfo = {
   linearFeet: '',
   width: null,
   coats: null,
-  prducts: []
+  prducts: [],
+  paint: false
 };
 
 export const initialCrownMoldingInfo = {
@@ -100,7 +100,8 @@ export const initialCrownMoldingInfo = {
   linearFeet: '',
   width: null,
   coats: null,
-  prducts: []
+  prducts: [],
+  paint: false
 };
 
 export const initialClosetInfo = {
@@ -111,7 +112,8 @@ export const initialClosetInfo = {
   width: null,
   averageHeight: null,
   coats: null,
-  prducts: []
+  prducts: [],
+  paint: false
 };
 
 export const initialCeilingInfo = {
@@ -121,7 +123,8 @@ export const initialCeilingInfo = {
   width: '',
   type: '',
   coats: '',
-  product: []
+  product: [],
+  paint: false
 };
 
 export const initialState = {

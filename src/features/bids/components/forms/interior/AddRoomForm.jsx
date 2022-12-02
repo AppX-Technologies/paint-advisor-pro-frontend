@@ -106,7 +106,7 @@ export default function AddRoomForm(props) {
       );
     }
     if (!roomStats._id) {
-      setAllRoom([...allRoom, { ...roomStats, _id: Date.now().toString() }]);
+      setAllRoom([...allRoom, { ...roomStats }]);
     } else {
       allRoom.splice(
         allRoom.findIndex((room) => room._id === roomStats._id),

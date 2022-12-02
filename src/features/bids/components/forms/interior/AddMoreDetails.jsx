@@ -79,16 +79,15 @@ const AddMoreDetails = ({
     }
 
     if (!roomInfoToEdit) {
+      delete currentStats._id;
       addIn.push({
         ...currentStats,
-        _id: new Date().getTime().toString(),
         isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
       });
     } else {
       if (!roomInfoToEdit._id) {
         addIn.push({
           ...currentStats,
-          _id: new Date().getTime().toString(),
           isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
         });
       } else {
@@ -255,7 +254,7 @@ const AddMoreDetails = ({
                             setCurrentStats({ ...currentStats });
                           }}
                           sx={{ height: '30px' }}>
-                          <MenuItem value='Wall-1'>None</MenuItem>
+                          <MenuItem value='None'>None</MenuItem>
                           {roomStats &&
                             roomStats.walls.map((wall) => {
                               return <MenuItem value={wall.name}>{wall.name}</MenuItem>;
@@ -269,26 +268,29 @@ const AddMoreDetails = ({
             );
           })}
 
-          {titleField !== 'walls' && titleField !== NONPAINTABLEAREAFIELD && (
-            <Grid xs={6} md={6} mt={2}>
-              <FormGroup>
-                <FormControlLabel
-                  sx={{ position: 'relative', ml: 0.8 }}
-                  control={<Checkbox defaultChecked />}
-                  checked={currentStats.paint}
-                  onChange={(event) => {
-                    currentStats.paint = event.target.checked;
-                    setCurrentStats({ ...currentStats });
-                  }}
-                  label={
-                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                      PAINT
-                    </InputLabel>
-                  }
-                />
-              </FormGroup>
-            </Grid>
-          )}
+          {titleField !== 'walls' &&
+            titleField !== NONPAINTABLEAREAFIELD &&
+            titleField !== 'baseboardTrims' &&
+            titleField !== 'windowTrims' && (
+              <Grid xs={6} md={6} mt={2}>
+                <FormGroup>
+                  <FormControlLabel
+                    sx={{ position: 'relative', ml: 0.8 }}
+                    control={<Checkbox defaultChecked />}
+                    checked={currentStats.paint}
+                    onChange={(event) => {
+                      currentStats.paint = event.target.checked;
+                      setCurrentStats({ ...currentStats });
+                    }}
+                    label={
+                      <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                        PAINT
+                      </InputLabel>
+                    }
+                  />
+                </FormGroup>
+              </Grid>
+            )}
         </Grid>
       </DialogContent>
       <DialogActions>

@@ -217,6 +217,9 @@ export const bidsSlice = createSlice({
       state.isJobCanceledLoading = false;
       state.clientFetchSuccess = false;
       state.isCommentSuccess = false;
+      state.isSuccess = false;
+      state.bidsIsError = false;
+      state.isSuccess = false;
     }
   },
   extraReducers: (builder) => {

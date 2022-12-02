@@ -3,10 +3,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ArticleIcon from '@mui/icons-material/Article';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
+import { STATUS_ESTIMATE_IN_PROGRESS, STATUS_NEW_CLIENT } from '../helpers/contants';
 
 export const buttonStageInfo = [
   {
-    name: 'new client',
+    name: STATUS_NEW_CLIENT,
     actions: [
       {
         text: 'View Files',
@@ -24,6 +25,11 @@ export const buttonStageInfo = [
         icon: <ScheduleIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
       },
       {
+        text: 'Update Scheduled Job',
+        color: 'info',
+        icon: <EditIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
+      },
+      {
         text: 'Begin Estimate',
         color: 'warning',
         icon: <ArticleIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />,
@@ -32,7 +38,7 @@ export const buttonStageInfo = [
     ]
   },
   {
-    name: 'estimate in progress',
+    name: STATUS_ESTIMATE_IN_PROGRESS,
     actions: [
       {
         text: 'View Files',

@@ -5,6 +5,7 @@ import {
   FormControl,
   Grid,
   InputLabel,
+  LinearProgress,
   MenuItem,
   Select,
   TextField,
@@ -20,19 +21,17 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { cloneDeep } from 'lodash';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
+import { STATUS_ESTIMATE_IN_PROGRESS } from '../../../helpers/contants';
 import { isSystemUser } from '../../../helpers/roles';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
-import { createBid, updateClientStatus } from '../bidsSlice';
+import { createBid, reset, updateClient, updateClientStatus } from '../bidsSlice';
 import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
-import {
-  findPaintableMaterials,
-  groupedPaintableMaterials,
-  onlyWindows
-} from '../helpers/generalHepers';
+
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
 export default function EstimateForm(props) {
@@ -64,16 +63,15 @@ export default function EstimateForm(props) {
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
+  const { bidsIsLoading, bidsIsSuccess } = useSelector((state) => state.bids);
+
   const { companyId } = useParams();
-  // console.log(findPaintableMaterials(allRoom), 'dfgsdjf');
   const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
 
   const handleClose = () => {
     setOpen(false);
     setRoomStats(initialRoomState);
   };
-
-  console.log(groupedPaintableMaterials(allRoom), 'dksgsdgfhjsgdhj');
 
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
@@ -109,14 +107,6 @@ export default function EstimateForm(props) {
 
     // Client's Status Update After Creating An Estimation
 
-    // dispatch(
-    //   updateClientStatus({
-    //     token: user.token,
-    //     status: 'Estimate In Progress',
-    //     id: currentClientInfo._id
-    //   })
-    // );
-
     handleClose();
   };
 
@@ -125,6 +115,26 @@ export default function EstimateForm(props) {
       setInitialBidInfo(cloneDeep(estimationFormInitialInfo));
     }
   }, [open]);
+
+  useEffect(() => {
+    if (bidsIsSuccess) {
+      dispatch(
+        updateClient({
+          status: STATUS_ESTIMATE_IN_PROGRESS,
+          token: user.token,
+          id: currentClientInfo._id
+        })
+      );
+      setOpen(false);
+      dispatch(
+        showMessage({
+          message: `Bids Information Successfully Created`,
+          severity: 'success'
+        })
+      );
+      dispatch(reset());
+    }
+  }, [bidsIsSuccess]);
 
   return (
     <div>
@@ -145,6 +155,8 @@ export default function EstimateForm(props) {
             Close <CloseIcon sx={{ height: '15px' }} />
           </Button>
         </Toolbar>
+
+        {bidsIsLoading && <LinearProgress color='success' />}
 
         <DialogContent>
           <Grid container spacing={2} mt={2}>
@@ -331,3 +343,6 @@ export default function EstimateForm(props) {
     </div>
   );
 }
+
+
+

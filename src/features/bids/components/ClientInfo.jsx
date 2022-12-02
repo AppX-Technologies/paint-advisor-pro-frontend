@@ -1,4 +1,6 @@
 import EditIcon from '@mui/icons-material/Edit';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+
 import {
   Badge,
   Box,
@@ -11,7 +13,7 @@ import {
   Typography
 } from '@mui/material';
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ConfirmationModel from '../../../common/ConfirmationModel';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 import ScheduleTheJob from '../../../common/ScheduleTheJob';
@@ -91,6 +93,14 @@ const ClientInfo = ({
     }
   }, [jobSuccessFullyCanceled]);
 
+  useEffect(() => {
+    if (currentClientInfo?.estimateScheduledDate) {
+      setScheduleJobDate(currentClientInfo?.estimateScheduledDate);
+    } else {
+      setScheduleJobDate(null);
+    }
+  }, [currentClientInfo]);
+
   return (
     <Box>
       {scheduleTheJob && (
@@ -100,6 +110,7 @@ const ClientInfo = ({
           schedueJobDate={schedueJobDate}
           setScheduleJobDate={setScheduleJobDate}
           currentClientInfo={currentClientInfo}
+          scheduleDateExistsOrNot={currentClientInfo.estimateScheduledDate}
         />
       )}
       {openFileDeleteModel && (
@@ -139,23 +150,55 @@ const ClientInfo = ({
             </Box>
 
             <Box sx={{ display: 'flex' }}>
-              {findCurrentStageButtonInfo(selectedStep)?.actions.map((info) => {
-                return info.text === 'Begin Estimate' || info.text === 'Update Estimation Info' ? (
-                  <Tooltip title={info.text} placement='top'>
-                    <Button
-                      sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
-                      variant='outlined'
-                      startIcon={info.icon}
-                      color={info.color}
-                      onClick={() => {
-                        setOpen(!open);
-                      }}
-                    />
-                  </Tooltip>
-                ) : (
-                  <>
-                    {info.text === 'Cancel The Job' &&
-                      currentClientInfo?.status !== 'Cancel The Job' && (
+              {findCurrentStageButtonInfo(selectedStep)
+                ?.actions.filter((item) =>
+                  Object.keys(currentClientInfo).includes('estimateScheduledDate')
+                    ? item.text !== 'Schedule'
+                    : item.text !== 'Update Scheduled Job'
+                )
+                .map((info) => {
+                  return info.text === 'Begin Estimate' ||
+                    info.text === 'Update Estimation Info' ? (
+                    <Tooltip title={info.text} placement='top'>
+                      <Button
+                        sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
+                        variant='outlined'
+                        startIcon={info.icon}
+                        color={info.color}
+                        onClick={() => {
+                          setOpen(!open);
+                        }}
+                      />
+                    </Tooltip>
+                  ) : (
+                    <>
+                      {info.text === 'Cancel The Job' &&
+                        currentClientInfo?.status !== 'Cancel The Job' && (
+                          <>
+                            <Tooltip title={info.text} placement='top'>
+                              <Badge
+                                badgeContent={
+                                  info.text === 'View Files' ? currentClientInfo?.files?.length : 0
+                                }
+                                color='primary'
+                                anchorOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'left'
+                                }}>
+                                <Button
+                                  sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
+                                  variant='outlined'
+                                  startIcon={info.icon}
+                                  color={info.color}
+                                  onClick={() => {
+                                    setOpenFileDeleteModel(true);
+                                  }}
+                                />
+                              </Badge>
+                            </Tooltip>
+                          </>
+                        )}
+                      {info.text !== 'Cancel The Job' && (
                         <>
                           <Tooltip title={info.text} placement='top'>
                             <Badge
@@ -173,56 +216,35 @@ const ClientInfo = ({
                                 startIcon={info.icon}
                                 color={info.color}
                                 onClick={() => {
-                                  setOpenFileDeleteModel(true);
+                                  if (info.nextState) {
+                                    onSelectedStepChange(
+                                      bidsStages[bidsStages.indexOf(selectedStep) + 1]
+                                    );
+                                  }
+                                  if (info.text === 'View Files') {
+                                    setShowFilesToView(true);
+                                  }
+                                  if (
+                                    info.text === 'Schedule' ||
+                                    info.text === 'Update Scheduled Job'
+                                  ) {
+                                    setScheduleTheJob(true);
+                                  }
                                 }}
                               />
                             </Badge>
                           </Tooltip>
                         </>
                       )}
-                    {info.text !== 'Cancel The Job' && (
-                      <>
-                        <Tooltip title={info.text} placement='top'>
-                          <Badge
-                            badgeContent={
-                              info.text === 'View Files' ? currentClientInfo?.files?.length : 0
-                            }
-                            color='primary'
-                            anchorOrigin={{
-                              vertical: 'top',
-                              horizontal: 'left'
-                            }}>
-                            <Button
-                              sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
-                              variant='outlined'
-                              startIcon={info.icon}
-                              color={info.color}
-                              onClick={() => {
-                                if (info.nextState) {
-                                  onSelectedStepChange(
-                                    bidsStages[bidsStages.indexOf(selectedStep) + 1]
-                                  );
-                                }
-                                if (info.text === 'View Files') {
-                                  setShowFilesToView(true);
-                                }
-                                if (info.text === 'Schedule') {
-                                  setScheduleTheJob(true);
-                                }
-                              }}
-                            />
-                          </Badge>
-                        </Tooltip>
-                      </>
-                    )}
-                  </>
-                );
-              })}
+                    </>
+                  );
+                })}
             </Box>
           </Box>
           {selectedListItem && <Divider light />}
 
           {/* Client's Info Card */}
+          {/* estimateScheduledDate */}
           <Grid container>
             {currentClientInfo &&
               Object.keys(currentClientInfo && currentClientInfo)

@@ -27,28 +27,28 @@ export const ALL_PROCESS_STAGES = [
   PROCESS_STAGE_CLEANUP
 ];
 
-export const STAGE_1 = 'new client';
-export const STAGE_2 = 'estimate in progress';
-export const STAGE_3 = 'in review';
-export const STAGE_4 = 'contract Pending';
-export const STAGE_5 = 'contract sent';
-export const STAGE_6 = 'contract rejected';
-export const STAGE_7 = 'job scheduled';
-export const STAGE_8 = 'job in progress';
-export const STAGE_9 = 'invoicing';
-export const STAGE_10 = 'complete';
+export const STATUS_NEW_CLIENT = 'New Client';
+export const STATUS_ESTIMATE_IN_PROGRESS = 'Estimate In Progress';
+export const STATUS_IN_REVIEW = 'In Review';
+export const STATUS_CONTRACT_PENDING = 'Contract Pending';
+export const STATUS_CONTRACT_SENT = 'Contract Sent';
+export const STATUS_CONTRACT_REJECTED = 'Contract rejected';
+export const STATUS_JOB_SCHEDULED = 'Job Scheduled';
+export const STATUS_JOB_IN_PROGRESS = 'Job In Progress';
+export const STATUS_INVOICING = 'Invoicing';
+export const STATUS_COMPLETE = 'Complete';
 
 export const BIDS_STAGES = [
-  STAGE_1,
-  STAGE_2,
-  STAGE_3,
-  STAGE_4,
-  STAGE_5,
-  STAGE_6,
-  STAGE_7,
-  STAGE_8,
-  STAGE_9,
-  STAGE_10
+  STATUS_NEW_CLIENT,
+  STATUS_ESTIMATE_IN_PROGRESS,
+  STATUS_IN_REVIEW,
+  STATUS_CONTRACT_PENDING,
+  STATUS_CONTRACT_SENT,
+  STATUS_CONTRACT_REJECTED,
+  STATUS_JOB_SCHEDULED,
+  STATUS_JOB_IN_PROGRESS,
+  STATUS_INVOICING,
+  STATUS_COMPLETE
 ];
 
 export const NONPAINTABLEAREAFIELD = 'nonPaintableAreas';
@@ -119,6 +119,61 @@ export const TEST_MATERIALS_VALUES_TO_SELECT = [
       'Ceiling Material 4',
       'Ceiling Material 5',
       'Ceiling Material 6'
+    ]
+  },
+  {
+    name: 'baseboardTrims',
+    values: [
+      'Baseboard Trims Material 1',
+      'Baseboard Trims Material 2',
+      'Baseboard Trims Material 3',
+      'Baseboard Trims Material 4',
+      'Baseboard Trims Material 5',
+      'Baseboard Trims Material 6'
+    ]
+  },
+  {
+    name: 'windowTrims',
+    values: [
+      'Window Trims Material 1',
+      'Window Trims Material 2',
+      'Window Trims Material 3',
+      'Window Trims Material 4',
+      'Window Trims Material 5',
+      'Window Trims Material 6'
+    ]
+  },
+  {
+    name: 'crownMoldings',
+    values: [
+      'Crown Molding Material 1',
+      'Crown Molding Material 2',
+      'Crown Molding Material 3',
+      'Crown Molding Material 4',
+      'Crown Molding Material 5',
+      'Crown Molding Material 6'
+    ]
+  },
+  {
+    name: 'closets',
+    values: [
+      'Closets Material 1',
+      'Closets Material 2',
+      'Closets Material 3',
+      'Closets Material 4',
+      'Closets Material 5',
+      'Closets Material 6'
+    ]
+  },
+  {
+    name: 'doorjambs',
+    values: [
+      'Door Jambs Material 1',
+      'Door Jambs Material 2',
+      'Door Jambs Material 3',
+      'Door Jambs Material 4',
+      'Door Jambs Material 5',
+      'Door Jambs Material 6'
     ]
   }
 ];
