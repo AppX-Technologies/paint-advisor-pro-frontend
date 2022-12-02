@@ -22,6 +22,7 @@ export function DeleteItemModel({
   selectedRoomInfo,
   setSelectedRoomInfo
 }) {
+  console.log(selectedRoomInfo, 'selectedRoomInfo');
   const dispatch = useDispatch();
   const handleClose = () => {
     setOpenDeleteModal(false);
@@ -45,7 +46,6 @@ export function DeleteItemModel({
         severity: 'success'
       })
     );
-    
   };
 
   return (

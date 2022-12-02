@@ -16,7 +16,6 @@ const RoomCard = ({
   onSelectedRoomInfoChange,
   setOpenDeleteModal
 }) => {
-  console.log(cloneDeep(completeRoomInfo), 'cloneDeep(completeRoomInfo)');
   return (
     <Box className='card-box' bgcolor='#faf2f0' p={1}>
       {/* Header-section */}

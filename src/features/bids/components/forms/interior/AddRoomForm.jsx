@@ -1,4 +1,3 @@
-import { ConstructionOutlined } from '@mui/icons-material';
 import BrushIcon from '@mui/icons-material/Brush';
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
@@ -147,7 +146,6 @@ export default function AddRoomForm(props) {
       setRoomStats({ ...selectedRoomInfo });
     }
   }, [open, selectedRoomInfo]);
-  console.log(selectedRoomInfo, roomStats, 'roomStats');
 
   return (
     <div>
@@ -279,6 +277,7 @@ export default function AddRoomForm(props) {
                                       items={roomComponent}
                                       title={roomComponent.name}
                                       onCardDelete={onCardDelete}
+                                      onSelectedRoomInfoChange={onSelectedRoomInfoChange}
                                       field={item.name}
                                       selectedRoomInfo={selectedRoomInfo}
                                       totalArea={roomStats[fieldType].reduce((total, currItem) => {
@@ -354,6 +353,7 @@ export default function AddRoomForm(props) {
             setRoomInfoToEdit={setRoomInfoToEdit}
             initialStats={filteredRoomInfo.initialStats}
             fields={filteredRoomInfo.fields}
+            itemToBEDeleted={itemToBEDeleted}
             currentLabel={
               filteredRoomInfo.label[filteredRoomInfo.label.length - 1] === 's'
                 ? filteredRoomInfo.label.slice(0, filteredRoomInfo.label.length - 1)

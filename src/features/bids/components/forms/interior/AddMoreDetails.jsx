@@ -42,7 +42,8 @@ const AddMoreDetails = ({
   setRoomInfoToEdit,
   fields,
   currentLabel,
-  selectedRoomInfo
+  selectedRoomInfo,
+  itemToBEDeleted
 }) => {
   const dispatch = useDispatch();
   const handleCreate = () => {
@@ -120,7 +121,7 @@ const AddMoreDetails = ({
       setCurrentStats({ ...roomInfoToEdit });
     }
   }, [roomInfoToEdit, selectedRoomInfo]);
-  console.log(roomInfoToEdit, currentStats, 'currentStats');
+  console.log(itemToBEDeleted, currentStats, 'itemToBEDeleted');
 
   return (
     <Dialog open={openAddMoreDetails} PaperProps={{ sx: { minWidth: '60%' } }}>

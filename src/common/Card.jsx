@@ -7,6 +7,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { cloneDeep } from 'lodash';
 
 const Card = ({
+  onSelectedRoomInfoChange,
   items,
   title,
   onCardDelete,
@@ -92,6 +93,7 @@ const Card = ({
                   }}
                   size='small'
                   onClick={() => {
+                    onSelectedRoomInfoChange(null);
                     setCurentAddMore(field);
                     onCardDelete(items._id, field);
                     setOpenDeleteModal(true);
@@ -177,7 +179,7 @@ const Card = ({
                         cursor: 'pointer'
                       }}
                       onClick={() => {
-                        setRoomInfoToEdit({ ...items, _id: null });
+                        setRoomInfoToEdit({ ...cloneDeep(items), _id: null });
                         onopenAddMoreDetailsChange(true);
                         setCurentAddMore(field);
                       }}
@@ -194,7 +196,7 @@ const Card = ({
                       }}
                       size='small'
                       onClick={() => {
-                        setRoomInfoToEdit({ ...items });
+                        setRoomInfoToEdit({ ...cloneDeep(items) });
                         onopenAddMoreDetailsChange(true);
                         setCurentAddMore(field);
                       }}
@@ -209,6 +211,7 @@ const Card = ({
                       }}
                       size='small'
                       onClick={() => {
+                        onSelectedRoomInfoChange(null);
                         setCurentAddMore(field);
                         onCardDelete(items._id, field);
                         setOpenDeleteModal(true);
