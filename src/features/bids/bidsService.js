@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { STATUS_ESTIMATE_IN_PROGRESS } from '../../helpers/contants';
 
-const clientEndpoint = 'https://painting-app-backend.herokuapp.com/clients';
-const bidEndPoint = 'https://painting-app-backend.herokuapp.com/bids';
+const clientEndpoint = 'http://localhost:5001/clients';
+const bidEndPoint = 'http://localhost:5001/bids';
 
 // Client Related Endpoints
 const CREATE_CLIENTS = `${clientEndpoint}/`;
@@ -10,6 +11,7 @@ const UPDATE_CLIENT = `${clientEndpoint}`;
 
 // Bids Related Endpoints
 const CREATE_BID = `${bidEndPoint}`;
+const updateBid = `${bidEndPoint}`;
 
 export const fetchAllClientsService = async (userData) => {
   const config = {
@@ -31,7 +33,7 @@ export const fetchAllClientsService = async (userData) => {
       limit: Number(userData.limit),
       query: userData.query,
       sort: { [userData.sort]: Number(userData.isAscending) },
-      filter: filterValueObj
+      filter: { bidTypes: filterValueObj.bidTypes }
     },
     config
   );
@@ -119,7 +121,7 @@ export const uploadAFileService = async (userData) => {
 export const deleteFileService = async (userData) => {
   const response = await axios({
     method: 'delete',
-    url: `https://painting-app-backend.herokuapp.com/api/files/${userData.id}`,
+    url: `http://localhost:5001/api/files/${userData.id}`,
     data: {},
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -166,5 +168,24 @@ export const createBidServices = async (userData) => {
     },
     config
   );
-  return response;
+  return { response, clientId: userData.id };
+};
+
+export const updateBidService = async (userData) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+
+  const response = await axios.put(
+    `${updateBid}/${userData._id}`,
+    {
+      ...userData.bidFields,
+      organization: userData.organization
+    },
+    config
+  );
+  return { response, clientId: userData.id };
 };

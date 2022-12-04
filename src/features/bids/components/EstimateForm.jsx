@@ -25,11 +25,11 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
-import { STATUS_ESTIMATE_IN_PROGRESS } from '../../../helpers/contants';
+import { STATUS_ESTIMATE_IN_PROGRESS, STATUS_NEW_CLIENT } from '../../../helpers/contants';
 import { isSystemUser } from '../../../helpers/roles';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
-import { createBid, reset, updateClient, updateClientStatus } from '../bidsSlice';
+import { createBid, reset, updateClient } from '../bidsSlice';
 import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
 
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
@@ -57,14 +57,14 @@ export default function EstimateForm(props) {
     openEditForm,
     setOpenEditForm,
     roomRelatedInfo,
-    currentClientInfo
+    currentClientInfo,
+    selectedStep
   } = props;
 
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
-  const { bidsIsLoading, bidsIsSuccess } = useSelector((state) => state.bids);
-
+  const { bidsIsLoading, bidsIsSuccess, bidInfo } = useSelector((state) => state.bids);
   const { companyId } = useParams();
   const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
 
@@ -92,10 +92,21 @@ export default function EstimateForm(props) {
         })
       );
     }
+    // Client's Status Update After Creating An Estimation
 
+    dispatch(
+      updateClient({
+        status: STATUS_ESTIMATE_IN_PROGRESS,
+        token: user.token,
+        id: currentClientInfo._id
+      })
+    );
+
+    // Bids Addition
     dispatch(
       createBid({
         token: user.token,
+        id: user._id,
         bidFields: {
           ...initialBidInfo,
           rooms: [...allRoom],
@@ -104,8 +115,6 @@ export default function EstimateForm(props) {
         organization: orgId
       })
     );
-
-    // Client's Status Update After Creating An Estimation
 
     handleClose();
   };
@@ -118,13 +127,6 @@ export default function EstimateForm(props) {
 
   useEffect(() => {
     if (bidsIsSuccess) {
-      dispatch(
-        updateClient({
-          status: STATUS_ESTIMATE_IN_PROGRESS,
-          token: user.token,
-          id: currentClientInfo._id
-        })
-      );
       setOpen(false);
       dispatch(
         showMessage({
@@ -135,6 +137,35 @@ export default function EstimateForm(props) {
       dispatch(reset());
     }
   }, [bidsIsSuccess]);
+
+  useEffect(() => {
+    if (selectedStep !== STATUS_NEW_CLIENT) {
+      setInitialBidInfo({
+        startDate: currentClientInfo?.bid?.startDate,
+        endDate: currentClientInfo?.bid?.endDate,
+        type: currentClientInfo?.bid?.type,
+        subType: currentClientInfo?.bid?.subType,
+        isMaterialProvidedByCustomer: currentClientInfo?.bid?.isMaterialProvidedByCustomer
+          ? 'Yes'
+          : 'No'
+      });
+    } else {
+      setInitialBidInfo(JSON.parse(JSON.stringify(estimationFormInitialInfo)));
+    }
+  }, [currentClientInfo]);
+
+  useEffect(() => {
+    if (bidInfo) {
+      dispatch(
+        updateClient({
+          bid: bidInfo?.response?.data?._id,
+          token: user.token,
+          id: currentClientInfo?._id
+        })
+      );
+      dispatch(reset());
+    }
+  }, [bidInfo]);
 
   return (
     <div>
@@ -317,6 +348,7 @@ export default function EstimateForm(props) {
               setOpenEditForm={setOpenEditForm}
               roomRelatedInfo={roomRelatedInfo}
               initialBidInfo={initialBidInfo}
+              currentClientInfo={currentClientInfo}
             />
           )}
           {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
@@ -343,6 +375,3 @@ export default function EstimateForm(props) {
     </div>
   );
 }
-
-
-

@@ -54,6 +54,7 @@ export const initialWindowInfo = {
   style: '',
   height: null,
   length: null,
+  prepHour: null,
   coats: null,
   wallInfo: '',
   paint: false
@@ -62,7 +63,7 @@ export const initialWindowInfo = {
 export const initialBaseBoardTrimInfo = {
   _id: '',
   name: '',
-  prepHour: '',
+  prepHour: null,
   linearFeet: '',
   height: null,
   length: null,
@@ -72,7 +73,7 @@ export const initialBaseBoardTrimInfo = {
 
 export const initialWindowTrimInfo = {
   _id: '',
-  prepHour: '',
+  prepHour: null,
   name: '',
   style: '',
   height: null,
@@ -85,7 +86,7 @@ export const initialWindowTrimInfo = {
 export const initialDoorjambsInfo = {
   _id: '',
   name: '',
-  prepHour: '',
+  prepHour: null,
   linearFeet: '',
   width: null,
   coats: null,
@@ -96,7 +97,7 @@ export const initialDoorjambsInfo = {
 export const initialCrownMoldingInfo = {
   _id: '',
   name: '',
-  prepHour: '',
+  prepHour: null,
   linearFeet: '',
   width: null,
   coats: null,
@@ -107,7 +108,7 @@ export const initialCrownMoldingInfo = {
 export const initialClosetInfo = {
   _id: '',
   name: '',
-  prepHour: '',
+  prepHour: null,
   length: '',
   width: null,
   averageHeight: null,

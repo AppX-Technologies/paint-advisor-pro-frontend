@@ -2,7 +2,6 @@ import AddIcon from '@mui/icons-material/Add';
 import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import { cloneDeep } from 'lodash';
 import React, { useState } from 'react';
-import MaterialsPickerCard from '../../../../../common/MaterialsPickerCard';
 import RoomCard from '../../../../../common/RoomCard';
 import Button from '../../../../../components/Button';
 import { initialRoomState } from '../../../common/roomsInitialStats';
@@ -31,7 +30,7 @@ const InteriorRoomByRoom = ({
   setNonPaintableAreaStats,
   openEditForm,
   setOpenEditForm,
-  roomRelatedInfo
+  roomRelatedInfo,
 }) => {
   const [addRoom, setAddRoom] = useState(false);
   const [editRoom, setEditRoom] = useState(false);
@@ -122,6 +121,7 @@ const InteriorRoomByRoom = ({
           selectedRoomInfo={selectedRoomInfo}
           onCardDelete={onCardDelete}
           setSelectedRoomInfo={setSelectedRoomInfo}
+          
         />
       )}
 

@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ConfirmationModel from '../../../common/ConfirmationModel';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 import ScheduleTheJob from '../../../common/ScheduleTheJob';
-import { bidsStages } from '../../../helpers/bidsStages';
+import { BIDS_STAGES } from '../../../helpers/contants';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
@@ -100,6 +100,8 @@ const ClientInfo = ({
       setScheduleJobDate(null);
     }
   }, [currentClientInfo]);
+
+  console.log(currentClientInfo, 'currentClientInfo');
 
   return (
     <Box>
@@ -218,7 +220,7 @@ const ClientInfo = ({
                                 onClick={() => {
                                   if (info.nextState) {
                                     onSelectedStepChange(
-                                      bidsStages[bidsStages.indexOf(selectedStep) + 1]
+                                      BIDS_STAGES[BIDS_STAGES.indexOf(selectedStep) + 1]
                                     );
                                   }
                                   if (info.text === 'View Files') {

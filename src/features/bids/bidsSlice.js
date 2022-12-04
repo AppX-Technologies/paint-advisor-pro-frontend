@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addOrUpdateItemInArray } from '../../helpers/addRemoveUpdateListHelper';
+import {
+  addOrUpdateItemInArray,
+  updateClientBidInfo
+} from '../../helpers/addRemoveUpdateListHelper';
 import { showMessage } from '../snackbar/snackbarSlice';
 import {
   createClientService,
@@ -34,7 +37,8 @@ const initialState = {
   bidsIsLoading: false,
   bidsIsSuccess: false,
   bidsIsError: false,
-  bidInfo: {}
+  bidInfo: null,
+  statusUpdate: false
 };
 
 // Fetch Client Info
@@ -219,6 +223,9 @@ export const bidsSlice = createSlice({
       state.isCommentSuccess = false;
       state.isSuccess = false;
       state.bidsIsError = false;
+      state.bidInfo = null;
+      state.bidsIsLoading = false;
+      state.bidsIsSuccess = false;
       state.isSuccess = false;
     }
   },
@@ -343,8 +350,7 @@ export const bidsSlice = createSlice({
         state.bidsIsLoading = true;
       })
       .addCase(createBid.fulfilled, (state, { payload }) => {
-        state.bidInfo = payload.data;
-        state.response = addOrUpdateItemInArray(state.clientList, payload.data);
+        state.bidInfo = payload;
         state.bidsIsLoading = false;
         state.bidsIsSuccess = true;
       })

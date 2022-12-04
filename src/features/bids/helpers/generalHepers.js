@@ -23,16 +23,13 @@ export const filterClientsBySelectedStep = (clients, selectedStep) => {
 
 export const readFile = async ({ fileName, mimeType, token }) => {
   try {
-    const response = await axios.get(
-      `https://painting-app-backend.herokuapp.com/api/files/stream/${fileName}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        responseType: 'blob'
-      }
-    );
+    const response = await axios.get(`http://localhost:5001/api/files/stream/${fileName}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      responseType: 'blob'
+    });
     if (response.status < 200 || response.status >= 300) {
       if (response.status === 401) {
         setTimeout(() => {

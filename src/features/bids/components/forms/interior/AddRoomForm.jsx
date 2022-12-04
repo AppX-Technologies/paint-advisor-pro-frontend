@@ -129,7 +129,7 @@ export default function AddRoomForm(props) {
     setOpenAddMoreDetails(value);
   };
 
-  const onCardDelete = (id, field) => {
+  const onCardDelete = (id, field, title) => {
     setItemToBeDeleted({ ...itemToBEDeleted, _id: id, field });
   };
 
@@ -276,9 +276,11 @@ export default function AddRoomForm(props) {
                                       onopenAddMoreDetailsChange={onopenAddMoreDetailsChange}
                                       items={roomComponent}
                                       title={roomComponent.name}
+                                      roomStats={roomStats}
                                       onCardDelete={onCardDelete}
                                       onSelectedRoomInfoChange={onSelectedRoomInfoChange}
                                       field={item.name}
+                                      allRoom={allRoom}
                                       selectedRoomInfo={selectedRoomInfo}
                                       totalArea={roomStats[fieldType].reduce((total, currItem) => {
                                         return total + Number(currItem.area);

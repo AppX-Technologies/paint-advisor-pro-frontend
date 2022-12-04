@@ -19,6 +19,7 @@ const QuickSearch = ({
     handleSearch('');
   }, [clientList]);
 
+
   return (
     <Card sx={{ bgcolor: 'background.paper' }}>
       <Box>

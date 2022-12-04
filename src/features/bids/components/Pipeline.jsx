@@ -51,7 +51,7 @@ const Pipeline = () => {
   const [filteredClietsList, setFilteredClietsList] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [showFilesToView, setShowFilesToView] = useState(null);
-
+  console.log(selectedStep, 'selectedStep');
   const [currentClientInfo, setCurrentClientInfo] = useState(
     findCurrentClient(clientList, selectedListItem)
   );
@@ -82,7 +82,7 @@ const Pipeline = () => {
   const [fileToDelete, setFileToDelete] = useState(null);
   const [bidFilterValues, setBidFilterValues] = useState(cloneDeep(bidStageFilter));
   const [isAscending, setIsAscending] = useState(true);
-  const [selectOption, setSelectOption] = useState('10');
+  const [selectOption, setSelectOption] = useState('100');
   const [sortOption, setSortOption] = useState('createdAt');
   const [comment, setComment] = useState('');
 
@@ -115,6 +115,7 @@ const Pipeline = () => {
       onCurrentStatsChange: setWindowStats,
       initialStats: initialWindowInfo,
       fields: [
+        { name: 'prepHour', label: 'Prep Hour' },
         { name: 'style', label: 'Style' },
         { name: 'height', label: 'Height' },
         { name: 'length', label: 'Length' },
@@ -130,6 +131,7 @@ const Pipeline = () => {
       onCurrentStatsChange: setDoorStats,
       initialStats: initialDoorInfo,
       fields: [
+        { name: 'prepHour', label: 'Prep Hour' },
         { name: 'style', label: 'Style' },
         { name: 'height', label: 'Height' },
         { name: 'length', label: 'Length' },
@@ -263,13 +265,13 @@ const Pipeline = () => {
     setRoomStats(initialRoomState);
   };
 
-  useEffect(() => {
-    if (!selectedListItem) {
-      setSelectedListItem(
-        filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
-      );
-    }
-  }, [clientList, filteredClietsList, selectedStep]);
+  // useEffect(() => {
+  //   if (!selectedListItem) {
+  //     setSelectedListItem(
+  //       filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
+  //     );
+  //   }
+  // }, [clientList, filteredClietsList, selectedStep]);
 
   const onClientFormChange = (formValue) => {
     setOpen(formValue);
@@ -278,6 +280,7 @@ const Pipeline = () => {
 
   const handlePrimaryFilter = () => {
     setSelectedListItem(null);
+    delete bidFilterValues.status;
     dispatch(
       fetchAllClients({
         query: primaryHeaderSearch,
@@ -290,6 +293,10 @@ const Pipeline = () => {
     );
     setSelectedListItem(null);
   };
+
+  useEffect(() => {
+    setSelectedListItem(null);
+  }, [selectedStep]);
 
   return (
     <>
@@ -347,6 +354,8 @@ const Pipeline = () => {
         setOpenEditForm={setOpenEditForm}
         roomRelatedInfo={roomRelatedInfo}
         currentClientInfo={currentClientInfo}
+        setCurrentClientInfo={setCurrentClientInfo}
+        selectedStep={selectedStep}
       />
       <Filter
         showFilter={showFilter}

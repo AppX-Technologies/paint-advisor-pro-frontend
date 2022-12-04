@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const endpoint = 'https://painting-app-backend.herokuapp.com/users';
+const endpoint = 'http://localhost:5001/users';
 
 const CREATE_USERS = `${endpoint}/`;
 const FETCH_USERS = `${endpoint}/list`;

@@ -1,5 +1,5 @@
 import { Box, Tooltip, Typography } from '@mui/material';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
@@ -95,7 +95,8 @@ const Card = ({
                   onClick={() => {
                     onSelectedRoomInfoChange(null);
                     setCurentAddMore(field);
-                    onCardDelete(items._id, field);
+                    onCardDelete(items._id, field, title);
+
                     setOpenDeleteModal(true);
                   }}
                 />
@@ -126,13 +127,15 @@ const Card = ({
             ?.filter((x) => x === 'wallInfo')
             ?.map((item) => {
               return (
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Wall</Typography>
+                <>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Wall</Typography>
 
-                  <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
-                    {items[item]}
-                  </Typography>
-                </Box>
+                    <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
+                      {items[item]}
+                    </Typography>
+                  </Box>
+                </>
               );
             })}
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

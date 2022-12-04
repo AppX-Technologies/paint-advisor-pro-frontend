@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const endpoint = 'https://painting-app-backend.herokuapp.com/processes';
+const endpoint = 'http://localhost:5001/processes';
 const CREATE_PROCESS = `${endpoint}/`;
-const FETCH_PROCESS = `https://painting-app-backend.herokuapp.com/processes/list`;
+const FETCH_PROCESS = `http://localhost:5001/processes/list`;
 const UPDATE_PROCESS = `${endpoint}/`;
 const DELETE_PROCESS = `${endpoint}/`;
 
