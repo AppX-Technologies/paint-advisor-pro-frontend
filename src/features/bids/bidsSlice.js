@@ -12,7 +12,8 @@ import {
   uploadAFileService,
   deleteFileService,
   updateClientStatusService,
-  createBidServices
+  createBidServices,
+  updateBidService
 } from './bidsService';
 
 // initial states
@@ -208,6 +209,22 @@ export const createBid = createAsyncThunk('bids/createBid', async (userData, thu
   }
 });
 
+// Update A Bid
+
+export const updateABid = createAsyncThunk('bids/updateBid', async (userData, thunkAPI) => {
+  try {
+    const response = await updateBidService(userData);
+    return response;
+  } catch (err) {
+    const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const bidsSlice = createSlice({
   name: 'bids',
   initialState,
@@ -355,6 +372,20 @@ export const bidsSlice = createSlice({
         state.bidsIsSuccess = true;
       })
       .addCase(createBid.rejected, (state, action) => {
+        state.bidsIsError = true;
+        state.message = action.payload;
+        state.bidsIsLoading = false;
+        state.bidsIsSuccess = false;
+      })
+      .addCase(updateABid.pending, (state) => {
+        state.bidsIsLoading = true;
+      })
+      .addCase(updateABid.fulfilled, (state, { payload }) => {
+        state.bidInfo = payload;
+        state.bidsIsLoading = false;
+        state.bidsIsSuccess = true;
+      })
+      .addCase(updateABid.rejected, (state, action) => {
         state.bidsIsError = true;
         state.message = action.payload;
         state.bidsIsLoading = false;

@@ -42,8 +42,7 @@ const AddMoreDetails = ({
   setRoomInfoToEdit,
   fields,
   currentLabel,
-  selectedRoomInfo,
-  itemToBEDeleted
+  selectedRoomInfo
 }) => {
   const dispatch = useDispatch();
   const handleCreate = () => {
@@ -79,15 +78,16 @@ const AddMoreDetails = ({
     }
 
     if (!roomInfoToEdit) {
-      delete currentStats._id;
       addIn.push({
         ...currentStats,
+        _id: Date.now().toString(),
         isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
       });
     } else {
       if (!roomInfoToEdit._id) {
         addIn.push({
           ...currentStats,
+          _id: Date.now().toString(),
           isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
         });
       } else {
@@ -120,14 +120,13 @@ const AddMoreDetails = ({
       setCurrentStats({ ...roomInfoToEdit });
     }
   }, [roomInfoToEdit, selectedRoomInfo]);
-  console.log(itemToBEDeleted, currentStats, 'itemToBEDeleted');
 
   return (
     <Dialog open={openAddMoreDetails} PaperProps={{ sx: { minWidth: '60%' } }}>
       <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
         <Stack direction='row' spacing={2}>
           <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
-            {roomInfoToEdit ? (!roomInfoToEdit._id ? 'Edit' : 'Clone') : 'Add New'} {currentLabel}
+            {roomInfoToEdit ? (!roomInfoToEdit._id ? 'Clone' : 'Edit') : 'Add New'} {currentLabel}
           </Typography>
           <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
         </Stack>

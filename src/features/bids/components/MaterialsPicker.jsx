@@ -28,7 +28,7 @@ import {
   sectionInfo
 } from '../helpers/generalHepers';
 
-const MaterialsPicker = ({ allRooms }) => {
+const MaterialsPicker = ({ currentClientInfo }) => {
   const [roomRelatedInfo, setRoomRelatedInfo] = useState(null);
   const [expandArea, setExpandArea] = useState({
     walls: true,
@@ -136,15 +136,15 @@ const MaterialsPicker = ({ allRooms }) => {
   };
 
   useEffect(() => {
-    setRoomRelatedInfo([...groupedPaintableMaterials(allRooms)]);
-  }, [allRooms]);
+    setRoomRelatedInfo([...groupedPaintableMaterials(currentClientInfo?.bid?.rooms)]);
+  }, [currentClientInfo?.bid?.rooms]);
 
   useEffect(() => {
-    allRooms.forEach((room) => {
+    currentClientInfo?.bid?.rooms.forEach((room) => {
       completelyFilledRooms[room] = false;
     });
     setCompletelyFilledRooms({ ...completelyFilledRooms });
-  }, [allRooms]);
+  }, [currentClientInfo?.bid?.rooms]);
 
   return (
     <>

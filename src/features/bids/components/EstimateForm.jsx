@@ -19,7 +19,7 @@ import DialogContent from '@mui/material/DialogContent';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, omit } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,7 +29,7 @@ import { STATUS_ESTIMATE_IN_PROGRESS, STATUS_NEW_CLIENT } from '../../../helpers
 import { isSystemUser } from '../../../helpers/roles';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
-import { createBid, reset, updateClient } from '../bidsSlice';
+import { createBid, reset, updateABid, updateClient } from '../bidsSlice';
 import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
 
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
@@ -58,13 +58,14 @@ export default function EstimateForm(props) {
     setOpenEditForm,
     roomRelatedInfo,
     currentClientInfo,
-    selectedStep
+    selectedStep,
+    setCurrentClientInfo
   } = props;
 
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
-  const { bidsIsLoading, bidsIsSuccess, bidInfo } = useSelector((state) => state.bids);
+  const { bidsIsLoading, bidsIsSuccess, bidInfo, bidsIsError } = useSelector((state) => state.bids);
   const { companyId } = useParams();
   const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
 
@@ -72,6 +73,8 @@ export default function EstimateForm(props) {
     setOpen(false);
     setRoomStats(initialRoomState);
   };
+
+  console.log(initialBidInfo, 'initialBidInfo');
 
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
@@ -93,30 +96,48 @@ export default function EstimateForm(props) {
       );
     }
     // Client's Status Update After Creating An Estimation
+    if (selectedStep === STATUS_NEW_CLIENT) {
+      dispatch(
+        updateClient({
+          status: STATUS_ESTIMATE_IN_PROGRESS,
+          token: user.token,
+          id: currentClientInfo._id
+        })
+      );
+      currentClientInfo?.bid?.rooms.forEach((room) => {
+        delete room._id;
+      });
+    }
 
-    dispatch(
-      updateClient({
-        status: STATUS_ESTIMATE_IN_PROGRESS,
-        token: user.token,
-        id: currentClientInfo._id
-      })
-    );
+    if (selectedStep === STATUS_NEW_CLIENT) {
+      dispatch(
+        createBid({
+          token: user.token,
+          id: user._id,
+          bidFields: {
+            ...initialBidInfo,
+            rooms: [...currentClientInfo.bid.rooms],
+            isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'Yes'
+          },
+          organization: orgId
+        })
+      );
+    } else {
+      // Bids Addition
 
-    // Bids Addition
-    dispatch(
-      createBid({
-        token: user.token,
-        id: user._id,
-        bidFields: {
-          ...initialBidInfo,
-          rooms: [...allRoom],
-          isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'yes'
-        },
-        organization: orgId
-      })
-    );
-
-    handleClose();
+      dispatch(
+        updateABid({
+          token: user.token,
+          _id: currentClientInfo.bid._id,
+          bidFields: {
+            ...initialBidInfo,
+            rooms: [...currentClientInfo.bid.rooms],
+            isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'Yes'
+          },
+          organization: orgId
+        })
+      );
+    }
   };
 
   React.useEffect(() => {
@@ -135,24 +156,43 @@ export default function EstimateForm(props) {
         })
       );
       dispatch(reset());
+      handleClose();
     }
   }, [bidsIsSuccess]);
 
   useEffect(() => {
-    if (selectedStep !== STATUS_NEW_CLIENT) {
-      setInitialBidInfo({
-        startDate: currentClientInfo?.bid?.startDate,
-        endDate: currentClientInfo?.bid?.endDate,
-        type: currentClientInfo?.bid?.type,
-        subType: currentClientInfo?.bid?.subType,
-        isMaterialProvidedByCustomer: currentClientInfo?.bid?.isMaterialProvidedByCustomer
-          ? 'Yes'
-          : 'No'
-      });
-    } else {
-      setInitialBidInfo(JSON.parse(JSON.stringify(estimationFormInitialInfo)));
+    if (bidsIsError) {
+      dispatch(
+        showMessage({
+          message: `Something Went Wrong`,
+          severity: 'error'
+        })
+      );
+      dispatch(reset());
     }
-  }, [currentClientInfo]);
+  }, [bidsIsError]);
+
+  useEffect(() => {
+    if (open) {
+      if (selectedStep !== STATUS_NEW_CLIENT) {
+        setInitialBidInfo(
+          JSON.parse(
+            JSON.stringify({
+              startDate: currentClientInfo?.bid?.startDate,
+              endDate: currentClientInfo?.bid?.endDate,
+              type: currentClientInfo?.bid?.type,
+              subType: currentClientInfo?.bid?.subType,
+              isMaterialProvidedByCustomer: currentClientInfo?.bid?.isMaterialProvidedByCustomer
+                ? 'Yes'
+                : 'No'
+            })
+          )
+        );
+      } else {
+        setInitialBidInfo(JSON.parse(JSON.stringify(estimationFormInitialInfo)));
+      }
+    }
+  }, [open]);
 
   useEffect(() => {
     if (bidInfo) {
@@ -187,7 +227,7 @@ export default function EstimateForm(props) {
           </Button>
         </Toolbar>
 
-        {bidsIsLoading && <LinearProgress color='success' />}
+        {bidsIsLoading && <LinearProgress color='success' sx={{ height: '5px' }} />}
 
         <DialogContent>
           <Grid container spacing={2} mt={2}>
@@ -349,6 +389,7 @@ export default function EstimateForm(props) {
               roomRelatedInfo={roomRelatedInfo}
               initialBidInfo={initialBidInfo}
               currentClientInfo={currentClientInfo}
+              setCurrentClientInfo={setCurrentClientInfo}
             />
           )}
           {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Man Hour' && (

@@ -297,6 +297,11 @@ const Pipeline = () => {
   useEffect(() => {
     setSelectedListItem(null);
   }, [selectedStep]);
+  // useEffect(() => {
+  //   if (currentClientInfo) {
+  //     setAllRoom([...currentClientInfo.bid.rooms]);
+  //   }
+  // }, currentClientInfo);
 
   return (
     <>

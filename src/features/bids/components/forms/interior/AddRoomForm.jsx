@@ -55,8 +55,8 @@ export default function AddRoomForm(props) {
     open,
     setOpen,
     roomStats,
+    currentClientInfo,
     setRoomStats,
-    allRoom,
     setAllRoom,
     openAddMoreDetails,
     setOpenAddMoreDetails,
@@ -70,11 +70,11 @@ export default function AddRoomForm(props) {
     currentAddMore,
     itemToBEDeleted,
     setItemToBeDeleted,
-    setCurentAddMore
+    setCurentAddMore,
+    setCurrentClientInfo
   } = props;
 
   const [roomInfoToEdit, setRoomInfoToEdit] = useState(null);
-
   const [seeMore, setSeeMore] = useState(false);
 
   const handleClose = () => {
@@ -94,7 +94,7 @@ export default function AddRoomForm(props) {
     }
 
     if (
-      allRoom
+      currentClientInfo?.bid?.rooms
         .filter((room) => room._id !== roomStats._id)
         .some((room) => room.roomName === roomStats.roomName)
     ) {
@@ -105,26 +105,33 @@ export default function AddRoomForm(props) {
         })
       );
     }
+
     if (!roomStats._id) {
-      setAllRoom([...allRoom, { ...roomStats }]);
+      setCurrentClientInfo({
+        ...currentClientInfo,
+        bid: {
+          ...currentClientInfo?.bid,
+          rooms: [...currentClientInfo.bid.rooms, { ...roomStats, _id: Date.now().toString() }]
+        }
+      });
     } else {
-      allRoom.splice(
-        allRoom.findIndex((room) => room._id === roomStats._id),
-        1,
-        roomStats
-      );
-      setAllRoom([...allRoom]);
+      setCurrentClientInfo({
+        ...currentClientInfo,
+        bid: {
+          ...currentClientInfo?.bid,
+          rooms: [
+            ...currentClientInfo.bid.rooms.filter((room) => room._id !== roomStats._id),
+            { ...roomStats }
+          ]
+        }
+      });
     }
-    dispatch(
-      showMessage({
-        message: `Room Updated Successfully.`,
-        severity: 'success'
-      })
-    );
+
     handleClose();
     setRoomStats({ ...initialRoomState });
     onSelectedRoomInfoChange(null);
   };
+
   const onopenAddMoreDetailsChange = (value) => {
     setOpenAddMoreDetails(value);
   };
@@ -280,7 +287,7 @@ export default function AddRoomForm(props) {
                                       onCardDelete={onCardDelete}
                                       onSelectedRoomInfoChange={onSelectedRoomInfoChange}
                                       field={item.name}
-                                      allRoom={allRoom}
+                                      currentClientInfo={currentClientInfo}
                                       selectedRoomInfo={selectedRoomInfo}
                                       totalArea={roomStats[fieldType].reduce((total, currItem) => {
                                         return total + Number(currItem.area);

@@ -80,17 +80,19 @@ export const humanFileSize = (bytes, si = false, dp = 1) => {
 };
 
 export const findPaintableMaterials = (rooms) => {
-  const paintableAreaOfARoom = rooms.map((room) => {
-    return Object.keys(room)
-      .filter((item) => Array.isArray(room[item]))
-      .reduce((total, roomEle) => {
-        return {
-          ...total,
-          [roomEle]: roomEle !== 'walls' ? room[roomEle].filter((a) => a.paint) : room[roomEle],
-          roomName: room.roomName
-        };
-      }, {});
-  });
+  const paintableAreaOfARoom =
+    rooms &&
+    rooms.map((room) => {
+      return Object.keys(room)
+        .filter((item) => Array.isArray(room[item]))
+        .reduce((total, roomEle) => {
+          return {
+            ...total,
+            [roomEle]: roomEle !== 'walls' ? room[roomEle].filter((a) => a.paint) : room[roomEle],
+            roomName: room.roomName
+          };
+        }, {});
+    });
 
   return paintableAreaOfARoom;
 };
@@ -99,25 +101,29 @@ export const groupedPaintableMaterials = (rooms) => {
   const paintableAreaAccrToSection = [];
 
   const allPaintAbleArea = findPaintableMaterials(rooms);
-  allPaintAbleArea.forEach((paintableArea) => {
-    Object.keys(paintableArea)
-      .filter((a) => a !== 'roomName')
-      .forEach((paintableEle) => {
-        const foundItem = paintableAreaAccrToSection.find((item) => item.name === paintableEle);
-        if (foundItem) {
-          foundItem.mainItems.push({
-            name: paintableArea.roomName,
-            values: [...paintableArea[paintableEle]]
-          });
-        } else {
-          paintableAreaAccrToSection.push({
-            name: paintableEle,
-            mainItems: [{ name: paintableArea.roomName, values: [...paintableArea[paintableEle]] }]
-          });
-        }
-      });
-  });
-  return paintableAreaAccrToSection;
+  if (allPaintAbleArea) {
+    allPaintAbleArea.forEach((paintableArea) => {
+      Object.keys(paintableArea)
+        .filter((a) => a !== 'roomName')
+        .forEach((paintableEle) => {
+          const foundItem = paintableAreaAccrToSection.find((item) => item.name === paintableEle);
+          if (foundItem) {
+            foundItem.mainItems.push({
+              name: paintableArea.roomName,
+              values: [...paintableArea[paintableEle]]
+            });
+          } else {
+            paintableAreaAccrToSection.push({
+              name: paintableEle,
+              mainItems: [
+                { name: paintableArea.roomName, values: [...paintableArea[paintableEle]] }
+              ]
+            });
+          }
+        });
+    });
+    return paintableAreaAccrToSection;
+  }
 };
 
 export const onlyWindows = (rooms) => {

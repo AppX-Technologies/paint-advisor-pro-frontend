@@ -14,7 +14,7 @@ const InteriorRoomByRoom = ({
   roomStats,
   setRoomStats,
   initialBidInfo,
-  allRoom,
+  currentClientInfo,
   setAllRoom,
   openAddMoreDetails,
   setOpenAddMoreDetails,
@@ -31,6 +31,7 @@ const InteriorRoomByRoom = ({
   openEditForm,
   setOpenEditForm,
   roomRelatedInfo,
+  setCurrentClientInfo
 }) => {
   const [addRoom, setAddRoom] = useState(false);
   const [editRoom, setEditRoom] = useState(false);
@@ -43,11 +44,11 @@ const InteriorRoomByRoom = ({
   });
 
   const onCardDelete = (id) => {
-    allRoom.splice(
-      allRoom.findIndex((room) => room._id === id),
+    currentClientInfo?.bid?.rooms.splice(
+      currentClientInfo?.bid?.rooms.findIndex((room) => room._id === id),
       1
     );
-    setAllRoom([...allRoom]);
+    setAllRoom([...currentClientInfo.bid.rooms]);
   };
   const onCardEdit = () => {
     setEditRoom(true);
@@ -62,7 +63,7 @@ const InteriorRoomByRoom = ({
       {/* Main Form Body  */}
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Typography mt={2} mr={1}>
-          Rooms({allRoom.length})
+          Rooms({currentClientInfo?.bid?.rooms.length})
         </Typography>
         <Tooltip title='Add Room' placement='top'>
           <Button
@@ -79,8 +80,9 @@ const InteriorRoomByRoom = ({
       </Box>
       <Box>
         <Grid container spacing={1} mt={2}>
-          {allRoom.length !== 0 &&
-            allRoom.map((room) => {
+          {currentClientInfo &&
+            currentClientInfo?.bid?.rooms.length !== 0 &&
+            currentClientInfo?.bid?.rooms.map((room) => {
               return (
                 <Grid xs={6} md={6} mt={1}>
                   <RoomCard
@@ -121,7 +123,6 @@ const InteriorRoomByRoom = ({
           selectedRoomInfo={selectedRoomInfo}
           onCardDelete={onCardDelete}
           setSelectedRoomInfo={setSelectedRoomInfo}
-          
         />
       )}
 
@@ -131,7 +132,7 @@ const InteriorRoomByRoom = ({
         roomStats={roomStats}
         setRoomStats={setRoomStats}
         initialRoomState={initialRoomState}
-        allRoom={allRoom}
+        currentClientInfo={currentClientInfo}
         setAllRoom={setAllRoom}
         openAddMoreDetails={openAddMoreDetails}
         wallStats={wallStats}
@@ -156,10 +157,12 @@ const InteriorRoomByRoom = ({
         itemToBEDeleted={itemToBEDeleted}
         setItemToBeDeleted={setItemToBeDeleted}
         setCurentAddMore={setCurentAddMore}
+        setCurrentClientInfo={setCurrentClientInfo}
       />
-      {initialBidInfo.isMaterialProvidedByCustomer === 'No' && allRoom.length !== 0 && (
-        <MaterialsPicker allRooms={allRoom} />
-      )}
+      {initialBidInfo.isMaterialProvidedByCustomer === 'No' &&
+        currentClientInfo?.bid?.rooms.length !== 0 && (
+          <MaterialsPicker currentClientInfo={currentClientInfo} />
+        )}
     </Box>
   );
 };

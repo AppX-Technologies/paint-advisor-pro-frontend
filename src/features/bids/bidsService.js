@@ -172,6 +172,7 @@ export const createBidServices = async (userData) => {
 };
 
 export const updateBidService = async (userData) => {
+  console.log(userData.rooms, 'userData.bidFields.bidFields');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -182,10 +183,11 @@ export const updateBidService = async (userData) => {
   const response = await axios.put(
     `${updateBid}/${userData._id}`,
     {
-      ...userData.bidFields,
-      organization: userData.organization
+      ...userData.bidFields
     },
     config
   );
-  return { response, clientId: userData.id };
+  console.log(response, 'jfhdghjdfghj');
+
+  return response;
 };
