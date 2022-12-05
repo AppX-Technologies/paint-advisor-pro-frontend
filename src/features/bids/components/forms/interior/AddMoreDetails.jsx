@@ -19,6 +19,8 @@ import {
 } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import uuid from 'react-uuid';
+
 import { validationInfo } from '../../../../../common/FormTextField';
 import Button from '../../../../../components/Button';
 import {
@@ -44,6 +46,7 @@ const AddMoreDetails = ({
   currentLabel,
   selectedRoomInfo
 }) => {
+  console.log(roomInfoToEdit, 'roomInfoToEdit');
   const dispatch = useDispatch();
   const handleCreate = () => {
     // For empty fields
@@ -66,8 +69,8 @@ const AddMoreDetails = ({
     if (
       titleField !== NONPAINTABLEAREAFIELD &&
       addIn
-        .filter((item) => item._id !== currentStats._id)
-        .some((item) => item.name === currentStats.name)
+        ?.filter((item) => item.id !== currentStats.id)
+        ?.some((item) => item.name === currentStats.name)
     ) {
       return dispatch(
         showMessage({
@@ -78,24 +81,36 @@ const AddMoreDetails = ({
     }
 
     if (!roomInfoToEdit) {
-      addIn.push({
+      delete currentStats._id;
+      addIn?.push({
         ...currentStats,
-        _id: Date.now().toString(),
+        id: uuid(),
         isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
       });
+      addIn?.forEach((item) => {
+        delete item._id;
+      });
     } else {
-      if (!roomInfoToEdit._id) {
-        addIn.push({
-          ...currentStats,
-          _id: Date.now().toString(),
-          isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
-        });
-      } else {
-        addIn.splice(
-          addIn.findIndex((item) => item._id === roomInfoToEdit._id),
+      if (Object.keys(roomInfoToEdit).some((roomInfo) => roomInfo === 'id')) {
+        delete currentStats._id;
+        addIn?.splice(
+          addIn.findIndex((item) => item.id === roomInfoToEdit.id),
           1,
           { ...currentStats, isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined }
         );
+        addIn.forEach((item) => {
+          delete item._id;
+        });
+      } else {
+        delete currentStats._id;
+        addIn?.push({
+          ...currentStats,
+          id: uuid(),
+          isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
+        });
+        addIn.forEach((item) => {
+          delete item._id;
+        });
       }
     }
     dispatch(
@@ -115,6 +130,8 @@ const AddMoreDetails = ({
     setOpenAddMoreDetails(false);
   };
 
+  console.log(roomInfoToEdit, 'roomInfoToEdit');
+
   useEffect(() => {
     if (roomInfoToEdit) {
       setCurrentStats({ ...roomInfoToEdit });
@@ -126,7 +143,7 @@ const AddMoreDetails = ({
       <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
         <Stack direction='row' spacing={2}>
           <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
-            {roomInfoToEdit ? (!roomInfoToEdit._id ? 'Clone' : 'Edit') : 'Add New'} {currentLabel}
+            {roomInfoToEdit ? (!roomInfoToEdit.id ? 'Clone' : 'Edit') : 'Add New'} {currentLabel}
           </Typography>
           <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
         </Stack>

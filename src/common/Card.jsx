@@ -61,7 +61,7 @@ const Card = ({
                     cursor: 'pointer'
                   }}
                   onClick={() => {
-                    setRoomInfoToEdit({ ...cloneDeep(items), _id: null });
+                    setRoomInfoToEdit({ ...cloneDeep(items), id: null });
                     onopenAddMoreDetailsChange(true);
                     setCurentAddMore(field);
                   }}
@@ -95,7 +95,7 @@ const Card = ({
                   onClick={() => {
                     onSelectedRoomInfoChange(null);
                     setCurentAddMore(field);
-                    onCardDelete(items._id, field, title);
+                    onCardDelete(items.id, field, title);
 
                     setOpenDeleteModal(true);
                   }}
@@ -182,7 +182,7 @@ const Card = ({
                         cursor: 'pointer'
                       }}
                       onClick={() => {
-                        setRoomInfoToEdit({ ...cloneDeep(items), _id: null });
+                        setRoomInfoToEdit({ ...cloneDeep(items), id: null });
                         onopenAddMoreDetailsChange(true);
                         setCurentAddMore(field);
                       }}
@@ -216,7 +216,7 @@ const Card = ({
                       onClick={() => {
                         onSelectedRoomInfoChange(null);
                         setCurentAddMore(field);
-                        onCardDelete(items._id, field);
+                        onCardDelete(items.id, field);
                         setOpenDeleteModal(true);
                       }}
                     />

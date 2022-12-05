@@ -19,7 +19,7 @@ import DialogContent from '@mui/material/DialogContent';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { cloneDeep, omit } from 'lodash';
+import { cloneDeep } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -59,10 +59,12 @@ export default function EstimateForm(props) {
     roomRelatedInfo,
     currentClientInfo,
     selectedStep,
-    setCurrentClientInfo
+    setCurrentClientInfo,
+    onSelecetedListItemChange
   } = props;
 
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
+  const [previousStateOfRooms, setPreviousStateOfRooms] = React.useState(null);
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { bidsIsLoading, bidsIsSuccess, bidInfo, bidsIsError } = useSelector((state) => state.bids);
@@ -73,8 +75,6 @@ export default function EstimateForm(props) {
     setOpen(false);
     setRoomStats(initialRoomState);
   };
-
-  console.log(initialBidInfo, 'initialBidInfo');
 
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
@@ -123,8 +123,6 @@ export default function EstimateForm(props) {
         })
       );
     } else {
-      // Bids Addition
-
       dispatch(
         updateABid({
           token: user.token,
@@ -207,6 +205,12 @@ export default function EstimateForm(props) {
     }
   }, [bidInfo]);
 
+  useEffect(() => {
+    if (open) {
+      setPreviousStateOfRooms({ ...currentClientInfo.bid });
+    }
+  }, [open]);
+
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>
@@ -222,7 +226,11 @@ export default function EstimateForm(props) {
               height: '30px',
               padding: '3px'
             }}
-            onClick={handleClose}>
+            onClick={() => {
+              handleClose();
+              currentClientInfo.bid = { ...previousStateOfRooms };
+              setCurrentClientInfo({ ...currentClientInfo });
+            }}>
             Close <CloseIcon sx={{ height: '15px' }} />
           </Button>
         </Toolbar>
@@ -407,7 +415,14 @@ export default function EstimateForm(props) {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={() => {
+              handleClose();
+              currentClientInfo.bid = { ...previousStateOfRooms };
+              setCurrentClientInfo({ ...currentClientInfo });
+            }}>
+            Cancel
+          </Button>
           <Button type='submit' variant='contained' onClick={handleBidsSubmission}>
             Save
           </Button>

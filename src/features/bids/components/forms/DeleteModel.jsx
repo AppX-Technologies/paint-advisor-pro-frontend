@@ -25,18 +25,15 @@ export function DeleteItemModel({
   const dispatch = useDispatch();
   const handleClose = () => {
     setOpenDeleteModal(false);
+    setSelectedRoomInfo(null);
   };
 
   const handleDelete = () => {
     if (selectedRoomInfo) {
-      onCardDelete(selectedRoomInfo._id);
+      onCardDelete(selectedRoomInfo.roomName);
       setSelectedRoomInfo(null);
     } else {
-      roomRelatedInfo.splice(
-        roomRelatedInfo.findIndex((x) => x._id === id),
-        1
-      );
-      setRoomStats({ ...roomStats });
+      setRoomStats([...roomRelatedInfo.filter((x) => x._id !== id)]);
     }
 
     setOpenDeleteModal(false);

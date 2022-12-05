@@ -54,9 +54,9 @@ export default function AddRoomForm(props) {
   const {
     open,
     setOpen,
-    roomStats,
+    roomStats: roomFormValue, // Updateable
     currentClientInfo,
-    setRoomStats,
+    setRoomStats: setRoomFormValue,
     setAllRoom,
     openAddMoreDetails,
     setOpenAddMoreDetails,
@@ -80,11 +80,12 @@ export default function AddRoomForm(props) {
   const handleClose = () => {
     setOpen(false);
     onRoomDetailsReset();
-    setRoomStats({ ...initialRoomState });
+    setRoomFormValue({ ...initialRoomState });
     onSelectedRoomInfoChange(null);
   };
+
   const handleCreate = () => {
-    if (!roomStats.roomName) {
+    if (!roomFormValue.roomName) {
       return dispatch(
         showMessage({
           message: 'Room Name cannot be empty',
@@ -94,41 +95,55 @@ export default function AddRoomForm(props) {
     }
 
     if (
-      currentClientInfo?.bid?.rooms
-        .filter((room) => room._id !== roomStats._id)
-        .some((room) => room.roomName === roomStats.roomName)
+      (!roomFormValue.edit || !Object.keys(roomFormValue).some((item) => item === 'edit')) &&
+      currentClientInfo?.bid?.rooms.some((room) => room.roomName === roomFormValue.roomName)
     ) {
       return dispatch(
         showMessage({
-          message: `Room Name '${roomStats.roomName}' Already Exists`,
+          message: `Room Name '${roomFormValue.roomName}' Already Exists`,
           severity: 'error'
         })
       );
     }
 
-    if (!roomStats._id) {
-      setCurrentClientInfo({
-        ...currentClientInfo,
-        bid: {
-          ...currentClientInfo?.bid,
-          rooms: [...currentClientInfo.bid.rooms, { ...roomStats, _id: Date.now().toString() }]
-        }
-      });
+    if (Object.keys(roomFormValue).some((item) => item === 'edit')) {
+      if (roomFormValue.edit) {
+        delete roomFormValue.edit;
+
+        setCurrentClientInfo({
+          ...currentClientInfo,
+          bid: {
+            ...currentClientInfo.bid,
+            rooms: [
+              ...currentClientInfo.bid.rooms.filter(
+                (room) => room.roomName !== selectedRoomInfo.roomName
+              ),
+              { ...roomFormValue }
+            ]
+          }
+        });
+      } else {
+        delete roomFormValue.edit;
+        setCurrentClientInfo({
+          ...currentClientInfo,
+          bid: {
+            ...currentClientInfo?.bid,
+            rooms: [...currentClientInfo.bid.rooms, { ...roomFormValue }]
+          }
+        });
+      }
     } else {
       setCurrentClientInfo({
         ...currentClientInfo,
         bid: {
           ...currentClientInfo?.bid,
-          rooms: [
-            ...currentClientInfo.bid.rooms.filter((room) => room._id !== roomStats._id),
-            { ...roomStats }
-          ]
+          rooms: [...currentClientInfo.bid.rooms, { ...roomFormValue }]
         }
       });
     }
 
     handleClose();
-    setRoomStats({ ...initialRoomState });
+    setRoomFormValue({ ...initialRoomState });
     onSelectedRoomInfoChange(null);
   };
 
@@ -136,8 +151,8 @@ export default function AddRoomForm(props) {
     setOpenAddMoreDetails(value);
   };
 
-  const onCardDelete = (id, field, title) => {
-    setItemToBeDeleted({ ...itemToBEDeleted, _id: id, field });
+  const onCardDelete = (roomName, field, title) => {
+    setItemToBeDeleted({ ...itemToBEDeleted, roomName, field });
   };
 
   React.useEffect(() => {
@@ -149,8 +164,9 @@ export default function AddRoomForm(props) {
   }, [currentAddMore, roomRelatedInfo]);
 
   React.useEffect(() => {
+
     if (selectedRoomInfo) {
-      setRoomStats({ ...selectedRoomInfo });
+      setRoomFormValue({ ...selectedRoomInfo });
     }
   }, [open, selectedRoomInfo]);
 
@@ -160,7 +176,7 @@ export default function AddRoomForm(props) {
         <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
           <Stack direction='row' spacing={2}>
             <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
-              Add New Room
+              {roomFormValue.edit ? 'Edit' : 'Add New'} Room
             </Typography>
             <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
           </Stack>
@@ -176,11 +192,11 @@ export default function AddRoomForm(props) {
                 <Autocomplete
                   id='free-solo-demo'
                   size='small'
-                  value={roomStats.roomName}
+                  value={roomFormValue.roomName}
                   freeSolo
                   onInputChange={(event, newInputValue) => {
-                    roomStats.roomName = newInputValue;
-                    setRoomStats({ ...roomStats });
+                    roomFormValue.roomName = newInputValue;
+                    setRoomFormValue({ ...roomFormValue });
                   }}
                   sx={{ width: '100%' }}
                   options={ROOM_TYPES.map((option) => option)}
@@ -227,7 +243,9 @@ export default function AddRoomForm(props) {
                             {item.label}
 
                             {` (${
-                              roomStats[fieldType]?.length ? roomStats[fieldType]?.length : 0
+                              roomFormValue[fieldType]?.length
+                                ? roomFormValue[fieldType]?.length
+                                : 0
                             })`}
                           </InputLabel>
 
@@ -240,7 +258,7 @@ export default function AddRoomForm(props) {
                             }}
                           />
                         </Box>
-                        {roomStats[fieldType]?.length === 0 || !roomStats[fieldType] ? (
+                        {roomFormValue[fieldType]?.length === 0 || !roomFormValue[fieldType] ? (
                           <></>
                         ) : showCards[fieldType] ? (
                           <Tooltip title='Less'>
@@ -271,8 +289,8 @@ export default function AddRoomForm(props) {
                       {showCards[item.name] && (
                         <>
                           <Grid container alignItems='center' justify='center'>
-                            {roomStats[fieldType].length !== 0 &&
-                              roomStats[fieldType].map((roomComponent) => {
+                            {roomFormValue[fieldType]?.length !== 0 &&
+                              roomFormValue[fieldType]?.map((roomComponent) => {
                                 return (
                                   <Grid xs={10} md={3}>
                                     <Card
@@ -283,15 +301,18 @@ export default function AddRoomForm(props) {
                                       onopenAddMoreDetailsChange={onopenAddMoreDetailsChange}
                                       items={roomComponent}
                                       title={roomComponent.name}
-                                      roomStats={roomStats}
+                                      roomStats={roomFormValue}
                                       onCardDelete={onCardDelete}
                                       onSelectedRoomInfoChange={onSelectedRoomInfoChange}
                                       field={item.name}
                                       currentClientInfo={currentClientInfo}
                                       selectedRoomInfo={selectedRoomInfo}
-                                      totalArea={roomStats[fieldType].reduce((total, currItem) => {
-                                        return total + Number(currItem.area);
-                                      }, 0)}
+                                      totalArea={roomFormValue[fieldType].reduce(
+                                        (total, currItem) => {
+                                          return total + Number(currItem.area);
+                                        },
+                                        0
+                                      )}
                                     />
                                   </Grid>
                                 );
@@ -350,13 +371,12 @@ export default function AddRoomForm(props) {
         {openAddMoreDetails && filteredRoomInfo && (
           <AddMoreDetails
             openAddMoreDetails={openAddMoreDetails}
-            roomStats={roomStats}
-            setRoomStat={setRoomStats}
+            roomStats={roomFormValue}
             setOpenAddMoreDetails={setOpenAddMoreDetails}
             titleField={currentAddMore}
             currentStats={filteredRoomInfo.currentStats}
             setCurrentStats={filteredRoomInfo.onCurrentStatsChange}
-            addIn={roomStats[currentAddMore]}
+            addIn={roomFormValue[currentAddMore]}
             clearWallStats={clearWallStats}
             roomInfoToEdit={roomInfoToEdit && roomInfoToEdit}
             setRoomInfoToEdit={setRoomInfoToEdit}

@@ -43,19 +43,22 @@ const InteriorRoomByRoom = ({
     field: ''
   });
 
-  const onCardDelete = (id) => {
-    currentClientInfo?.bid?.rooms.splice(
-      currentClientInfo?.bid?.rooms.findIndex((room) => room._id === id),
-      1
-    );
-    setAllRoom([...currentClientInfo.bid.rooms]);
+  const onSelectedRoomInfoChange = (value) => {
+    setSelectedRoomInfo(value);
+  };
+
+  const onCardDelete = (roomName) => {
+    setCurrentClientInfo({
+      ...currentClientInfo,
+      bid: {
+        ...currentClientInfo.bid,
+        rooms: [...currentClientInfo.bid.rooms.filter((room) => room.roomName !== roomName)]
+      }
+    });
+    onSelectedRoomInfoChange(null);
   };
   const onCardEdit = () => {
     setEditRoom(true);
-  };
-
-  const onSelectedRoomInfoChange = (value) => {
-    setSelectedRoomInfo(value);
   };
 
   return (
@@ -92,7 +95,7 @@ const InteriorRoomByRoom = ({
                     items={{
                       roomName: room.roomName,
                       WallDetail:
-                        room.walls.length !== 0 ? findSameTypeOfWall(room.walls) : 'No Walls',
+                        room?.walls?.length !== 0 ? findSameTypeOfWall(room.walls) : 'No Walls',
                       WindowDetail:
                         room.windows.length !== 0 ? findSameTypeOfWall(room.windows) : 'No Windows',
                       PaintableArea: `${

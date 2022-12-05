@@ -44,9 +44,10 @@ const RoomCard = ({
                 cursor: 'pointer'
               }}
               onClick={() => {
-                onSelectedRoomInfoChange({ ...cloneDeep(completeRoomInfo), _id: null });
-
-                setAddRoom(true);
+                onSelectedRoomInfoChange({ ...cloneDeep(completeRoomInfo), edit: false });
+                setTimeout(() => {
+                  setAddRoom(true);
+                }, 2000);
               }}
               size='small'
             />
@@ -62,7 +63,7 @@ const RoomCard = ({
               size='small'
               onClick={() => {
                 onCardEdit(items.roomName);
-                onSelectedRoomInfoChange({ ...cloneDeep(completeRoomInfo) });
+                onSelectedRoomInfoChange({ ...cloneDeep(completeRoomInfo), edit: true });
                 setAddRoom(true);
               }}
             />
@@ -78,7 +79,6 @@ const RoomCard = ({
               onClick={() => {
                 setOpenDeleteModal(true);
                 onSelectedRoomInfoChange({ ...completeRoomInfo });
-                onCardDelete(items.roomName);
               }}
             />
           </Tooltip>
