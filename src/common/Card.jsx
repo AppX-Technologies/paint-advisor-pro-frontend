@@ -16,12 +16,16 @@ const Card = ({
   setRoomInfoToEdit,
   onopenAddMoreDetailsChange,
   setOpenDeleteModal,
-  setCurentAddMore
+  setCurentAddMore,
+  setitemToBeDeleted,
+  roomName,
+  itemToBeDeleted
 }) => {
   const dimension = useMemo(() => {
     return `${items.length}x${items.height ? items.height : items.width}`;
   }, [items]);
 
+  console.log(itemToBeDeleted, 'itemToBeDeleted');
   return (
     <Box
       className='card-box'
@@ -61,7 +65,7 @@ const Card = ({
                     cursor: 'pointer'
                   }}
                   onClick={() => {
-                    setRoomInfoToEdit({ ...cloneDeep(items), id: null });
+                    setRoomInfoToEdit({ ...cloneDeep(items), edit: false });
                     onopenAddMoreDetailsChange(true);
                     setCurentAddMore(field);
                   }}
@@ -78,7 +82,7 @@ const Card = ({
                   }}
                   size='small'
                   onClick={() => {
-                    setRoomInfoToEdit({ ...cloneDeep(items) });
+                    setRoomInfoToEdit({ ...cloneDeep(items), edit: true });
                     onopenAddMoreDetailsChange(true);
                     setCurentAddMore(field);
                   }}
@@ -93,11 +97,9 @@ const Card = ({
                   }}
                   size='small'
                   onClick={() => {
-                    onSelectedRoomInfoChange(null);
                     setCurentAddMore(field);
-                    onCardDelete(items.id, field, title);
-
                     setOpenDeleteModal(true);
+                    setitemToBeDeleted({ title, field, roomName });
                   }}
                 />
               </Tooltip>

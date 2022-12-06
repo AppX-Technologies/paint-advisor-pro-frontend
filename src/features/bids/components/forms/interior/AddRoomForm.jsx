@@ -68,8 +68,8 @@ export default function AddRoomForm(props) {
     openDeleteModal,
     setOpenDeleteModal,
     currentAddMore,
-    itemToBEDeleted,
-    setItemToBeDeleted,
+    itemToBeDeleted,
+    setitemToBeDeleted,
     setCurentAddMore,
     setCurrentClientInfo
   } = props;
@@ -151,20 +151,11 @@ export default function AddRoomForm(props) {
     setOpenAddMoreDetails(value);
   };
 
-  const onCardDelete = (roomName, field, title) => {
-    setItemToBeDeleted({ ...itemToBEDeleted, roomName, field });
-  };
-
-  React.useEffect(() => {
-    setItemToBeDeleted({ ...itemToBEDeleted });
-  }, [openDeleteModal]);
-
   const filteredRoomInfo = React.useMemo(() => {
     return roomRelatedInfo && roomRelatedInfo.find((room) => room.name === currentAddMore);
   }, [currentAddMore, roomRelatedInfo]);
 
   React.useEffect(() => {
-
     if (selectedRoomInfo) {
       setRoomFormValue({ ...selectedRoomInfo });
     }
@@ -294,6 +285,7 @@ export default function AddRoomForm(props) {
                                 return (
                                   <Grid xs={10} md={3}>
                                     <Card
+                                      itemToBeDeleted={itemToBeDeleted}
                                       setCurentAddMore={setCurentAddMore}
                                       setRoomInfoToEdit={setRoomInfoToEdit}
                                       openDeleteModal={openDeleteModal}
@@ -302,7 +294,8 @@ export default function AddRoomForm(props) {
                                       items={roomComponent}
                                       title={roomComponent.name}
                                       roomStats={roomFormValue}
-                                      onCardDelete={onCardDelete}
+                                      setitemToBeDeleted={setitemToBeDeleted}
+                                      roomName={selectedRoomInfo?.roomName}
                                       onSelectedRoomInfoChange={onSelectedRoomInfoChange}
                                       field={item.name}
                                       currentClientInfo={currentClientInfo}
@@ -364,7 +357,7 @@ export default function AddRoomForm(props) {
             onClick={() => {
               handleCreate();
             }}>
-            Add Room
+            {roomFormValue.edit ? 'Edit' : 'Add New'} Room
           </Button>
         </DialogActions>
 
@@ -382,7 +375,7 @@ export default function AddRoomForm(props) {
             setRoomInfoToEdit={setRoomInfoToEdit}
             initialStats={filteredRoomInfo.initialStats}
             fields={filteredRoomInfo.fields}
-            itemToBEDeleted={itemToBEDeleted}
+            itemToBeDeleted={itemToBeDeleted}
             currentLabel={
               filteredRoomInfo.label[filteredRoomInfo.label.length - 1] === 's'
                 ? filteredRoomInfo.label.slice(0, filteredRoomInfo.label.length - 1)

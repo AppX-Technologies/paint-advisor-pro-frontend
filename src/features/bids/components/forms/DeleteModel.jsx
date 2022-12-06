@@ -7,20 +7,23 @@ import {
   Stack,
   Typography
 } from '@mui/material';
+import { cloneDeep } from 'lodash';
 import { useDispatch } from 'react-redux';
 import Button from '../../../../components/Button';
 import { showMessage } from '../../../snackbar/snackbarSlice';
 
 export function DeleteItemModel({
-  id,
+  itemToBeDeleted,
   setOpenDeleteModal,
   setRoomStats,
   openDeleteModal,
+  setitemToBeDeleted,
   roomStats,
-  roomRelatedInfo,
   onCardDelete,
   selectedRoomInfo,
-  setSelectedRoomInfo
+  setSelectedRoomInfo,
+  setCurrentClientInfo,
+  currentClientInfo
 }) {
   const dispatch = useDispatch();
   const handleClose = () => {
@@ -29,11 +32,30 @@ export function DeleteItemModel({
   };
 
   const handleDelete = () => {
-    if (selectedRoomInfo) {
+    const currentClientInfoCopy = cloneDeep(currentClientInfo);
+    if (!itemToBeDeleted) {
       onCardDelete(selectedRoomInfo.roomName);
       setSelectedRoomInfo(null);
     } else {
-      setRoomStats([...roomRelatedInfo.filter((x) => x._id !== id)]);
+      const roomWhoseItemIsToBeUpdated = currentClientInfoCopy?.bid?.rooms.find(
+        (room) => room.roomName === itemToBeDeleted?.roomName
+      );
+
+      roomWhoseItemIsToBeUpdated[itemToBeDeleted?.field].splice(
+        roomWhoseItemIsToBeUpdated[itemToBeDeleted?.field].findIndex(
+          (item) => item.name === itemToBeDeleted.title
+        ),
+        1
+      );
+
+      setCurrentClientInfo({
+        ...currentClientInfo,
+        bid: { ...currentClientInfo?.bid, rooms: [...currentClientInfoCopy.bid.rooms] }
+      });
+      if (roomStats.edit) {
+        setRoomStats({ ...roomWhoseItemIsToBeUpdated, edit: true });
+      }
+      setitemToBeDeleted(null);
     }
 
     setOpenDeleteModal(false);

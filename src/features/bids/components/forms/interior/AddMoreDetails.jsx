@@ -66,35 +66,44 @@ const AddMoreDetails = ({
       );
     }
 
-    if (
-      titleField !== NONPAINTABLEAREAFIELD &&
-      addIn
-        ?.filter((item) => item.id !== currentStats.id)
-        ?.some((item) => item.name === currentStats.name)
-    ) {
-      return dispatch(
-        showMessage({
-          message: `Name '${currentStats.name}' already exists`,
-          severity: 'error'
-        })
-      );
+    if (!roomInfoToEdit) {
+      if (addIn?.some((item) => item.name === currentStats.name))
+        return dispatch(
+          showMessage({
+            message: `Name '${currentStats.name}' already exists`,
+            severity: 'error'
+          })
+        );
+    } else {
+      
+      if (
+        titleField !== NONPAINTABLEAREAFIELD &&
+        addIn
+          ?.filter((item) => (roomInfoToEdit.edit ? item.name !== currentStats.name : true))
+          ?.some((item) => item.name === currentStats.name)
+      ) {
+        return dispatch(
+          showMessage({
+            message: `Name '${currentStats.name}' already exists`,
+            severity: 'error'
+          })
+        );
+      }
     }
 
     if (!roomInfoToEdit) {
-      delete currentStats._id;
       addIn?.push({
         ...currentStats,
-        id: uuid(),
         isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
       });
       addIn?.forEach((item) => {
         delete item._id;
       });
     } else {
-      if (Object.keys(roomInfoToEdit).some((roomInfo) => roomInfo === 'id')) {
+      if (roomInfoToEdit.edit) {
         delete currentStats._id;
         addIn?.splice(
-          addIn.findIndex((item) => item.id === roomInfoToEdit.id),
+          addIn.findIndex((item) => item.name === roomInfoToEdit.name),
           1,
           { ...currentStats, isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined }
         );
@@ -105,7 +114,6 @@ const AddMoreDetails = ({
         delete currentStats._id;
         addIn?.push({
           ...currentStats,
-          id: uuid(),
           isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
         });
         addIn.forEach((item) => {
@@ -125,12 +133,11 @@ const AddMoreDetails = ({
     clearWallStats();
   };
 
+  console.log(roomInfoToEdit, 'roomInfoToEdit');
   const onDialogClose = () => {
     setRoomInfoToEdit(null);
     setOpenAddMoreDetails(false);
   };
-
-  console.log(roomInfoToEdit, 'roomInfoToEdit');
 
   useEffect(() => {
     if (roomInfoToEdit) {
@@ -143,7 +150,7 @@ const AddMoreDetails = ({
       <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
         <Stack direction='row' spacing={2}>
           <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
-            {roomInfoToEdit ? (!roomInfoToEdit.id ? 'Clone' : 'Edit') : 'Add New'} {currentLabel}
+            {roomInfoToEdit ? (!roomInfoToEdit.edit ? 'Clone' : 'Edit') : 'Add New'} {currentLabel}
           </Typography>
           <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
         </Stack>

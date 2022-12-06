@@ -38,10 +38,7 @@ const InteriorRoomByRoom = ({
   const [currentAddMore, setCurentAddMore] = useState('');
   const [selectedRoomInfo, setSelectedRoomInfo] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [itemToBEDeleted, setItemToBeDeleted] = useState({
-    _id: '',
-    field: ''
-  });
+  const [itemToBeDeleted, setitemToBeDeleted] = useState(null);
 
   const onSelectedRoomInfoChange = (value) => {
     setSelectedRoomInfo(value);
@@ -120,12 +117,15 @@ const InteriorRoomByRoom = ({
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
           roomRelatedInfo={roomStats[currentAddMore]}
-          id={itemToBEDeleted._id}
+          itemToBeDeleted={itemToBeDeleted}
           roomStats={roomStats}
           setRoomStats={setRoomStats}
           selectedRoomInfo={selectedRoomInfo}
           onCardDelete={onCardDelete}
           setSelectedRoomInfo={setSelectedRoomInfo}
+          setCurrentClientInfo={setCurrentClientInfo}
+          currentClientInfo={currentClientInfo}
+          setitemToBeDeleted={setitemToBeDeleted}
         />
       )}
 
@@ -157,8 +157,8 @@ const InteriorRoomByRoom = ({
         openDeleteModal={openDeleteModal}
         setOpenDeleteModal={setOpenDeleteModal}
         currentAddMore={currentAddMore}
-        itemToBEDeleted={itemToBEDeleted}
-        setItemToBeDeleted={setItemToBeDeleted}
+        itemToBeDeleted={itemToBeDeleted}
+        setitemToBeDeleted={setitemToBeDeleted}
         setCurentAddMore={setCurentAddMore}
         setCurrentClientInfo={setCurrentClientInfo}
       />

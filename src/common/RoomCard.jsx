@@ -45,9 +45,8 @@ const RoomCard = ({
               }}
               onClick={() => {
                 onSelectedRoomInfoChange({ ...cloneDeep(completeRoomInfo), edit: false });
-                setTimeout(() => {
-                  setAddRoom(true);
-                }, 2000);
+
+                setAddRoom(true);
               }}
               size='small'
             />
