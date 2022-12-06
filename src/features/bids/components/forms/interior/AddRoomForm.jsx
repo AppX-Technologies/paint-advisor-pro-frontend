@@ -95,8 +95,9 @@ export default function AddRoomForm(props) {
     }
 
     if (
-      (!roomFormValue.edit || !Object.keys(roomFormValue).some((item) => item === 'edit')) &&
-      currentClientInfo?.bid?.rooms.some((room) => room.roomName === roomFormValue.roomName)
+      currentClientInfo?.bid?.rooms
+        .filter((room) => (roomFormValue.edit ? room.roomName !== roomFormValue.roomName : true))
+        .some((room) => room.roomName === roomFormValue.roomName)
     ) {
       return dispatch(
         showMessage({
@@ -160,6 +161,7 @@ export default function AddRoomForm(props) {
       setRoomFormValue({ ...selectedRoomInfo });
     }
   }, [open, selectedRoomInfo]);
+
 
   return (
     <div>

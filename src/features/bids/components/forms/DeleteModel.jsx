@@ -7,7 +7,6 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-import { cloneDeep } from 'lodash';
 import { useDispatch } from 'react-redux';
 import Button from '../../../../components/Button';
 import { showMessage } from '../../../snackbar/snackbarSlice';
@@ -17,45 +16,34 @@ export function DeleteItemModel({
   setOpenDeleteModal,
   setRoomStats,
   openDeleteModal,
-  setitemToBeDeleted,
   roomStats,
   onCardDelete,
   selectedRoomInfo,
-  setSelectedRoomInfo,
-  setCurrentClientInfo,
-  currentClientInfo
+  onSelectedRoomInfoChange
 }) {
   const dispatch = useDispatch();
+
   const handleClose = () => {
     setOpenDeleteModal(false);
-    setSelectedRoomInfo(null);
   };
 
   const handleDelete = () => {
-    const currentClientInfoCopy = cloneDeep(currentClientInfo);
     if (!itemToBeDeleted) {
       onCardDelete(selectedRoomInfo.roomName);
-      setSelectedRoomInfo(null);
+      onSelectedRoomInfoChange(null);
     } else {
-      const roomWhoseItemIsToBeUpdated = currentClientInfoCopy?.bid?.rooms.find(
-        (room) => room.roomName === itemToBeDeleted?.roomName
-      );
-
-      roomWhoseItemIsToBeUpdated[itemToBeDeleted?.field].splice(
-        roomWhoseItemIsToBeUpdated[itemToBeDeleted?.field].findIndex(
-          (item) => item.name === itemToBeDeleted.title
+      roomStats[itemToBeDeleted?.field]?.splice(
+        roomStats[itemToBeDeleted?.field]?.findIndex((item) =>
+          roomStats[itemToBeDeleted?.field] !== 'nonPaintableAreas'
+            ? item.name === itemToBeDeleted.title
+            : item.description === itemToBeDeleted.title
         ),
         1
       );
 
-      setCurrentClientInfo({
-        ...currentClientInfo,
-        bid: { ...currentClientInfo?.bid, rooms: [...currentClientInfoCopy.bid.rooms] }
-      });
       if (roomStats.edit) {
-        setRoomStats({ ...roomWhoseItemIsToBeUpdated, edit: true });
+        setRoomStats({ ...selectedRoomInfo, edit: true });
       }
-      setitemToBeDeleted(null);
     }
 
     setOpenDeleteModal(false);

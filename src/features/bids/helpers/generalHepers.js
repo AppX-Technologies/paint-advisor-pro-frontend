@@ -10,7 +10,7 @@ export const findCurrentClient = (clientList, selectedListItem) => {
 };
 
 export const searchedResult = (list, keyword) => {
-  return list.filter((item) => item?.name?.toLowerCase().includes(keyword.toLowerCase()));
+  return list.filter((item) => item?.name?.toLowerCase().trim().includes(keyword.toLowerCase()));
 };
 
 export const findCommentsUniquely = (originalCommentList, searchValue) => {

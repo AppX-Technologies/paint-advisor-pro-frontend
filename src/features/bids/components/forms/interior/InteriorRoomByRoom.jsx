@@ -114,6 +114,7 @@ const InteriorRoomByRoom = ({
 
       {openDeleteModal && (
         <DeleteItemModel
+          onSelectedRoomInfoChange={onSelectedRoomInfoChange}
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
           roomRelatedInfo={roomStats[currentAddMore]}

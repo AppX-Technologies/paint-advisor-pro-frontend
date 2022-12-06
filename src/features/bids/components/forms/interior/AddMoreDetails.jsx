@@ -17,10 +17,9 @@ import {
   TextField,
   Typography
 } from '@mui/material';
+import { startCase } from 'lodash';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import uuid from 'react-uuid';
-
 import { validationInfo } from '../../../../../common/FormTextField';
 import Button from '../../../../../components/Button';
 import {
@@ -46,7 +45,6 @@ const AddMoreDetails = ({
   currentLabel,
   selectedRoomInfo
 }) => {
-  console.log(roomInfoToEdit, 'roomInfoToEdit');
   const dispatch = useDispatch();
   const handleCreate = () => {
     // For empty fields
@@ -60,13 +58,29 @@ const AddMoreDetails = ({
     if (emptyFields.length !== 0) {
       return dispatch(
         showMessage({
-          message: `${emptyFields[0].name.toUpperCase()} cannot be empty`,
+          message: `${startCase(emptyFields[0].name)} cannot be empty`,
           severity: 'error'
         })
       );
     }
 
-    if (!roomInfoToEdit) {
+    if (
+      titleField === NONPAINTABLEAREAFIELD &&
+      addIn
+        ?.filter((item) =>
+          roomInfoToEdit?.edit ? item?.description !== currentStats?.description : true
+        )
+        .some((item) => item.description === currentStats.description)
+    ) {
+      return dispatch(
+        showMessage({
+          message: `Description '${currentStats.description}' already exists`,
+          severity: 'error'
+        })
+      );
+    }
+
+    if (!roomInfoToEdit && titleField !== NONPAINTABLEAREAFIELD) {
       if (addIn?.some((item) => item.name === currentStats.name))
         return dispatch(
           showMessage({
@@ -75,7 +89,6 @@ const AddMoreDetails = ({
           })
         );
     } else {
-      
       if (
         titleField !== NONPAINTABLEAREAFIELD &&
         addIn

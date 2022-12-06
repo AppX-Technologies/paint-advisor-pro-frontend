@@ -82,7 +82,7 @@ const Pipeline = () => {
   const [fileToDelete, setFileToDelete] = useState(null);
   const [bidFilterValues, setBidFilterValues] = useState(cloneDeep(bidStageFilter));
   const [isAscending, setIsAscending] = useState(true);
-  const [selectOption, setSelectOption] = useState('100');
+  const [selectOption, setSelectOption] = useState('All');
   const [sortOption, setSortOption] = useState('createdAt');
   const [comment, setComment] = useState('');
 
@@ -265,14 +265,6 @@ const Pipeline = () => {
     setRoomStats(initialRoomState);
   };
 
-  // useEffect(() => {
-  //   if (!selectedListItem) {
-  //     setSelectedListItem(
-  //       filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
-  //     );
-  //   }
-  // }, [clientList, filteredClietsList, selectedStep]);
-
   const onClientFormChange = (formValue) => {
     setOpen(formValue);
   };
@@ -295,13 +287,10 @@ const Pipeline = () => {
   };
 
   useEffect(() => {
-    setSelectedListItem(null);
+    setSelectedListItem(
+      filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
+    );
   }, [selectedStep]);
-  // useEffect(() => {
-  //   if (currentClientInfo) {
-  //     setAllRoom([...currentClientInfo.bid.rooms]);
-  //   }
-  // }, currentClientInfo);
 
   return (
     <>

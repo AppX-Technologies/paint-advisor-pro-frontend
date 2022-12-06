@@ -9,7 +9,6 @@ import { cloneDeep } from 'lodash';
 const RoomCard = ({
   items,
   title,
-  onCardDelete,
   onCardEdit,
   setAddRoom,
   completeRoomInfo,

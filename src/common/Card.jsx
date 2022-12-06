@@ -1,5 +1,5 @@
 import { Box, Tooltip, Typography } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
@@ -7,10 +7,8 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { cloneDeep } from 'lodash';
 
 const Card = ({
-  onSelectedRoomInfoChange,
   items,
   title,
-  onCardDelete,
   field,
   totalArea = 0,
   setRoomInfoToEdit,
@@ -18,18 +16,16 @@ const Card = ({
   setOpenDeleteModal,
   setCurentAddMore,
   setitemToBeDeleted,
-  roomName,
-  itemToBeDeleted
+  roomStats
 }) => {
   const dimension = useMemo(() => {
     return `${items.length}x${items.height ? items.height : items.width}`;
   }, [items]);
 
-  console.log(itemToBeDeleted, 'itemToBeDeleted');
   return (
     <Box
       className='card-box'
-      bgcolor={items.isTotal ? '#f0f0f0' : '#faf2f0'}
+      bgcolor={items.isTotal ? '#faf2ff' : '#faf2f0'}
       p={1}
       sx={{
         height: field === 'nonPaintableAreas' ? '30px' : 'auto',
@@ -99,7 +95,7 @@ const Card = ({
                   onClick={() => {
                     setCurentAddMore(field);
                     setOpenDeleteModal(true);
-                    setitemToBeDeleted({ title, field, roomName });
+                    setitemToBeDeleted({ title, field, roomStats });
                   }}
                 />
               </Tooltip>
@@ -184,7 +180,7 @@ const Card = ({
                         cursor: 'pointer'
                       }}
                       onClick={() => {
-                        setRoomInfoToEdit({ ...cloneDeep(items), id: null });
+                        setRoomInfoToEdit({ ...cloneDeep(items), edit: false });
                         onopenAddMoreDetailsChange(true);
                         setCurentAddMore(field);
                       }}
@@ -201,7 +197,7 @@ const Card = ({
                       }}
                       size='small'
                       onClick={() => {
-                        setRoomInfoToEdit({ ...cloneDeep(items) });
+                        setRoomInfoToEdit({ ...cloneDeep(items), edit: true });
                         onopenAddMoreDetailsChange(true);
                         setCurentAddMore(field);
                       }}
@@ -216,10 +212,9 @@ const Card = ({
                       }}
                       size='small'
                       onClick={() => {
-                        onSelectedRoomInfoChange(null);
                         setCurentAddMore(field);
-                        onCardDelete(items.id, field);
                         setOpenDeleteModal(true);
+                        setitemToBeDeleted({ title: items.description, field, roomStats });
                       }}
                     />
                   </Tooltip>

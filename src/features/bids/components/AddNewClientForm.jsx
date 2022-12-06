@@ -70,11 +70,14 @@ export default function AddNewClientForm(props) {
       dispatch(reset());
     }
   }, [isSuccess]);
+
   useEffect(() => {
     if (open && currentClientInfoToEdit) {
       setSelectedvalue({ ...currentClientInfoToEdit });
     }
   }, [open]);
+
+  
 
   return (
     <div>
