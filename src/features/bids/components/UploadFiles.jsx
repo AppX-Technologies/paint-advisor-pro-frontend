@@ -62,7 +62,7 @@ const UploadFiles = ({
     formData.append('file', fileToBeUploaded.file);
     const { error, data } = await axios({
       method: 'post',
-      url: 'https://painting-app-backend.herokuapp.com/api/files',
+      url: 'http://localhost:5001/api/files',
       data: formData,
       headers: {
         'Content-Type': 'multipart/form-data',

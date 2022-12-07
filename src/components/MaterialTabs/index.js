@@ -19,8 +19,9 @@ const Materials = () => {
   const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const { isDeleted } = useSelector((state) => state.material);
+  const { isDeleted, materialList } = useSelector((state) => state.material);
   const { companyId } = useParams();
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (isDeleted) {
@@ -37,13 +38,14 @@ const Materials = () => {
   }, [isDeleted]);
 
   useEffect(() => {
-    // dispatch(
-    //   fetchMaterial({
-    //     token: userDetail.token,
-    //     id: companyId ? org.materials : undefined
-    //   })
-    // );
+    dispatch(
+      fetchMaterial({
+        token: userDetail.token,
+        id: companyId ? org.materials : undefined
+      })
+    );
   }, []);
+  console.log(org, 'materials');
   useEffect(() => {
     dispatch(
       fetchSingleOrg({

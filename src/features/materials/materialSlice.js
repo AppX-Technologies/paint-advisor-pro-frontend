@@ -3,64 +3,8 @@ import { showMessage } from '../snackbar/snackbarSlice';
 import { addOrUpdateItemInArray } from '../../helpers/addRemoveUpdateListHelper';
 import materialService from './materialService';
 
-
 const initialState = {
-  materialList: [
-    {
-      _id: '1111',
-      global: true,
-      materials: [
-        {
-          _id: '123',
-          bidType: 'Interior',
-          materialName: 'Blue paint',
-          unit: 'KG',
-          pricePerUnit: '940'
-        },
-        {
-          _id: '1233',
-          bidType: 'Exterior',
-          materialName: 'Red paint',
-          unit: 'KG',
-          pricePerUnit: '700'
-        },
-        {
-          _id: '1234',
-          bidType: 'Interior',
-          materialName: 'White paint',
-          unit: 'KG',
-          pricePerUnit: '3050'
-        }
-      ]
-    },
-    {
-      _id: '2222',
-      global: false,
-      materials: [
-        {
-          _id: '123',
-          bidType: 'Interior',
-          materialName: 'Orange paint',
-          unit: 'KG',
-          pricePerUnit: '340'
-        },
-        {
-          _id: '1233',
-          bidType: 'Exterior',
-          materialName: 'Pink paint',
-          unit: 'KG',
-          pricePerUnit: '340'
-        },
-        {
-          _id: '1234',
-          bidType: 'Interior',
-          materialName: 'Purple paint',
-          unit: 'KG',
-          pricePerUnit: '340'
-        }
-      ]
-    }
-  ],
+  materialList: [],
   material: [],
   isLoading: false,
   isError: false,
@@ -114,6 +58,7 @@ export const fetchSingleMaterial = createAsyncThunk(
 export const createMaterial = createAsyncThunk(
   'material/createMaterial',
   async (userData, thunkAPI) => {
+    console.log(userData, 'userDatauserData');
     try {
       const response = await materialService.createMaterial(userData);
       return response;

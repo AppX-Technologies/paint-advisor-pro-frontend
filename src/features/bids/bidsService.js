@@ -2,13 +2,13 @@
 
 import axios from 'axios';
 
-const endpoint = 'https://painting-app-backend.herokuapp.com/clients';
+const endpoint = 'http://localhost:5001/clients';
 
 const CREATE_CLIENTS = `${endpoint}/`;
 const FETCH_CLIENTS = `${endpoint}/search`;
 const UPDATE_CLIENT = `${endpoint}`;
 const DELETE_CLIENT = `${endpoint}/`;
-const DELETE_FILE = `https://painting-app-backend.herokuapp.com/api/files/`;
+const DELETE_FILE = `http://localhost:5001/api/files/`;
 
 export const fetchAllClientsService = async (userData) => {
   const config = {
@@ -104,7 +104,7 @@ export const uploadAFileService = async (userData) => {
 export const deleteFileService = async (userData) => {
   const response = await axios({
     method: 'delete',
-    url: `https://painting-app-backend.herokuapp.com/api/files/${userData.id}`,
+    url: `http://localhost:5001/api/files/${userData.id}`,
     data: {},
     headers: {
       'Content-Type': 'multipart/form-data',

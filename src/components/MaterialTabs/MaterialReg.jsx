@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Stack, TextField, Typography } from '@mui/material';
+import { Chip, CircularProgress, Grid, Stack, TextField, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,65 +8,61 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { startCase } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createMaterial, reset } from '../../features/materials/materialSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
+import { FIELDS_WHERE_MATERIALS_ARE_APPLIES } from '../../helpers/contants';
+
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function FormDialog(props) {
   const { materialList, isSuccess } = useSelector((state) => state.material);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const dispatch = useDispatch();
-  const { open, setOpen, bidType, filteredMaterials } = props;
+  const { open, setOpen, bidType } = props;
   const initialFormState = {
-    materialName: '',
+    description: '',
     unit: '',
-    pricePerUnit: '',
-    bidType
+    unitPrice: '',
+    bidType,
+    appliesTo: []
   };
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-  console.log(formState);
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleCreate = (e) => {
     e.preventDefault();
-    if (!formState.materialName || !formState.bidType || !formState.pricePerUnit) {
+    const emptyField = Object.keys(formState).find((state) =>
+      typeof formState[state] === 'string'
+        ? formState[state] === ''
+        : typeof formState[state] === 'number'
+        ? formState[state] === 0
+        : !formState[state].length
+    );
+
+    if (emptyField) {
       return dispatch(
         showMessage({
-          message: `Material Name cannot be empty`,
+          message: `${startCase(emptyField)} cannot be empty`,
           severity: 'error'
         })
       );
     }
     const formStateWithToken = {
       ...formState,
-      ID: materialList[0]._id,
-      previousMaterials: materialList[0].materials,
+      ID: materialList[0]?._id,
+      previousMaterials: materialList[0]?.materials,
       add: true,
       token: userDetail.token
     };
-    if (
-      filteredMaterials.some((material) => {
-        return (
-          material.materialName.toLowerCase().trim() === formState.materialName.toLowerCase().trim()
-        );
-      })
-    ) {
-      dispatch(
-        showMessage({
-          message: 'Material Already Exists',
-          variant: 'info',
-          severity: 'info'
-        })
-      );
-    } else {
-      dispatch(createMaterial(formStateWithToken));
-    }
+
+    dispatch(createMaterial(formStateWithToken));
 
     setOpen(false);
   };
@@ -84,7 +80,7 @@ export default function FormDialog(props) {
   }, [isSuccess]);
 
   useEffect(() => {
-    ['materialName', 'unit', 'pricePerUnit', 'bidType'].forEach((key, i) => {
+    ['description', 'unit', 'unitPrice', 'bidType'].forEach((key, i) => {
       dispatchNew({
         type: 'HANDLE_FORM_INPUT',
         field: key,
@@ -100,9 +96,31 @@ export default function FormDialog(props) {
       payload: e.target.value
     });
   };
+
+  const handleMaterialApplicableSection = (field) => {
+    if (formState.appliesTo.includes(field)) {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: 'appliesTo',
+        payload: [...formState.appliesTo.filter((item) => item !== field)]
+      });
+    } else {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: 'appliesTo',
+        payload: [...formState.appliesTo, field]
+      });
+    }
+  };
+
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { width: '40%' } }}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          sx: { width: '40%' }
+        }}>
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New Material</Typography>
@@ -112,16 +130,16 @@ export default function FormDialog(props) {
         <DialogContent>
           <Grid item xs={12} md={12}>
             <TextField
-              name='materialName'
+              name='description'
               required
               fullWidth
               aria-label='minimum height'
               minRows={3}
               variant='standard'
               id='material'
-              label='Material Name'
+              label='Material Description'
               autoFocus
-              value={formState.materialName}
+              value={formState.description}
               onChange={(e) => handleTextChange(e)}
               style={{ width: '100%' }}
             />
@@ -145,16 +163,16 @@ export default function FormDialog(props) {
             </Grid>
             <Grid item xs={6} md={3}>
               <TextField
-                name='pricePerUnit'
+                name='unitPrice'
                 required
                 fullWidth
                 aria-label='minimum height'
                 minRows={3}
                 variant='standard'
-                id='pricePerUnit'
+                id='unitPrice'
                 label='Price per Unit'
                 autoFocus
-                value={formState.pricePerUnit}
+                value={formState.unitPrice}
                 onChange={(e) => handleTextChange(e)}
                 style={{ width: '100%', marginTop: '13px' }}
               />
@@ -173,6 +191,31 @@ export default function FormDialog(props) {
                   <MenuItem value='Exterior'>Exterior</MenuItem>
                 </Select>
               </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={12}>
+              <Typography sx={{ color: 'gray', fontWeight: 390, mb: 1 }}>
+                Material Applied To
+              </Typography>
+              {FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((field) => {
+                return (
+                  <>
+                    <Chip
+                      label={field.label}
+                      variant='outlined'
+                      onClick={() => handleMaterialApplicableSection(field.label)}
+                      sx={{
+                        bgcolor: formState.appliesTo.includes(field.label) ? '#E0E0E0' : 'white',
+                        m: 0.5,
+                        '&:hover': {
+                          bgcolor: formState.appliesTo.includes(field.label) ? '#E0E0E0' : 'white'
+                        }
+                      }}
+                      size='small'
+                    />
+                  </>
+                );
+              })}
             </Grid>
           </Grid>
         </DialogContent>

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const endpoint = 'https://painting-app-backend.herokuapp.com/processes';
+const endpoint = 'http://localhost:5001/materials';
 const CREATE_MATERIAL = `${endpoint}/`;
-const FETCH_MATERIAL = `https://painting-app-backend.herokuapp.com/processes/list`;
+const FETCH_MATERIAL = `http://localhost:5001/materials/list`;
 const UPDATE_MATERIAL = `${endpoint}/`;
 const DELETE_MATERIAL = `${endpoint}/`;
 
@@ -20,6 +20,7 @@ const fetchMaterial = async (userData) => {
     },
     config
   );
+
   return response.data;
 };
 
@@ -36,7 +37,6 @@ const fetchSingleMaterial = async (userData) => {
 };
 
 const createMaterial = async (userData) => {
-  console.log(userData);
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -49,11 +49,13 @@ const createMaterial = async (userData) => {
     {
       materials: userData.add
         ? [
-            ...userData.previousMaterials,
+            ...(userData.previousMaterials ? userData.previousMaterials : []),
             {
-              materialName: userData.materialName,
+              description: userData.description,
               unit: userData.unit,
-              pricePerUnit: userData.pricePerUnit
+              unitPrice: userData.unitPrice,
+              bidType: userData.bidType,
+              appliesTo: userData.appliesTo
             }
           ]
         : userData.previousMaterials.filter(

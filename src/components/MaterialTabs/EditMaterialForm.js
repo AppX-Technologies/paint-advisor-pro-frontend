@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, TextareaAutosize, TextField } from '@mui/material';
+import { Chip, CircularProgress, Grid, TextField, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,21 +8,27 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { cloneDeep, startCase } from 'lodash';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createMaterial } from '../../features/materials/materialSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
+import { FIELDS_WHERE_MATERIALS_ARE_APPLIES } from '../../helpers/contants';
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function Edit(props) {
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const { openEditForm, setOpenEditForm, editFormData } = props;
+
   const initialFormState = {
-    materialName: editFormData.material ? editFormData.material : '',
+    description: editFormData.description ? editFormData.description : '',
     unit: editFormData.unit ? editFormData.unit : '',
-    pricePerUnit: editFormData.pricePerUnit ? editFormData.pricePerUnit : '',
-    bidType: editFormData.bidType ? editFormData.bidType : ''
+    unitPrice: editFormData.unitPrice ? editFormData.unitPrice : '',
+    bidType: editFormData.bidType ? editFormData.bidType : '',
+    appliesTo: editFormData?.appliesTo ? [...editFormData.appliesTo] : []
   };
+
+  console.log(initialFormState, 'initialFormState');
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
   const { materialList } = useSelector((state) => state.material);
@@ -54,14 +60,23 @@ export default function Edit(props) {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    if (!formState.material) {
+    const emptyField = Object.keys(formState).find((state) =>
+      typeof formState[state] === 'string'
+        ? formState[state] === ''
+        : typeof formState[state] === 'number'
+        ? formState[state] === 0
+        : !formState[state].length
+    );
+
+    if (emptyField) {
       return dispatch(
         showMessage({
-          message: `Material name cannot be empty`,
+          message: `${startCase(emptyField)} cannot be empty`,
           severity: 'error'
         })
       );
     }
+
     const formStateWithToken = {
       ...formState,
       ID: materialList[0]._id,
@@ -76,6 +91,22 @@ export default function Edit(props) {
     setOpenEditForm(false);
   };
 
+  const handleMaterialApplicableSection = (field) => {
+    if (formState.appliesTo.includes(field)) {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: 'appliesTo',
+        payload: [...formState.appliesTo.filter((item) => item !== field)]
+      });
+    } else {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: 'appliesTo',
+        payload: [...formState.appliesTo, field]
+      });
+    }
+  };
+
   return (
     <div>
       <Dialog open={openEditForm} onClose={handleClose} PaperProps={{ sx: { width: '40%' } }}>
@@ -86,16 +117,16 @@ export default function Edit(props) {
         <DialogContent>
           <Grid item xs={12}>
             <TextField
-              name='material'
+              name='description'
               required
               fullWidth
               aria-label='minimum height'
               minRows={3}
               variant='standard'
               id='material'
-              label='Material Name'
+              label='Material Description'
               autoFocus
-              value={formState.materialName}
+              value={formState.description}
               onChange={(e) => handleTextChange(e)}
               style={{ width: '100%' }}
             />
@@ -119,7 +150,7 @@ export default function Edit(props) {
             </Grid>
             <Grid item xs={3} md={3}>
               <TextField
-                name='pricePerUnit'
+                name='unitPrice'
                 required
                 fullWidth
                 aria-label='minimum height'
@@ -128,7 +159,7 @@ export default function Edit(props) {
                 id='pricePerUnit'
                 label='Price per Unit'
                 autoFocus
-                value={formState.pricePerUnit ? formState.pricePerUnit : ''}
+                value={formState.unitPrice ? formState.unitPrice : ''}
                 onChange={(e) => handleTextChange(e)}
                 style={{ width: '100%', marginTop: '13px' }}
               />
@@ -147,6 +178,30 @@ export default function Edit(props) {
                   <MenuItem value='Exterior'>Exterior</MenuItem>
                 </Select>
               </FormControl>
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <Typography sx={{ color: 'gray', fontWeight: 390, mb: 1 }}>
+                Material Applied To
+              </Typography>
+              {FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((field) => {
+                return (
+                  <>
+                    <Chip
+                      label={field.label}
+                      variant='outlined'
+                      onClick={() => handleMaterialApplicableSection(field.label)}
+                      sx={{
+                        bgcolor: formState.appliesTo.includes(field.label) ? '#E0E0E0' : 'white',
+                        m: 0.5,
+                        '&:hover': {
+                          bgcolor: formState.appliesTo.includes(field.label) ? '#E0E0E0' : 'white'
+                        }
+                      }}
+                      size='small'
+                    />
+                  </>
+                );
+              })}
             </Grid>
           </Grid>
         </DialogContent>

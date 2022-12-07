@@ -102,19 +102,24 @@ export const processColumn = () => {
 export const materialColumn = () => {
   return [
     {
-      name: 'materialName',
-      label: 'Item Name',
+      name: 'description',
+      label: 'Material Description',
       width: '20%'
     },
     {
       name: 'unit',
       label: 'Unit',
-      width: '40%'
+      width: '20%'
     },
     {
-      name: 'pricePerUnit',
+      name: 'unitPrice',
       label: 'Price Per Unit',
-      width: '40%'
+      width: '20%'
+    },
+    {
+      name: 'appliesTo',
+      label: 'Applies To',
+      width: '50%'
     }
   ];
 };

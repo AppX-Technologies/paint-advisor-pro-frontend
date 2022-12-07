@@ -69,3 +69,11 @@ export const ROOM_TYPES = [
   'Bathroom',
   'Laundry Room'
 ];
+
+export const FIELDS_WHERE_MATERIALS_ARE_APPLIES = [
+  { label: 'Doors' },
+  { label: 'Walls' },
+  { label: 'Windows' },
+  { label: 'Ceilings' },
+  { label: 'Door Jambs' }
+];

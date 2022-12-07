@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const endpoint = 'https://painting-app-backend.herokuapp.com/organizations';
+const endpoint = 'http://localhost:5001/organizations';
 
 const CREATE_ORGS = `${endpoint}/`;
 const FETCH_ORGS = `${endpoint}/search`;

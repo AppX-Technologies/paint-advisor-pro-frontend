@@ -66,7 +66,7 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
 
   useEffect(() => {
     setFilteredMaterials(filterMaterialByBid(materialList, filterValue));
-  }, [filterValue]);
+  }, [filterValue, materialList]);
 
   return (
     <>
@@ -85,10 +85,11 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
           filteredMaterials.map((material) => {
             return {
               _id: material._id,
-              materialName: material.materialName,
+              description: material.description,
               unit: material.unit,
-              pricePerUnit: material.pricePerUnit,
-              bidType: material.bidType
+              unitPrice: material.unitPrice,
+              bidType: material.bidType,
+              appliesTo: material?.appliesTo
             };
           })
         }
