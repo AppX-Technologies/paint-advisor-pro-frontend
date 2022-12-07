@@ -5,6 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { cloneDeep } from 'lodash';
+import { CURRENT_TOTAL_DESCRIPTION, NONPAINTABLEAREAFIELD } from '../helpers/contants';
 
 const Card = ({
   items,
@@ -25,7 +26,7 @@ const Card = ({
   return (
     <Box
       className='card-box'
-      bgcolor={items.isTotal ? '#faf2ff' : '#faf2f0'}
+      bgcolor={items.description === CURRENT_TOTAL_DESCRIPTION ? '#faf2ff' : '#faf2f0'}
       p={1}
       sx={{
         height: field === 'nonPaintableAreas' ? '30px' : 'auto',
@@ -105,7 +106,7 @@ const Card = ({
       </Box>
       {/* Body-section */}
 
-      {field !== 'nonPaintableAreas' ? (
+      {field !== NONPAINTABLEAREAFIELD ? (
         <>
           {Object.keys(items)
             .filter((x) => x === 'coats')
@@ -155,7 +156,7 @@ const Card = ({
               </Typography>
             </Tooltip>
             <Typography sx={{ fontSize: '14px', mb: 2, color: '#736f6f', fontWeight: '600' }}>
-              {items.isTotal ? totalArea : items.area}
+              {items.description === CURRENT_TOTAL_DESCRIPTION ? totalArea : items.area}
             </Typography>
             <Box sx={{ display: 'flex' }}>
               {items.paint && (
@@ -169,7 +170,7 @@ const Card = ({
                   size='small'
                 />
               )}
-              {!items.isTotal && (
+              {items.description !== CURRENT_TOTAL_DESCRIPTION && (
                 <>
                   <Tooltip title='Clone' placement='top'>
                     <ContentCopyIcon

@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import Button from '../../../../components/Button';
+import { CURRENT_TOTAL_DESCRIPTION } from '../../../../helpers/contants';
 import { showMessage } from '../../../snackbar/snackbarSlice';
 
 export function DeleteItemModel({
@@ -36,7 +37,8 @@ export function DeleteItemModel({
         roomStats[itemToBeDeleted?.field]?.findIndex((item) =>
           itemToBeDeleted?.field !== 'nonPaintableAreas'
             ? item.name === itemToBeDeleted.title
-            : item.description === itemToBeDeleted.title && !item.isTotal
+            : item.description === itemToBeDeleted.title &&
+              item.description !== CURRENT_TOTAL_DESCRIPTION
         ),
         1
       );

@@ -290,7 +290,7 @@ const Pipeline = () => {
     setSelectedListItem(
       filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
     );
-  }, [selectedStep]);
+  }, [selectedStep, clientList, filteredClietsList]);
 
   return (
     <>

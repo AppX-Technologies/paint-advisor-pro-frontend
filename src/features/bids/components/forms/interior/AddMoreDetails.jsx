@@ -106,8 +106,7 @@ const AddMoreDetails = ({
 
     if (!roomInfoToEdit) {
       addIn?.push({
-        ...currentStats,
-        isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
+        ...currentStats
       });
       addIn?.forEach((item) => {
         delete item._id;
@@ -118,7 +117,7 @@ const AddMoreDetails = ({
         addIn?.splice(
           addIn.findIndex((item) => item.name === roomInfoToEdit.name),
           1,
-          { ...currentStats, isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined }
+          { ...currentStats }
         );
         addIn.forEach((item) => {
           delete item._id;
@@ -126,8 +125,7 @@ const AddMoreDetails = ({
       } else {
         delete currentStats._id;
         addIn?.push({
-          ...currentStats,
-          isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
+          ...currentStats
         });
         addIn.forEach((item) => {
           delete item._id;

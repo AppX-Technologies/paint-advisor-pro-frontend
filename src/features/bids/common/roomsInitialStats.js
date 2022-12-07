@@ -22,7 +22,7 @@ export const initialRoomState = {
   doorjambs: [],
   crownMoldings: [],
   closets: [],
-  nonPaintableAreas: [{description:"Current Total",area : null,isTotal : true}]
+  nonPaintableAreas: [{ description: 'Current Total', area: 0 }]
 };
 
 export const initilWallInfo = {
