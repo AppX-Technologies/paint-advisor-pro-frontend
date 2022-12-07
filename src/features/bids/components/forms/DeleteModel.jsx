@@ -36,7 +36,7 @@ export function DeleteItemModel({
         roomStats[itemToBeDeleted?.field]?.findIndex((item) =>
           roomStats[itemToBeDeleted?.field] !== 'nonPaintableAreas'
             ? item.name === itemToBeDeleted.title
-            : item.description === itemToBeDeleted.title
+            : item.description === itemToBeDeleted.title && !item.isTotal
         ),
         1
       );

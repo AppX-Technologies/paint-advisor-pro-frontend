@@ -7,7 +7,6 @@ export const estimationFormInitialInfo = {
 };
 
 export const initialNonPaintableStats = {
-  _id: '',
   description: '',
   area: null
 };
