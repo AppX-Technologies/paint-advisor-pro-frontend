@@ -76,6 +76,8 @@ export const STATUS_VALUES = ['New Client'];
 
 export const MATERIALS_DROPDOWN_VALUES = ['Walls', 'Doors', 'Windows', 'Trims'];
 
+export const CURRENT_TOTAL_DESCRIPTION = 'Current Total';
+
 export const TEST_MATERIALS_VALUES_TO_SELECT = [
   {
     name: 'walls',

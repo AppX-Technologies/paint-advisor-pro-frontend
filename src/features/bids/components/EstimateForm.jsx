@@ -25,7 +25,11 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
-import { STATUS_ESTIMATE_IN_PROGRESS, STATUS_NEW_CLIENT } from '../../../helpers/contants';
+import {
+  NONPAINTABLEAREAFIELD,
+  STATUS_ESTIMATE_IN_PROGRESS,
+  STATUS_NEW_CLIENT
+} from '../../../helpers/contants';
 import { isSystemUser } from '../../../helpers/roles';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
@@ -95,19 +99,14 @@ export default function EstimateForm(props) {
         })
       );
     }
-    // Client's Status Update After Creating An Estimation
-    if (selectedStep === STATUS_NEW_CLIENT) {
-      dispatch(
-        updateClient({
-          status: STATUS_ESTIMATE_IN_PROGRESS,
-          token: user.token,
-          id: currentClientInfo._id
-        })
-      );
-      currentClientInfo?.bid?.rooms.forEach((room) => {
-        delete room._id;
+
+    currentClientInfo?.bid?.rooms.forEach((room) => {
+      room[NONPAINTABLEAREAFIELD].forEach((item) => {
+        delete item[0];
+        delete item.isTotal;
+        item.area = Number(item.area);
       });
-    }
+    });
 
     if (selectedStep === STATUS_NEW_CLIENT) {
       dispatch(
@@ -153,6 +152,19 @@ export default function EstimateForm(props) {
           severity: 'success'
         })
       );
+      // Client's Status Update After Creating An Estimation
+      if (selectedStep === STATUS_NEW_CLIENT) {
+        dispatch(
+          updateClient({
+            status: STATUS_ESTIMATE_IN_PROGRESS,
+            token: user.token,
+            id: currentClientInfo._id
+          })
+        );
+        currentClientInfo?.bid?.rooms.forEach((room) => {
+          delete room._id;
+        });
+      }
       dispatch(reset());
       handleClose();
     }
@@ -191,19 +203,6 @@ export default function EstimateForm(props) {
       }
     }
   }, [open]);
-
-  useEffect(() => {
-    if (bidInfo) {
-      dispatch(
-        updateClient({
-          bid: bidInfo?.response?.data?._id,
-          token: user.token,
-          id: currentClientInfo?._id
-        })
-      );
-      dispatch(reset());
-    }
-  }, [bidInfo]);
 
   useEffect(() => {
     if (open) {

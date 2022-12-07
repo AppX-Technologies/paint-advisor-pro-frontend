@@ -146,7 +146,6 @@ const AddMoreDetails = ({
     clearWallStats();
   };
 
-  console.log(roomInfoToEdit, 'roomInfoToEdit');
   const onDialogClose = () => {
     setRoomInfoToEdit(null);
     setOpenAddMoreDetails(false);

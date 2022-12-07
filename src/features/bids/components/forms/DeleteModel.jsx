@@ -34,13 +34,12 @@ export function DeleteItemModel({
     } else {
       roomStats[itemToBeDeleted?.field]?.splice(
         roomStats[itemToBeDeleted?.field]?.findIndex((item) =>
-          roomStats[itemToBeDeleted?.field] !== 'nonPaintableAreas'
+          itemToBeDeleted?.field !== 'nonPaintableAreas'
             ? item.name === itemToBeDeleted.title
             : item.description === itemToBeDeleted.title && !item.isTotal
         ),
         1
       );
-
       if (roomStats.edit) {
         setRoomStats({ ...selectedRoomInfo, edit: true });
       }
