@@ -180,79 +180,89 @@ export const TEST_MATERIALS_VALUES_TO_SELECT = [
   }
 ];
 
-export const ROOM_RELATED_INFO = [
-  {
-    name: 'Walls',
-    mainItems: [
-      {
-        name: 'Room 1',
-        values: [
-          { name: 'Wall 1', assigned: '' },
-          { name: 'Wall 2', assigned: '' }
-        ]
-      },
-      {
-        name: 'Room 2',
-        values: [
-          { name: 'Wall 1', assigned: '' },
-          { name: 'Wall 2', assigned: '' },
-          { name: 'Wall 3', assigned: '' },
-          { name: 'Wall 4', assigned: '' }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Doors',
-    mainItems: [
-      {
-        name: 'Room 1',
-        values: [
-          { name: 'Door 1', assigned: '' },
-          { name: 'Door 2', assigned: '' }
-        ]
-      },
-      {
-        name: 'Room 2',
-        values: [
-          { name: 'Door 1', assigned: '' },
-          { name: 'Door 2', assigned: '' },
-          { name: 'Door 3', assigned: '' },
-          { name: 'Door 4', assigned: '' }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Windows',
-    mainItems: [
-      {
-        name: 'Room 1',
-        values: [
-          { name: 'Window 1', assigned: '' },
-          { name: 'Window 2', assigned: '' }
-        ]
-      },
-      {
-        name: 'Room 2',
-        values: [
-          { name: 'Window 1', assigned: '' },
-          { name: 'Window 2', assigned: '' },
-          { name: 'Window 3', assigned: '' },
-          { name: 'Window 4', assigned: '' }
-        ]
-      },
-      {
-        name: 'Room 4',
-        values: [
-          { name: 'Window 1', assigned: '' },
-          { name: 'Window 2', assigned: '' },
-          { name: 'Window 3', assigned: '' },
-          { name: 'Window 4', assigned: '' },
-          { name: 'Window 5', assigned: '' },
-          { name: 'Window 6', assigned: '' }
-        ]
-      }
-    ]
-  }
+// export const ROOM_RELATED_INFO = [
+//   {
+//     name: 'Walls',
+//     mainItems: [
+//       {
+//         name: 'Room 1',
+//         values: [
+//           { name: 'Wall 1', assigned: '' },
+//           { name: 'Wall 2', assigned: '' }
+//         ]
+//       },
+//       {
+//         name: 'Room 2',
+//         values: [
+//           { name: 'Wall 1', assigned: '' },
+//           { name: 'Wall 2', assigned: '' },
+//           { name: 'Wall 3', assigned: '' },
+//           { name: 'Wall 4', assigned: '' }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     name: 'Doors',
+//     mainItems: [
+//       {
+//         name: 'Room 1',
+//         values: [
+//           { name: 'Door 1', assigned: '' },
+//           { name: 'Door 2', assigned: '' }
+//         ]
+//       },
+//       {
+//         name: 'Room 2',
+//         values: [
+//           { name: 'Door 1', assigned: '' },
+//           { name: 'Door 2', assigned: '' },
+//           { name: 'Door 3', assigned: '' },
+//           { name: 'Door 4', assigned: '' }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     name: 'Windows',
+//     mainItems: [
+//       {
+//         name: 'Room 1',
+//         values: [
+//           { name: 'Window 1', assigned: '' },
+//           { name: 'Window 2', assigned: '' }
+//         ]
+//       },
+//       {
+//         name: 'Room 2',
+//         values: [
+//           { name: 'Window 1', assigned: '' },
+//           { name: 'Window 2', assigned: '' },
+//           { name: 'Window 3', assigned: '' },
+//           { name: 'Window 4', assigned: '' }
+//         ]
+//       },
+//       {
+//         name: 'Room 4',
+//         values: [
+//           { name: 'Window 1', assigned: '' },
+//           { name: 'Window 2', assigned: '' },
+//           { name: 'Window 3', assigned: '' },
+//           { name: 'Window 4', assigned: '' },
+//           { name: 'Window 5', assigned: '' },
+//           { name: 'Window 6', assigned: '' }
+//         ]
+//       }
+//     ]
+//   }
+// ];
+
+export const POPULAR_UNITS_OF_MEASUREMENT = ['Kilogram', 'Liter', 'Meter'];
+
+export const FIELDS_WHERE_MATERIALS_ARE_APPLIES = [
+  { label: 'doors' },
+  { label: 'walls' },
+  { label: 'windows' },
+  { label: 'ceilings' },
+  { label: 'doorJambs' }
 ];

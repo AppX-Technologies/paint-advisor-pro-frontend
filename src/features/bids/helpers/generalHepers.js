@@ -134,6 +134,40 @@ export const onlyWindows = (rooms) => {
   return paintableWindows;
 };
 
+export const setMaterialsAccordingToSection = (materialList) => {
+  const materialsAccordingToSection = [];
+  if (materialList && materialList[0]) {
+    materialList[0]?.materials.forEach((material) => {
+      material?.appliesTo?.forEach((materialApplication) => {
+        const foundMaterialSection = materialsAccordingToSection.find(
+          (materialSection) => materialSection.name === materialApplication
+        );
+        if (foundMaterialSection) {
+          foundMaterialSection.values.push({
+            description: material.description,
+            unit: material.unit,
+            unitPrice: material.unitPrice,
+            _id: material._id
+          });
+        } else {
+          materialsAccordingToSection.push({
+            name: materialApplication,
+            values: [
+              {
+                description: material.description,
+                unit: material.unit,
+                unitPrice: material.unitPrice,
+                _id: material._id
+              }
+            ]
+          });
+        }
+      });
+    });
+    return materialsAccordingToSection;
+  }
+};
+
 export const individualItem = (roomRelatedInfo, room, section, title) => {
   return roomRelatedInfo
     .find((a) => a.name === section)

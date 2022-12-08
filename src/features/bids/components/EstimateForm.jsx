@@ -63,8 +63,7 @@ export default function EstimateForm(props) {
     roomRelatedInfo,
     currentClientInfo,
     selectedStep,
-    setCurrentClientInfo,
-    onSelecetedListItemChange
+    setCurrentClientInfo
   } = props;
 
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
@@ -225,6 +224,7 @@ export default function EstimateForm(props) {
       setPreviousStateOfRooms({ ...currentClientInfo.bid });
     }
   }, [open]);
+
 
   return (
     <div>

@@ -182,7 +182,7 @@ export const RoomInfofields = [
     option: booleanOption
   },
   {
-    label: 'Ceiling',
+    label: 'Ceilings',
     name: 'ceilings',
     dataType: 'dropDown',
     option: booleanOption

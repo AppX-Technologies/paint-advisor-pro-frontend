@@ -11,7 +11,7 @@ const UPDATE_CLIENT = `${clientEndpoint}`;
 
 // Bids Related Endpoints
 const CREATE_BID = `${bidEndPoint}`;
-const updateBid = `${bidEndPoint}`;
+const UPDATE_BID = `${bidEndPoint}`;
 
 export const fetchAllClientsService = async (userData) => {
   const config = {
@@ -181,7 +181,7 @@ export const updateBidService = async (userData) => {
   };
 
   const response = await axios.put(
-    `${updateBid}/${userData._id}`,
+    `${UPDATE_BID}/${userData._id}`,
     {
       ...userData.bidFields
     },

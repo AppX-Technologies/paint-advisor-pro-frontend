@@ -99,3 +99,27 @@ export const processColumn = () => {
     }
   ];
 };
+export const materialColumn = () => {
+  return [
+    {
+      name: 'description',
+      label: 'Material Description',
+      width: '20%'
+    },
+    {
+      name: 'unit',
+      label: 'Unit',
+      width: '20%'
+    },
+    {
+      name: 'unitPrice',
+      label: 'Price Per Unit',
+      width: '20%'
+    },
+    {
+      name: 'appliesTo',
+      label: 'Applies To',
+      width: '50%'
+    }
+  ];
+};

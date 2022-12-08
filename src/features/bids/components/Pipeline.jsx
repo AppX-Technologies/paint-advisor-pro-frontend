@@ -41,7 +41,7 @@ import UploadFiles from './UploadFiles';
 import ViewFiles from './ViewFiles';
 
 const Pipeline = () => {
-  const { clientList, isSuccess } = useSelector((state) => state.bids);
+  const { clientList } = useSelector((state) => state.bids);
   const [primaryHeaderSearch, setPrimaryHeaderSearch] = useState('');
   const [showFilter, setShowFilter] = useState(false);
   const [open, setOpen] = useState(false);
@@ -85,6 +85,8 @@ const Pipeline = () => {
   const [selectOption, setSelectOption] = useState('All');
   const [sortOption, setSortOption] = useState('createdAt');
   const [comment, setComment] = useState('');
+
+  const { org } = useSelector((state) => state.org);
 
   const roomRelatedInfo = [
     {
@@ -141,7 +143,7 @@ const Pipeline = () => {
       ]
     },
     {
-      label: 'Ceiling',
+      label: 'Ceilings',
       name: 'ceilings',
       option: booleanOption,
       currentStats: ceilingStats,
@@ -280,7 +282,8 @@ const Pipeline = () => {
         sort: sortOption,
         isAscending: isAscending ? 1 : -1,
         token: user.token,
-        bidFilterValues
+        bidFilterValues,
+        organization: org._id
       })
     );
     setSelectedListItem(null);

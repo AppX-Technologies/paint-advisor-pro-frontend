@@ -9,6 +9,7 @@ import ProtectedRouteLayout from '../layouts/ProtectedRouteLayout';
 import PublicRouteLayout from '../layouts/PublicRouteLayout';
 import Dashboard from '../pages/Dashboard';
 import Login from '../pages/Login';
+import Materials from '../pages/Materials';
 import { Processes } from '../pages/Processes';
 import RegisterPage from '../pages/Register';
 import ProtectedRoute from './ProtectedRoute';
@@ -34,6 +35,7 @@ const AppRoutes = () => {
           <Route element={<AdminRouteLayout />}>
             <Route path='dashboard' element={<Dashboard />} />
             <Route path='processes' element={<Processes />} />
+            <Route path='materials' element={<Materials />} />
           </Route>
           <Route path='company'>
             <Route path=':companyId'>

@@ -112,7 +112,7 @@ export default function FormDialog(props) {
   };
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} PaperProps={{ sx: { width: '40%' } }}>
+      <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New Process</Typography>

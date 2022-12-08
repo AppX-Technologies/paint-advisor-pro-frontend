@@ -134,6 +134,8 @@ export const DraggableDataTable = ({
                                     color={rowItem['active'] ? 'success' : 'primary'}>
                                     Inactive
                                   </Chip>
+                                ) : Array.isArray(rowItem[item.name]) ? (
+                                  rowItem[item.name].join(' , ')
                                 ) : (
                                   rowItem[item.name]
                                 )}

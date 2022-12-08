@@ -4,6 +4,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 import FormatPaintOutlinedIcon from '@mui/icons-material/FormatPaintOutlined';
 import {
+  Autocomplete,
   Box,
   Divider,
   FormControl,
@@ -12,20 +13,26 @@ import {
   MenuItem,
   Select,
   Stack,
+  TextField,
   Tooltip,
   Typography
 } from '@mui/material';
-import { startCase } from 'lodash';
+import { cloneDeep, startCase } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import MaterialsPickerCard from '../../../common/MaterialsPickerCard';
 import { NONPAINTABLEAREAFIELD, TEST_MATERIALS_VALUES_TO_SELECT } from '../../../helpers/contants';
+import { isSystemUser } from '../../../helpers/roles';
+import { authSelector } from '../../auth/authSlice';
+import { fetchMaterial } from '../../materials/materialSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import {
   groupedPaintableMaterials,
   individualItem,
   roomInfo,
-  sectionInfo
+  sectionInfo,
+  setMaterialsAccordingToSection
 } from '../helpers/generalHepers';
 
 const MaterialsPicker = ({ currentClientInfo }) => {
@@ -37,7 +44,7 @@ const MaterialsPicker = ({ currentClientInfo }) => {
     ceilings: true,
     crownMoldings: true,
     closets: true,
-    doorjambs: true
+    doorJambs: true
   });
 
   const [currentlyChoosenMaterial, setCurrentyChoosenMaterial] = useState({
@@ -47,7 +54,7 @@ const MaterialsPicker = ({ currentClientInfo }) => {
     ceilings: '',
     crownMoldings: '',
     closets: '',
-    doorjambs: ''
+    doorJambs: ''
   });
 
   const [completelyFilledSection, setCompletelyFilledSection] = useState({
@@ -57,13 +64,19 @@ const MaterialsPicker = ({ currentClientInfo }) => {
     ceilings: false,
     crownMoldings: false,
     closets: false,
-    doorjambs: false
+    doorJambs: false
   });
 
-  const [completelyFilledRooms, setCompletelyFilledRooms] = useState({});
+  console.log(completelyFilledSection, 'completelyFilledSection');
 
+  const { materialList } = useSelector((state) => state.material);
+  const [completelyFilledRooms, setCompletelyFilledRooms] = useState({});
+  const [materialListSectionwise, setMaterialListSectionwise] = useState(null);
   const [showMaterialToPaint, setShowMaterialToPaint] = useState(true);
   const dispatch = useDispatch();
+  const { user } = useSelector(authSelector);
+  const { companyId } = useParams();
+  const { org } = useSelector((state) => state.org);
 
   // Material Assignment To Individual Item
 
@@ -136,8 +149,10 @@ const MaterialsPicker = ({ currentClientInfo }) => {
   };
 
   useEffect(() => {
-    setRoomRelatedInfo([...groupedPaintableMaterials(currentClientInfo?.bid?.rooms)]);
+    setRoomRelatedInfo(cloneDeep([...groupedPaintableMaterials(currentClientInfo?.bid?.rooms)]));
   }, [currentClientInfo?.bid?.rooms]);
+
+  console.log(currentClientInfo?.bid?.rooms, 'currentClientInfo?.bid?.rooms');
 
   useEffect(() => {
     currentClientInfo?.bid?.rooms.forEach((room) => {
@@ -145,6 +160,25 @@ const MaterialsPicker = ({ currentClientInfo }) => {
     });
     setCompletelyFilledRooms({ ...completelyFilledRooms });
   }, [currentClientInfo?.bid?.rooms]);
+
+  // Fetch Material According To Organization
+
+  useEffect(() => {
+    dispatch(
+      fetchMaterial({
+        token: user.token,
+        id: companyId ? org.materials : undefined
+      })
+    );
+  }, []);
+
+  useEffect(() => {
+    setMaterialListSectionwise(setMaterialsAccordingToSection(materialList));
+  }, [materialList]);
+
+  const findMaterialListSectionWise = (value) => {
+    return materialListSectionwise?.find((material) => material?.name === value);
+  };
 
   return (
     <>
@@ -232,77 +266,79 @@ const MaterialsPicker = ({ currentClientInfo }) => {
                             {/* DropDown */}
                             <Box
                               sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
                                 height: '100%'
                               }}>
-                              <FormControl fullWidth size='small' sx={{ windth: '90%' }}>
-                                <InputLabel id='demo-simple-select-label' sx={{ fontSize: '14px' }}>
-                                  Materials For {startCase(dropdownValue.name)}
-                                </InputLabel>
-                                <Select
-                                  value={currentlyChoosenMaterial[dropdownValue.name]}
-                                  onChange={(e) => {
-                                    currentlyChoosenMaterial[dropdownValue.name] = e.target.value;
+                              <Typography sx={{ fontSize: '14px' }}>
+                                Materials For {startCase(dropdownValue.name)}
+                              </Typography>
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center'
+                                }}>
+                                <Autocomplete
+                                  size='small'
+                                  onInputChange={(event, newInputValue) => {
+                                    currentlyChoosenMaterial[dropdownValue.name] = newInputValue;
                                     setCurrentyChoosenMaterial({ ...currentlyChoosenMaterial });
                                   }}
-                                  labelId='demo-simple-select-label'
-                                  id='demo-simple-select'
-                                  label={
-                                    <Typography
-                                      sx={{
-                                        fontSize: '10px'
-                                      }}>{`Materials For ${startCase(
-                                      dropdownValue.name
-                                    )}`}</Typography>
-                                  }>
-                                  {TEST_MATERIALS_VALUES_TO_SELECT.find(
-                                    (material) => material.name === dropdownValue.name
-                                  ).values.map((MatValue) => {
-                                    return <MenuItem value={MatValue}>{MatValue}</MenuItem>;
-                                  })}
-                                </Select>
-                              </FormControl>
-                              {/* Select For All */}
-                              <Box>
-                                {/* Section Completely Filled */}
-                                {!completelyFilledSection[dropdownValue.name] ? (
-                                  <>
-                                    <Tooltip title={`Apply To All ${dropdownValue.name}`}>
-                                      <FormatPaintOutlinedIcon
+                                  disablePortal
+                                  id='combo-box-demo'
+                                  options={
+                                    findMaterialListSectionWise(dropdownValue?.name) &&
+                                    findMaterialListSectionWise(dropdownValue?.name)?.values &&
+                                    findMaterialListSectionWise(dropdownValue?.name)?.values?.map(
+                                      (item) => item?.description
+                                    )
+                                  }
+                                  sx={{ mt: 1, width: '100%', mb: 1 }}
+                                  renderInput={(params) => (
+                                    <TextField {...params} label='Materials' />
+                                  )}
+                                />
+                                {/* Select For All */}
+                                <Box>
+                                  {/* Section Completely Filled */}
+                                  {!completelyFilledSection[dropdownValue.name] ? (
+                                    <>
+                                      <Tooltip title={`Apply To All ${dropdownValue.name}`}>
+                                        <FormatPaintOutlinedIcon
+                                          onClick={() =>
+                                            handleMaterialAssignmentForWholeSection(
+                                              dropdownValue.name
+                                            )
+                                          }
+                                          sx={{
+                                            mt: 1,
+                                            ml: 1,
+                                            cursor: 'pointer',
+                                            color: completelyFilledSection[dropdownValue.name]
+                                              ? 'green'
+                                              : 'gray'
+                                          }}
+                                        />
+                                      </Tooltip>
+                                    </>
+                                  ) : (
+                                    <Tooltip title={`Remove From All ${dropdownValue.name}`}>
+                                      <HighlightOffIcon
+                                        sx={{
+                                          fontSize: '25px',
+                                          cursor: 'pointer',
+                                          mt: 1,
+                                          ml: 1,
+                                          color: (theme) => theme.deleteicon.color.main
+                                        }}
                                         onClick={() =>
                                           handleMaterialAssignmentForWholeSection(
                                             dropdownValue.name
                                           )
                                         }
-                                        sx={{
-                                          mt: 1,
-                                          ml: 1,
-                                          cursor: 'pointer',
-                                          color: completelyFilledSection[dropdownValue.name]
-                                            ? 'green'
-                                            : 'gray'
-                                        }}
                                       />
                                     </Tooltip>
-                                  </>
-                                ) : (
-                                  <Tooltip title={`Remove From All ${dropdownValue.name}`}>
-                                    <HighlightOffIcon
-                                      sx={{
-                                        fontSize: '25px',
-                                        cursor: 'pointer',
-                                        mt: 1,
-                                        ml: 1,
-                                        color: (theme) => theme.deleteicon.color.main
-                                      }}
-                                      onClick={() =>
-                                        handleMaterialAssignmentForWholeSection(dropdownValue.name)
-                                      }
-                                    />
-                                  </Tooltip>
-                                )}
+                                  )}
+                                </Box>
                               </Box>
                             </Box>
                           </Grid>

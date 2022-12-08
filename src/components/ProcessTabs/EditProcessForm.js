@@ -29,7 +29,6 @@ export default function Edit(props) {
   const { processList } = useSelector((state) => state.process);
 
   const dispatch = useDispatch();
-
   React.useEffect(() => {
     Object.keys(editFormData).forEach((key) => {
       dispatchNew({
@@ -79,7 +78,7 @@ export default function Edit(props) {
 
   return (
     <div>
-      <Dialog open={openEditForm} onClose={handleClose} PaperProps={{ sx: { width: '40%' } }}>
+      <Dialog open={openEditForm} onClose={handleClose}>
         <DialogTitle>
           Edit Process
           <CircularProgress style={{ display: 'none' }} size={25} />
