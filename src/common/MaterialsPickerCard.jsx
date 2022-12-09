@@ -8,7 +8,8 @@ const MaterialsPickerCard = ({
   handleMaterialAssignment,
   handleMaterialDeletion,
   roomName,
-  section
+  section,
+  setCurrentlyActiveRoomInfo
 }) => {
   return (
     <Box
@@ -34,7 +35,12 @@ const MaterialsPickerCard = ({
             title={!materials ? `Apply On This ${title.slice(0, title.length - 1)}` : ''}
             placement='top'>
             <Chip
-              onClick={() => !materials && handleMaterialAssignment(roomName, section, title)}
+              onClick={() => {
+                if (!materials) {
+                  handleMaterialAssignment(roomName, section, title);
+                }
+                setCurrentlyActiveRoomInfo({ roomName, section });
+              }}
               color={materials ? 'success' : 'default'}
               sx={{ height: '16px', cursor: 'pointer' }}
               label={
@@ -47,7 +53,10 @@ const MaterialsPickerCard = ({
                     <Tooltip title='Remove Assigned Material' placement='top'>
                       <HighlightOffIcon
                         sx={{ fontSize: '15px', ml: 1 }}
-                        onClick={() => handleMaterialDeletion(roomName, section, title)}
+                        onClick={() => {
+                          handleMaterialDeletion(roomName, section, title);
+                          setCurrentlyActiveRoomInfo({ roomName, section });
+                        }}
                       />
                     </Tooltip>
                   )}

@@ -264,5 +264,7 @@ export const FIELDS_WHERE_MATERIALS_ARE_APPLIES = [
   { label: 'walls' },
   { label: 'windows' },
   { label: 'ceilings' },
-  { label: 'doorJambs' }
+  { label: 'doorJambs' },
+  { label: 'crownMoldings' },
+  { label: 'closets' }
 ];

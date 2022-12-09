@@ -14,6 +14,7 @@ const CREATE_BID = `${bidEndPoint}`;
 const UPDATE_BID = `${bidEndPoint}`;
 
 export const fetchAllClientsService = async (userData) => {
+  console.log(userData, 'userDatauserData');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -33,7 +34,7 @@ export const fetchAllClientsService = async (userData) => {
       limit: Number(userData.limit),
       query: userData.query,
       sort: { [userData.sort]: Number(userData.isAscending) },
-      filter: { bidTypes: filterValueObj.bidTypes }
+      filter: { bidTypes: filterValueObj.bidTypes, organization: userData.organization }
     },
     config
   );

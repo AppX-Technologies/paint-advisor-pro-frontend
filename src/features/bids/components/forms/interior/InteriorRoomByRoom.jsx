@@ -44,16 +44,6 @@ const InteriorRoomByRoom = ({
     setSelectedRoomInfo(value);
   };
 
-  const onCardDelete = (roomName) => {
-    setCurrentClientInfo({
-      ...currentClientInfo,
-      bid: {
-        ...currentClientInfo.bid,
-        rooms: [...currentClientInfo.bid.rooms.filter((room) => room.roomName !== roomName)]
-      }
-    });
-    onSelectedRoomInfoChange(null);
-  };
   const onCardEdit = () => {
     setEditRoom(true);
   };
@@ -122,7 +112,6 @@ const InteriorRoomByRoom = ({
           roomStats={roomStats}
           setRoomStats={setRoomStats}
           selectedRoomInfo={selectedRoomInfo}
-          onCardDelete={onCardDelete}
           setSelectedRoomInfo={setSelectedRoomInfo}
           setCurrentClientInfo={setCurrentClientInfo}
           currentClientInfo={currentClientInfo}

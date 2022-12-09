@@ -18,9 +18,11 @@ export function DeleteItemModel({
   setRoomStats,
   openDeleteModal,
   roomStats,
-  onCardDelete,
+
   selectedRoomInfo,
-  onSelectedRoomInfoChange
+  onSelectedRoomInfoChange,
+  currentClientInfo,
+  setCurrentClientInfo
 }) {
   const dispatch = useDispatch();
 
@@ -30,7 +32,16 @@ export function DeleteItemModel({
 
   const handleDelete = () => {
     if (!itemToBeDeleted) {
-      onCardDelete(selectedRoomInfo.roomName);
+      setCurrentClientInfo({
+        ...currentClientInfo,
+        bid: {
+          ...currentClientInfo.bid,
+          rooms: [
+            ...currentClientInfo.bid.rooms.filter((room) => room.roomName !== roomStats?.roomName)
+          ]
+        }
+      });
+
       onSelectedRoomInfoChange(null);
     } else {
       roomStats[itemToBeDeleted?.field]?.splice(

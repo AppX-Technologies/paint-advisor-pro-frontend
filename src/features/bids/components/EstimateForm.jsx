@@ -225,7 +225,6 @@ export default function EstimateForm(props) {
     }
   }, [open]);
 
-
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>
@@ -250,7 +249,7 @@ export default function EstimateForm(props) {
           </Button>
         </Toolbar>
 
-        {bidsIsLoading && <LinearProgress color='success' sx={{ height: '5px' }} />}
+        {bidsIsLoading && <LinearProgress color='success' sx={{ height: '10px' }} />}
 
         <DialogContent>
           <Grid container spacing={2} mt={2}>

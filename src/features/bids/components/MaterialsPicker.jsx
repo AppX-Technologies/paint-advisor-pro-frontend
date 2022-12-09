@@ -37,6 +37,8 @@ import {
 
 const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
   const [roomRelatedInfo, setRoomRelatedInfo] = useState(null);
+  const [currentlyActiveRoomInfo, setCurrentlyActiveRoomInfo] = useState({});
+
   const [expandArea, setExpandArea] = useState({
     walls: true,
     doors: true,
@@ -140,19 +142,12 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfoCopy, section);
     itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
       materialAssignment.forEach((materialToBeAssigned) => {
-        materialToBeAssigned.materials = currentlyChoosenMaterial[section];
+        materialToBeAssigned.materials = completelyFilledSection[section]
+          ? ''
+          : currentlyChoosenMaterial[section];
       });
     });
-    // itemToWhichMaterialIsToBeAssigned.mainItems.forEach((mainItem) => {
-    //   mainItem.values.forEach((individualValue) => {
-    //     individualValue.material = completelyFilledSection[section]
-    //       ? ''
-    //       : currentlyChoosenMaterial[section];
-    //   });
-    // });
-    // setRoomRelatedInfo([...roomRelatedInfo]);
-    // completelyFilledSection[section] = !completelyFilledSection[section];
-    // setCompletelyFilledSection({ ...completelyFilledSection });
+
     setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
@@ -207,6 +202,26 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
   const findMaterialListSectionWise = (value) => {
     return materialListSectionwise?.find((material) => material?.name === value);
   };
+
+
+  useEffect(() => {
+    const itemToWhichMaterialIsToBeAssigned = sectionInfo(
+      currentClientInfo,
+      currentlyActiveRoomInfo.section
+    );
+
+    if (
+      itemToWhichMaterialIsToBeAssigned?.every((roomDetails) =>
+        roomDetails?.every((room) => room.materials !== '')
+      )
+    ) {
+      completelyFilledSection[currentlyActiveRoomInfo.section] = true;
+    } else {
+      completelyFilledSection[currentlyActiveRoomInfo.section] = false;
+    }
+
+    setCompletelyFilledSection({ ...completelyFilledSection });
+  }, [currentClientInfo]);
 
   return (
     <>
@@ -331,7 +346,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                         })
                                       : []
                                   }
-                                  getOptionLabel={(option) => option || {}}
+                                  getOptionLabel={(option) => option}
                                   renderOption={(props, option) => (
                                     <Box
                                       {...props}
@@ -362,11 +377,15 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                     <>
                                       <Tooltip title={`Apply To All ${dropdownValue.name}`}>
                                         <FormatPaintOutlinedIcon
-                                          onClick={() =>
+                                          onClick={() => {
                                             handleMaterialAssignmentForWholeSection(
                                               dropdownValue.name
-                                            )
-                                          }
+                                            );
+                                            setCurrentlyActiveRoomInfo({
+                                              roomName: '',
+                                              section: dropdownValue.name
+                                            });
+                                          }}
                                           sx={{
                                             mt: 1,
                                             ml: 1,
@@ -482,6 +501,9 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                                     handleMaterialAssignmentForIndividualItem
                                                   }
                                                   roomName={mainItem.name}
+                                                  setCurrentlyActiveRoomInfo={
+                                                    setCurrentlyActiveRoomInfo
+                                                  }
                                                   section={dropdownValue.name}
                                                   handleMaterialDeletion={
                                                     handleMaterialDeletionForIndividualItem
