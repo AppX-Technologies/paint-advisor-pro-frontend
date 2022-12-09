@@ -165,7 +165,10 @@ const InteriorRoomByRoom = ({
       />
       {initialBidInfo.isMaterialProvidedByCustomer === 'No' &&
         currentClientInfo?.bid?.rooms.length !== 0 && (
-          <MaterialsPicker currentClientInfo={currentClientInfo} />
+          <MaterialsPicker
+            currentClientInfo={currentClientInfo}
+            setCurrentClientInfo={setCurrentClientInfo}
+          />
         )}
     </Box>
   );

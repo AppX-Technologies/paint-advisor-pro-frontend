@@ -99,8 +99,9 @@ export const findPaintableMaterials = (rooms) => {
 
 export const groupedPaintableMaterials = (rooms) => {
   const paintableAreaAccrToSection = [];
-
   const allPaintAbleArea = findPaintableMaterials(rooms);
+  console.log(allPaintAbleArea, 'allPaintAbleArea');
+
   if (allPaintAbleArea) {
     allPaintAbleArea.forEach((paintableArea) => {
       Object.keys(paintableArea)
@@ -126,12 +127,11 @@ export const groupedPaintableMaterials = (rooms) => {
   }
 };
 
-export const onlyWindows = (rooms) => {
-  const allPaintAbleArea = findPaintableMaterials(rooms);
-  const paintableWindows = allPaintAbleArea.map((area) => {
-    return { roomName: area.roomName, windows: area.windows };
-  });
-  return paintableWindows;
+export const findSpecificMaterial = (companyMaterialList, specificMaterialId) => {
+  return (
+    companyMaterialList &&
+    companyMaterialList.find((companyMaterial) => companyMaterial._id === specificMaterialId)
+  );
 };
 
 export const setMaterialsAccordingToSection = (materialList) => {
@@ -168,16 +168,20 @@ export const setMaterialsAccordingToSection = (materialList) => {
   }
 };
 
-export const individualItem = (roomRelatedInfo, room, section, title) => {
-  return roomRelatedInfo
-    .find((a) => a.name === section)
-    .mainItems.find((b) => b.name === room)
-    .values.find((c) => c.name === title);
+export const individualItem = (currentClientInfo, room, section, title) => {
+  return currentClientInfo?.bid?.rooms
+    ?.find((roomInfoForIndividualItem) => roomInfoForIndividualItem.roomName === room)
+    [section].find((individualEntity) => individualEntity.name === title);
 };
 
-export const roomInfo = (roomRelatedInfo, room, section) => {
-  return roomRelatedInfo.find((a) => a.name === section).mainItems.find((b) => b.name === room);
+export const roomInfo = (currentClientInfo, room, section) => {
+  return currentClientInfo?.bid?.rooms?.find(
+    (roomInformation) => roomInformation.roomName === room
+  )[section];
 };
 
-export const sectionInfo = (roomRelatedInfo, section) =>
-  roomRelatedInfo.find((a) => a.name === section);
+export const sectionInfo = (currentClientInfo, section) => {
+  return currentClientInfo?.bid?.rooms?.map((roomInfoForSection) => {
+    return roomInfoForSection[section];
+  });
+};

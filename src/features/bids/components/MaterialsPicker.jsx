@@ -18,16 +18,16 @@ import {
   Typography
 } from '@mui/material';
 import { cloneDeep, startCase } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import MaterialsPickerCard from '../../../common/MaterialsPickerCard';
-import { NONPAINTABLEAREAFIELD, TEST_MATERIALS_VALUES_TO_SELECT } from '../../../helpers/contants';
-import { isSystemUser } from '../../../helpers/roles';
+import { NONPAINTABLEAREAFIELD } from '../../../helpers/contants';
 import { authSelector } from '../../auth/authSlice';
 import { fetchMaterial } from '../../materials/materialSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import {
+  findSpecificMaterial,
   groupedPaintableMaterials,
   individualItem,
   roomInfo,
@@ -35,7 +35,7 @@ import {
   setMaterialsAccordingToSection
 } from '../helpers/generalHepers';
 
-const MaterialsPicker = ({ currentClientInfo }) => {
+const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
   const [roomRelatedInfo, setRoomRelatedInfo] = useState(null);
   const [expandArea, setExpandArea] = useState({
     walls: true,
@@ -57,6 +57,16 @@ const MaterialsPicker = ({ currentClientInfo }) => {
     doorJambs: ''
   });
 
+  const [currentlyChoosenMaterialDescription, setCurrentyChoosenMaterialDescription] = useState({
+    walls: '',
+    doors: '',
+    windows: '',
+    ceilings: '',
+    crownMoldings: '',
+    closets: '',
+    doorJambs: ''
+  });
+
   const [completelyFilledSection, setCompletelyFilledSection] = useState({
     walls: false,
     doors: false,
@@ -66,7 +76,6 @@ const MaterialsPicker = ({ currentClientInfo }) => {
     closets: false,
     doorJambs: false
   });
-
 
   const { materialList } = useSelector((state) => state.material);
   const [completelyFilledRooms, setCompletelyFilledRooms] = useState({});
@@ -88,22 +97,37 @@ const MaterialsPicker = ({ currentClientInfo }) => {
         })
       );
     }
-    const itemToWhichMaterialIsToBeAssigned = individualItem(roomRelatedInfo, room, section, title);
-    itemToWhichMaterialIsToBeAssigned.assigned = currentlyChoosenMaterial[section];
-    setRoomRelatedInfo([...roomRelatedInfo]);
+    const currentClientInfoCopy = cloneDeep(currentClientInfo);
+    const itemToWhichMaterialIsToBeAssigned = individualItem(
+      currentClientInfoCopy,
+      room,
+      section,
+      title
+    );
+    itemToWhichMaterialIsToBeAssigned.materials = currentlyChoosenMaterial[section];
+    setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
   // Deletion Of Material For Individual Item
 
   const handleMaterialDeletionForIndividualItem = (room, section, title) => {
-    const itemToWhichMaterialIsToBeAssigned = individualItem(roomRelatedInfo, room, section, title);
-    itemToWhichMaterialIsToBeAssigned.assigned = '';
-    setRoomRelatedInfo([...roomRelatedInfo]);
+    const currentClientInfoCopy = cloneDeep(currentClientInfo);
+
+    const itemToWhichMaterialIsToBeAssigned = individualItem(
+      currentClientInfoCopy,
+      room,
+      section,
+      title
+    );
+    itemToWhichMaterialIsToBeAssigned.materials = '';
+    setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
   // Material Assignment To Whole Section
 
   const handleMaterialAssignmentForWholeSection = (section) => {
+    const currentClientInfoCopy = cloneDeep(currentClientInfo);
+
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
@@ -112,22 +136,31 @@ const MaterialsPicker = ({ currentClientInfo }) => {
         })
       );
     }
-    const itemToWhichMaterialIsToBeAssigned = sectionInfo(roomRelatedInfo, section);
-    itemToWhichMaterialIsToBeAssigned.mainItems.forEach((mainItem) => {
-      mainItem.values.forEach((individualValue) => {
-        individualValue.assigned = completelyFilledSection[section]
-          ? ''
-          : currentlyChoosenMaterial[section];
+
+    const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfoCopy, section);
+    itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
+      materialAssignment.forEach((materialToBeAssigned) => {
+        materialToBeAssigned.materials = currentlyChoosenMaterial[section];
       });
     });
-    setRoomRelatedInfo([...roomRelatedInfo]);
-    completelyFilledSection[section] = !completelyFilledSection[section];
-    setCompletelyFilledSection({ ...completelyFilledSection });
+    // itemToWhichMaterialIsToBeAssigned.mainItems.forEach((mainItem) => {
+    //   mainItem.values.forEach((individualValue) => {
+    //     individualValue.material = completelyFilledSection[section]
+    //       ? ''
+    //       : currentlyChoosenMaterial[section];
+    //   });
+    // });
+    // setRoomRelatedInfo([...roomRelatedInfo]);
+    // completelyFilledSection[section] = !completelyFilledSection[section];
+    // setCompletelyFilledSection({ ...completelyFilledSection });
+    setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
   // Material Assignment To A Whole Room
 
   const handleMaterialAssignmentForWholeRoom = (room, section) => {
+    const currentClientInfoCopy = cloneDeep(currentClientInfo);
+
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
@@ -136,22 +169,18 @@ const MaterialsPicker = ({ currentClientInfo }) => {
         })
       );
     }
-    const itemToWhichMaterialIsToBeAssigned = roomInfo(roomRelatedInfo, room, section);
+    const itemToWhichMaterialIsToBeAssigned = roomInfo(currentClientInfoCopy, room, section);
 
-    itemToWhichMaterialIsToBeAssigned.values.forEach((individualValue) => {
-      individualValue.assigned = completelyFilledRooms[room]
-        ? ''
-        : currentlyChoosenMaterial[section];
+    itemToWhichMaterialIsToBeAssigned.forEach((individualValue) => {
+      individualValue.materials = currentlyChoosenMaterial[section];
     });
-    completelyFilledRooms[room] = !completelyFilledRooms[room];
-    setRoomRelatedInfo([...roomRelatedInfo]);
+    // completelyFilledRooms[room] = !completelyFilledRooms[room];
+    setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
   useEffect(() => {
     setRoomRelatedInfo(cloneDeep([...groupedPaintableMaterials(currentClientInfo?.bid?.rooms)]));
   }, [currentClientInfo?.bid?.rooms]);
-
-  console.log(currentClientInfo?.bid?.rooms, 'currentClientInfo?.bid?.rooms');
 
   useEffect(() => {
     currentClientInfo?.bid?.rooms.forEach((room) => {
@@ -250,7 +279,9 @@ const MaterialsPicker = ({ currentClientInfo }) => {
                       )}
                     </Box>
                     {expandArea[dropdownValue.name] === true &&
-                      dropdownValue.mainItems.every((mainItem) => mainItem.values.length === 0) && (
+                      dropdownValue.mainItems.every(
+                        (mainItem) => mainItem?.values?.length === 0
+                      ) && (
                         <Typography sx={{ fontSize: '12px', textAlign: 'center' }}>
                           No Info To Show
                         </Typography>
@@ -258,7 +289,7 @@ const MaterialsPicker = ({ currentClientInfo }) => {
                     {/* Materials Picker */}
                     {expandArea[dropdownValue.name] === true &&
                       !dropdownValue.mainItems.every(
-                        (mainItem) => mainItem.values.length === 0
+                        (mainItem) => mainItem?.values?.length === 0
                       ) && (
                         <Grid container gap={0.5}>
                           <Grid md={2} xs={10} sx={{ mb: 2, mt: 1, margin: '0px auto' }}>
@@ -277,20 +308,48 @@ const MaterialsPicker = ({ currentClientInfo }) => {
                                   alignItems: 'center'
                                 }}>
                                 <Autocomplete
+                                  value={currentlyChoosenMaterialDescription[dropdownValue?.name]}
                                   size='small'
-                                  onInputChange={(event, newInputValue) => {
-                                    currentlyChoosenMaterial[dropdownValue.name] = newInputValue;
+                                  onChange={(event, newInput) => {
+                                    currentlyChoosenMaterial[dropdownValue?.name] = newInput?._id;
                                     setCurrentyChoosenMaterial({ ...currentlyChoosenMaterial });
+                                    currentlyChoosenMaterialDescription[dropdownValue?.name] =
+                                      newInput?.description;
+                                    setCurrentyChoosenMaterialDescription({
+                                      ...currentlyChoosenMaterialDescription
+                                    });
                                   }}
                                   disablePortal
                                   id='combo-box-demo'
                                   options={
                                     findMaterialListSectionWise(dropdownValue?.name) &&
-                                    findMaterialListSectionWise(dropdownValue?.name)?.values &&
-                                    findMaterialListSectionWise(dropdownValue?.name)?.values?.map(
-                                      (item) => item?.description
-                                    )
+                                    findMaterialListSectionWise(dropdownValue?.name)?.values
+                                      ? findMaterialListSectionWise(
+                                          dropdownValue?.name
+                                        )?.values?.map((item) => {
+                                          return item;
+                                        })
+                                      : []
                                   }
+                                  getOptionLabel={(option) => option || {}}
+                                  renderOption={(props, option) => (
+                                    <Box
+                                      {...props}
+                                      sx={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                      }}>
+                                      <Box>
+                                        <Typography>{option?.description}</Typography>
+                                      </Box>
+                                      <Box ml={2}>
+                                        <Typography sx={{ fontSize: '13px', mt: 0.5 }}>
+                                          ({option?.unitPrice}/{option?.unit})
+                                        </Typography>
+                                      </Box>
+                                    </Box>
+                                  )}
                                   sx={{ mt: 1, width: '100%', mb: 1 }}
                                   renderInput={(params) => (
                                     <TextField {...params} label='Materials' />
@@ -347,7 +406,7 @@ const MaterialsPicker = ({ currentClientInfo }) => {
                             {dropdownValue.mainItems.map((mainItem, index) => {
                               return (
                                 <>
-                                  {mainItem.values.length !== 0 && (
+                                  {mainItem?.values && mainItem?.values?.length !== 0 && (
                                     <>
                                       <Box
                                         sx={{
@@ -404,14 +463,21 @@ const MaterialsPicker = ({ currentClientInfo }) => {
                                         )}
                                       </Box>
                                       <Grid container sx={{ mb: 1 }}>
-                                        {mainItem.values.length !== 0 &&
+                                        {mainItem?.values?.length !== 0 &&
                                           mainItem.values.map((value, idx) => {
                                             return (
                                               <Grid md={2.9} xs={10} sx={{ mt: 1, ml: 0.2 }}>
                                                 <MaterialsPickerCard
                                                   title={value.name}
                                                   index={idx}
-                                                  assigned={value.assigned}
+                                                  materials={
+                                                    findSpecificMaterial(
+                                                      materialList &&
+                                                        materialList[0] &&
+                                                        materialList[0]?.materials,
+                                                      value?.materials && value?.materials
+                                                    )?.description
+                                                  }
                                                   handleMaterialAssignment={
                                                     handleMaterialAssignmentForIndividualItem
                                                   }

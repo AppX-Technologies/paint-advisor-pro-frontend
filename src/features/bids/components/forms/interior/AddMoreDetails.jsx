@@ -115,7 +115,11 @@ const AddMoreDetails = ({
       if (roomInfoToEdit.edit) {
         delete currentStats._id;
         addIn?.splice(
-          addIn.findIndex((item) => item.name === roomInfoToEdit.name),
+          addIn.findIndex((item) =>
+            titleField !== NONPAINTABLEAREAFIELD
+              ? item.name === roomInfoToEdit.name
+              : item.description === roomInfoToEdit.description
+          ),
           1,
           { ...currentStats }
         );

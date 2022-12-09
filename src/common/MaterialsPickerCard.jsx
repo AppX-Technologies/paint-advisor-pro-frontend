@@ -4,7 +4,7 @@ import React from 'react';
 
 const MaterialsPickerCard = ({
   title,
-  assigned,
+  materials,
   handleMaterialAssignment,
   handleMaterialDeletion,
   roomName,
@@ -31,19 +31,19 @@ const MaterialsPickerCard = ({
             {title}
           </Typography>
           <Tooltip
-            title={!assigned ? `Apply On This ${title.slice(0, title.length - 1)}` : ''}
+            title={!materials ? `Apply On This ${title.slice(0, title.length - 1)}` : ''}
             placement='top'>
             <Chip
-              onClick={() => !assigned && handleMaterialAssignment(roomName, section, title)}
-              color={assigned ? 'success' : 'default'}
+              onClick={() => !materials && handleMaterialAssignment(roomName, section, title)}
+              color={materials ? 'success' : 'default'}
               sx={{ height: '16px', cursor: 'pointer' }}
               label={
                 <Box
                   sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Typography sx={{ fontSize: '11px' }}>
-                    {!assigned ? 'Not Assigned' : assigned}
+                    {!materials ? 'Not Assigned' : materials}
                   </Typography>
-                  {assigned && (
+                  {materials && (
                     <Tooltip title='Remove Assigned Material' placement='top'>
                       <HighlightOffIcon
                         sx={{ fontSize: '15px', ml: 1 }}
