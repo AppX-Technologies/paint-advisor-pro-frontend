@@ -46,7 +46,7 @@ export default function AddRoomForm(props) {
     ceilings: true,
     baseboardTrims: true,
     windowTrims: true,
-    doorjambs: true,
+    doorJambs: true,
     crownMoldings: true,
     closets: true
   });
@@ -162,6 +162,7 @@ export default function AddRoomForm(props) {
     }
   }, [open, selectedRoomInfo]);
 
+  console.log(roomFormValue, 'roomFormValue');
 
   return (
     <div>

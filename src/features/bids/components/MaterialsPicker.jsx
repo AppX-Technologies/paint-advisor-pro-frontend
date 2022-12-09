@@ -67,7 +67,6 @@ const MaterialsPicker = ({ currentClientInfo }) => {
     doorJambs: false
   });
 
-  console.log(completelyFilledSection, 'completelyFilledSection');
 
   const { materialList } = useSelector((state) => state.material);
   const [completelyFilledRooms, setCompletelyFilledRooms] = useState({});

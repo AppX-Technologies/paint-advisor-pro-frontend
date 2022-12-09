@@ -189,7 +189,7 @@ const Pipeline = () => {
     },
     {
       label: 'Door Jambs',
-      name: 'doorjambs',
+      name: 'doorJambs',
       option: booleanOption,
       currentStats: doorJambsStats,
       onCurrentStatsChange: setDoorJambsStats,

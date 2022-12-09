@@ -195,7 +195,7 @@ export const RoomInfofields = [
   },
   {
     label: 'Door Jambs',
-    name: 'doorjambss',
+    name: 'doorjambs',
     dataType: 'dropDown',
     option: booleanOption
   },

@@ -19,7 +19,7 @@ export const initialRoomState = {
   doors: [],
   baseboardTrims: [],
   windowTrims: [],
-  doorjambs: [],
+  doorJambs: [],
   crownMoldings: [],
   closets: [],
   nonPaintableAreas: [{ description: 'Current Total', area: 0 }]
@@ -119,10 +119,10 @@ export const initialClosetInfo = {
 export const initialCeilingInfo = {
   _id: '',
   name: '',
-  length: '',
-  width: '',
+  length: null,
+  width: null,
   type: '',
-  coats: '',
+  coats: null,
   product: [],
   paint: false
 };
