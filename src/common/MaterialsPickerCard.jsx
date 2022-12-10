@@ -1,6 +1,6 @@
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Box, CardContent, Chip, Tooltip, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const MaterialsPickerCard = ({
   title,

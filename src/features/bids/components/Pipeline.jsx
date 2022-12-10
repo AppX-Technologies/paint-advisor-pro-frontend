@@ -289,13 +289,11 @@ const Pipeline = () => {
     setSelectedListItem(null);
   };
 
-  console.log(org, 'orgorgorgorgorg');
-
   useEffect(() => {
     setSelectedListItem(
       filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
     );
-  }, [selectedStep, filteredClietsList]);
+  }, [selectedStep]);
 
   return (
     <>

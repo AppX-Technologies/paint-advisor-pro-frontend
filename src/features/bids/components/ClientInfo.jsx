@@ -101,7 +101,6 @@ const ClientInfo = ({
     }
   }, [currentClientInfo]);
 
-  console.log(currentClientInfo, 'currentClientInfo');
 
   return (
     <Box>

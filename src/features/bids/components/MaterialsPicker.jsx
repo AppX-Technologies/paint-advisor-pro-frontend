@@ -142,9 +142,20 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfoCopy, section);
     itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
       materialAssignment.forEach((materialToBeAssigned) => {
-        materialToBeAssigned.materials = completelyFilledSection[section]
-          ? ''
-          : currentlyChoosenMaterial[section];
+        materialToBeAssigned.materials = currentlyChoosenMaterial[section];
+      });
+    });
+
+    setCurrentClientInfo({ ...currentClientInfoCopy });
+  };
+
+  const handleMaterialDeletionForWholeSection = (section) => {
+    const currentClientInfoCopy = cloneDeep(currentClientInfo);
+
+    const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfoCopy, section);
+    itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
+      materialAssignment.forEach((materialToBeAssigned) => {
+        materialToBeAssigned.materials = '';
       });
     });
 
@@ -202,7 +213,6 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
   const findMaterialListSectionWise = (value) => {
     return materialListSectionwise?.find((material) => material?.name === value);
   };
-
 
   useEffect(() => {
     const itemToWhichMaterialIsToBeAssigned = sectionInfo(
@@ -408,9 +418,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                           color: (theme) => theme.deleteicon.color.main
                                         }}
                                         onClick={() =>
-                                          handleMaterialAssignmentForWholeSection(
-                                            dropdownValue.name
-                                          )
+                                          handleMaterialDeletionForWholeSection(dropdownValue.name)
                                         }
                                       />
                                     </Tooltip>

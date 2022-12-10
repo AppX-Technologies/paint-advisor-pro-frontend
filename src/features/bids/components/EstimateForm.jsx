@@ -98,19 +98,6 @@ export default function EstimateForm(props) {
         })
       );
     }
-    // Client's Status Update After Creating An Estimation
-    if (selectedStep === STATUS_NEW_CLIENT) {
-      dispatch(
-        updateClient({
-          status: STATUS_ESTIMATE_IN_PROGRESS,
-          token: user.token,
-          id: currentClientInfo._id
-        })
-      );
-      currentClientInfo?.bid?.rooms.forEach((room) => {
-        delete room._id;
-      });
-    }
 
     const currentClientInfoCopy = cloneDeep(currentClientInfo);
 
@@ -160,6 +147,20 @@ export default function EstimateForm(props) {
 
   useEffect(() => {
     if (bidsIsSuccess) {
+      // Client's Status Update After Creating An Estimation
+      if (selectedStep === STATUS_NEW_CLIENT) {
+        dispatch(
+          updateClient({
+            status: STATUS_ESTIMATE_IN_PROGRESS,
+            token: user.token,
+            id: currentClientInfo._id
+          })
+        );
+        currentClientInfo?.bid?.rooms.forEach((room) => {
+          delete room._id;
+        });
+      }
+
       setOpen(false);
       dispatch(
         showMessage({
@@ -249,7 +250,7 @@ export default function EstimateForm(props) {
           </Button>
         </Toolbar>
 
-        {bidsIsLoading && <LinearProgress color='success' sx={{ height: '10px' }} />}
+        {bidsIsLoading && <LinearProgress color='success' sx={{ height: '8px' }} />}
 
         <DialogContent>
           <Grid container spacing={2} mt={2}>

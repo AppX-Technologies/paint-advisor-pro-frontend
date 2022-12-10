@@ -50,12 +50,7 @@ export const buttonStageInfo = [
         color: 'error',
         icon: <DeleteIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
       },
-      {
-        text: 'Estimate Job',
-        color: 'info',
-        icon: <ScheduleIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />,
-        openForm: true
-      },
+
       {
         text: 'Update Estimation Info',
         color: 'success',

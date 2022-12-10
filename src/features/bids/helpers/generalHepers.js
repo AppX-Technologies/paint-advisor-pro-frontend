@@ -134,6 +134,15 @@ export const findSpecificMaterial = (companyMaterialList, specificMaterialId) =>
   );
 };
 
+export const findWheatherTheSectionIsCompletelyFilledOrNot = (roomsList, section) => {
+  return (
+    roomsList &&
+    roomsList.every((room) =>
+      room[section].every((individualSection) => individualSection?.materials !== '')
+    )
+  );
+};
+
 export const setMaterialsAccordingToSection = (materialList) => {
   const materialsAccordingToSection = [];
   if (materialList && materialList[0]) {
