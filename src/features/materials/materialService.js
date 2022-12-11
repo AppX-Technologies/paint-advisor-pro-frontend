@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-const endpoint = 'http://localhost:5001/materials';
-const CREATE_MATERIAL = `${endpoint}/`;
-const FETCH_MATERIAL = `http://localhost:5001/materials/list`;
-const UPDATE_MATERIAL = `${endpoint}/`;
-const DELETE_MATERIAL = `${endpoint}/`;
+const endpoint = process.env.REACT_APP_API_BASE_URL;
+
+const CREATE_MATERIAL = `${endpoint}/materials`;
+const FETCH_MATERIAL = `${endpoint}/materials/list`;
+const UPDATE_MATERIAL = `${endpoint}/materials`;
+const DELETE_MATERIAL = `${endpoint}/materials`;
 
 const fetchMaterial = async (userData) => {
   const config = {

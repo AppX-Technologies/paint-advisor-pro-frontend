@@ -15,6 +15,7 @@ import { Box, Chip, CircularProgress, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
+import { startCase } from 'lodash';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -135,7 +136,11 @@ export const DraggableDataTable = ({
                                     Inactive
                                   </Chip>
                                 ) : Array.isArray(rowItem[item.name]) ? (
-                                  rowItem[item.name].join(' , ')
+                                  rowItem[item.name]
+                                    .map(
+                                      (item) => item[0].toUpperCase() + item.slice(1, item.length)
+                                    )
+                                    .join(', ')
                                 ) : (
                                   rowItem[item.name]
                                 )}

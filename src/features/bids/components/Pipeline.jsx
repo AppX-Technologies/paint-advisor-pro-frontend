@@ -274,7 +274,6 @@ const Pipeline = () => {
 
   const handlePrimaryFilter = () => {
     setSelectedListItem(null);
-    delete bidFilterValues.status;
     dispatch(
       fetchAllClients({
         query: primaryHeaderSearch,

@@ -70,7 +70,7 @@ export default function EstimateForm(props) {
   const [previousStateOfRooms, setPreviousStateOfRooms] = React.useState(null);
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
-  const { bidsIsLoading, bidsIsSuccess, bidInfo, bidsIsError } = useSelector((state) => state.bids);
+  const { bidsIsLoading, bidsIsSuccess, bidsIsError, bidInfo } = useSelector((state) => state.bids);
   const { companyId } = useParams();
   const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
 
@@ -110,33 +110,18 @@ export default function EstimateForm(props) {
 
     setCurrentClientInfo({ ...currentClientInfoCopy });
 
-    if (selectedStep === STATUS_NEW_CLIENT) {
-      dispatch(
-        createBid({
-          token: user.token,
-          id: user._id,
-          bidFields: {
-            ...initialBidInfo,
-            rooms: [...currentClientInfo.bid.rooms],
-            isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'Yes'
-          },
-          organization: orgId
-        })
-      );
-    } else {
-      dispatch(
-        updateABid({
-          token: user.token,
-          _id: currentClientInfo.bid._id,
-          bidFields: {
-            ...initialBidInfo,
-            rooms: [...currentClientInfo.bid.rooms],
-            isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'Yes'
-          },
-          organization: orgId
-        })
-      );
-    }
+    dispatch(
+      updateABid({
+        token: user.token,
+        _id: currentClientInfo.bid._id,
+        bidFields: {
+          ...initialBidInfo,
+          rooms: [...currentClientInfo.bid.rooms],
+          isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'Yes'
+        },
+        organization: orgId
+      })
+    );
   };
 
   React.useEffect(() => {
@@ -186,6 +171,12 @@ export default function EstimateForm(props) {
   }, [bidsIsError]);
 
   useEffect(() => {
+    if (bidInfo) {
+      setCurrentClientInfo({ ...currentClientInfo, bid: { ...bidInfo } });
+    }
+  }, [bidInfo]);
+
+  useEffect(() => {
     if (open) {
       if (selectedStep !== STATUS_NEW_CLIENT) {
         setInitialBidInfo(
@@ -206,19 +197,6 @@ export default function EstimateForm(props) {
       }
     }
   }, [open]);
-
-  useEffect(() => {
-    if (bidInfo) {
-      dispatch(
-        updateClient({
-          bid: bidInfo?.response?.data?._id,
-          token: user.token,
-          id: currentClientInfo?._id
-        })
-      );
-      dispatch(reset());
-    }
-  }, [bidInfo]);
 
   useEffect(() => {
     if (open) {
@@ -250,7 +228,7 @@ export default function EstimateForm(props) {
           </Button>
         </Toolbar>
 
-        {bidsIsLoading && <LinearProgress color='success' sx={{ height: '8px' }} />}
+        {bidsIsLoading && <LinearProgress color='success' sx={{ height: '5px' }} />}
 
         <DialogContent>
           <Grid container spacing={2} mt={2}>

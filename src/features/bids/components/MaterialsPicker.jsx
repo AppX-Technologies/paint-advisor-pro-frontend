@@ -1,24 +1,20 @@
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-
+import { createFilterOptions } from '@mui/material/Autocomplete';
 import FormatPaintOutlinedIcon from '@mui/icons-material/FormatPaintOutlined';
 import {
   Autocomplete,
   Box,
   Divider,
-  FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
   TextField,
   Tooltip,
   Typography
 } from '@mui/material';
 import { cloneDeep, startCase } from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import MaterialsPickerCard from '../../../common/MaterialsPickerCard';
@@ -28,12 +24,18 @@ import { fetchMaterial } from '../../materials/materialSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import {
   findSpecificMaterial,
+  findWheatherTheSectionIsCompletelyFilledOrNot,
   groupedPaintableMaterials,
   individualItem,
   roomInfo,
   sectionInfo,
   setMaterialsAccordingToSection
 } from '../helpers/generalHepers';
+
+const filterOptions = createFilterOptions({
+  matchFrom: 'start',
+  stringify: (option) => option.description
+});
 
 const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
   const [roomRelatedInfo, setRoomRelatedInfo] = useState(null);
@@ -149,6 +151,8 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
+  // Material Deletion For Whole Section
+
   const handleMaterialDeletionForWholeSection = (section) => {
     const currentClientInfoCopy = cloneDeep(currentClientInfo);
 
@@ -190,7 +194,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
 
   useEffect(() => {
     currentClientInfo?.bid?.rooms.forEach((room) => {
-      completelyFilledRooms[room] = false;
+      completelyFilledRooms[room.roomName] = false;
     });
     setCompletelyFilledRooms({ ...completelyFilledRooms });
   }, [currentClientInfo?.bid?.rooms]);
@@ -215,22 +219,24 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
   };
 
   useEffect(() => {
-    const itemToWhichMaterialIsToBeAssigned = sectionInfo(
-      currentClientInfo,
-      currentlyActiveRoomInfo.section
-    );
+    if (!currentlyActiveRoomInfo.roomName) {
+      const itemToWhichMaterialIsToBeAssigned = sectionInfo(
+        currentClientInfo,
+        currentlyActiveRoomInfo.section
+      );
 
-    if (
-      itemToWhichMaterialIsToBeAssigned?.every((roomDetails) =>
-        roomDetails?.every((room) => room.materials !== '')
-      )
-    ) {
-      completelyFilledSection[currentlyActiveRoomInfo.section] = true;
-    } else {
-      completelyFilledSection[currentlyActiveRoomInfo.section] = false;
+      if (
+        itemToWhichMaterialIsToBeAssigned?.every((roomDetails) =>
+          roomDetails?.every((room) => room.materials !== '')
+        )
+      ) {
+        completelyFilledSection[currentlyActiveRoomInfo.section] = true;
+      } else {
+        completelyFilledSection[currentlyActiveRoomInfo.section] = false;
+      }
+
+      setCompletelyFilledSection({ ...completelyFilledSection });
     }
-
-    setCompletelyFilledSection({ ...completelyFilledSection });
   }, [currentClientInfo]);
 
   return (
@@ -333,6 +339,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                   alignItems: 'center'
                                 }}>
                                 <Autocomplete
+                                  filterOptions={filterOptions}
                                   value={currentlyChoosenMaterialDescription[dropdownValue?.name]}
                                   size='small'
                                   onChange={(event, newInput) => {
@@ -383,7 +390,11 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                 {/* Select For All */}
                                 <Box>
                                   {/* Section Completely Filled */}
-                                  {!completelyFilledSection[dropdownValue.name] ? (
+                                  {!completelyFilledSection[dropdownValue.name] ||
+                                  !findWheatherTheSectionIsCompletelyFilledOrNot(
+                                    currentClientInfo?.bid?.rooms,
+                                    dropdownValue.name
+                                  ) ? (
                                     <>
                                       <Tooltip title={`Apply To All ${dropdownValue.name}`}>
                                         <FormatPaintOutlinedIcon
@@ -451,12 +462,16 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                               placement='top'
                                               title={`Apply Material To All ${dropdownValue.name} Of ${mainItem.name} Room`}>
                                               <FormatPaintOutlinedIcon
-                                                onClick={() =>
+                                                onClick={() => {
                                                   handleMaterialAssignmentForWholeRoom(
                                                     mainItem.name,
                                                     dropdownValue.name
-                                                  )
-                                                }
+                                                  );
+                                                  setCurrentlyActiveRoomInfo({
+                                                    roomName: mainItem.name,
+                                                    section: dropdownValue.name
+                                                  });
+                                                }}
                                                 sx={{
                                                   fontSize: '14px',
                                                   ml: 1,
@@ -478,12 +493,16 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                                   ml: 1,
                                                   color: (theme) => theme.deleteicon.color.main
                                                 }}
-                                                onClick={() =>
+                                                onClick={() => {
                                                   handleMaterialAssignmentForWholeRoom(
                                                     mainItem.name,
                                                     dropdownValue.name
-                                                  )
-                                                }
+                                                  );
+                                                  setCurrentlyActiveRoomInfo({
+                                                    roomName: mainItem.name,
+                                                    section: dropdownValue.name
+                                                  });
+                                                }}
                                               />
                                             </Tooltip>
                                           </>

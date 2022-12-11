@@ -54,6 +54,7 @@ const DrawerMenu = ({ menuItems = [], open, onDrawerMenuChange }) => {
           <>
             <ListItemButton
               selected={pathname.includes(relLink)}
+              sx={{ p: 0.5 }}
               key={text}
               onClick={
                 text === 'Logout'

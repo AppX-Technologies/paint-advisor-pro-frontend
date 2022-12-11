@@ -381,7 +381,7 @@ export const bidsSlice = createSlice({
         state.bidsIsLoading = true;
       })
       .addCase(updateABid.fulfilled, (state, { payload }) => {
-        state.bidInfo = payload;
+        state.bidInfo = payload.data;
         state.bidsIsLoading = false;
         state.bidsIsSuccess = true;
       })

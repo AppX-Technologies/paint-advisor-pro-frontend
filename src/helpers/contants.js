@@ -37,6 +37,7 @@ export const STATUS_JOB_SCHEDULED = 'Job Scheduled';
 export const STATUS_JOB_IN_PROGRESS = 'Job In Progress';
 export const STATUS_INVOICING = 'Invoicing';
 export const STATUS_COMPLETE = 'Complete';
+export const STATUS_CANCELLED = 'Cancelled';
 
 export const BIDS_STAGES = [
   STATUS_NEW_CLIENT,
@@ -48,7 +49,8 @@ export const BIDS_STAGES = [
   STATUS_JOB_SCHEDULED,
   STATUS_JOB_IN_PROGRESS,
   STATUS_INVOICING,
-  STATUS_COMPLETE
+  STATUS_COMPLETE,
+  STATUS_CANCELLED
 ];
 
 export const NONPAINTABLEAREAFIELD = 'nonPaintableAreas';
@@ -257,7 +259,17 @@ export const TEST_MATERIALS_VALUES_TO_SELECT = [
 //   }
 // ];
 
-export const POPULAR_UNITS_OF_MEASUREMENT = ['Kilogram', 'Liter', 'Meter'];
+export const POPULAR_UNITS_OF_MEASUREMENT = [
+  'Kilogram',
+  'Litre',
+  'Metre',
+  'Pound',
+  'Feet',
+  'Quarts',
+  'Inches',
+  'Ounces',
+  'Gallons'
+];
 
 export const FIELDS_WHERE_MATERIALS_ARE_APPLIES = [
   { label: 'doors' },

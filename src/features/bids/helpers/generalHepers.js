@@ -135,6 +135,7 @@ export const findSpecificMaterial = (companyMaterialList, specificMaterialId) =>
 };
 
 export const findWheatherTheSectionIsCompletelyFilledOrNot = (roomsList, section) => {
+  console.log(roomsList, section, 'roomList,section');
   return (
     roomsList &&
     roomsList.every((room) =>

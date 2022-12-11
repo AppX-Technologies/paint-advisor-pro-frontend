@@ -1,20 +1,17 @@
 import axios from 'axios';
-import { STATUS_ESTIMATE_IN_PROGRESS } from '../../helpers/contants';
 
-const clientEndpoint = 'http://localhost:5001/clients';
-const bidEndPoint = 'http://localhost:5001/bids';
+const endpoint = process.env.REACT_APP_API_BASE_URL;
 
 // Client Related Endpoints
-const CREATE_CLIENTS = `${clientEndpoint}/`;
-const FETCH_CLIENTS = `${clientEndpoint}/search`;
-const UPDATE_CLIENT = `${clientEndpoint}`;
+const CREATE_CLIENTS = `${endpoint}/clients`;
+const FETCH_CLIENTS = `${endpoint}/clients/search`;
+const UPDATE_CLIENT = `${endpoint}/clients`;
 
 // Bids Related Endpoints
-const CREATE_BID = `${bidEndPoint}`;
-const UPDATE_BID = `${bidEndPoint}`;
+const CREATE_BID = `${endpoint}/bids`;
+const UPDATE_BID = `${endpoint}/bids`;
 
 export const fetchAllClientsService = async (userData) => {
-  console.log(userData, 'userDatauserData');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -34,7 +31,10 @@ export const fetchAllClientsService = async (userData) => {
       limit: Number(userData.limit),
       query: userData.query,
       sort: { [userData.sort]: Number(userData.isAscending) },
-      filter: { bidTypes: filterValueObj.bidTypes, organization: userData.organization }
+      filter: {
+        ...filterValueObj,
+        organization: userData.organization
+      }
     },
     config
   );
@@ -173,7 +173,6 @@ export const createBidServices = async (userData) => {
 };
 
 export const updateBidService = async (userData) => {
-  console.log(userData.rooms, 'userData.bidFields.bidFields');
   const config = {
     headers: {
       'Content-Type': 'application/json',

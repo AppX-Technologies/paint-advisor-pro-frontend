@@ -1,6 +1,4 @@
 import EditIcon from '@mui/icons-material/Edit';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-
 import {
   Badge,
   Box,
@@ -17,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ConfirmationModel from '../../../common/ConfirmationModel';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 import ScheduleTheJob from '../../../common/ScheduleTheJob';
-import { BIDS_STAGES } from '../../../helpers/contants';
+import { BIDS_STAGES, STATUS_CANCELLED } from '../../../helpers/contants';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
@@ -101,7 +99,6 @@ const ClientInfo = ({
     }
   }, [currentClientInfo]);
 
-
   return (
     <Box>
       {scheduleTheJob && (
@@ -124,7 +121,7 @@ const ClientInfo = ({
               updateClientStatus({
                 token: user.token,
                 id: currentClientInfo._id,
-                status: 'Cancel The Job'
+                status: STATUS_CANCELLED
               })
             );
           }}
@@ -149,8 +146,12 @@ const ClientInfo = ({
                 <EditIcon sx={{ cursor: 'pointer', ml: 1, width: '20px', height: '20px' }} />
               </Tooltip>
             </Box>
-
             <Box sx={{ display: 'flex' }}>
+              {currentClientInfo?.estimateScheduledDate && (
+                <Typography sx={{ fontSize: '13px', mr: 2 }}>
+                  ({new Date(currentClientInfo.estimateScheduledDate).toString().slice(4, 16)})
+                </Typography>
+              )}
               {findCurrentStageButtonInfo(selectedStep)
                 ?.actions.filter((item) =>
                   Object.keys(currentClientInfo).includes('estimateScheduledDate')
@@ -259,6 +260,7 @@ const ClientInfo = ({
                     item !== '_id' &&
                     item !== 'rooms' &&
                     item !== 'comments' &&
+                    item !== 'estimateScheduledDate' &&
                     item !== '__v'
                 )
                 .map((field) => {
@@ -286,7 +288,17 @@ const ClientInfo = ({
                           label={
                             <Typography
                               sx={{ textAlign: 'left', fontWeight: '400', fontSize: '12px' }}>
-                              {currentClientInfo[field] !== '' ? currentClientInfo[field] : null}
+                              {currentClientInfo[field] !== '' ? (
+                                currentClientInfo[field].length > 19 ? (
+                                  <Tooltip title={currentClientInfo[field]} placement='top'>
+                                    <Typography sx={{ fontSize: '12px' }}>
+                                      {currentClientInfo[field].slice(0, 16)}...
+                                    </Typography>
+                                  </Tooltip>
+                                ) : (
+                                  currentClientInfo[field]
+                                )
+                              ) : null}
                             </Typography>
                           }
                           size='small'

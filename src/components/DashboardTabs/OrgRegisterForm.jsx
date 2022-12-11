@@ -24,7 +24,7 @@ const initialFormState = {
   email: '',
   address: '',
   phone: '',
-  active: false
+  active: true
 };
 export default function FormDialog(props) {
   const dispatch = useDispatch();
@@ -130,7 +130,7 @@ export default function FormDialog(props) {
                 onChange={(e) => handleTextChange(e)}
               />
             </Grid>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -141,7 +141,7 @@ export default function FormDialog(props) {
                 }
                 label='Is organization active?'
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </DialogContent>
         <DialogActions>

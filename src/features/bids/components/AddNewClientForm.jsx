@@ -77,8 +77,6 @@ export default function AddNewClientForm(props) {
     }
   }, [open]);
 
-  
-
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose}>
@@ -103,7 +101,9 @@ export default function AddNewClientForm(props) {
 
         <DialogContent>
           <Grid container spacing={2}>
-            {AddNewClientTextField.map((item) => {
+            {AddNewClientTextField.filter(
+              (clientField) => clientField.name !== 'estimateScheduledDate'
+            ).map((item) => {
               const fieldType = item.name;
               return (
                 (item.dataType === 'text' && (

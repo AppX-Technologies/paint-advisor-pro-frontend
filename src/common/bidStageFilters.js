@@ -1,4 +1,4 @@
-import { BID_TYPES, STATUS_VALUES } from '../helpers/contants';
+import { BIDS_STAGES, BID_TYPES } from '../helpers/contants';
 
 export const bidStageFilter = [
   {
@@ -8,7 +8,7 @@ export const bidStageFilter = [
   },
   {
     label: 'Status',
-    values: STATUS_VALUES,
+    values: BIDS_STAGES,
     name: 'status'
   }
 ];

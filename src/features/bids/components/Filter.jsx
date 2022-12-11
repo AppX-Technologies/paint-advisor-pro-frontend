@@ -7,6 +7,7 @@ import {
   Divider,
   FormControlLabel,
   FormGroup,
+  Grid,
   IconButton,
   Slide,
   Toolbar,
@@ -106,23 +107,25 @@ const Filter = ({
                       }
                     />
                   </FormGroup>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', ml: 2 }}>
+                  <Grid container sx={{ pl: 2 }}>
                     {filter.values.map((value) => {
                       return (
-                        <FormGroup sx={{ ml: 1 }} size='small'>
-                          <FormControlLabel
-                            checked={bidFilterValues.some(
-                              (bidValue) =>
-                                bidValue.label === filter.label && bidValue.values.includes(value)
-                            )}
-                            onChange={() => handleBidFilter({ label: filter.label, value })}
-                            control={<Checkbox defaultChecked size='small' />}
-                            label={<Typography sx={{ fontSize: '15px' }}>{value}</Typography>}
-                          />
-                        </FormGroup>
+                        <Grid xs={6} md={4} lg={3}>
+                          <FormGroup sx={{ ml: 1 }} size='small'>
+                            <FormControlLabel
+                              checked={bidFilterValues.some(
+                                (bidValue) =>
+                                  bidValue.label === filter.label && bidValue.values.includes(value)
+                              )}
+                              onChange={() => handleBidFilter({ label: filter.label, value })}
+                              control={<Checkbox defaultChecked size='small' />}
+                              label={<Typography sx={{ fontSize: '13px' }}>{value}</Typography>}
+                            />
+                          </FormGroup>
+                        </Grid>
                       );
                     })}
-                  </Box>
+                  </Grid>
                   <Divider light />
                 </Box>
               );
