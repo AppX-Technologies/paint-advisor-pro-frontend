@@ -12,7 +12,7 @@ export const buttonStageInfo = [
       {
         text: 'View Files',
         color: 'warning',
-        icon: <FolderOutlinedIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
+        icon: <FolderOutlinedIcon sx={{ width: '15px', height: '15px', marginRight: '7px' }} />
       },
       {
         text: 'Cancel The Job',
@@ -22,12 +22,12 @@ export const buttonStageInfo = [
       {
         text: 'Schedule',
         color: 'info',
-        icon: <ScheduleIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
+        icon: <ScheduleIcon sx={{ width: '15px', height: '15px', marginRight: '7px' }} />
       },
       {
         text: 'Update Scheduled Job',
         color: 'info',
-        icon: <EditIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
+        icon: <EditIcon sx={{ width: '15px', height: '15px', marginRight: '7px' }} />
       },
       {
         text: 'Begin Estimate',

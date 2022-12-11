@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ConfirmationModel from '../../../common/ConfirmationModel';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 import ScheduleTheJob from '../../../common/ScheduleTheJob';
-import { BIDS_STAGES, STATUS_CANCELLED } from '../../../helpers/contants';
+import { BIDS_STAGES, STATUS_CANCELLED, STATUS_NEW_CLIENT } from '../../../helpers/contants';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
@@ -147,11 +147,6 @@ const ClientInfo = ({
               </Tooltip>
             </Box>
             <Box sx={{ display: 'flex' }}>
-              {currentClientInfo?.estimateScheduledDate && (
-                <Typography sx={{ fontSize: '13px', mr: 2 }}>
-                  ({new Date(currentClientInfo.estimateScheduledDate).toString().slice(4, 16)})
-                </Typography>
-              )}
               {findCurrentStageButtonInfo(selectedStep)
                 ?.actions.filter((item) =>
                   Object.keys(currentClientInfo).includes('estimateScheduledDate')
@@ -213,9 +208,9 @@ const ClientInfo = ({
                                 horizontal: 'left'
                               }}>
                               <Button
-                                sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
+                                sx={{ margin: '0 2px', minWidth: '30px', padding: 0.7 }}
                                 variant='outlined'
-                                startIcon={info.icon}
+                                endIcon={<>{info.icon}</>}
                                 color={info.color}
                                 onClick={() => {
                                   if (info.nextState) {
@@ -232,8 +227,17 @@ const ClientInfo = ({
                                   ) {
                                     setScheduleTheJob(true);
                                   }
-                                }}
-                              />
+                                }}>
+                                {selectedStep === STATUS_NEW_CLIENT &&
+                                  info.text === 'Update Scheduled Job' &&
+                                  currentClientInfo?.estimateScheduledDate && (
+                                    <Typography sx={{ fontSize: '10px' }}>
+                                      {new Date(currentClientInfo.estimateScheduledDate)
+                                        .toString()
+                                        .slice(4, 16)}
+                                    </Typography>
+                                  )}
+                              </Button>
                             </Badge>
                           </Tooltip>
                         </>
