@@ -103,7 +103,7 @@ export const materialColumn = () => {
   return [
     {
       name: 'description',
-      label: 'Material Description',
+      label: 'Paint Description',
       width: '20%'
     },
     {
@@ -116,6 +116,22 @@ export const materialColumn = () => {
       label: 'Price Per Unit',
       width: '20%'
     },
+    {
+      name: 'appliesTo',
+      label: 'Applies To',
+      width: '50%'
+    }
+  ];
+};
+
+export const equipmentColumn = () => {
+  return [
+    {
+      name: 'description',
+      label: 'Equiment Description',
+      width: '40%'
+    },
+
     {
       name: 'appliesTo',
       label: 'Applies To',

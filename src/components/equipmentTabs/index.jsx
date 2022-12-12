@@ -2,12 +2,11 @@ import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { materialTabLists } from '../../common/Constants';
+import { equipmentTabLists } from '../../common/Constants';
 import TabsNavigation from '../../common/TabsNavigation';
-import { fetchMaterial } from '../../features/materials/materialSlice';
+import { fetchEquipment, reset } from '../../features/equipments/equipmentSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { reset } from '../../features/usersFromCompany/usersFromCompanySlice';
-import MaterialTable from './MaterialTable';
+import EquipmentTable from './EquipmentTable';
 
 const Materials = () => {
   const [value, setValue] = React.useState(0);
@@ -18,7 +17,7 @@ const Materials = () => {
   const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const { isDeleted } = useSelector((state) => state.material);
+  const { isDeleted } = useSelector((state) => state.equipment);
   const { companyId } = useParams();
 
   const dispatch = useDispatch();
@@ -36,31 +35,31 @@ const Materials = () => {
     }
   }, [isDeleted]);
 
-  useEffect(() => {
-    dispatch(
-      fetchMaterial({
-        token: userDetail.token,
-        id: companyId ? org.materials : undefined
-      })
-    );
-  }, []);
+  //   useEffect(() => {
+  //     dispatch(
+  //       fetchEquipment({
+  //         token: userDetail.token,
+  //         id: companyId ? org.equipments : undefined
+  //       })
+  //     );
+  //   }, []);
 
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <TabsNavigation value={value} handleTabChange={handleChange} tabList={materialTabLists} />
+        <TabsNavigation value={value} handleTabChange={handleChange} tabList={equipmentTabLists} />
       </Box>
       <div role='tabpanel' id={`simple-tabpanel-${0}`} aria-labelledby={`simple-tab-${0}`}>
         <Box sx={{ p: 3 }}>
           <Typography>
             {value === 0 ? (
-              <MaterialTable
+              <EquipmentTable
                 filterValue='Interior'
                 openDeleteModal={openDeleteModal}
                 setOpenDeleteModal={setOpenDeleteModal}
               />
             ) : (
-              <MaterialTable
+              <EquipmentTable
                 filterValue='Exterior'
                 openDeleteModal={openDeleteModal}
                 setOpenDeleteModal={setOpenDeleteModal}

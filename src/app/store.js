@@ -7,6 +7,7 @@ import processReducer from '../features/process/processSlice';
 import snackbarReducer from '../features/snackbar/snackbarSlice';
 import userReducer from '../features/users/userSlice';
 import materialReducer from '../features/materials/materialSlice';
+import equipmentReducer from '../features/equipments/equipmentSlice';
 import usersFromCompanyReducer from '../features/usersFromCompany/usersFromCompanySlice';
 
 export const store = configureStore({
@@ -19,6 +20,7 @@ export const store = configureStore({
     process: processReducer,
     usersFromCompany: usersFromCompanyReducer,
     bids: bidsReducer,
-    material: materialReducer
+    material: materialReducer,
+    equipment: equipmentReducer
   }
 });

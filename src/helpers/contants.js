@@ -271,6 +271,16 @@ export const POPULAR_UNITS_OF_MEASUREMENT = [
   'Gallons'
 ];
 
+export const POPULAR_UNITS_OF_MEASUREMENT_FOR_EQUIPMENTS = [
+  'Kilogram',
+
+  'Metre',
+  'Pound',
+  'Feet',
+  'Quarts',
+  'Inches'
+];
+
 export const FIELDS_WHERE_MATERIALS_ARE_APPLIES = [
   { label: 'doors' },
   { label: 'walls' },

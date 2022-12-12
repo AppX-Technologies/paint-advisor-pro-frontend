@@ -12,6 +12,7 @@ import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { APP_NAME } from '../../helpers/contants';
 import DrawerMenu from './DrawerMenu';
 
@@ -104,7 +105,19 @@ export const NavigationDrawer = ({ title = APP_NAME, menuItems = [], children })
             justifyContent: 'space-between',
             px: [1]
           }}>
-          <IconButton sx={{ fontSize: '18px', fontWeight: '550' }}>Paint Advisor</IconButton>
+          <Link to='/dashboard' style={{ textDecoration: 'none' }}>
+            <IconButton
+              sx={{
+                fontSize: '18px',
+                fontWeight: '550',
+                backgroundColor: 'transparent',
+                '&:hover': {
+                  background: 'transparent'
+                }
+              }}>
+              Paint Advisor
+            </IconButton>
+          </Link>
           <IconButton onClick={toggleDrawer}>
             <ChevronLeftIcon />
           </IconButton>

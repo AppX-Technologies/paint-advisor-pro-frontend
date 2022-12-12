@@ -1,4 +1,4 @@
-import { Chip, CircularProgress, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Chip, CircularProgress, Grid, TextField, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -13,7 +13,10 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createMaterial } from '../../features/materials/materialSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { FIELDS_WHERE_MATERIALS_ARE_APPLIES } from '../../helpers/contants';
+import {
+  FIELDS_WHERE_MATERIALS_ARE_APPLIES,
+  POPULAR_UNITS_OF_MEASUREMENT
+} from '../../helpers/contants';
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function Edit(props) {
@@ -111,7 +114,7 @@ export default function Edit(props) {
     <div>
       <Dialog open={openEditForm} onClose={handleClose}>
         <DialogTitle>
-          Edit Material
+          Edit Paint
           <CircularProgress style={{ display: 'none' }} size={25} />
         </DialogTitle>
         <DialogContent>
@@ -124,7 +127,7 @@ export default function Edit(props) {
               minRows={3}
               variant='standard'
               id='material'
-              label='Material Description'
+              label='Paint Description'
               autoFocus
               value={formState.description}
               onChange={(e) => handleTextChange(e)}
@@ -132,22 +135,26 @@ export default function Edit(props) {
             />
           </Grid>
           <Grid container spacing={2} sx={{ marginBottom: '13px' }}>
-            <Grid item xs={3} md={3}>
-              <TextField
-                name='unit'
-                required
-                fullWidth
-                aria-label='minimum height'
-                minRows={3}
+            <Grid item xs={6} md={3} mt={2}>
+              <Autocomplete
+                size='small'
+                disableCloseOnSelect
+                inputValue={formState.unit}
                 variant='standard'
-                id='unit'
-                label='Unit'
-                autoFocus
-                value={formState.unit ? formState.unit : ''}
-                onChange={(e) => handleTextChange(e)}
-                style={{ width: '100%', marginTop: '13px' }}
+                freeSolo
+                onInputChange={(event, newInputValue) => {
+                  dispatchNew({
+                    type: 'HANDLE_FORM_INPUT',
+                    field: 'unit',
+                    payload: newInputValue
+                  });
+                }}
+                id='disable-list-wrap'
+                options={POPULAR_UNITS_OF_MEASUREMENT.map((option) => option)}
+                renderInput={(params) => <TextField {...params} label='Units' variant='standard' />}
               />
             </Grid>
+
             <Grid item xs={3} md={3}>
               <TextField
                 name='unitPrice'
@@ -181,7 +188,7 @@ export default function Edit(props) {
             </Grid>
             <Grid item xs={12} md={12}>
               <Typography sx={{ color: 'gray', fontWeight: 390, mb: 1 }}>
-                Material Applied To
+                Paint Applied To
               </Typography>
               {FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((field) => {
                 return (

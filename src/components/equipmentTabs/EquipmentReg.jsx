@@ -1,12 +1,4 @@
-import {
-  Autocomplete,
-  Chip,
-  CircularProgress,
-  Grid,
-  Stack,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Chip, CircularProgress, Grid, Stack, TextField, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -20,24 +12,18 @@ import { startCase } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createMaterial, reset } from '../../features/materials/materialSlice';
+import { createEquipment, reset } from '../../features/equipments/equipmentSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import {
-  FIELDS_WHERE_MATERIALS_ARE_APPLIES,
-  POPULAR_UNITS_OF_MEASUREMENT
-} from '../../helpers/contants';
-
+import { FIELDS_WHERE_MATERIALS_ARE_APPLIES } from '../../helpers/contants';
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function FormDialog(props) {
-  const { materialList, isSuccess } = useSelector((state) => state.material);
+  const { equipmentList, isSuccess } = useSelector((state) => state.equipment);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const dispatch = useDispatch();
   const { open, setOpen, bidType } = props;
   const initialFormState = {
     description: '',
-    unit: '',
-    unitPrice: '',
     bidType,
     appliesTo: []
   };
@@ -46,6 +32,8 @@ export default function FormDialog(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  console.log(formState, 'formStateformState');
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -68,13 +56,13 @@ export default function FormDialog(props) {
 
     const formStateWithToken = {
       ...formState,
-      ID: materialList[0]?._id,
-      previousMaterials: materialList[0]?.materials,
+      ID: equipmentList[0]?._id,
+      previousEquipments: equipmentList[0]?.equipments,
       add: true,
       token: userDetail.token
     };
 
-    dispatch(createMaterial(formStateWithToken));
+    dispatch(createEquipment(formStateWithToken));
 
     setOpen(false);
   };
@@ -83,7 +71,7 @@ export default function FormDialog(props) {
       setOpen(false);
       dispatch(
         showMessage({
-          message: 'Process Updated successfully',
+          message: 'Equipment Updated successfully',
           variant: 'success'
         })
       );
@@ -92,7 +80,7 @@ export default function FormDialog(props) {
   }, [isSuccess]);
 
   useEffect(() => {
-    ['description', 'unit', 'unitPrice', 'bidType'].forEach((key, i) => {
+    ['description', 'bidType'].forEach((key, i) => {
       dispatchNew({
         type: 'HANDLE_FORM_INPUT',
         field: key,
@@ -130,7 +118,7 @@ export default function FormDialog(props) {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           <Stack direction='row' spacing={2}>
-            <Typography variant='h6'>Add New Paint</Typography>
+            <Typography variant='h6'>Add New Equipment</Typography>
             <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
           </Stack>
         </DialogTitle>
@@ -143,8 +131,8 @@ export default function FormDialog(props) {
               aria-label='minimum height'
               minRows={3}
               variant='standard'
-              id='material'
-              label='Paint Description'
+              id='equipment'
+              label='Equipment Description'
               autoFocus
               value={formState.description}
               onChange={(e) => handleTextChange(e)}
@@ -152,44 +140,8 @@ export default function FormDialog(props) {
             />
           </Grid>
           <Grid container spacing={2}>
-            <Grid item xs={6} md={3} mt={2}>
-              <Autocomplete
-                size='small'
-                disableCloseOnSelect
-                inputValue={formState.unit}
-                variant='standard'
-                freeSolo
-                onInputChange={(event, newInputValue) => {
-                  dispatchNew({
-                    type: 'HANDLE_FORM_INPUT',
-                    field: 'unit',
-                    payload: newInputValue
-                  });
-                }}
-                id='disable-list-wrap'
-                options={POPULAR_UNITS_OF_MEASUREMENT.map((option) => option)}
-                renderInput={(params) => <TextField {...params} label='Units' variant='standard' />}
-              />
-            </Grid>
-            <Grid item xs={6} md={3}>
-              <TextField
-                name='unitPrice'
-                required
-                fullWidth
-                aria-label='minimum height'
-                minRows={3}
-                variant='standard'
-                id='unit'
-                label='Unit Price'
-                autoFocus
-                value={formState.unitPrice}
-                onChange={(e) => handleTextChange(e)}
-                style={{ width: '100%', marginTop: '13px' }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControl sx={{ m: 0, minWidth: 240, maxHeight: 30, marginTop: 3 }} size='small'>
+            <Grid item xs={12} md={12}>
+              <FormControl sx={{ m: 0, width: '100%', maxHeight: 30, marginTop: 3 }} size='small'>
                 <InputLabel id='demo-select-small'>Bid Type</InputLabel>
                 <Select
                   labelId='demo-select-small'
@@ -206,7 +158,7 @@ export default function FormDialog(props) {
 
             <Grid item xs={12} md={12}>
               <Typography sx={{ color: 'gray', fontWeight: 390, mb: 1 }}>
-                Paint Applied To
+                Equipment Applied To
               </Typography>
               {FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((field) => {
                 return (
