@@ -100,7 +100,6 @@ export const findPaintableMaterials = (rooms) => {
 export const groupedPaintableMaterials = (rooms) => {
   const paintableAreaAccrToSection = [];
   const allPaintAbleArea = findPaintableMaterials(rooms);
-  console.log(allPaintAbleArea, 'allPaintAbleArea');
 
   if (allPaintAbleArea) {
     allPaintAbleArea.forEach((paintableArea) => {
@@ -135,7 +134,6 @@ export const findSpecificMaterial = (companyMaterialList, specificMaterialId) =>
 };
 
 export const findWheatherTheSectionIsCompletelyFilledOrNot = (roomsList, section) => {
-  console.log(roomsList, section, 'roomList,section');
   return (
     roomsList &&
     roomsList.every((room) =>

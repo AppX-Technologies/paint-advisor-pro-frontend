@@ -153,7 +153,6 @@ export const updateClientStatusService = async (userData) => {
 // *Bids Related Services
 
 export const createBidServices = async (userData) => {
-  console.log(userData, 'userData');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -187,7 +186,6 @@ export const updateBidService = async (userData) => {
     },
     config
   );
-  console.log(response, 'jfhdghjdfghj');
 
   return response;
 };

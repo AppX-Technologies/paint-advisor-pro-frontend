@@ -31,7 +31,6 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   const [processId, setProcessId] = useState('');
   const [open, setOpen] = useState(false);
 
-  console.log(processList);
   const onDeleteBtnClick = (e, getId) => {
     e.stopPropagation();
     setProcessId(getId);

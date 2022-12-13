@@ -11,6 +11,8 @@ import { DeleteModal } from '../delete-model/DeleteModel';
 import Edit from './EditEquipmentForm';
 import FormDialog from './EquipmentReg';
 
+const columns = equipmentColumn();
+
 const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   const dispatch = useDispatch();
   const { equipmentList, isDeleting, isLoading, isSuccess } = useSelector(
@@ -27,29 +29,6 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
     e.stopPropagation();
     setEquipmentId(getId);
   };
-  const columns = equipmentColumn();
-
-  //   const resortMaterials = (sortedList, originalMaterialList) => {
-  //     if (!sortedList.length) return originalMaterialList;
-
-  //     const currentBidTypeAndStageRemoved = originalMaterialList.filter(
-  //       (item) => !sortedList.map((p) => p._id).includes(item._id)
-  //     );
-  //     return [...currentBidTypeAndStageRemoved, ...sortedList];
-  //   };
-
-  //   const onListSort = (dataList) => {
-  //     const formState = {};
-  //     const formStateWithToken = {
-  //       ...formState,
-  //       ID: equipmentList[0]._id,
-  //       previousMaterials: resortMaterials(dataList, equipmentList[0].equipments),
-  //       add: false,
-  //       token: userDetail.token
-  //     };
-  //     dispatch(createMaterial(formStateWithToken));
-  //     setFilteredEquipment(dataList);
-  //   };
 
   useEffect(() => {
     if (isSuccess) {

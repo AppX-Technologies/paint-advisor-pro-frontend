@@ -1,4 +1,15 @@
-import { Chip, CircularProgress, Grid, Stack, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Chip,
+  CircularProgress,
+  Grid,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography
+} from '@mui/material';
+import CancelIcon from '@mui/icons-material/Cancel';
+import FormatPaintIcon from '@mui/icons-material/FormatPaintOutlined';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -32,8 +43,6 @@ export default function FormDialog(props) {
   const handleClose = () => {
     setOpen(false);
   };
-
-  console.log(formState, 'formStateformState');
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -97,7 +106,7 @@ export default function FormDialog(props) {
     });
   };
 
-  const handleMaterialApplicableSection = (field) => {
+  const handleEquipmentApplicableSection = (field) => {
     if (formState.appliesTo.includes(field)) {
       dispatchNew({
         type: 'HANDLE_FORM_INPUT',
@@ -109,6 +118,22 @@ export default function FormDialog(props) {
         type: 'HANDLE_FORM_INPUT',
         field: 'appliesTo',
         payload: [...formState.appliesTo, field]
+      });
+    }
+  };
+
+  const handleEquipmentApplication = () => {
+    if (formState.appliesTo.length === 0) {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: 'appliesTo',
+        payload: FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((materialSection) => materialSection.label)
+      });
+    } else {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: 'appliesTo',
+        payload: []
       });
     }
   };
@@ -157,28 +182,79 @@ export default function FormDialog(props) {
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <Typography sx={{ color: 'gray', fontWeight: 390, mb: 1 }}>
-                Equipment Applied To
-              </Typography>
-              {FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((field) => {
-                return (
-                  <>
-                    <Chip
-                      label={startCase(field.label)}
-                      variant='outlined'
-                      onClick={() => handleMaterialApplicableSection(field.label)}
-                      sx={{
-                        bgcolor: formState.appliesTo.includes(field.label) ? '#E0E0E0' : 'white',
-                        m: 0.5,
-                        '&:hover': {
-                          bgcolor: formState.appliesTo.includes(field.label) ? '#E0E0E0' : 'white'
-                        }
-                      }}
-                      size='small'
-                    />
-                  </>
-                );
-              })}
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography sx={{ color: 'gray', fontWeight: 397, mb: 1 }}>
+                  Equipment Applied To
+                </Typography>
+                <Tooltip
+                  placement='top'
+                  title={
+                    formState.appliesTo.length === 0
+                      ? 'Apply To  All Sections'
+                      : 'Remove From All Sections'
+                  }>
+                  <FormatPaintIcon
+                    onClick={handleEquipmentApplication}
+                    sx={{
+                      width: '16px',
+                      height: '16px',
+                      ml: 1,
+                      cursor: 'pointer',
+                      color: formState.appliesTo.length === 0 ? 'green' : 'gray'
+                    }}
+                  />
+                </Tooltip>
+              </Box>
+              <Grid container>
+                {FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((field) => {
+                  return (
+                    <Grid xs={4} md={3}>
+                      <Tooltip
+                        title={!formState.appliesTo.includes(field.label) ? 'Click To Add' : ''}
+                        placement='top'>
+                        <Chip
+                          color={formState.appliesTo.includes(field.label) ? 'error' : 'default'}
+                          label={
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between'
+                              }}>
+                              <Typography sx={{ fontSize: '14px' }}>
+                                {startCase(field.label)}
+                              </Typography>
+                              {formState.appliesTo.includes(field.label) && (
+                                <Tooltip title='Remove From Applied To' placement='top'>
+                                  <CancelIcon
+                                    sx={{ width: '14px', height: '16px', ml: 0.5 }}
+                                    onClick={() => handleEquipmentApplicableSection(field.label)}
+                                  />
+                                </Tooltip>
+                              )}
+                            </Box>
+                          }
+                          variant='outlined'
+                          onClick={() =>
+                            !formState.appliesTo.includes(field.label) &&
+                            handleEquipmentApplicableSection(field.label)
+                          }
+                          sx={{
+                            width: '96%',
+                            height: '20px',
+                            bgcolor: 'transparent',
+                            m: 0.5,
+                            '&:hover': {
+                              bgcolor: 'black'
+                            }
+                          }}
+                          size='small'
+                        />
+                      </Tooltip>
+                    </Grid>
+                  );
+                })}
+              </Grid>
             </Grid>
           </Grid>
         </DialogContent>

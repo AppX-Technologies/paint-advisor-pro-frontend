@@ -51,11 +51,9 @@ const Pipeline = () => {
   const [filteredClietsList, setFilteredClietsList] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [showFilesToView, setShowFilesToView] = useState(null);
-  console.log(selectedStep, 'selectedStep');
   const [currentClientInfo, setCurrentClientInfo] = useState(
     findCurrentClient(clientList, selectedListItem)
   );
-  const [commentList, setCommentList] = useState([]);
   const [initialEstimateBidInfo, setInitialEstimateBidInfo] = useState(estimationFormInitialInfo);
   const [allRoom, setAllRoom] = React.useState([]);
   const [value, setValue] = React.useState([null, null]);
@@ -292,7 +290,7 @@ const Pipeline = () => {
     setSelectedListItem(
       filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
     );
-  }, [selectedStep]);
+  }, [selectedStep, filteredClietsList]);
 
   return (
     <>
@@ -437,7 +435,6 @@ const Pipeline = () => {
                     <Comment
                       currentClientInfo={currentClientInfo}
                       selectedListItem={selectedListItem}
-                      onCommentListChange={setCommentList}
                       comment={comment}
                       onCommentsChange={setComment}
                     />

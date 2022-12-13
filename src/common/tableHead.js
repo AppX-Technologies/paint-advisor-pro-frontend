@@ -128,7 +128,7 @@ export const equipmentColumn = () => {
   return [
     {
       name: 'description',
-      label: 'Equiment Description',
+      label: 'Equipment Description',
       width: '40%'
     },
 

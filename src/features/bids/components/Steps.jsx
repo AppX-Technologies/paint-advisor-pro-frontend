@@ -6,7 +6,7 @@ import { BIDS_STAGES } from '../../../helpers/contants';
 
 const Steps = ({ selectedStep, onSelectedStepChange }) => {
   return (
-    <Card>
+    <Card sx={{ position: 'sticky', top: 0, bgcolor: 'white', zIndex: '20000' }}>
       <Box
         sx={{
           position: 'sticky',

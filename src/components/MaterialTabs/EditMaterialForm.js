@@ -1,14 +1,25 @@
-import { Autocomplete, Chip, CircularProgress, Grid, TextField, Typography } from '@mui/material';
+import FormatPaintIcon from '@mui/icons-material/FormatPaintOutlined';
+import {
+  Autocomplete,
+  Box,
+  Chip,
+  CircularProgress,
+  Grid,
+  TextField,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
+import CancelIcon from '@mui/icons-material/Cancel';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { cloneDeep, startCase } from 'lodash';
+import { startCase } from 'lodash';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createMaterial } from '../../features/materials/materialSlice';
@@ -20,6 +31,7 @@ import {
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function Edit(props) {
+  React.useState(false);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const { openEditForm, setOpenEditForm, editFormData } = props;
 
@@ -30,8 +42,6 @@ export default function Edit(props) {
     bidType: editFormData.bidType ? editFormData.bidType : '',
     appliesTo: editFormData?.appliesTo ? [...editFormData.appliesTo] : []
   };
-
-  console.log(initialFormState, 'initialFormState');
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
   const { materialList } = useSelector((state) => state.material);
@@ -86,7 +96,6 @@ export default function Edit(props) {
       previousMaterials: materialList[0].materials.filter(
         (previousMaterials) => previousMaterials._id !== editFormData._id
       ),
-
       add: true,
       token: userDetail.token
     };
@@ -106,6 +115,22 @@ export default function Edit(props) {
         type: 'HANDLE_FORM_INPUT',
         field: 'appliesTo',
         payload: [...formState.appliesTo, field]
+      });
+    }
+  };
+
+  const handleMaterialApplication = () => {
+    if (formState.appliesTo.length === 0) {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: 'appliesTo',
+        payload: FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((materialSection) => materialSection.label)
+      });
+    } else {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: 'appliesTo',
+        payload: []
       });
     }
   };
@@ -187,28 +212,75 @@ export default function Edit(props) {
               </FormControl>
             </Grid>
             <Grid item xs={12} md={12}>
-              <Typography sx={{ color: 'gray', fontWeight: 390, mb: 1 }}>
-                Paint Applied To
-              </Typography>
-              {FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((field) => {
-                return (
-                  <>
-                    <Chip
-                      label={startCase(field.label)}
-                      variant='outlined'
-                      onClick={() => handleMaterialApplicableSection(field.label)}
-                      sx={{
-                        bgcolor: formState.appliesTo.includes(field.label) ? '#E0E0E0' : 'white',
-                        m: 0.5,
-                        '&:hover': {
-                          bgcolor: formState.appliesTo.includes(field.label) ? '#E0E0E0' : 'white'
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography sx={{ color: 'gray', fontWeight: 390, mb: 1 }}>
+                  Paint Applied To
+                </Typography>
+                <Tooltip
+                  placement='top'
+                  title={
+                    formState.appliesTo.length === 0
+                      ? 'Apply To  All Sections'
+                      : 'Remove From All Sections'
+                  }>
+                  <FormatPaintIcon
+                    onClick={handleMaterialApplication}
+                    sx={{
+                      width: '16px',
+                      height: '16px',
+                      ml: 1,
+                      cursor: 'pointer',
+                      color: formState.appliesTo.length === 0 ? 'green' : 'gray'
+                    }}
+                  />
+                </Tooltip>
+              </Box>
+              <Grid container>
+                {FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((field) => {
+                  return (
+                    <Grid xs={4} md={3}>
+                      <Chip
+                        color={formState.appliesTo.includes(field.label) ? 'error' : 'default'}
+                        label={
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between'
+                            }}>
+                            <Typography sx={{ fontSize: '14px' }}>
+                              {startCase(field.label)}
+                            </Typography>
+                            {formState.appliesTo.includes(field.label) && (
+                              <Tooltip title='Remove From Applies To' placement='top'>
+                                <CancelIcon
+                                  sx={{ width: '14px', height: '16px', ml: 0.5 }}
+                                  onClick={() => handleMaterialApplicableSection(field.label)}
+                                />
+                              </Tooltip>
+                            )}
+                          </Box>
                         }
-                      }}
-                      size='small'
-                    />
-                  </>
-                );
-              })}
+                        variant='outlined'
+                        onClick={() =>
+                          !formState.appliesTo.includes(field.label) &&
+                          handleMaterialApplicableSection(field.label)
+                        }
+                        sx={{
+                          height: '20px',
+                          width: '96%',
+                          bgcolor: 'transparent',
+                          m: 0.5,
+                          '&:hover': {
+                            bgcolor: 'black'
+                          }
+                        }}
+                        size='small'
+                      />
+                    </Grid>
+                  );
+                })}
+              </Grid>
             </Grid>
           </Grid>
         </DialogContent>

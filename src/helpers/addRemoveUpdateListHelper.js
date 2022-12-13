@@ -16,6 +16,5 @@ export const updateClientBidInfo = (clientList, clientId, object) => {
   if (foundClient) {
     foundClient.bid = object;
   }
-  console.log(clientList, 'clientList');
   return clientList;
 };

@@ -43,7 +43,7 @@ export const buttonStageInfo = [
       {
         text: 'View Files',
         color: 'warning',
-        icon: <FolderOutlinedIcon sx={{ width: '15px', height: '15px', marginLeft: '13px' }} />
+        icon: <FolderOutlinedIcon sx={{ width: '15px', height: '15px', marginRight: '7px' }} />
       },
       {
         text: 'Cancel The Job',

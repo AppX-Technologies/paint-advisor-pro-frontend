@@ -20,7 +20,6 @@ const initialState = {
 
 // get
 
-
 export const fetchEquipment = createAsyncThunk(
   'equipment/fetchEquipment',
   async (userData, thunkAPI) => {
@@ -58,7 +57,6 @@ export const fetchSingleEquipment = createAsyncThunk(
 export const createEquipment = createAsyncThunk(
   'equipment/createEquipment',
   async (userData, thunkAPI) => {
-    console.log(userData, 'userDatauserData');
     try {
       const response = await equipmentService.createEquipment(userData);
       return response;

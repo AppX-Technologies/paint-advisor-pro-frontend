@@ -162,8 +162,6 @@ export default function AddRoomForm(props) {
     }
   }, [open, selectedRoomInfo]);
 
-  console.log(roomFormValue, 'roomFormValue');
-
   return (
     <div>
       <Dialog open={open} PaperProps={{ sx: { minWidth: '80%' } }}>

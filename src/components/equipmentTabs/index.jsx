@@ -21,6 +21,7 @@ const Materials = () => {
   const { companyId } = useParams();
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (isDeleted) {
       dispatch(
@@ -35,14 +36,16 @@ const Materials = () => {
     }
   }, [isDeleted]);
 
-  //   useEffect(() => {
-  //     dispatch(
-  //       fetchEquipment({
-  //         token: userDetail.token,
-  //         id: companyId ? org.equipments : undefined
-  //       })
-  //     );
-  //   }, []);
+  // Fetching Equipments On First Render
+
+  // useEffect(() => {
+  //   dispatch(
+  //     fetchEquipment({
+  //       token: userDetail.token,
+  //       id: companyId ? org.equipments : undefined
+  //     })
+  //   );
+  // }, []);
 
   return (
     <Box sx={{ width: '100%' }}>

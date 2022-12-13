@@ -58,7 +58,6 @@ export const fetchSingleMaterial = createAsyncThunk(
 export const createMaterial = createAsyncThunk(
   'material/createMaterial',
   async (userData, thunkAPI) => {
-    console.log(userData, 'userDatauserData');
     try {
       const response = await materialService.createMaterial(userData);
       return response;
