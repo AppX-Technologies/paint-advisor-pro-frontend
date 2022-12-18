@@ -15,10 +15,9 @@ import { showMessage } from '../../../snackbar/snackbarSlice';
 export function DeleteItemModel({
   itemToBeDeleted,
   setOpenDeleteModal,
-  setRoomStats,
+  setRoomFormValue,
   openDeleteModal,
-  roomStats,
-
+  roomFormValue,
   selectedRoomInfo,
   onSelectedRoomInfoChange,
   currentClientInfo,
@@ -37,15 +36,17 @@ export function DeleteItemModel({
         bid: {
           ...currentClientInfo.bid,
           rooms: [
-            ...currentClientInfo.bid.rooms.filter((room) => room.roomName !== roomStats?.roomName)
+            ...currentClientInfo.bid.rooms.filter(
+              (room) => room.roomName !== roomFormValue?.roomName
+            )
           ]
         }
       });
 
       onSelectedRoomInfoChange(null);
     } else {
-      roomStats[itemToBeDeleted?.field]?.splice(
-        roomStats[itemToBeDeleted?.field]?.findIndex((item) =>
+      roomFormValue[itemToBeDeleted?.field]?.splice(
+        roomFormValue[itemToBeDeleted?.field]?.findIndex((item) =>
           itemToBeDeleted?.field !== 'nonPaintableAreas'
             ? item.name === itemToBeDeleted.title
             : item.description === itemToBeDeleted.title &&
@@ -53,8 +54,8 @@ export function DeleteItemModel({
         ),
         1
       );
-      if (roomStats.edit) {
-        setRoomStats({ ...selectedRoomInfo, edit: true });
+      if (roomFormValue.edit) {
+        setRoomFormValue({ ...selectedRoomInfo, edit: true });
       }
     }
 

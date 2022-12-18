@@ -104,7 +104,7 @@ export const materialColumn = () => {
   return [
     {
       name: 'description',
-      label: 'Material Description',
+      label: 'Paint Description',
       width: '20%'
     },
     {
@@ -125,32 +125,12 @@ export const materialColumn = () => {
   ];
 };
 
-export const productRateColumn = () => {
+export const equipmentColumn = () => {
   return [
     {
-      name: 'painterName',
-      label: 'Painter Name',
-      width: '20%'
-    },
-    {
-      name: 'orangePeel',
-      label: 'Orange Peel',
-      width: '20%'
-    },
-    {
-      name: 'smooth',
-      label: 'Smooth',
-      width: '20%'
-    },
-    {
-      name: 'knockDown',
-      label: 'Knock Down',
-      width: '20%'
-    },
-    {
-      name: 'popcorn',
-      label: 'Popcorn',
-      width: '20%'
+      name: 'description',
+      label: 'Equipment Description',
+      width: '40%'
     }
   ];
 };

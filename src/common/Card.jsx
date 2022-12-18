@@ -17,7 +17,7 @@ const Card = ({
   setOpenDeleteModal,
   setCurentAddMore,
   setitemToBeDeleted,
-  roomStats
+  roomFormValue
 }) => {
   const dimension = useMemo(() => {
     return `${items.length}x${items.height ? items.height : items.width}`;
@@ -95,7 +95,7 @@ const Card = ({
                   onClick={() => {
                     setCurentAddMore(field);
                     setOpenDeleteModal(true);
-                    setitemToBeDeleted({ title, field, roomStats });
+                    setitemToBeDeleted({ title, field, roomFormValue });
                   }}
                 />
               </Tooltip>
@@ -210,7 +210,7 @@ const Card = ({
                       onClick={() => {
                         setCurentAddMore(field);
                         setOpenDeleteModal(true);
-                        setitemToBeDeleted({ title: items.description, field, roomStats });
+                        setitemToBeDeleted({ title: items.description, field, roomFormValue });
                       }}
                     />
                   </Tooltip>

@@ -7,6 +7,7 @@ import processReducer from '../features/process/processSlice';
 import snackbarReducer from '../features/snackbar/snackbarSlice';
 import userReducer from '../features/users/userSlice';
 import materialReducer from '../features/materials/materialSlice';
+import equipmentReducer from '../features/equipments/equipmentSlice';
 import usersFromCompanyReducer from '../features/usersFromCompany/usersFromCompanySlice';
 import productionRateReducer from '../features/productionRate/productionRateSlice';
 
@@ -21,6 +22,7 @@ export const store = configureStore({
     usersFromCompany: usersFromCompanyReducer,
     bids: bidsReducer,
     material: materialReducer,
-    productionRate: productionRateReducer
+    productionRate: productionRateReducer,
+    equipment: equipmentReducer
   }
 });

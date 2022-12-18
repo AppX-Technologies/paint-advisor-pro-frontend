@@ -22,3 +22,12 @@ export const filterProductionRateByBid = (list, bidType) => {
   });
   return filteredList;
 };
+
+export const filterEquipmentByBid = (equipmentlList, bidType) => {
+  const filteredEquipmentList =
+    equipmentlList[0] &&
+    equipmentlList[0]?.equipments.filter((equipment) => {
+      return equipment.bidType === bidType;
+    });
+  return filteredEquipmentList;
+};

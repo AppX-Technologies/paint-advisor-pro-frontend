@@ -36,7 +36,26 @@ const expandMoreAndLessStyles = {
   color: '#D50000'
 };
 
-export default function AddRoomForm(props) {
+export default function AddRoomForm({
+  open,
+  setOpen,
+  roomFormValue,
+  currentClientInfo,
+  setRoomFormValue,
+  openAddMoreDetails,
+  setOpenAddMoreDetails,
+  onRoomDetailsReset,
+  allSectionsInfoOfARoom,
+  selectedRoomInfo,
+  onSelectedRoomInfoChange,
+  openDeleteModal,
+  setOpenDeleteModal,
+  currentAddMore,
+  itemToBeDeleted,
+  setitemToBeDeleted,
+  setCurentAddMore,
+  setCurrentClientInfo
+}) {
   const dispatch = useDispatch();
   const [showCards, setShowCards] = useState({
     walls: true,
@@ -50,29 +69,6 @@ export default function AddRoomForm(props) {
     crownMoldings: true,
     closets: true
   });
-
-  const {
-    open,
-    setOpen,
-    roomStats: roomFormValue, // Updateable
-    currentClientInfo,
-    setRoomStats: setRoomFormValue,
-    setAllRoom,
-    openAddMoreDetails,
-    setOpenAddMoreDetails,
-    clearWallStats,
-    onRoomDetailsReset,
-    roomRelatedInfo,
-    selectedRoomInfo,
-    onSelectedRoomInfoChange,
-    openDeleteModal,
-    setOpenDeleteModal,
-    currentAddMore,
-    itemToBeDeleted,
-    setitemToBeDeleted,
-    setCurentAddMore,
-    setCurrentClientInfo
-  } = props;
 
   const [roomInfoToEdit, setRoomInfoToEdit] = useState(null);
   const [seeMore, setSeeMore] = useState(false);
@@ -153,16 +149,16 @@ export default function AddRoomForm(props) {
   };
 
   const filteredRoomInfo = React.useMemo(() => {
-    return roomRelatedInfo && roomRelatedInfo.find((room) => room.name === currentAddMore);
-  }, [currentAddMore, roomRelatedInfo]);
+    return (
+      allSectionsInfoOfARoom && allSectionsInfoOfARoom.find((room) => room.name === currentAddMore)
+    );
+  }, [currentAddMore, allSectionsInfoOfARoom]);
 
   React.useEffect(() => {
     if (selectedRoomInfo) {
       setRoomFormValue({ ...selectedRoomInfo });
     }
   }, [open, selectedRoomInfo]);
-
-  console.log(roomFormValue, 'roomFormValue');
 
   return (
     <div>
@@ -199,8 +195,8 @@ export default function AddRoomForm(props) {
               </Stack>
             </Grid>
             <Divider />
-            {roomRelatedInfo &&
-              roomRelatedInfo
+            {allSectionsInfoOfARoom &&
+              allSectionsInfoOfARoom
                 .filter((i) => {
                   if (i.name === 'roomName') return false;
                   return seeMore || i.name === 'walls' || i.name === 'nonPaintableAreas';
@@ -296,7 +292,7 @@ export default function AddRoomForm(props) {
                                       onopenAddMoreDetailsChange={onopenAddMoreDetailsChange}
                                       items={roomComponent}
                                       title={roomComponent.name}
-                                      roomStats={roomFormValue}
+                                      roomFormValue={roomFormValue}
                                       setitemToBeDeleted={setitemToBeDeleted}
                                       roomName={selectedRoomInfo?.roomName}
                                       onSelectedRoomInfoChange={onSelectedRoomInfoChange}
@@ -367,13 +363,12 @@ export default function AddRoomForm(props) {
         {openAddMoreDetails && filteredRoomInfo && (
           <AddMoreDetails
             openAddMoreDetails={openAddMoreDetails}
-            roomStats={roomFormValue}
+            roomFormValue={roomFormValue}
             setOpenAddMoreDetails={setOpenAddMoreDetails}
             titleField={currentAddMore}
             currentStats={filteredRoomInfo.currentStats}
             setCurrentStats={filteredRoomInfo.onCurrentStatsChange}
             addIn={roomFormValue[currentAddMore]}
-            clearWallStats={clearWallStats}
             roomInfoToEdit={roomInfoToEdit && roomInfoToEdit}
             setRoomInfoToEdit={setRoomInfoToEdit}
             initialStats={filteredRoomInfo.initialStats}

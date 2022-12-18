@@ -138,7 +138,7 @@ const ClientInfo = ({
 
               <Tooltip
                 title="Edit Client's Info"
-                placement='top'
+                placement='bottom'
                 onClick={() => {
                   onClientFormChange(true);
                   setCurrentClientInfoToEdit({ ...currentClientInfo });
@@ -156,7 +156,7 @@ const ClientInfo = ({
                 .map((info) => {
                   return info.text === 'Begin Estimate' ||
                     info.text === 'Update Estimation Info' ? (
-                    <Tooltip title={info.text} placement='top'>
+                    <Tooltip title={info.text} placement='bottom'>
                       <Button
                         sx={{ margin: '0 2px', p: 0, minWidth: '30px' }}
                         variant='outlined'
@@ -172,7 +172,7 @@ const ClientInfo = ({
                       {info.text === 'Cancel The Job' &&
                         currentClientInfo?.status !== 'Cancel The Job' && (
                           <>
-                            <Tooltip title={info.text} placement='top'>
+                            <Tooltip title={info.text} placement='bottom'>
                               <Badge
                                 badgeContent={
                                   info.text === 'View Files' ? currentClientInfo?.files?.length : 0
@@ -197,7 +197,7 @@ const ClientInfo = ({
                         )}
                       {info.text !== 'Cancel The Job' && (
                         <>
-                          <Tooltip title={info.text} placement='top'>
+                          <Tooltip title={info.text} placement='bottom'>
                             <Badge
                               badgeContent={
                                 info.text === 'View Files' ? currentClientInfo?.files?.length : 0
@@ -208,7 +208,7 @@ const ClientInfo = ({
                                 horizontal: 'left'
                               }}>
                               <Button
-                                sx={{ margin: '0 2px', minWidth: '30px', padding: 0.7 }}
+                                sx={{ margin: '0 2px', minWidth: '10px', padding: 0.6 }}
                                 variant='outlined'
                                 endIcon={<>{info.icon}</>}
                                 color={info.color}
@@ -294,7 +294,7 @@ const ClientInfo = ({
                               sx={{ textAlign: 'left', fontWeight: '400', fontSize: '12px' }}>
                               {currentClientInfo[field] !== '' ? (
                                 currentClientInfo[field].length > 19 ? (
-                                  <Tooltip title={currentClientInfo[field]} placement='top'>
+                                  <Tooltip title={currentClientInfo[field]} placement='bottom'>
                                     <Typography sx={{ fontSize: '12px' }}>
                                       {currentClientInfo[field].slice(0, 16)}...
                                     </Typography>

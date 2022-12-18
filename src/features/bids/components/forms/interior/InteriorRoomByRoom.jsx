@@ -11,30 +11,17 @@ import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHel
 import AddRoomForm from './AddRoomForm';
 
 const InteriorRoomByRoom = ({
-  roomStats,
-  setRoomStats,
+  roomFormValue,
+  setRoomFormValue,
   initialBidInfo,
   currentClientInfo,
-  setAllRoom,
   openAddMoreDetails,
   setOpenAddMoreDetails,
   onRoomDetailsReset,
-  wallStats,
-  setWallStats,
-  windowStats,
-  setWindowStats,
-  clearWallStats,
-  doorsStats,
-  setDoorStats,
-  nonPaintableAreaStats,
-  setNonPaintableAreaStats,
-  openEditForm,
-  setOpenEditForm,
-  roomRelatedInfo,
+  allSectionsInfoOfARoom,
   setCurrentClientInfo
 }) => {
   const [addRoom, setAddRoom] = useState(false);
-  const [editRoom, setEditRoom] = useState(false);
   const [currentAddMore, setCurentAddMore] = useState('');
   const [selectedRoomInfo, setSelectedRoomInfo] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -42,10 +29,6 @@ const InteriorRoomByRoom = ({
 
   const onSelectedRoomInfoChange = (value) => {
     setSelectedRoomInfo(value);
-  };
-
-  const onCardEdit = () => {
-    setEditRoom(true);
   };
 
   return (
@@ -63,7 +46,7 @@ const InteriorRoomByRoom = ({
             color='info'
             onClick={() => {
               setAddRoom(true);
-              setRoomStats(cloneDeep(initialRoomState));
+              setRoomFormValue(cloneDeep(initialRoomState));
             }}
           />
         </Tooltip>
@@ -93,7 +76,6 @@ const InteriorRoomByRoom = ({
                       } sq.feet`
                     }}
                     title={room.roomName}
-                    onCardEdit={onCardEdit}
                     setAddRoom={setAddRoom}
                   />
                 </Grid>
@@ -107,10 +89,9 @@ const InteriorRoomByRoom = ({
           onSelectedRoomInfoChange={onSelectedRoomInfoChange}
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
-          roomRelatedInfo={roomStats[currentAddMore]}
           itemToBeDeleted={itemToBeDeleted}
-          roomStats={roomStats}
-          setRoomStats={setRoomStats}
+          roomFormValue={roomFormValue}
+          setRoomFormValue={setRoomFormValue}
           selectedRoomInfo={selectedRoomInfo}
           setSelectedRoomInfo={setSelectedRoomInfo}
           setCurrentClientInfo={setCurrentClientInfo}
@@ -122,26 +103,13 @@ const InteriorRoomByRoom = ({
       <AddRoomForm
         open={addRoom}
         setOpen={setAddRoom}
-        roomStats={roomStats}
-        setRoomStats={setRoomStats}
-        initialRoomState={initialRoomState}
+        roomFormValue={roomFormValue}
+        setRoomFormValue={setRoomFormValue}
         currentClientInfo={currentClientInfo}
-        setAllRoom={setAllRoom}
         openAddMoreDetails={openAddMoreDetails}
-        wallStats={wallStats}
-        setWallStats={setWallStats}
         setOpenAddMoreDetails={setOpenAddMoreDetails}
-        clearWallStats={clearWallStats}
-        windowStats={windowStats}
-        setWindowStats={setWindowStats}
         onRoomDetailsReset={onRoomDetailsReset}
-        doorsStats={doorsStats}
-        setDoorStats={setDoorStats}
-        nonPaintableAreaStats={nonPaintableAreaStats}
-        setNonPaintableAreaStats={setNonPaintableAreaStats}
-        openEditForm={openEditForm}
-        setOpenEditForm={setOpenEditForm}
-        roomRelatedInfo={roomRelatedInfo}
+        allSectionsInfoOfARoom={allSectionsInfoOfARoom}
         selectedRoomInfo={selectedRoomInfo}
         onSelectedRoomInfoChange={onSelectedRoomInfoChange}
         openDeleteModal={openDeleteModal}

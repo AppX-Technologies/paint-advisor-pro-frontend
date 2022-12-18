@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const endpoint = 'http://localhost:5001/processes';
-const CREATE_PROCESS = `${endpoint}/`;
-const FETCH_PROCESS = `http://localhost:5001/processes/list`;
-const UPDATE_PROCESS = `${endpoint}/`;
-const DELETE_PROCESS = `${endpoint}/`;
+const endpoint = process.env.REACT_APP_API_BASE_URL;
+const CREATE_PROCESS = `${endpoint}/processes`;
+const FETCH_PROCESS = `${endpoint}/processes/list`;
+const UPDATE_PROCESS = `${endpoint}/processes`;
+const DELETE_PROCESS = `${endpoint}/processes`;
 
 const fetchProcess = async (userData) => {
   const config = {

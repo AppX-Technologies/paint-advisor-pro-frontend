@@ -1,6 +1,6 @@
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Box, CardContent, Chip, Tooltip, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 const MaterialsPickerCard = ({
   title,
@@ -41,7 +41,7 @@ const MaterialsPickerCard = ({
                 }
                 setCurrentlyActiveRoomInfo({ roomName, section });
               }}
-              color={materials ? 'success' : 'default'}
+              color={materials ? 'error' : 'default'}
               sx={{ height: '16px', cursor: 'pointer' }}
               label={
                 <Box

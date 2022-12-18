@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { showMessage } from '../snackbar/snackbarSlice';
 import { addOrUpdateItemInArray } from '../../helpers/addRemoveUpdateListHelper';
-import materialService from './materialService';
+import equipmentService from './equipmentService';
 
 const initialState = {
-  materialList: [],
-  material: [],
+  equipmentList: [],
+  equipment: [],
   isLoading: false,
   isError: false,
   isSuccess: false,
@@ -14,17 +14,14 @@ const initialState = {
   isUpdating: false,
   isUpdated: false,
   message: '',
-  response: null,
-  deletedId: ''
+  response: null
 };
 
-// get
-
-export const fetchMaterial = createAsyncThunk(
-  'material/fetchMaterial',
+export const fetchEquipment = createAsyncThunk(
+  'equipment/fetchEquipment',
   async (userData, thunkAPI) => {
     try {
-      const response = await materialService.fetchMaterial(userData);
+      const response = await equipmentService.fetchEquipment(userData);
       return response;
     } catch (err) {
       const message =
@@ -36,12 +33,11 @@ export const fetchMaterial = createAsyncThunk(
     }
   }
 );
-
-export const fetchSingleMaterial = createAsyncThunk(
-  'material/fetchSingleMaterial',
+export const fetchSingleEquipment = createAsyncThunk(
+  'equipment/fetchSingleEquipment',
   async (userData, thunkAPI) => {
     try {
-      const response = await materialService.fetchSingleMaterial(userData);
+      const response = await equipmentService.fetchSingleEquipment(userData);
       return response;
     } catch (err) {
       const message =
@@ -55,11 +51,11 @@ export const fetchSingleMaterial = createAsyncThunk(
 );
 // create
 
-export const createMaterial = createAsyncThunk(
-  'material/createMaterial',
+export const createEquipment = createAsyncThunk(
+  'equipment/createEquipment',
   async (userData, thunkAPI) => {
     try {
-      const response = await materialService.createMaterial(userData);
+      const response = await equipmentService.createEquipment(userData);
       return response;
     } catch (error) {
       const message =
@@ -72,11 +68,11 @@ export const createMaterial = createAsyncThunk(
   }
 );
 
-export const updateMaterial = createAsyncThunk(
-  'material/updateMaterial',
+export const updateEquipment = createAsyncThunk(
+  'equipment/updateEquipment',
   async (userData, thunkAPI) => {
     try {
-      const response = await materialService.updateMaterial(userData);
+      const response = await equipmentService.updateEquipment(userData);
       return response;
     } catch (error) {
       const message =
@@ -89,11 +85,11 @@ export const updateMaterial = createAsyncThunk(
   }
 );
 
-export const deleteMaterial = createAsyncThunk(
-  'material/deleteMaterial',
+export const deleteEquipment = createAsyncThunk(
+  'equipment/deleteEquipment',
   async (userData, thunkAPI) => {
     try {
-      const response = await materialService.deleteMaterial(userData);
+      const response = await equipmentService.deleteEquipment(userData);
       return response;
     } catch (error) {
       const message =
@@ -106,8 +102,8 @@ export const deleteMaterial = createAsyncThunk(
   }
 );
 
-export const materialSlice = createSlice({
-  name: 'material',
+export const equipmentSlice = createSlice({
+  name: 'equipment',
   initialState,
   reducers: {
     reset: (state) => {
@@ -121,66 +117,66 @@ export const materialSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMaterial.pending, (state) => {
+      .addCase(fetchEquipment.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchMaterial.fulfilled, (state, action) => {
+      .addCase(fetchEquipment.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.materialList = action.payload;
+        state.equipmentList = action.payload;
       })
-      .addCase(fetchMaterial.rejected, (state, action) => {
+      .addCase(fetchEquipment.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(createMaterial.pending, (state) => {
+      .addCase(createEquipment.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createMaterial.fulfilled, (state, { payload }) => {
+      .addCase(createEquipment.fulfilled, (state, { payload }) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.response = addOrUpdateItemInArray(state.materialList, payload);
+        state.response = addOrUpdateItemInArray(state.equipmentList, payload);
       })
-      .addCase(createMaterial.rejected, (state, action) => {
+      .addCase(createEquipment.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(updateMaterial.pending, (state) => {
+      .addCase(updateEquipment.pending, (state) => {
         state.isUpdating = true;
       })
-      .addCase(updateMaterial.fulfilled, (state, action) => {
+      .addCase(updateEquipment.fulfilled, (state, action) => {
         state.isUpdated = true;
         state.isUpdating = false;
         state.message = action.payload;
-        state.response = addOrUpdateItemInArray(state.materialList, action.payload);
+        state.response = addOrUpdateItemInArray(state.equipmentList, action.payload);
       })
-      .addCase(updateMaterial.rejected, (state, action) => {
+      .addCase(updateEquipment.rejected, (state, action) => {
         state.isUpdating = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(deleteMaterial.pending, (state) => {
+      .addCase(deleteEquipment.pending, (state) => {
         state.isDeleting = true;
       })
-      .addCase(deleteMaterial.fulfilled, (state, action) => {
+      .addCase(deleteEquipment.fulfilled, (state, action) => {
         state.isDeleting = false;
         state.isDeleted = true;
-        state.response = addOrUpdateItemInArray(state.materialList, action.payload);
+        state.response = addOrUpdateItemInArray(state.equipmentList, action.payload);
       })
-      .addCase(deleteMaterial.rejected, (state, action) => {
+      .addCase(deleteEquipment.rejected, (state, action) => {
         state.isDeleting = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(fetchSingleMaterial.pending, (state) => {
+      .addCase(fetchSingleEquipment.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchSingleMaterial.fulfilled, (state, action) => {
-        state.material = action.payload;
+      .addCase(fetchSingleEquipment.fulfilled, (state, action) => {
+        state.equipment = action.payload;
         state.isLoading = false;
       })
-      .addCase(fetchSingleMaterial.rejected, (state, action) => {
+      .addCase(fetchSingleEquipment.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
@@ -188,6 +184,6 @@ export const materialSlice = createSlice({
   }
 });
 
-export const { reset } = materialSlice.actions;
+export const { reset } = equipmentSlice.actions;
 
-export default materialSlice.reducer;
+export default equipmentSlice.reducer;

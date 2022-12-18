@@ -1,12 +1,10 @@
 import axios from 'axios';
 
-const endpoint = 'http://localhost:5001/users';
+const endpoint = process.env.REACT_APP_API_BASE_URL;
 
-const FETCH_USERS_COMPANY = `${endpoint}/list`;
-const DELETE_USER = `${endpoint}/`;
-const UPDATE_USER = `${endpoint}/update-user-details`;
-
-// const {token} = JSON.parse(localStorage.getItem("user"));
+const FETCH_USERS_COMPANY = `${endpoint}/users/list`;
+const DELETE_USER = `${endpoint}/users`;
+const UPDATE_USER = `${endpoint}/users/update-user-details`;
 
 const fetchUserMadeByCompany = async (userData) => {
   const config = {

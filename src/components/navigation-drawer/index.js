@@ -6,12 +6,12 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import MuiDrawer from '@mui/material/Drawer';
-import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { APP_NAME } from '../../helpers/contants';
 import DrawerMenu from './DrawerMenu';
 
@@ -65,11 +65,15 @@ const Drawer = styled(MuiDrawer, {
  * if pass only one of link or onClick
  */
 export const NavigationDrawer = ({ title = APP_NAME, menuItems = [], children }) => {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(JSON.parse(localStorage.getItem('drawerChoice')));
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  React.useEffect(() => {
+    localStorage.setItem('drawerChoice', JSON.stringify(open));
+  }, [open]);
 
   return (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
@@ -104,7 +108,19 @@ export const NavigationDrawer = ({ title = APP_NAME, menuItems = [], children })
             justifyContent: 'space-between',
             px: [1]
           }}>
-          <IconButton sx={{ fontSize: '18px', fontWeight: '550' }}>Paint Advisor</IconButton>
+          <Link to='/dashboard' style={{ textDecoration: 'none' }}>
+            <IconButton
+              sx={{
+                fontSize: '18px',
+                fontWeight: '550',
+                backgroundColor: 'transparent',
+                '&:hover': {
+                  background: 'transparent'
+                }
+              }}>
+              Paint Advisor
+            </IconButton>
+          </Link>
           <IconButton onClick={toggleDrawer}>
             <ChevronLeftIcon />
           </IconButton>

@@ -9,7 +9,6 @@ import { cloneDeep } from 'lodash';
 const RoomCard = ({
   items,
   title,
-  onCardEdit,
   setAddRoom,
   completeRoomInfo,
   onSelectedRoomInfoChange,
@@ -60,7 +59,6 @@ const RoomCard = ({
               }}
               size='small'
               onClick={() => {
-                onCardEdit(items.roomName);
                 onSelectedRoomInfoChange({ ...cloneDeep(completeRoomInfo), edit: true });
                 setAddRoom(true);
               }}

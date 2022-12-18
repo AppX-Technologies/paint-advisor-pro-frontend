@@ -55,7 +55,7 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
       setOpenDeleteModal(false);
       dispatch(
         showMessage({
-          message: 'Material list updated successfully',
+          message: 'Paint list updated successfully',
           variant: 'success'
         })
       );
@@ -97,7 +97,7 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
         columns={columns}
         dataList={materialDataList}
         setDataList={setMaterialDataList}
-        title='Materials List'
+        title='Paints List'
         setEditFormData={setEditFormData}
         setOpenEditForm={setOpenEditForm}
         setOpenDeleteModal={setOpenDeleteModal}
