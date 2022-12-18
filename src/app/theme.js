@@ -6,7 +6,8 @@ const theme = createTheme({
       styleOverrides: {
         input: {
           '& input:-internal-autofill-selected': {
-            '-webkit-box-shadow': 0
+            '-webkit-box-shadow': '0 0 0 100px transparent inset',
+            height: 0
           }
         }
       }

@@ -41,6 +41,13 @@ export default function FormDialog(props) {
   };
   const handleClose = () => {
     setOpen(false);
+    Object.keys(formState).forEach((indiFormValue) => {
+      dispatchNew({
+        type: 'HANDLE_FORM_INPUT',
+        field: indiFormValue,
+        payload: indiFormValue === 'active' ? false : ''
+      });
+    });
   };
   const handleCreate = (e) => {
     e.preventDefault();
@@ -54,6 +61,13 @@ export default function FormDialog(props) {
   useEffect(() => {
     if (isSuccess) {
       setOpen(false);
+      Object.keys(formState).forEach((indiFormValue) => {
+        dispatchNew({
+          type: 'HANDLE_FORM_INPUT',
+          field: indiFormValue,
+          payload: indiFormValue === 'active' ? false : ''
+        });
+      });
       dispatch(
         showMessage({
           message: 'Organization created successfully',
