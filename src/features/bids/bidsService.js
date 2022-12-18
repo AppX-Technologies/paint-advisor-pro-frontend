@@ -32,8 +32,11 @@ export const fetchAllClientsService = async (userData) => {
       query: userData.query,
       sort: { [userData.sort]: Number(userData.isAscending) },
       filter: {
-        ...filterValueObj,
+        status: filterValueObj.status,
         organization: userData.organization
+      },
+      extraFilters: {
+        'bid.type': filterValueObj.bidTypes
       }
     },
     config

@@ -37,7 +37,6 @@ const AppRoutes = () => {
           <Route element={<AdminRouteLayout />}>
             <Route path='dashboard' element={<Dashboard />} />
             <Route path='processes' element={<Processes />} />
-            <Route path='materials' element={<Materials />} />
             <Route path='production-rates' element={<ProductionRate />} />
             <Route path='paint' element={<Materials />} />
             <Route path='equipments' element={<Equipments />} />

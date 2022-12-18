@@ -389,6 +389,7 @@ export default function EstimateForm({
         </DialogContent>
         <DialogActions>
           <Button
+            disabled={bidsIsLoading}
             onClick={() => {
               handleClose();
               currentClientInfo.bid = { ...previousStateOfRooms };
@@ -396,7 +397,7 @@ export default function EstimateForm({
             }}>
             Cancel
           </Button>
-          <Button type='submit' variant='contained' onClick={handleBidsSubmission}>
+          <Button disabled={bidsIsLoading} type='submit' variant='contained' onClick={handleBidsSubmission}>
             Save
           </Button>
         </DialogActions>

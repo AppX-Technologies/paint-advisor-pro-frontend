@@ -83,7 +83,12 @@ const ScheduleTheJob = ({
             />
           </LocalizationProvider>
           {schedueJobDate && (
-            <Button color='error' varient='outlined' sx={{ mt: 2 }} onClick={handleSchedulingDate}>
+            <Button
+              color='error'
+              varient='outlined'
+              sx={{ mt: 2 }}
+              onClick={handleSchedulingDate}
+              disabled={isLoading}>
               Save
             </Button>
           )}

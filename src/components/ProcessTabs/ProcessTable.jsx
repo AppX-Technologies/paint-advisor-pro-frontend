@@ -14,15 +14,12 @@ import StageTab from './StageTab';
 
 const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   const dispatch = useDispatch();
-  const { processList, isDeleting, isLoading, isSuccess } = useSelector(
-    (state) => state.process
-  );
+  const { processList, isDeleting, isLoading, isSuccess } = useSelector((state) => state.process);
   const [stageValue, setStageValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setStageValue(newValue);
   };
-  const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [openEditForm, setOpenEditForm] = useState(false);
   const [editFormData, setEditFormData] = useState([]);
