@@ -52,7 +52,7 @@ const DrawerMenu = ({ menuItems = [], open, onDrawerMenuChange }) => {
         ))}
         <Divider light />
       </div>
-      <div style={{ display: open ? 'flex' : 'static' }}>
+      <div style={{ display: 'flex' }}>
         {commonRoutes.map(({ icon: Icon, text, relLink }, idx) => (
           <>
             <Tooltip title={!open ? text : ''}>

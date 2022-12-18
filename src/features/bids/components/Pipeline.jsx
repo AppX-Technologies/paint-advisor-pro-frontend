@@ -44,7 +44,7 @@ const Pipeline = () => {
   const { clientList } = useSelector((state) => state.bids);
   const [primaryHeaderSearch, setPrimaryHeaderSearch] = useState('');
   const [showFilter, setShowFilter] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [openNewClientForm, setOpenNewClientForm] = useState(false);
   const [openEstimate, setOpenEstimate] = useState(false);
   const [selectedStep, setSelectedStep] = useState(STATUS_NEW_CLIENT);
   const [selectedListItem, setSelectedListItem] = useState(null);
@@ -56,8 +56,7 @@ const Pipeline = () => {
   );
   const [initialEstimateBidInfo, setInitialEstimateBidInfo] = useState(estimationFormInitialInfo);
   const [allRoom, setAllRoom] = React.useState([]);
-  const [value, setValue] = React.useState([null, null]);
-  const [roomStats, setRoomStats] = React.useState(initialRoomState);
+  const [roomFormValue, setRoomFormValue] = React.useState(initialRoomState);
   // ! TODO rename
   const { user } = useSelector(authSelector);
 
@@ -86,7 +85,7 @@ const Pipeline = () => {
 
   const { org } = useSelector((state) => state.org);
 
-  const roomRelatedInfo = [
+  const allSectionsInfoOfARoom = [
     {
       label: 'Room Name',
       name: 'roomName',
@@ -245,8 +244,8 @@ const Pipeline = () => {
   const handleSearch = (keyword) => {
     setFilteredClietsList(searchedResult(clientList, keyword));
   };
-  const handleClose = () => {
-    setOpen(false);
+  const handleNewClientFormClose = () => {
+    setOpenNewClientForm(false);
     setCurrentClientInfoToEdit(null);
   };
   const onFilterOptionsClose = () => {
@@ -257,16 +256,12 @@ const Pipeline = () => {
     setSelectedListItem(itemValue);
   };
 
-  const clearWallStats = () => {
-    setWallStats(initilWallInfo);
-  };
-
   const onRoomDetailsReset = () => {
-    setRoomStats(initialRoomState);
+    setRoomFormValue(initialRoomState);
   };
 
   const onClientFormChange = (formValue) => {
-    setOpen(formValue);
+    setOpenNewClientForm(formValue);
   };
   const dispatch = useDispatch();
 
@@ -305,16 +300,16 @@ const Pipeline = () => {
             height: '25px'
           }}
           onClick={() => {
-            setOpen(true);
+            setOpenNewClientForm(true);
             setSelectedvalue(cloneDeep(initialState));
           }}>
           <GroupAddIcon sx={{ mr: 1 }} /> Add new client
         </Button>
       )}
       <AddNewClientForm
-        open={open}
-        setOpen={setOpen}
-        handleClose={handleClose}
+        openNewClientForm={openNewClientForm}
+        setOpenNewClientForm={setOpenNewClientForm}
+        handleNewClientFormClose={handleNewClientFormClose}
         selectedValue={selectedValue}
         setSelectedvalue={setSelectedvalue}
         initialState={initialState}
@@ -322,31 +317,19 @@ const Pipeline = () => {
         setCurrentClientInfoToEdit={setCurrentClientInfoToEdit}
       />{' '}
       <EstimateForm
-        clearWallStats={clearWallStats}
         open={openEstimate}
         setOpen={setOpenEstimate}
-        handleClose={handleClose}
         initialBidInfo={initialEstimateBidInfo}
         setInitialBidInfo={setInitialEstimateBidInfo}
         estimationFormInitialInfo={estimationFormInitialInfo}
         allRoom={allRoom}
         setAllRoom={setAllRoom}
-        value={value}
-        setValue={setValue}
-        roomStats={roomStats}
-        setRoomStats={setRoomStats}
-        wallStats={wallStats}
-        setWallStats={setWallStats}
-        windowStats={windowStats}
-        setWindowStats={setWindowStats}
+        roomFormValue={roomFormValue}
+        setRoomFormValue={setRoomFormValue}
         onRoomDetailsReset={onRoomDetailsReset}
-        doorsStats={doorsStats}
-        setDoorStats={setDoorStats}
-        nonPaintableAreaStats={nonPaintableAreaStats}
-        setNonPaintableAreaStats={setNonPaintableAreaStats}
         openEditForm={openEditForm}
         setOpenEditForm={setOpenEditForm}
-        roomRelatedInfo={roomRelatedInfo}
+        allSectionsInfoOfARoom={allSectionsInfoOfARoom}
         currentClientInfo={currentClientInfo}
         setCurrentClientInfo={setCurrentClientInfo}
         selectedStep={selectedStep}
@@ -365,18 +348,14 @@ const Pipeline = () => {
         setCurrentClientInfo={setCurrentClientInfo}
         fileToDelete={fileToDelete}
         setFileToDelete={setFileToDelete}
-        openFileDeleteModel={openFileDeleteModel}
-        setOpenFileDeleteModel={setOpenFileDeleteModel}
       />
       <Box sx={{ display: 'flex', flexDirection: 'column', padding: 1 }}>
         <PrimaryHeader
-          showFilter={showFilter}
           onFilterChange={setShowFilter}
           primaryHeaderSearch={primaryHeaderSearch}
           setPrimaryHeaderSearch={setPrimaryHeaderSearch}
           isAscending={isAscending}
           setIsAscending={setIsAscending}
-          bidFilterValues={bidFilterValues}
           handlePrimaryFilter={handlePrimaryFilter}
           selectOption={selectOption}
           setSelectOption={setSelectOption}
@@ -391,7 +370,6 @@ const Pipeline = () => {
                 selectedListItem={selectedListItem}
                 onSelecetedListItemChange={onSelecetedListItemChange}
                 filteredClietsList={filteredClietsList}
-                setFilteredClietsList={setFilteredClietsList}
                 handleSearch={handleSearch}
                 selectedStep={selectedStep}
                 scheduleTheJob={scheduleTheJob}
@@ -415,7 +393,6 @@ const Pipeline = () => {
                   currentClientInfo={currentClientInfo}
                   setCurrentClientInfo={setCurrentClientInfo}
                   onClientFormChange={onClientFormChange}
-                  currentClientInfoToEdit={currentClientInfoToEdit}
                   setCurrentClientInfoToEdit={setCurrentClientInfoToEdit}
                   openFileDeleteModel={openFileDeleteModel}
                   setOpenFileDeleteModel={setOpenFileDeleteModel}
@@ -434,7 +411,6 @@ const Pipeline = () => {
                     />
                     <Comment
                       currentClientInfo={currentClientInfo}
-                      selectedListItem={selectedListItem}
                       comment={comment}
                       onCommentsChange={setComment}
                     />

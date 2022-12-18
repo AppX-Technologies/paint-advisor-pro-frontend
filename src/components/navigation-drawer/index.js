@@ -6,7 +6,6 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import MuiDrawer from '@mui/material/Drawer';
-import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
@@ -66,11 +65,15 @@ const Drawer = styled(MuiDrawer, {
  * if pass only one of link or onClick
  */
 export const NavigationDrawer = ({ title = APP_NAME, menuItems = [], children }) => {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(JSON.parse(localStorage.getItem('drawerChoice')));
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  React.useEffect(() => {
+    localStorage.setItem('drawerChoice', JSON.stringify(open));
+  }, [open]);
 
   return (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>

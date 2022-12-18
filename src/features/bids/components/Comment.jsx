@@ -5,10 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { createAComment, reset } from '../bidsSlice';
-import { findCommentsUniquely } from '../helpers/generalHepers';
 
-const Comment = ({ currentClientInfo, onCommentListChange, comment, onCommentsChange }) => {
-  const { comments, isMessageLoading, isCommentSuccess } = useSelector((state) => state.bids);
+const Comment = ({ currentClientInfo, comment, onCommentsChange }) => {
+  const { isMessageLoading, isCommentSuccess } = useSelector((state) => state.bids);
   const { user } = useSelector(authSelector);
 
   const dispatch = useDispatch();
@@ -25,10 +24,6 @@ const Comment = ({ currentClientInfo, onCommentListChange, comment, onCommentsCh
     dispatch(createAComment({ comment, token: user.token, id: currentClientInfo._id }));
     onCommentsChange('');
   };
-
-  useEffect(() => {
-    onCommentListChange(findCommentsUniquely(comments, currentClientInfo?.name));
-  }, [comments, currentClientInfo]);
 
   useEffect(() => {
     if (isCommentSuccess) {

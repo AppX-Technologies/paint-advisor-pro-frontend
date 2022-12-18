@@ -35,8 +35,7 @@ export default function FormDialog(props) {
   const { open, setOpen, bidType } = props;
   const initialFormState = {
     description: '',
-    bidType,
-    appliesTo: []
+    bidType
   };
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
@@ -89,7 +88,7 @@ export default function FormDialog(props) {
   }, [isSuccess]);
 
   useEffect(() => {
-    ['description', 'bidType'].forEach((key, i) => {
+    ['description', 'bidType'].forEach((key) => {
       dispatchNew({
         type: 'HANDLE_FORM_INPUT',
         field: key,
@@ -106,37 +105,37 @@ export default function FormDialog(props) {
     });
   };
 
-  const handleEquipmentApplicableSection = (field) => {
-    if (formState.appliesTo.includes(field)) {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: [...formState.appliesTo.filter((item) => item !== field)]
-      });
-    } else {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: [...formState.appliesTo, field]
-      });
-    }
-  };
+  // const handleEquipmentApplicableSection = (field) => {
+  //   if (formState.appliesTo.includes(field)) {
+  //     dispatchNew({
+  //       type: 'HANDLE_FORM_INPUT',
+  //       field: 'appliesTo',
+  //       payload: [...formState.appliesTo.filter((item) => item !== field)]
+  //     });
+  //   } else {
+  //     dispatchNew({
+  //       type: 'HANDLE_FORM_INPUT',
+  //       field: 'appliesTo',
+  //       payload: [...formState.appliesTo, field]
+  //     });
+  //   }
+  // };
 
-  const handleEquipmentApplication = () => {
-    if (formState.appliesTo.length === 0) {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((materialSection) => materialSection.label)
-      });
-    } else {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: []
-      });
-    }
-  };
+  // const handleEquipmentApplication = () => {
+  //   if (formState.appliesTo.length === 0) {
+  //     dispatchNew({
+  //       type: 'HANDLE_FORM_INPUT',
+  //       field: 'appliesTo',
+  //       payload: FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((materialSection) => materialSection.label)
+  //     });
+  //   } else {
+  //     dispatchNew({
+  //       type: 'HANDLE_FORM_INPUT',
+  //       field: 'appliesTo',
+  //       payload: []
+  //     });
+  //   }
+  // };
 
   return (
     <div>
@@ -182,7 +181,7 @@ export default function FormDialog(props) {
             </Grid>
 
             <Grid item xs={12} md={12}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography sx={{ color: 'gray', fontWeight: 397, mb: 1 }}>
                   Equipment Applied To
                 </Typography>
@@ -204,8 +203,8 @@ export default function FormDialog(props) {
                     }}
                   />
                 </Tooltip>
-              </Box>
-              <Grid container>
+              </Box> */}
+              {/* <Grid container>
                 {FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((field) => {
                   return (
                     <Grid xs={4} md={3}>
@@ -254,7 +253,7 @@ export default function FormDialog(props) {
                     </Grid>
                   );
                 })}
-              </Grid>
+              </Grid> */}
             </Grid>
           </Grid>
         </DialogContent>

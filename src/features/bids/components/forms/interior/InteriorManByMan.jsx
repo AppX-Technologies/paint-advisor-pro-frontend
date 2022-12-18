@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Button from '../../../../../components/Button';
 import AddRoomForm from './AddRoomForm';
 
-const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
+const InteriorManByMan = ({ roomFormValue, setRoomFormValue, allRoom, setAllRoom }) => {
   const [addRoom, setAddRoom] = useState(false);
 
   return (
@@ -38,8 +38,8 @@ const InteriorManByMan = ({ roomStats, setRoomStats, allRoom, setAllRoom }) => {
       <AddRoomForm
         open={addRoom}
         setOpen={setAddRoom}
-        roomStats={roomStats}
-        setRoomStats={setRoomStats}
+        roomFormValue={roomFormValue}
+        setRoomFormValue={setRoomFormValue}
         allRoom={allRoom}
         setAllRoom={setAllRoom}
       />

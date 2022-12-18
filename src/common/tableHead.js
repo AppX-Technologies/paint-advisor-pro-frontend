@@ -130,12 +130,6 @@ export const equipmentColumn = () => {
       name: 'description',
       label: 'Equipment Description',
       width: '40%'
-    },
-
-    {
-      name: 'appliesTo',
-      label: 'Applies To',
-      width: '50%'
     }
   ];
 };

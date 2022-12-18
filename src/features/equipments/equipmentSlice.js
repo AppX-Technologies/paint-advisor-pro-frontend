@@ -14,11 +14,8 @@ const initialState = {
   isUpdating: false,
   isUpdated: false,
   message: '',
-  response: null,
-  deletedId: ''
+  response: null
 };
-
-// get
 
 export const fetchEquipment = createAsyncThunk(
   'equipment/fetchEquipment',

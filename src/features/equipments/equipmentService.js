@@ -8,6 +8,7 @@ const UPDATE_EQUIPMENT = `${endpoint}/equipments`;
 const DELETE_EQUIPMENT = `${endpoint}/equipments`;
 
 const fetchEquipment = async (userData) => {
+  console.log(userData, 'userData');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -42,6 +43,7 @@ const fetchSingleEquipment = async (userData) => {
 };
 
 const createEquipment = async (userData) => {
+  console.log(userData, 'userData');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -57,10 +59,7 @@ const createEquipment = async (userData) => {
             ...(userData.previousEquipments ? userData.previousEquipments : []),
             {
               description: userData.description,
-              unit: userData.unit,
-              unitPrice: userData.unitPrice,
-              bidType: userData.bidType,
-              appliesTo: userData.appliesTo
+              bidType: userData.bidType
             }
           ]
         : userData.previousEquipments.filter(

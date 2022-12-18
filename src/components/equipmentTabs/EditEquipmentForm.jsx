@@ -1,4 +1,4 @@
-import { Chip, CircularProgress, Grid, TextField, Typography } from '@mui/material';
+import { CircularProgress, Grid, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -13,9 +13,6 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createEquipment } from '../../features/equipments/equipmentSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import {
-    FIELDS_WHERE_MATERIALS_ARE_APPLIES
-} from '../../helpers/contants';
 import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function Edit(props) {
@@ -24,8 +21,7 @@ export default function Edit(props) {
 
   const initialFormState = {
     description: editFormData.description ? editFormData.description : '',
-    bidType: editFormData.bidType ? editFormData.bidType : '',
-    appliesTo: editFormData?.appliesTo ? [...editFormData.appliesTo] : []
+    bidType: editFormData.bidType ? editFormData.bidType : ''
   };
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
@@ -89,22 +85,6 @@ export default function Edit(props) {
     setOpenEditForm(false);
   };
 
-  const handleMaterialApplicableSection = (field) => {
-    if (formState.appliesTo.includes(field)) {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: [...formState.appliesTo.filter((item) => item !== field)]
-      });
-    } else {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: [...formState.appliesTo, field]
-      });
-    }
-  };
-
   return (
     <div>
       <Dialog open={openEditForm} onClose={handleClose}>
@@ -144,30 +124,6 @@ export default function Edit(props) {
                   <MenuItem value='Exterior'>Exterior</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <Typography sx={{ color: 'gray', fontWeight: 390, mb: 1 }}>
-                Equipment Applied To
-              </Typography>
-              {FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((field) => {
-                return (
-                  <>
-                    <Chip
-                      label={startCase(field.label)}
-                      variant='outlined'
-                      onClick={() => handleMaterialApplicableSection(field.label)}
-                      sx={{
-                        bgcolor: formState.appliesTo.includes(field.label) ? '#E0E0E0' : 'white',
-                        m: 0.5,
-                        '&:hover': {
-                          bgcolor: formState.appliesTo.includes(field.label) ? '#E0E0E0' : 'white'
-                        }
-                      }}
-                      size='small'
-                    />
-                  </>
-                );
-              })}
             </Grid>
           </Grid>
         </DialogContent>

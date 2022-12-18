@@ -35,10 +35,10 @@ const AddMoreDetails = ({
   openAddMoreDetails,
   currentStats,
   setCurrentStats,
-  clearWallStats,
+
   addIn,
   titleField,
-  roomStats,
+  roomFormValue,
   roomInfoToEdit,
   setRoomInfoToEdit,
   fields,
@@ -145,7 +145,6 @@ const AddMoreDetails = ({
 
     setRoomInfoToEdit(null);
     setOpenAddMoreDetails(false);
-    clearWallStats();
   };
 
   const onDialogClose = () => {
@@ -292,8 +291,8 @@ const AddMoreDetails = ({
                           }}
                           sx={{ height: '30px' }}>
                           <MenuItem value='None'>None</MenuItem>
-                          {roomStats &&
-                            roomStats.walls.map((wall) => {
+                          {roomFormValue &&
+                            roomFormValue.walls.map((wall) => {
                               return <MenuItem value={wall.name}>{wall.name}</MenuItem>;
                             })}
                         </Select>

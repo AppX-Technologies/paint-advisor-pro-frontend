@@ -24,6 +24,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { processesTabLists } from '../../../common/Constants';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
 import {
   NONPAINTABLEAREAFIELD,
@@ -33,39 +34,27 @@ import {
 import { isSystemUser } from '../../../helpers/roles';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
-import { createBid, reset, updateABid, updateClient } from '../bidsSlice';
+import { reset, updateABid, updateClient } from '../bidsSlice';
 import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
 
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
-export default function EstimateForm(props) {
-  const {
-    open,
-    setOpen,
-    initialBidInfo,
-    setInitialBidInfo,
-    allRoom,
-    setAllRoom,
-    onRoomDetailsReset,
-    roomStats,
-    setRoomStats,
-    wallStats,
-    setWallStats,
-    windowStats,
-    setWindowStats,
-    clearWallStats,
-    doorsStats,
-    setDoorStats,
-    nonPaintableAreaStats,
-    setNonPaintableAreaStats,
-    openEditForm,
-    setOpenEditForm,
-    roomRelatedInfo,
-    currentClientInfo,
-    selectedStep,
-    setCurrentClientInfo
-  } = props;
-
+export default function EstimateForm({
+  open,
+  setOpen,
+  initialBidInfo,
+  setInitialBidInfo,
+  setAllRoom,
+  onRoomDetailsReset,
+  roomFormValue,
+  setRoomFormValue,
+  openEditForm,
+  setOpenEditForm,
+  allSectionsInfoOfARoom,
+  currentClientInfo,
+  selectedStep,
+  setCurrentClientInfo
+}) {
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
   const [previousStateOfRooms, setPreviousStateOfRooms] = React.useState(null);
   const dispatch = useDispatch();
@@ -76,7 +65,7 @@ export default function EstimateForm(props) {
 
   const handleClose = () => {
     setOpen(false);
-    setRoomStats(initialRoomState);
+    setRoomFormValue(initialRoomState);
   };
 
   const handleBidsSubmission = () => {
@@ -329,8 +318,9 @@ export default function EstimateForm(props) {
                       </Typography>
                     ))
                   }>
-                  <MenuItem value='Interior'>Interior</MenuItem>
-                  <MenuItem value='Exterior'>Exterior</MenuItem>
+                  {processesTabLists.map((processTab) => {
+                    return <MenuItem value={processTab}>{processTab}</MenuItem>;
+                  })}
                 </Select>
               </FormControl>
             </Grid>
@@ -369,25 +359,15 @@ export default function EstimateForm(props) {
           <Divider sx={{ mt: 2 }} />
           {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Room by Room' && (
             <InteriorRoomByRoom
-              roomStats={roomStats}
-              setRoomStats={setRoomStats}
-              allRoom={allRoom}
+              roomFormValue={roomFormValue}
+              setRoomFormValue={setRoomFormValue}
               setAllRoom={setAllRoom}
               onRoomDetailsReset={onRoomDetailsReset}
-              wallStats={wallStats}
               openAddMoreDetails={openAddMoreDetails}
               setOpenAddMoreDetails={setOpenAddMoreDetails}
-              setWallStats={setWallStats}
-              windowStats={windowStats}
-              setWindowStats={setWindowStats}
-              clearWallStats={clearWallStats}
-              doorsStats={doorsStats}
-              setDoorStats={setDoorStats}
-              nonPaintableAreaStats={nonPaintableAreaStats}
-              setNonPaintableAreaStats={setNonPaintableAreaStats}
               openEditForm={openEditForm}
               setOpenEditForm={setOpenEditForm}
-              roomRelatedInfo={roomRelatedInfo}
+              allSectionsInfoOfARoom={allSectionsInfoOfARoom}
               initialBidInfo={initialBidInfo}
               currentClientInfo={currentClientInfo}
               setCurrentClientInfo={setCurrentClientInfo}
@@ -396,8 +376,8 @@ export default function EstimateForm(props) {
           {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
             <></>
             // <InteriorManByMan
-            //   roomStats={roomStats}
-            //   setRoomStats={setRoomStats}
+            //   roomFormValue={roomFormValue}
+            //   setRoomFormValue={setRoomFormValue}
             //   allRoom={allRoom}
             //   setAllRoom={setAllRoom}
             // />

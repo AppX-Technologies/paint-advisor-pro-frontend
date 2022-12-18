@@ -28,8 +28,8 @@ import { createClient, reset, updateClient } from '../bidsSlice';
 
 export default function AddNewClientForm(props) {
   const {
-    open,
-    handleClose,
+    openNewClientForm,
+    handleNewClientFormClose,
     selectedValue,
     setSelectedvalue,
     currentClientInfoToEdit,
@@ -66,20 +66,20 @@ export default function AddNewClientForm(props) {
 
   useEffect(() => {
     if (isSuccess) {
-      handleClose();
+      handleNewClientFormClose();
       dispatch(reset());
     }
   }, [isSuccess]);
 
   useEffect(() => {
-    if (open && currentClientInfoToEdit) {
+    if (openNewClientForm && currentClientInfoToEdit) {
       setSelectedvalue({ ...currentClientInfoToEdit });
     }
-  }, [open]);
+  }, [openNewClientForm]);
 
   return (
     <div>
-      <Dialog fullScreen open={open} onClose={handleClose}>
+      <Dialog fullScreen open={openNewClientForm} onClose={handleNewClientFormClose}>
         <Toolbar sx={{ backgroundColor: '#D50000' }}>
           <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
             {selectedValue._id ? 'Edit' : 'Add New'} Client{' '}
@@ -93,7 +93,7 @@ export default function AddNewClientForm(props) {
               height: '30px',
               padding: '3px'
             }}
-            onClick={handleClose}>
+            onClick={handleNewClientFormClose}>
             Close <CloseIcon sx={{ height: '15px' }} />
           </Button>
         </Toolbar>
@@ -204,7 +204,7 @@ export default function AddNewClientForm(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} disabled={isLoading}>
+          <Button onClick={handleNewClientFormClose} disabled={isLoading}>
             Cancel
           </Button>
           <Button
