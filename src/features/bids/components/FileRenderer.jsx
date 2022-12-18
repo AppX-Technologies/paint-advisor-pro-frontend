@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React from 'react';
 
 const FileRenderer = ({ src, fileType = '' }) => {
@@ -24,7 +22,8 @@ const FileRenderer = ({ src, fileType = '' }) => {
         />
       ) : (
         <iframe
-          allowFullScreen={true}
+          allowFullScreen
+          title='File Viewer'
           className='p-3 p-md-4'
           style={{
             position: 'absolute',
@@ -38,7 +37,8 @@ const FileRenderer = ({ src, fileType = '' }) => {
             bottom: 0,
             colorScheme: 'normal'
           }}
-          src={src}></iframe>
+          src={src}
+        />
       )}
     </div>
   );

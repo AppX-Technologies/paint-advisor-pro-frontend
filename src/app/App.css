@@ -42,3 +42,7 @@ body {
 .MuiGrid-root .MuiGrid-grid-xs-2 {
   display: flex !important;
 }
+
+input:autofill {
+  box-shadow: none;
+}

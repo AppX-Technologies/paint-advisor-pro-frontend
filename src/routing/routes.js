@@ -18,7 +18,7 @@ export const commonRoutes = [
 export const systemAdminRoutes = [
   { relLink: 'dashboard', icon: Dashboard, text: 'Dashboard' },
   { relLink: 'processes', icon: FormatListBulleted, text: 'Processes' },
-  { relLink: 'materials', icon: FormatColorFillIcon, text: 'Materials' },
+
   {
     relLink: 'production-rates',
     icon: BarChartIcon,
@@ -35,7 +35,7 @@ export const companyRoutes = (id) =>
     { relLink: 'bids', icon: Dashboard, text: 'Bids', element: Bids },
     { relLink: 'processes', icon: FormatListBulleted, text: 'Processes', element: Processes },
     { relLink: 'users', icon: People, text: 'Users', element: UsersFromCompany },
-    { relLink: 'materials', icon: FormatColorFillIcon, text: 'Materials', element: Materials },
+
     {
       relLink: 'production-rates',
       icon: BarChartIcon,

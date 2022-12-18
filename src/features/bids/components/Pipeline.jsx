@@ -57,9 +57,7 @@ const Pipeline = () => {
   const [initialEstimateBidInfo, setInitialEstimateBidInfo] = useState(estimationFormInitialInfo);
   const [allRoom, setAllRoom] = React.useState([]);
   const [roomFormValue, setRoomFormValue] = React.useState(initialRoomState);
-  // ! TODO rename
   const { user } = useSelector(authSelector);
-
   const [selectedValue, setSelectedvalue] = React.useState(initialState);
   const [wallStats, setWallStats] = useState(initilWallInfo);
   const [windowStats, setWindowStats] = useState(initialWindowInfo);
@@ -286,6 +284,8 @@ const Pipeline = () => {
       filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
     );
   }, [selectedStep, filteredClietsList]);
+
+  console.log(currentClientInfo, 'currentClientInfo');
 
   return (
     <>

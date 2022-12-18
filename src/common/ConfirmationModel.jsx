@@ -45,8 +45,11 @@ const ConfirmationModel = ({
         <DialogContentText>{content}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setOpenFileDeleteModel(false)}>Cancel</Button>
+        <Button onClick={() => setOpenFileDeleteModel(false)} disabled={isLoading}>
+          Cancel
+        </Button>
         <Button
+          disabled={isLoading}
           onClick={() =>
             !isFileUploadLoading
               ? fileToDelete

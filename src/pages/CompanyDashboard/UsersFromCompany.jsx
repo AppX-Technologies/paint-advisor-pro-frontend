@@ -41,7 +41,6 @@ const UsersFromCompany = () => {
       );
     }
   }, []);
-  console.log(companyMadeByUsers, 'companyMadeByUsers');
   React.useEffect(() => {
     if (isDeleted) {
       dispatch(
@@ -71,39 +70,40 @@ const UsersFromCompany = () => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <CustomButton
-          variant='contained'
-          sx={{ mt: 3, mb: 2 }}
-          onClick={() => setOpen(true)}
-          disabled={isLoading}>
-          Create
-        </CustomButton>
+      <Box sx={{ p: '24px' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <CustomButton
+            variant='contained'
+            sx={{ mt: 3, mb: 2 }}
+            onClick={() => setOpen(true)}
+            disabled={isLoading}>
+            Create
+          </CustomButton>
+        </Box>
+
+        <DraggableDataTable
+          initialDataList={companyMadeByUsers.map((org) => {
+            return {
+              _id: org._id,
+              name: org.name,
+              email: org.email,
+              phone: org.phone,
+              role: org.role,
+              proficiency: org.proficiency,
+              organization: org.organization ? org.organization.name : '',
+              status: org.active
+            };
+          })}
+          isLoading={isLoading}
+          columns={columns}
+          title='Users List'
+          setEditFormData={setEditFormData}
+          setOpenEditForm={setOpenEditForm}
+          setOpenDeleteModal={setOpenDeleteModal}
+          onDeleteBtnClick={onDeleteBtnClick}
+          deleteByEmail
+        />
       </Box>
-
-      <DraggableDataTable
-        initialDataList={companyMadeByUsers.map((org) => {
-          return {
-            _id: org._id,
-            name: org.name,
-            email: org.email,
-            phone: org.phone,
-            role: org.role,
-            proficiency: org.proficiency,
-            organization: org.organization ? org.organization.name : '',
-            status: org.active
-          };
-        })}
-        isLoading={isLoading}
-        columns={columns}
-        title='Users List'
-        setEditFormData={setEditFormData}
-        setOpenEditForm={setOpenEditForm}
-        setOpenDeleteModal={setOpenDeleteModal}
-        onDeleteBtnClick={onDeleteBtnClick}
-        deleteByEmail
-      />
-
       <CreateUserForm open={open} setOpen={setOpen} orgId={orgId} />
       {openEditForm && (
         <EditUserForm
@@ -129,3 +129,5 @@ const UsersFromCompany = () => {
 };
 
 export default UsersFromCompany;
+
+
