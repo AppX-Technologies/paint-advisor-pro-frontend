@@ -41,15 +41,13 @@ const Users = () => {
       dispatch(reset());
     }
   }, [isDeleted]);
-
+  console.log(userList, 'userList');
   // set email on click
   const onDeleteBtnClick = (e, email) => {
     e.stopPropagation();
     setEmailId(email);
   };
   const columns = userColumn();
-
-
 
   return (
     <>

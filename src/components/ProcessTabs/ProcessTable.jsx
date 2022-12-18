@@ -14,7 +14,7 @@ import StageTab from './StageTab';
 
 const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   const dispatch = useDispatch();
-  const { processList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(
+  const { processList, isDeleting, isLoading, isSuccess } = useSelector(
     (state) => state.process
   );
   const [stageValue, setStageValue] = React.useState(0);
@@ -24,14 +24,12 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   };
   const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
-  const [processDataList, setProcessDataList] = useState([]);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [editFormData, setEditFormData] = useState([]);
   const [filteredProcesses, setFilteredProcesses] = useState([]);
   const [processId, setProcessId] = useState('');
   const [open, setOpen] = useState(false);
 
-  console.log(processList);
   const onDeleteBtnClick = (e, getId) => {
     e.stopPropagation();
     setProcessId(getId);
@@ -115,8 +113,6 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
         }
         isLoading={isLoading}
         columns={columns}
-        dataList={processDataList}
-        setDataList={setProcessDataList}
         title='Processes List'
         setEditFormData={setEditFormData}
         setOpenEditForm={setOpenEditForm}

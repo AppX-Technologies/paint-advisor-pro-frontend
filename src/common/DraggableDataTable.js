@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { Box, Chip, CircularProgress, Typography } from '@mui/material';
+import { Box, Chip, CircularProgress, Divider, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
@@ -41,7 +41,9 @@ export const DraggableDataTable = ({
   onListSort,
   draggable = false,
   deleteByEmail = false,
-  viewCompany = false
+  viewCompany = false,
+  subHeader = [],
+  deletable = true
 }) => {
   const onDragEnd = (result) => {
     if (!result.destination) {
@@ -76,11 +78,33 @@ export const DraggableDataTable = ({
         </Typography>
         <Table aria-label='simple table'>
           <TableHead>
+            {subHeader.length !== 0 && (
+              <TableRow>
+                {subHeader.map((field, index) => {
+                  return (
+                    <>
+                      <TableCell
+                        colSpan={field.colSpan}
+                        align='center'
+                        sx={{
+                          fontSize: '12px',
+                          fontWeight: '550',
+                          height: 20,
+                         
+                        }}>
+                        {field.name}
+                      </TableCell>
+                    </>
+                  );
+                })}
+              </TableRow>
+            )}
             <TableRow>
               {draggable && <TableCell sx={{ fontSize: '16px', fontWeight: '550' }}></TableCell>}
               {columns.map((column) => {
                 return (
                   <TableCell
+                    align='center'
                     sx={{
                       fontSize: '16px',
                       fontWeight: '550',
@@ -125,6 +149,7 @@ export const DraggableDataTable = ({
                             {columns.map((item) => (
                               <TableCell
                                 component='th'
+                                align='center'
                                 scope='row'
                                 style={{
                                   width: `${item.width ? item.width : '20%'}`
@@ -141,12 +166,14 @@ export const DraggableDataTable = ({
                                       (item) => item[0].toUpperCase() + item.slice(1, item.length)
                                     )
                                     .join(', ')
-                                ) : (
+                                ) : rowItem[item.name] ? (
                                   rowItem[item.name]
+                                ) : (
+                                  'N/A'
                                 )}
                               </TableCell>
                             ))}
-                            <TableCell style={{ width: '50%' }}>
+                            <TableCell style={{ width: '50%' }} align='center'>
                               <Stack direction='row' spacing={2}>
                                 <EditOutlinedIcon
                                   style={{ cursor: 'pointer' }}
@@ -165,16 +192,18 @@ export const DraggableDataTable = ({
                                     />
                                   </Link>
                                 )}
-                                <DeleteOutlineOutlinedIcon
-                                  style={{ cursor: 'pointer' }}
-                                  onClick={(e) => {
-                                    setOpenDeleteModal(true);
-                                    onDeleteBtnClick(
-                                      e,
-                                      deleteByEmail ? rowItem.email : rowItem._id
-                                    );
-                                  }}
-                                />
+                                {deletable && (
+                                  <DeleteOutlineOutlinedIcon
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={(e) => {
+                                      setOpenDeleteModal(true);
+                                      onDeleteBtnClick(
+                                        e,
+                                        deleteByEmail ? rowItem.email : rowItem._id
+                                      );
+                                    }}
+                                  />
+                                )}
                               </Stack>
                             </TableCell>
                           </TableRow>

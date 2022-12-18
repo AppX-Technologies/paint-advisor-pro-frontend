@@ -11,6 +11,7 @@ import Dashboard from '../pages/Dashboard';
 import Login from '../pages/Login';
 import Materials from '../pages/Materials';
 import { Processes } from '../pages/Processes';
+import ProductionRate from '../pages/ProductionRate';
 import RegisterPage from '../pages/Register';
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
@@ -36,6 +37,7 @@ const AppRoutes = () => {
             <Route path='dashboard' element={<Dashboard />} />
             <Route path='processes' element={<Processes />} />
             <Route path='materials' element={<Materials />} />
+            <Route path='production-rates' element={<ProductionRate />} />
           </Route>
           <Route path='company'>
             <Route path=':companyId'>

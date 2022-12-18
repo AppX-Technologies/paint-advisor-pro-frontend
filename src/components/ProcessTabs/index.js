@@ -18,9 +18,9 @@ const Processes = () => {
   };
   const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
+  const { companyId } = useParams();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const { isDeleted } = useSelector((state) => state.process);
-  const { companyId } = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
     if (isDeleted) {

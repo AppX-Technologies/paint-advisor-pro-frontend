@@ -28,7 +28,6 @@ export default function Edit(props) {
     appliesTo: editFormData?.appliesTo ? [...editFormData.appliesTo] : []
   };
 
-  console.log(initialFormState, 'initialFormState');
 
   const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
   const { materialList } = useSelector((state) => state.material);

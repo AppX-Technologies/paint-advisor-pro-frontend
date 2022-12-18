@@ -61,6 +61,29 @@ export const WALL_TYPES = ['Smooth', 'Orange Peel', 'Knockdown'];
 
 export const CEILING_TYPES = [...WALL_TYPES, 'Popcorn'];
 
+export const productionTableHeaderFields = [
+  {
+    type: 'Smooth',
+    category: 'wallType',
+    bgColor: '#e5e6e1'
+  },
+  {
+    type: 'Orange Peel',
+    category: 'wallType',
+    bgColor: '#e5e6e1'
+  },
+  {
+    type: 'Knockdown',
+    category: 'wallType',
+    bgColor: '#e5e6e1'
+  },
+  {
+    type: 'Popcorn',
+    category: 'ceilingType',
+    bgColor: '#d0d1cd'
+  }
+];
+
 export const ROOM_TYPES = [
   'Entrance Hall',
   'Kitchen Room',
@@ -280,3 +303,167 @@ export const FIELDS_WHERE_MATERIALS_ARE_APPLIES = [
   { label: 'crownMoldings' },
   { label: 'closets' }
 ];
+export const companyProductionRate = [
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Smooth',
+    beginner: 10,
+    intermediate: 20,
+    proficient: 30
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Knock Down',
+    beginner: 10,
+    intermediate: 20,
+    proficient: 30
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Smooth',
+    beginner: 10,
+    intermediate: 20,
+    proficient: 30
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Popcorn',
+    beginner: 10,
+    intermediate: 20,
+    proficient: 30
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Double Hung',
+    beginner: 10,
+    intermediate: 20,
+    proficient: 30
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Sliding',
+    beginner: 10,
+    intermediate: 20,
+    proficient: 30
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Casement',
+    beginner: 10,
+    intermediate: 20,
+    proficient: 30
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Orange Peel',
+    beginner: 66,
+    intermediate: 155,
+    proficient: 352
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Single Hung',
+    beginner: 10,
+    intermediate: 204,
+    proficient: 352
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Knock Down',
+    beginner: 180,
+    intermediate: 340,
+    proficient: 450
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Orange Peel',
+    beginner: 145,
+    intermediate: 245,
+    proficient: 333
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Door',
+    appliesToType: ' ',
+    beginner: 145,
+    intermediate: 245,
+    proficient: 333
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Baseboard Trim',
+    appliesToType: ' ',
+    beginner: 145,
+    intermediate: 245,
+    proficient: 333
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window Trim',
+    appliesToType: ' ',
+    beginner: 145,
+    intermediate: 245,
+    proficient: 333
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Door Jamb',
+    appliesToType: ' ',
+    beginner: 145,
+    intermediate: 245,
+    proficient: 333
+  },
+
+  {
+    bidType: 'Interior',
+    appliesTo: 'Crown Molding',
+    appliesToType: ' ',
+    beginner: 145,
+    intermediate: 245,
+    proficient: 333
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Closet',
+    appliesToType: ' ',
+    beginner: 145,
+    intermediate: 245,
+    proficient: 333
+  },
+  {
+    bidType: 'Exterior',
+    appliesTo: 'Wall',
+    appliesToType: 'Vinyl Siding ',
+    beginner: 145,
+    intermediate: 245,
+    proficient: 333
+  },
+  {
+    bidType: 'Exterior',
+    appliesTo: 'Wall',
+    appliesToType: 'Clapboard Siding  Siding ',
+    beginner: 145,
+    intermediate: 245,
+    proficient: 333
+  },
+  {
+    bidType: 'Exterior',
+    appliesTo: 'Wall',
+    appliesToType: 'Stucco',
+    beginner: 145,
+    intermediate: 245,
+    proficient: 333
+  }
+];
+

@@ -40,8 +40,7 @@ const Card = ({
 
         {/* Action */}
         {field !== 'nonPaintableAreas' && (
-          <>
-            <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex' }}>
               {items.paint && (
                 <FormatPaintIcon
                   sx={{
@@ -101,7 +100,6 @@ const Card = ({
                 />
               </Tooltip>
             </Box>
-          </>
         )}
       </Box>
       {/* Body-section */}
@@ -126,15 +124,13 @@ const Card = ({
             ?.filter((x) => x === 'wallInfo')
             ?.map((item) => {
               return (
-                <>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Wall</Typography>
 
                     <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
                       {items[item]}
                     </Typography>
                   </Box>
-                </>
               );
             })}
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -145,8 +141,7 @@ const Card = ({
           </Box>
         </>
       ) : (
-        <>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Tooltip title={items.description} placement='top'>
               <Typography sx={{ fontSize: '14px', mb: 2, color: '#736f6f', fontWeight: '600' }}>
                 {items.description.length >= 15
@@ -223,7 +218,6 @@ const Card = ({
               )}
             </Box>
           </Box>
-        </>
       )}
     </Box>
   );

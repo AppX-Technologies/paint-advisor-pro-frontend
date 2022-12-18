@@ -85,6 +85,7 @@ export const companyUserColumns = () => {
     }
   ];
 };
+
 export const processColumn = () => {
   return [
     {
@@ -120,6 +121,36 @@ export const materialColumn = () => {
       name: 'appliesTo',
       label: 'Applies To',
       width: '50%'
+    }
+  ];
+};
+
+export const productRateColumn = () => {
+  return [
+    {
+      name: 'painterName',
+      label: 'Painter Name',
+      width: '20%'
+    },
+    {
+      name: 'orangePeel',
+      label: 'Orange Peel',
+      width: '20%'
+    },
+    {
+      name: 'smooth',
+      label: 'Smooth',
+      width: '20%'
+    },
+    {
+      name: 'knockDown',
+      label: 'Knock Down',
+      width: '20%'
+    },
+    {
+      name: 'popcorn',
+      label: 'Popcorn',
+      width: '20%'
     }
   ];
 };

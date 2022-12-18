@@ -5,14 +5,12 @@ import { useParams } from 'react-router-dom';
 import { materialTabLists } from '../../common/Constants';
 import TabsNavigation from '../../common/TabsNavigation';
 import { fetchMaterial } from '../../features/materials/materialSlice';
-import { fetchSingleOrg } from '../../features/org/orgSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { reset } from '../../features/usersFromCompany/usersFromCompanySlice';
 import MaterialTable from './MaterialTable';
 
 const Materials = () => {
   const [value, setValue] = React.useState(0);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

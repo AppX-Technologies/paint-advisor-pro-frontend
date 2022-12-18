@@ -7,11 +7,18 @@ export const filterProcessByBid = (processList, bidType, stage) => {
   return filteredProcessList;
 };
 
-export const filterMaterialByBid = (materialList, bidType) => {
-  const filteredMaterialList =
-    materialList[0] &&
-    materialList[0]?.materials.filter((material) => {
+export const filterMaterialByBid = (list, bidType) => {
+  const filteredList =
+    list[0] &&
+    list[0]?.materials.filter((material) => {
       return material.bidType === bidType;
     });
-  return filteredMaterialList;
+  return filteredList;
+};
+
+export const filterProductionRateByBid = (list, bidType) => {
+  const filteredList = list?.filter((productionRate) => {
+    return productionRate.bidType === bidType;
+  });
+  return filteredList;
 };

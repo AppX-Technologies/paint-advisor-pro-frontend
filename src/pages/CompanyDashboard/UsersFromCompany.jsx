@@ -41,7 +41,7 @@ const UsersFromCompany = () => {
       );
     }
   }, []);
-
+  console.log(companyMadeByUsers, 'companyMadeByUsers');
   React.useEffect(() => {
     if (isDeleted) {
       dispatch(
