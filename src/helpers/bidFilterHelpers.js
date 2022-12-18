@@ -16,10 +16,12 @@ export const filterMaterialByBid = (list, bidType) => {
   return filteredList;
 };
 
-export const filterProductionRateByBid = (list, bidType) => {
-  const filteredList = list?.filter((productionRate) => {
-    return productionRate.bidType === bidType;
-  });
+export const filterProductionRateByBid = (bidType, list = []) => {
+  const filteredList =
+    list &&
+    list?.filter((productionRate) => {
+      return productionRate.bidType === bidType;
+    });
   return filteredList;
 };
 

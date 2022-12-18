@@ -5,27 +5,47 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProductionRate } from '../../features/productionRate/productionRateSlice';
 
 export default function EditIndividualPainterProductionR({ editState, setEditState, onEditClose }) {
   const userDetail = JSON.parse(localStorage.getItem('user'));
+  const [updatedProductionList, setUpdatedProductList] = React.useState([]);
   const { productionRateList } = useSelector((state) => state.productionRate);
   const dispatch = useDispatch();
-
+  React.useEffect(() => {
+    if (editState) {
+      const ids = Object.keys(editState.id);
+      const result = [
+        ...productionRateList[0].productionRates.filter(
+          (x) => !ids.map((i) => editState.id[i]).includes(x._id)
+        )
+      ];
+      ids.forEach((i) => {
+        result.push({
+          _id: editState.id[i],
+          appliesTo: editState.appliesTo,
+          appliesToType: editState.appliesToType,
+          proficiency: i,
+          productionRate: editState[i.toLowerCase()]
+        });
+      });
+      setUpdatedProductList([...result]);
+    }
+  }, [editState]);
+  console.log(productionRateList);
   const handleEdit = () => {
     const formStateWithToken = {
-      ...editState,
+      list: updatedProductionList,
       ID: productionRateList[0]._id,
-      previousProductionRates: productionRateList[0].productionRates.filter(
-        (previousProductionRate) => previousProductionRate._id !== editState._id
-      ),
       add: true,
       token: userDetail.token
     };
     dispatch(createProductionRate(formStateWithToken));
     setEditState(null);
   };
+  useEffect(() => {}, [handleEdit]);
 
   const marks = [
     {

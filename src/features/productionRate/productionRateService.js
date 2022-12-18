@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { companyProductionRate } from '../../helpers/contants';
 
 const endpoint = 'http://localhost:5001/production-rates';
 const CREATE_PROCESS = `${endpoint}/`;
@@ -46,17 +47,7 @@ const createProductionRate = async (userData) => {
     `${CREATE_PROCESS}/${userData.ID}`,
     {
       productionRates: userData.add
-        ? [
-            ...userData.previousProductionRates,
-            {
-              bidType: userData.bidType,
-              appliesTo: userData.appliesTo,
-              appliesToType: userData.appliesToType,
-              beginner: userData.beginner,
-              intermediate: userData.intermediate,
-              proficient: userData.proficient
-            }
-          ]
+        ? [...userData.list ]
         : userData.previousProductionRates.filter(
             (previousProductionRate) => previousProductionRate._id !== userData.idToBeDeleted
           )

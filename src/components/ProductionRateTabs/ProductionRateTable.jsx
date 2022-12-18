@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { reset } from '../../features/productionRate/productionRateSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { filterProductionRateByBid } from '../../helpers/bidFilterHelpers';
+import { companyProductionRate, filterProductionRates } from '../../helpers/contants';
 import { productionRateDataRowFormatter } from '../../helpers/productionRateHelper';
 import EditIndividualPainterProductionR from './EditIndividualPainterProductionR';
 
@@ -151,11 +152,9 @@ export default function ProductionRateTable({ filterValue }) {
   }, [isSuccess]);
 
   useEffect(() => {
-    setFilteredListByBidType(
-      filterProductionRateByBid(productionRateList[0]?.productionRates, filterValue)
-    );
+    setFilteredListByBidType(filterProductionRates(productionRateList[0]?.productionRates));
   }, [filterValue, productionRateList]);
-  const rows = rowDataGenerator(productionRateDataRowFormatter(filteredListByBidType));
+  const rows = rowDataGenerator(filteredListByBidType);
 
   return (
     <>
