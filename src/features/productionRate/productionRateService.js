@@ -47,7 +47,7 @@ const createProductionRate = async (userData) => {
     `${CREATE_PROCESS}/${userData.ID}`,
     {
       productionRates: userData.add
-        ? [...userData.list ]
+        ? [...userData.list]
         : userData.previousProductionRates.filter(
             (previousProductionRate) => previousProductionRate._id !== userData.idToBeDeleted
           )

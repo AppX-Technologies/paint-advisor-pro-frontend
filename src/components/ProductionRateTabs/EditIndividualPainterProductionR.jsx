@@ -4,10 +4,12 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { cloneDeep } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProductionRate } from '../../features/productionRate/productionRateSlice';
+import { removeItemFromArray } from '../../helpers/addRemoveUpdateListHelper';
 
 export default function EditIndividualPainterProductionR({ editState, setEditState, onEditClose }) {
   const userDetail = JSON.parse(localStorage.getItem('user'));
@@ -18,13 +20,17 @@ export default function EditIndividualPainterProductionR({ editState, setEditSta
     if (editState) {
       const ids = Object.keys(editState.id);
       const result = [
-        ...productionRateList[0].productionRates.filter(
-          (x) => !ids.map((i) => editState.id[i]).includes(x._id)
+        ...cloneDeep(
+          productionRateList[0].productionRates.filter(
+            (x) => !ids.map((i) => editState.id[i]).includes(x._id)
+          )
         )
       ];
+      console.log(result);
       ids.forEach((i) => {
         result.push({
           _id: editState.id[i],
+          bidType: editState.bidType,
           appliesTo: editState.appliesTo,
           appliesToType: editState.appliesToType,
           proficiency: i,
@@ -34,7 +40,7 @@ export default function EditIndividualPainterProductionR({ editState, setEditSta
       setUpdatedProductList([...result]);
     }
   }, [editState]);
-  console.log(productionRateList);
+
   const handleEdit = () => {
     const formStateWithToken = {
       list: updatedProductionList,
@@ -45,7 +51,11 @@ export default function EditIndividualPainterProductionR({ editState, setEditSta
     dispatch(createProductionRate(formStateWithToken));
     setEditState(null);
   };
-  useEffect(() => {}, [handleEdit]);
+  // useEffect(() => {
+  //   dispatch(
+  //     createProductionRate({ ID: productionRateList[0]?._id, add: true, token: userDetail.token })
+  //   );
+  // }, []);
 
   const marks = [
     {
