@@ -17,9 +17,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { reset } from '../../features/productionRate/productionRateSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { filterProductionRateByBid } from '../../helpers/bidFilterHelpers';
-import { companyProductionRate, filterProductionRates } from '../../helpers/contants';
-import { productionRateDataRowFormatter } from '../../helpers/productionRateHelper';
+import { filterProductionRates } from '../../helpers/productionRateHelper';
 import EditIndividualPainterProductionR from './EditIndividualPainterProductionR';
 
 const rowDataGenerator = (companyData) => {
@@ -27,14 +25,14 @@ const rowDataGenerator = (companyData) => {
   function avgCalculator(section) {
     const types = companyData[section];
     const totalTypes = companyData[section].length;
-    const beginner = types.map((type) => type.beginner).reduce((a, b) => a + b) / totalTypes;
-    const intermediate =
+    const beginnerAvg = types.map((type) => type.beginner).reduce((a, b) => a + b) / totalTypes;
+    const intermediateAvg =
       types.map((type) => type.intermediate).reduce((a, b) => a + b) / totalTypes;
-    const proficient = types.map((type) => type.proficient).reduce((a, b) => a + b) / totalTypes;
+    const proficientAvg = types.map((type) => type.proficient).reduce((a, b) => a + b) / totalTypes;
     return {
-      beginner: beginner.toFixed(1),
-      intermediate: intermediate.toFixed(1),
-      proficient: proficient.toFixed(1)
+      beginnerAvg: beginnerAvg.toFixed(1),
+      intermediateAvg: intermediateAvg.toFixed(1),
+      proficientAvg: proficientAvg.toFixed(1)
     };
   }
   Object.keys(companyData).forEach((item) => {
@@ -59,19 +57,19 @@ function Row({ row, onEditClick }) {
         </TableCell>
         <TableCell>{row.section}</TableCell>
         <TableCell align='left'>
-          {row.beginner}{' '}
+          {row.beginnerAvg}{' '}
           <span style={{ fontSize: '10px' }}>
             ft<sup>2</sup>/hr
           </span>
         </TableCell>
         <TableCell align='left'>
-          {row.intermediate}{' '}
+          {row.intermediateAvg}{' '}
           <span style={{ fontSize: '10px' }}>
             ft<sup>2</sup>/hr
           </span>
         </TableCell>
         <TableCell align='left'>
-          {row.proficient}{' '}
+          {row.proficientAvg}{' '}
           <span style={{ fontSize: '10px' }}>
             ft<sup>2</sup>/hr
           </span>
@@ -150,7 +148,6 @@ export default function ProductionRateTable({ filterValue }) {
       dispatch(reset());
     }
   }, [isSuccess]);
-
   useEffect(() => {
     setFilteredListByBidType(filterProductionRates(productionRateList[0]?.productionRates));
   }, [filterValue, productionRateList]);
@@ -190,7 +187,7 @@ export default function ProductionRateTable({ filterValue }) {
               <TableCell
                 align='left'
                 sx={{ fontSize: '15px', fontWeight: '550', color: '#4d5057' }}>
-                Profficient
+                Proficient
               </TableCell>
             </TableRow>
           </TableHead>

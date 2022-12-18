@@ -44,13 +44,9 @@ const createProductionRate = async (userData) => {
   };
   delete userData.token;
   const response = await axios.put(
-    `${CREATE_PROCESS}/${userData.ID}`,
+    `${CREATE_PROCESS}/${userData.productionRateId}`,
     {
-      productionRates: userData.add
-        ? [...userData.list]
-        : userData.previousProductionRates.filter(
-            (previousProductionRate) => previousProductionRate._id !== userData.idToBeDeleted
-          )
+      productionRates: [...userData.updatedProductionList]
     },
     config
   );
