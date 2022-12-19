@@ -129,8 +129,7 @@ export const companyProductionRate = [
     bidType: 'Interior',
     appliesTo: 'Wall',
     appliesToType: 'Smooth',
-    proficiency: 'Beginner',
-    productionRate: 20
+    proficiency: 'Beginner'
   },
   {
     bidType: 'Interior',
@@ -466,4 +465,3 @@ export const companyProductionRate = [
     productionRate: 20
   }
 ];
-

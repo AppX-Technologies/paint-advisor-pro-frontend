@@ -85,3 +85,31 @@ export const filterProductionRates = (productionRate = []) => {
   });
   return allProductionRateObject;
 };
+
+export  function avgCalculator(section, productionRateList=[]) {
+  const types = productionRateList[section];
+  const totalTypes = productionRateList[section].length;
+  const beginnerAvg =
+    types
+      .map((type) => type.beginner)
+      .reduce((a, b) => {
+        return b !== 'N/A' && a + b;
+      }, 0) / totalTypes;
+  const intermediateAvg =
+    types
+      .map((type) => type.intermediate)
+      .reduce((a, b) => {
+        return b !== 'N/A' && a + b;
+      }, 0) / totalTypes;
+  const proficientAvg =
+    types
+      .map((type) => type.proficient)
+      .reduce((a, b) => {
+        return b !== 'N/A' && a + b;
+      }, 0) / totalTypes;
+  return {
+    beginnerAvg: beginnerAvg.toFixed(1),
+    intermediateAvg: intermediateAvg.toFixed(1),
+    proficientAvg: proficientAvg.toFixed(1)
+  };
+}

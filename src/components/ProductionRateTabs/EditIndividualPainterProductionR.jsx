@@ -5,17 +5,17 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { startCase } from 'lodash';
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProductionRate } from '../../features/productionRate/productionRateSlice';
 
 export default function EditIndividualPainterProductionR({ editState, setEditState, onEditClose }) {
   const userDetail = JSON.parse(localStorage.getItem('user'));
-  const [updatedProductionRateList, setUpdatedProductionRateList] = React.useState([]);
   const { productionRateList } = useSelector((state) => state.productionRate);
+  const [updatedProductionRateList, setUpdatedProductionRateList] = useState([]);
   const dispatch = useDispatch();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (editState) {
       const ids = Object.keys(editState.id);
       const result = [
@@ -75,7 +75,7 @@ export default function EditIndividualPainterProductionR({ editState, setEditSta
       value: 500,
       label: (
         <Typography sx={{ fontSize: '10px', marginLeft: '-10px', marginTop: '-5px' }}>
-          500{' '}
+          500
           <span style={{ fontSize: '8px' }}>
             ft<sup>2</sup>/hr
           </span>
@@ -95,11 +95,14 @@ export default function EditIndividualPainterProductionR({ editState, setEditSta
         <Grid container spacing={3} sx={{ marginTop: '-15px' }}>
           <Grid item xs={12}>
             <Typography sx={{ fontSize: '12px', width: '140px' }}>
-              Beginner: {editState?.beginner}{' '}
-              <span style={{ fontSize: '10px' }}>
-                ft<sup>2</sup>/hr
-              </span>
+              Beginner: {editState?.beginner}
+              {editState?.beginner !== 'N/A' && (
+                <span style={{ fontSize: '10px' }}>
+                  ft<sup>2</sup>/hr
+                </span>
+              )}
             </Typography>
+
             <Slider
               value={editState?.beginner}
               min={5}
@@ -113,9 +116,11 @@ export default function EditIndividualPainterProductionR({ editState, setEditSta
           <Grid item xs={12} sx={{ marginTop: '-30px' }}>
             <Typography sx={{ fontSize: '12px', width: '140px' }}>
               Intermediate: {editState?.intermediate}{' '}
-              <span style={{ fontSize: '10px' }}>
-                ft<sup>2</sup>/hr
-              </span>
+              {editState?.intermediate !== 'N/A' && (
+                <span style={{ fontSize: '10px' }}>
+                  ft<sup>2</sup>/hr
+                </span>
+              )}
             </Typography>
             <Slider
               value={editState?.intermediate}
@@ -130,9 +135,11 @@ export default function EditIndividualPainterProductionR({ editState, setEditSta
           <Grid item xs={12} sx={{ marginTop: '-30px' }}>
             <Typography sx={{ fontSize: '12px', width: '140px' }}>
               Proficient: {editState?.proficient}{' '}
-              <span style={{ fontSize: '10px' }}>
-                ft<sup>2</sup>/hr
-              </span>
+              {editState?.proficient !== 'N/A' && (
+                <span style={{ fontSize: '10px' }}>
+                  ft<sup>2</sup>/hr
+                </span>
+              )}
             </Typography>
             <Slider
               value={editState?.proficient}
