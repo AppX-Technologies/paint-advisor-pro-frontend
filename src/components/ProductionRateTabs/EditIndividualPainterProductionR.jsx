@@ -4,14 +4,14 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { cloneDeep } from 'lodash';
+import { startCase } from 'lodash';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProductionRate } from '../../features/productionRate/productionRateSlice';
 
 export default function EditIndividualPainterProductionR({ editState, setEditState, onEditClose }) {
   const userDetail = JSON.parse(localStorage.getItem('user'));
-  const [updatedProductionList, setUpdatedProductList] = React.useState([]);
+  const [updatedProductionRateList, setUpdatedProductionRateList] = React.useState([]);
   const { productionRateList } = useSelector((state) => state.productionRate);
   const dispatch = useDispatch();
 
@@ -32,15 +32,14 @@ export default function EditIndividualPainterProductionR({ editState, setEditSta
           productionRate: editState[i.toLowerCase()]
         });
       });
-      setUpdatedProductList([...result]);
+      setUpdatedProductionRateList([...result]);
     }
   }, [editState]);
 
   const handleEdit = () => {
     const stateWithToken = {
-      updatedProductionList,
+      updatedProductionRateList,
       productionRateId: productionRateList[0]._id,
-      add: true,
       token: userDetail.token
     };
     dispatch(createProductionRate(stateWithToken));
@@ -87,8 +86,8 @@ export default function EditIndividualPainterProductionR({ editState, setEditSta
   return (
     <Dialog open={editState !== null} onClose={onEditClose}>
       <DialogTitle>
-        <Typography sx={{ fontSize: '14px', width: '140px' }}>
-          {editState?.appliesTo} ({editState?.appliesToType})
+        <Typography sx={{ fontSize: '14px', width: '200px' }}>
+          {startCase(editState?.appliesTo)} ({editState?.appliesToType})
         </Typography>{' '}
         <CircularProgress style={{ display: 'none' }} size={25} />
       </DialogTitle>

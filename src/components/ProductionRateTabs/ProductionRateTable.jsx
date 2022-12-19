@@ -12,6 +12,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { startCase } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +21,7 @@ import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { filterProductionRates } from '../../helpers/productionRateHelper';
 import EditIndividualPainterProductionR from './EditIndividualPainterProductionR';
 
-const rowDataGenerator = (companyData) => {
+const rowDataCalculatorWithAvg = (companyData) => {
   const result = [];
   function avgCalculator(section) {
     const types = companyData[section];
@@ -55,7 +56,7 @@ function Row({ row, onEditClick }) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>{row.section}</TableCell>
+        <TableCell>{startCase(row.section)}</TableCell>
         <TableCell align='left'>
           {row.beginnerAvg}{' '}
           <span style={{ fontSize: '10px' }}>
@@ -83,16 +84,16 @@ function Row({ row, onEditClick }) {
                 <TableBody>
                   {row.summary.map((summaryRow) => (
                     <TableRow key={summaryRow.appliesToType}>
-                      <TableCell align='left' sx={{ width: '21%', fontSize: '12px' }}>
+                      <TableCell align='left' sx={{ width: '21.3%', fontSize: '12px' }}>
                         {summaryRow.appliesToType}
                       </TableCell>
-                      <TableCell align='left' sx={{ width: '24.4%', fontSize: '12px' }}>
+                      <TableCell align='left' sx={{ width: '24.6%', fontSize: '12px' }}>
                         {summaryRow.beginner}{' '}
                         <span style={{ fontSize: '9px' }}>
                           ft<sup>2</sup>/hr
                         </span>
                       </TableCell>
-                      <TableCell align='left' sx={{ width: '30.2%', fontSize: '12px' }}>
+                      <TableCell align='left' sx={{ width: '30.4%', fontSize: '12px' }}>
                         {summaryRow.intermediate}{' '}
                         <span style={{ fontSize: '9px' }}>
                           ft<sup>2</sup>/hr
@@ -151,7 +152,7 @@ export default function ProductionRateTable({ filterValue }) {
   useEffect(() => {
     setFilteredListByBidType(filterProductionRates(productionRateList[0]?.productionRates));
   }, [filterValue, productionRateList]);
-  const rows = rowDataGenerator(filteredListByBidType);
+  const rows = rowDataCalculatorWithAvg(filteredListByBidType);
 
   return (
     <>

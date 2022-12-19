@@ -46,7 +46,7 @@ const createProductionRate = async (userData) => {
   const response = await axios.put(
     `${CREATE_PROCESS}/${userData.productionRateId}`,
     {
-      productionRates: [...userData.updatedProductionList]
+      productionRates: [...userData.updatedProductionRateList]
     },
     config
   );
