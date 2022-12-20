@@ -112,7 +112,6 @@ export const userSlice = createSlice({
         state.isSuccess = true;
         state.message = action.payload;
         state.companyMadeByUsers = addOrUpdateItemInArray(state.userList, action.payload);
-
       })
       .addCase(createUsers.rejected, (state, action) => {
         state.isLoading = false;
@@ -139,6 +138,7 @@ export const userSlice = createSlice({
         state.isDeleting = false;
         state.isDeleted = true;
         state.message = action.payload;
+        state.userList = [...state.userList.filter((user) => user.email !== action.payload.email)];
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.isDeleting = false;

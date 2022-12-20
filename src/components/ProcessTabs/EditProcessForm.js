@@ -8,6 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { startCase } from 'lodash';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProcess } from '../../features/process/processSlice';
@@ -26,14 +27,20 @@ export default function Edit({
   const dispatch = useDispatch();
   const handleEdit = (e) => {
     e.preventDefault();
-    if (
-      !processRegistrationAndEditStats.description ||
-      !processRegistrationAndEditStats.bidType ||
-      !processRegistrationAndEditStats.stage
-    ) {
+    const emptyField = Object.keys(processRegistrationAndEditStats)
+      .filter((item) => item !== '__v')
+      .find((state) =>
+        typeof processRegistrationAndEditStats[state] === 'string'
+          ? processRegistrationAndEditStats[state] === ''
+          : typeof processRegistrationAndEditStats[state] === 'number'
+          ? processRegistrationAndEditStats[state] === 0
+          : !processRegistrationAndEditStats[state]?.length
+      );
+
+    if (emptyField) {
       return dispatch(
         showMessage({
-          message: `Description cannot be empty`,
+          message: `${startCase(emptyField)} cannot be empty`,
           severity: 'error'
         })
       );

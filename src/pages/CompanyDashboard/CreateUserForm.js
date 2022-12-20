@@ -1,24 +1,20 @@
-import * as React from 'react';
+import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useDispatch, useSelector } from 'react-redux';
-import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import { startCase } from 'lodash';
+import * as React from 'react';
 import { useEffect } from 'react';
-import formReducer from '../reducers/registerReducer';
-import {
-  createUsersByCompany,
-  fetchUserMadeByCompany,
-  reset
-} from '../../features/usersFromCompany/usersFromCompanySlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
+import { createUsersByCompany, reset } from '../../features/usersFromCompany/usersFromCompanySlice';
 
 export default function CreateUserForm({
   orgId,
@@ -31,22 +27,30 @@ export default function CreateUserForm({
 
   const handleCreate = (e) => {
     e.preventDefault();
+    const emptyField = Object.keys(userRegistrationAndEditStats).find((state) =>
+      typeof userRegistrationAndEditStats[state] === 'string'
+        ? userRegistrationAndEditStats[state] === ''
+        : typeof userRegistrationAndEditStats[state] === 'number'
+        ? userRegistrationAndEditStats[state] === 0
+        : !userRegistrationAndEditStats[state]?.length
+    );
+
+    if (emptyField) {
+      return dispatch(
+        showMessage({
+          message: `${startCase(emptyField)} cannot be empty`,
+          severity: 'error'
+        })
+      );
+    }
     const formStateWithCompanyId = {
       ...userRegistrationAndEditStats,
       organization: orgId,
       token: JSON.parse(localStorage.getItem('user')).token
     };
-    if (userRegistrationAndEditStats.role === '') {
-      dispatch(
-        showMessage({
-          message: 'Please select a role',
-          severity: 'error'
-        })
-      );
-    } else {
-      dispatch(createUsersByCompany(formStateWithCompanyId));
-      reset();
-    }
+
+    dispatch(createUsersByCompany(formStateWithCompanyId));
+    reset();
   };
 
   useEffect(() => {

@@ -9,6 +9,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
+import { startCase } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,17 +29,22 @@ export default function FormDialog({
 
   const handleCreate = (e) => {
     e.preventDefault();
-    if (
-      !processRegistrationAndEditStats.description ||
-      !processRegistrationAndEditStats.bidType ||
-      !processRegistrationAndEditStats.stage
-    ) {
-      return dispatch();
+    const emptyField = Object.keys(processRegistrationAndEditStats).find((state) =>
+      typeof processRegistrationAndEditStats[state] === 'string'
+        ? processRegistrationAndEditStats[state] === ''
+        : typeof processRegistrationAndEditStats[state] === 'number'
+        ? processRegistrationAndEditStats[state] === 0
+        : !processRegistrationAndEditStats[state]?.length
+    );
+
+    if (emptyField) {
+      return dispatch(
+        showMessage({
+          message: `${startCase(emptyField)} cannot be empty`,
+          severity: 'error'
+        })
+      );
     }
-    showMessage({
-      message: `Description cannot be empty`,
-      severity: 'error'
-    });
     const processRegistrationAndEditStatsWithToken = {
       ...processRegistrationAndEditStats,
       ID: processList[0]._id,
@@ -79,7 +85,6 @@ export default function FormDialog({
       dispatch(reset());
     }
   }, [isSuccess]);
-  console.log(processRegistrationAndEditStats, 'processRegistrationAndEditStats');
 
   return (
     <Dialog

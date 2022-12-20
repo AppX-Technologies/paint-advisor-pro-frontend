@@ -48,7 +48,7 @@ export default function FormDialog({
         ? materialRegistrationAndEditStats[state] === ''
         : typeof materialRegistrationAndEditStats[state] === 'number'
         ? materialRegistrationAndEditStats[state] === 0
-        : !materialRegistrationAndEditStats[state].length
+        : !materialRegistrationAndEditStats[state]?.length
     );
 
     if (emptyField) {
@@ -72,6 +72,7 @@ export default function FormDialog({
 
     onMaterialFormClose();
   };
+  console.log(materialRegistrationAndEditStats, 'materialRegistrationAndEditStats');
   useEffect(() => {
     if (isSuccess) {
       onMaterialFormClose();

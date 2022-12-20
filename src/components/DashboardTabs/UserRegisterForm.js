@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { startCase } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,10 +25,18 @@ export default function CreateUserForm({
 
   const handleCreate = (e) => {
     e.preventDefault();
-    if (!userRegistrationAndEditStats.name) {
+    const emptyField = Object.keys(userRegistrationAndEditStats).find((state) =>
+      typeof userRegistrationAndEditStats[state] === 'string'
+        ? userRegistrationAndEditStats[state] === ''
+        : typeof userRegistrationAndEditStats[state] === 'number'
+        ? userRegistrationAndEditStats[state] === 0
+        : !userRegistrationAndEditStats[state]?.length
+    );
+
+    if (emptyField) {
       return dispatch(
         showMessage({
-          message: `Name cannot be empty`,
+          message: `${startCase(emptyField)} cannot be empty`,
           severity: 'error'
         })
       );

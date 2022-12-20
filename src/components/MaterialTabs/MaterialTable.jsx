@@ -17,8 +17,6 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
   const { materialList, isDeleting, isLoading, isSuccess } = useSelector((state) => state.material);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [materialDataList, setMaterialDataList] = useState([]);
-  const [openEditForm, setOpenEditForm] = useState(false);
-  const [editFormData, setEditFormData] = useState([]);
   const [filteredMaterials, setFilteredMaterials] = useState([]);
   const [materialId, setMateriaId] = useState('');
   const onDeleteBtnClick = (e, getId) => {
@@ -71,8 +69,6 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
     setFilteredMaterials(filterMaterialByBid(materialList, filterValue));
   }, [filterValue, materialList]);
 
-  console.log(materialRegistrationAndEditStats, 'materialRegistrationAndEditStats');
-
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -82,7 +78,9 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
           onClick={() =>
             setMaterialRegistrationAndEditStats({
               bidType: filterValue,
-              appliesTo: []
+              appliesTo: [],
+              unit: '',
+              unitPrice: ''
             })
           }
           disabled={isLoading}>

@@ -1,15 +1,4 @@
-import {
-  Box,
-  Chip,
-  CircularProgress,
-  Grid,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography
-} from '@mui/material';
-import CancelIcon from '@mui/icons-material/Cancel';
-import FormatPaintIcon from '@mui/icons-material/FormatPaintOutlined';
+import { CircularProgress, Grid, Stack, TextField, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -25,32 +14,25 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createEquipment, reset } from '../../features/equipments/equipmentSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { FIELDS_WHERE_MATERIALS_ARE_APPLIES } from '../../helpers/contants';
-import formReducer from '../DashboardTabs/reducers/formReducer';
 
 export default function FormDialog(props) {
   const { equipmentList, isSuccess } = useSelector((state) => state.equipment);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const dispatch = useDispatch();
-  const { open, setOpen, bidType } = props;
-  const initialFormState = {
-    description: '',
-    bidType
-  };
-
-  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const {
+    equipmentRegistrationAndEditStats,
+    setEquipmentRegistrationAndEditStats,
+    onEquipmentFormClose
+  } = props;
 
   const handleCreate = (e) => {
     e.preventDefault();
-    const emptyField = Object.keys(formState).find((state) =>
-      typeof formState[state] === 'string'
-        ? formState[state] === ''
-        : typeof formState[state] === 'number'
-        ? formState[state] === 0
-        : !formState[state].length
+    const emptyField = Object.keys(equipmentRegistrationAndEditStats).find((state) =>
+      typeof equipmentRegistrationAndEditStats[state] === 'string'
+        ? equipmentRegistrationAndEditStats[state] === ''
+        : typeof equipmentRegistrationAndEditStats[state] === 'number'
+        ? equipmentRegistrationAndEditStats[state] === 0
+        : !equipmentRegistrationAndEditStats[state]?.length
     );
 
     if (emptyField) {
@@ -63,7 +45,7 @@ export default function FormDialog(props) {
     }
 
     const formStateWithToken = {
-      ...formState,
+      ...equipmentRegistrationAndEditStats,
       ID: equipmentList[0]?._id,
       previousEquipments: equipmentList[0]?.equipments,
       add: true,
@@ -72,11 +54,11 @@ export default function FormDialog(props) {
 
     dispatch(createEquipment(formStateWithToken));
 
-    setOpen(false);
+    onEquipmentFormClose();
   };
   useEffect(() => {
     if (isSuccess) {
-      setOpen(false);
+      onEquipmentFormClose();
       dispatch(
         showMessage({
           message: 'Equipment Updated successfully',
@@ -87,59 +69,14 @@ export default function FormDialog(props) {
     }
   }, [isSuccess]);
 
-  useEffect(() => {
-    ['description', 'bidType'].forEach((key) => {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: key,
-        payload: key === 'bidType' ? bidType : ''
-      });
-    });
-  }, [bidType]);
-
-  const handleTextChange = (e) => {
-    dispatchNew({
-      type: 'HANDLE_FORM_INPUT',
-      field: e.target.name,
-      payload: e.target.value
-    });
-  };
-
-  // const handleEquipmentApplicableSection = (field) => {
-  //   if (formState.appliesTo.includes(field)) {
-  //     dispatchNew({
-  //       type: 'HANDLE_FORM_INPUT',
-  //       field: 'appliesTo',
-  //       payload: [...formState.appliesTo.filter((item) => item !== field)]
-  //     });
-  //   } else {
-  //     dispatchNew({
-  //       type: 'HANDLE_FORM_INPUT',
-  //       field: 'appliesTo',
-  //       payload: [...formState.appliesTo, field]
-  //     });
-  //   }
-  // };
-
-  // const handleEquipmentApplication = () => {
-  //   if (formState.appliesTo.length === 0) {
-  //     dispatchNew({
-  //       type: 'HANDLE_FORM_INPUT',
-  //       field: 'appliesTo',
-  //       payload: FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((materialSection) => materialSection.label)
-  //     });
-  //   } else {
-  //     dispatchNew({
-  //       type: 'HANDLE_FORM_INPUT',
-  //       field: 'appliesTo',
-  //       payload: []
-  //     });
-  //   }
-  // };
-
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog
+        open={
+          equipmentRegistrationAndEditStats !== null &&
+          !Object.keys(equipmentRegistrationAndEditStats).includes('_id')
+        }
+        onClose={onEquipmentFormClose}>
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New Equipment</Typography>
@@ -158,8 +95,11 @@ export default function FormDialog(props) {
               id='equipment'
               label='Equipment Description'
               autoFocus
-              value={formState.description}
-              onChange={(e) => handleTextChange(e)}
+              value={equipmentRegistrationAndEditStats?.description}
+              onChange={(e) => {
+                equipmentRegistrationAndEditStats.description = e.target.value;
+                setEquipmentRegistrationAndEditStats({ ...equipmentRegistrationAndEditStats });
+              }}
               style={{ width: '100%' }}
             />
           </Grid>
@@ -171,94 +111,21 @@ export default function FormDialog(props) {
                   labelId='demo-select-small'
                   id='demo-select-small'
                   name='bidType'
-                  value={formState.bidType}
+                  value={equipmentRegistrationAndEditStats?.bidType}
                   label='Bid Type'
-                  onChange={(e) => handleTextChange(e)}>
+                  onChange={(e) => {
+                    equipmentRegistrationAndEditStats.bidType = e.target.value;
+                    setEquipmentRegistrationAndEditStats({ ...equipmentRegistrationAndEditStats });
+                  }}>
                   <MenuItem value='Interior'>Interior</MenuItem>
                   <MenuItem value='Exterior'>Exterior</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-
-            <Grid item xs={12} md={12}>
-              {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography sx={{ color: 'gray', fontWeight: 397, mb: 1 }}>
-                  Equipment Applied To
-                </Typography>
-                <Tooltip
-                  placement='top'
-                  title={
-                    formState.appliesTo.length === 0
-                      ? 'Apply To  All Sections'
-                      : 'Remove From All Sections'
-                  }>
-                  <FormatPaintIcon
-                    onClick={handleEquipmentApplication}
-                    sx={{
-                      width: '16px',
-                      height: '16px',
-                      ml: 1,
-                      cursor: 'pointer',
-                      color: formState.appliesTo.length === 0 ? 'green' : 'gray'
-                    }}
-                  />
-                </Tooltip>
-              </Box> */}
-              {/* <Grid container>
-                {FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((field) => {
-                  return (
-                    <Grid xs={4} md={3}>
-                      <Tooltip
-                        title={!formState.appliesTo.includes(field.label) ? 'Click To Add' : ''}
-                        placement='top'>
-                        <Chip
-                          color={formState.appliesTo.includes(field.label) ? 'error' : 'default'}
-                          label={
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between'
-                              }}>
-                              <Typography sx={{ fontSize: '14px' }}>
-                                {startCase(field.label)}
-                              </Typography>
-                              {formState.appliesTo.includes(field.label) && (
-                                <Tooltip title='Remove From Applied To' placement='top'>
-                                  <CancelIcon
-                                    sx={{ width: '14px', height: '16px', ml: 0.5 }}
-                                    onClick={() => handleEquipmentApplicableSection(field.label)}
-                                  />
-                                </Tooltip>
-                              )}
-                            </Box>
-                          }
-                          variant='outlined'
-                          onClick={() =>
-                            !formState.appliesTo.includes(field.label) &&
-                            handleEquipmentApplicableSection(field.label)
-                          }
-                          sx={{
-                            width: '96%',
-                            height: '20px',
-                            bgcolor: 'transparent',
-                            m: 0.5,
-                            '&:hover': {
-                              bgcolor: 'black'
-                            }
-                          }}
-                          size='small'
-                        />
-                      </Tooltip>
-                    </Grid>
-                  );
-                })}
-              </Grid> */}
-            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onEquipmentFormClose}>Cancel</Button>
           <Button type='submit' variant='contained' onClick={(e) => handleCreate(e)}>
             Create
           </Button>

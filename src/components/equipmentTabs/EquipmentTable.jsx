@@ -8,7 +8,6 @@ import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { filterEquipmentByBid } from '../../helpers/bidFilterHelpers';
 import CustomButton from '../Button';
 import { DeleteModal } from '../delete-model/DeleteModel';
-import Edit from './EditEquipmentForm';
 import FormDialog from './EquipmentReg';
 
 const columns = equipmentColumn();
@@ -18,21 +17,22 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
   const { equipmentList, isDeleting, isLoading, isSuccess } = useSelector(
     (state) => state.equipment
   );
+  const [equipmentRegistrationAndEditStats, setEquipmentRegistrationAndEditStats] = useState(null);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [equipmentDataList, setEquipmentDataList] = useState([]);
-  const [openEditForm, setOpenEditForm] = useState(false);
-  const [editFormData, setEditFormData] = useState([]);
   const [filteredEquipment, setFilteredEquipment] = useState([]);
   const [equipmentId, setEquipmentId] = useState('');
-  const [open, setOpen] = useState(false);
   const onDeleteBtnClick = (e, getId) => {
     e.stopPropagation();
     setEquipmentId(getId);
   };
+  const onEquipmentFormClose = () => {
+    setEquipmentRegistrationAndEditStats(null);
+  };
 
   useEffect(() => {
     if (isSuccess) {
-      setOpen(false);
+      onEquipmentFormClose();
       setOpenDeleteModal(false);
       dispatch(
         showMessage({
@@ -55,7 +55,9 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
         <CustomButton
           variant='contained'
           sx={{ mb: 2 }}
-          onClick={() => setOpen(true)}
+          onClick={() =>
+            setEquipmentRegistrationAndEditStats({ bidType: filterValue, description: '' })
+          }
           disabled={isLoading}>
           Create
         </CustomButton>
@@ -73,22 +75,20 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
           })
         }
         isLoading={isLoading}
+        setProcessRegistrationAndEditStats={setEquipmentRegistrationAndEditStats}
         columns={columns}
         dataList={equipmentDataList}
         setDataList={setEquipmentDataList}
         title='Equipment List'
-        setEditFormData={setEditFormData}
-        setOpenEditForm={setOpenEditForm}
         setOpenDeleteModal={setOpenDeleteModal}
         onDeleteBtnClick={onDeleteBtnClick}
-        // onListSort={onListSort}
         draggable={false}
       />
       <FormDialog
-        open={open}
-        setOpen={setOpen}
-        bidType={filterValue}
         filteredEquipment={filteredEquipment}
+        equipmentRegistrationAndEditStats={equipmentRegistrationAndEditStats}
+        setEquipmentRegistrationAndEditStats={setEquipmentRegistrationAndEditStats}
+        onEquipmentFormClose={onEquipmentFormClose}
       />
       <DeleteModal
         openDeleteModal={openDeleteModal}
@@ -105,13 +105,12 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
         deleteMethod={createEquipment}
       />
 
-      <Edit
-        openEditForm={openEditForm}
-        setOpenEditForm={setOpenEditForm}
-        editFormData={editFormData}
-        bidType={filterValue}
+      {/* <Edit
         filteredEquipment={filteredEquipment}
-      />
+        equipmentRegistrationAndEditStats={equipmentRegistrationAndEditStats}
+        setEquipmentRegistrationAndEditStats={setEquipmentRegistrationAndEditStats}
+        onEquipmentFormClose={onEquipmentFormClose}
+      /> */}
     </>
   );
 };

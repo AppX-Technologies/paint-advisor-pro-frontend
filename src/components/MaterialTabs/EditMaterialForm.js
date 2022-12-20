@@ -43,13 +43,15 @@ export default function Edit({
 
   const handleEdit = (e) => {
     e.preventDefault();
-    const emptyField = Object.keys(materialRegistrationAndEditStats).find((state) =>
-      typeof materialRegistrationAndEditStats[state] === 'string'
-        ? materialRegistrationAndEditStats[state] === ''
-        : typeof materialRegistrationAndEditStats[state] === 'number'
-        ? materialRegistrationAndEditStats[state] === 0
-        : !materialRegistrationAndEditStats[state].length
-    );
+    const emptyField = Object.keys(materialRegistrationAndEditStats)
+      .filter((item) => item !== '__v')
+      .find((state) =>
+        typeof materialRegistrationAndEditStats[state] === 'string'
+          ? materialRegistrationAndEditStats[state] === ''
+          : typeof materialRegistrationAndEditStats[state] === 'number'
+          ? materialRegistrationAndEditStats[state] === 0
+          : !materialRegistrationAndEditStats[state]?.length
+      );
 
     if (emptyField) {
       return dispatch(

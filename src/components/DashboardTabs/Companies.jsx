@@ -55,7 +55,9 @@ const Companies = () => {
         <CustomButton
           variant='contained'
           sx={{ mb: 2 }}
-          onClick={() => setCompaniesRegistrationAndEditStats({})}
+          onClick={() =>
+            setCompaniesRegistrationAndEditStats({ name: '', email: '', address: '', phone: '' })
+          }
           disabled={isLoading}>
           Create
         </CustomButton>

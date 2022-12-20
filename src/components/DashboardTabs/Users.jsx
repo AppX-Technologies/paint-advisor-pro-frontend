@@ -36,7 +36,7 @@ const Users = () => {
     }
   }, [isDeleted]);
   console.log(userList, 'userList');
-  // set email on click
+
   const onDeleteBtnClick = (e, email) => {
     e.stopPropagation();
     setEmailId(email);
@@ -55,7 +55,7 @@ const Users = () => {
         <CustomButton
           variant='contained'
           sx={{ mb: 2 }}
-          onClick={() => setUserRegistrationAndEditStats({})}
+          onClick={() => setUserRegistrationAndEditStats({ name: '', email: '', phone: '' })}
           disabled={isLoading}>
           Create
         </CustomButton>

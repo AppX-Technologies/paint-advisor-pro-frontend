@@ -61,7 +61,6 @@ export const deleteUserByCompany = createAsyncThunk(
   'usersFromCompany/deleteUserByCompany',
   async (userData, thunkAPI) => {
     try {
-      console.log(userData, 'userData');
       const response = await usersFromCompanyService.deleteUserByCompany(userData);
       return { response, email: userData.email };
     } catch (error) {

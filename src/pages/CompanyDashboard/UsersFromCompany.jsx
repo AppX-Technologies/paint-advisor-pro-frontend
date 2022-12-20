@@ -80,7 +80,7 @@ const UsersFromCompany = () => {
             variant='contained'
             sx={{ mt: 3, mb: 2 }}
             onClick={() => {
-              setUserRegistrationAndEditStats({});
+              setUserRegistrationAndEditStats({ name: '', email: '', phone: '', role: '' });
             }}
             disabled={isLoading}>
             Create

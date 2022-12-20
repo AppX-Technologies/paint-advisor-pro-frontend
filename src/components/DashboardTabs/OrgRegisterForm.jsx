@@ -23,13 +23,15 @@ export default function FormDialog({
 
   const handleCreate = (e) => {
     e.preventDefault();
-    const emptyField = Object.keys(companiesRegistrationAndEditStats).find((state) =>
-      typeof companiesRegistrationAndEditStats[state] === 'string'
-        ? companiesRegistrationAndEditStats[state] === ''
-        : typeof companiesRegistrationAndEditStats[state] === 'number'
-        ? companiesRegistrationAndEditStats[state] === 0
-        : !companiesRegistrationAndEditStats[state].length
-    );
+    const emptyField = Object.keys(companiesRegistrationAndEditStats)
+      .filter((item) => item !== 'active')
+      .find((state) =>
+        typeof companiesRegistrationAndEditStats[state] === 'string'
+          ? companiesRegistrationAndEditStats[state] === ''
+          : typeof companiesRegistrationAndEditStats[state] === 'number'
+          ? companiesRegistrationAndEditStats[state] === 0
+          : !companiesRegistrationAndEditStats[state]?.length
+      );
 
     if (emptyField) {
       return dispatch(

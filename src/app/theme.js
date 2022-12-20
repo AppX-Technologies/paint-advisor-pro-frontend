@@ -5,9 +5,9 @@ const theme = createTheme({
     MuiInputBase: {
       styleOverrides: {
         input: {
-          '& input:-internal-autofill-selected': {
-            '-webkit-box-shadow': '0 0 0 100px transparent inset',
-            height: 0
+          '&:-webkit-autofill': {
+            '-webkit-box-shadow': '0 0 0 100px white inset',
+            height: '0px'
           }
         }
       }

@@ -5,17 +5,18 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { startCase } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { authSelector } from '../../features/auth/authSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { isSystemUser } from '../../helpers/roles';
 import {
   reset,
   updateUserFromCompany
 } from '../../features/usersFromCompany/usersFromCompanySlice';
-import { authSelector } from '../../features/auth/authSlice';
+import { isSystemUser } from '../../helpers/roles';
 
 export default function Edit(props) {
   const dispatch = useDispatch();
@@ -30,22 +31,37 @@ export default function Edit(props) {
 
   const handleEdit = (e) => {
     e.preventDefault();
+    const emptyField =
+      userRegistrationAndEditStats &&
+      Object.keys(userRegistrationAndEditStats)
+        .filter(
+          (item) =>
+            item !== '__v' && item !== 'proficiency' && item !== 'status' && item !== 'organization'
+        )
+        ?.find((state) =>
+          typeof userRegistrationAndEditStats[state] === 'string'
+            ? userRegistrationAndEditStats[state] === ''
+            : typeof userRegistrationAndEditStats[state] === 'number'
+            ? userRegistrationAndEditStats[state] === 0
+            : !userRegistrationAndEditStats[state]?.length
+        );
+
+    if (emptyField) {
+      return dispatch(
+        showMessage({
+          message: `${startCase(emptyField)} cannot be empty`,
+          severity: 'error'
+        })
+      );
+    }
     const formStateWithToken = {
       ...userRegistrationAndEditStats,
       orgId,
       token: userDetail.token
     };
-    if (userRegistrationAndEditStats.role === '') {
-      dispatch(
-        showMessage({
-          message: 'Please select a role',
-          severity: 'error'
-        })
-      );
-    } else {
-      dispatch(updateUserFromCompany(formStateWithToken));
-      dispatch(reset());
-    }
+
+    dispatch(updateUserFromCompany(formStateWithToken));
+    dispatch(reset());
   };
 
   useEffect(() => {

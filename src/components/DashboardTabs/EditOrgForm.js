@@ -1,16 +1,16 @@
-import * as React from 'react';
+import { Checkbox, CircularProgress, FormControlLabel, Grid } from '@mui/material';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useDispatch, useSelector } from 'react-redux';
-import { Checkbox, CircularProgress, FormControlLabel, Grid } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import { startCase } from 'lodash';
+import * as React from 'react';
 import { useEffect } from 'react';
-import formReducer from './reducers/formReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { reset, updateOrg } from '../../features/org/orgSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { updateOrg, fetchOrgs, reset } from '../../features/org/orgSlice';
 
 export default function Edit({
   companiesRegistrationAndEditStats,
@@ -30,10 +30,28 @@ export default function Edit({
   };
   const handleEdit = (e) => {
     e.preventDefault();
-    if (!formStateWithToken.name || !formStateWithToken.email) {
+    const emptyField = Object.keys(companiesRegistrationAndEditStats)
+      .filter(
+        (item) =>
+          item !== 'active' &&
+          item !== '__v' &&
+          item !== 'processes' &&
+          item !== 'organization' &&
+          item !== 'materials' &&
+          item !== 'equipments'
+      )
+      .find((state) =>
+        typeof companiesRegistrationAndEditStats[state] === 'string'
+          ? companiesRegistrationAndEditStats[state] === ''
+          : typeof companiesRegistrationAndEditStats[state] === 'number'
+          ? companiesRegistrationAndEditStats[state] === 0
+          : !companiesRegistrationAndEditStats[state]?.length
+      );
+
+    if (emptyField) {
       return dispatch(
         showMessage({
-          message: `Fields cannot be empty`,
+          message: `${startCase(emptyField)} cannot be empty`,
           severity: 'error'
         })
       );
@@ -41,6 +59,8 @@ export default function Edit({
     dispatch(updateOrg(formStateWithToken));
     // dispatch(reset());
   };
+
+  console.log(companiesRegistrationAndEditStats, 'companiesRegistrationAndEditStats');
 
   useEffect(() => {
     if (isUpdated) {

@@ -32,7 +32,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   };
   const columns = processColumn();
   const resortProcesses = (sortedList, originalProcessList) => {
-    if (!sortedList.length) return originalProcessList;
+    if (!sortedList?.length) return originalProcessList;
 
     const currentBidTypeAndStageRemoved = originalProcessList.filter(
       (item) => !sortedList.map((p) => p._id).includes(item._id)
