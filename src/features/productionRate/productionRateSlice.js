@@ -100,10 +100,10 @@ export const productionRateSlice = createSlice({
       .addCase(createProductionRate.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createProductionRate.fulfilled, (state, { payload }) => {
+      .addCase(createProductionRate.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.response = addOrUpdateItemInArray(state.productionRateList, payload);
+        state.response = addOrUpdateItemInArray(state.productionRateList, action.payload);
       })
       .addCase(createProductionRate.rejected, (state, action) => {
         state.isLoading = false;

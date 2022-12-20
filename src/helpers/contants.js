@@ -129,8 +129,7 @@ export const companyProductionRate = [
     bidType: 'Interior',
     appliesTo: 'Wall',
     appliesToType: 'Smooth',
-    proficiency: 'Beginner',
-    productionRate: 20
+    proficiency: 'Beginner'
   },
   {
     bidType: 'Interior',
@@ -169,86 +168,300 @@ export const companyProductionRate = [
   },
   {
     bidType: 'Interior',
-    appliesTo: 'Window',
+    appliesTo: 'Wall',
     appliesToType: 'Knock Down',
     proficiency: 'Beginner',
     productionRate: 20
   },
   {
     bidType: 'Interior',
-    appliesTo: 'Window',
+    appliesTo: 'Wall',
     appliesToType: 'Knock Down',
     proficiency: 'Intermediate',
     productionRate: 20
   },
   {
     bidType: 'Interior',
-    appliesTo: 'Window',
+    appliesTo: 'Wall',
     appliesToType: 'Knock Down',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Smooth',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Smooth',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Smooth',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Knock Down',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Knock Down',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Knock Down',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Orange Peel',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Orange Peel',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Orange Peel',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Popcorn',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Popcorn',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Ceiling',
+    appliesToType: 'Popcorn',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Single Hung',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Single Hung',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Single Hung',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Double Hung',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Double Hung',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Double Hung',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Sliding',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Sliding',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Sliding',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Door',
+    appliesToType: 'Default',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Door',
+    appliesToType: 'Default',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Door',
+    appliesToType: 'Default',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'baseboardTrim',
+    appliesToType: 'Default',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'baseboardTrim',
+    appliesToType: 'Default',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'baseboardTrim',
+    appliesToType: 'Default',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'windowTrim',
+    appliesToType: 'Default',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'windowTrim',
+    appliesToType: 'Default',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'windowTrim',
+    appliesToType: 'Default',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Closet',
+    appliesToType: 'Default',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Closet',
+    appliesToType: 'Default',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Closet',
+    appliesToType: 'Default',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+
+  {
+    bidType: 'Interior',
+    appliesTo: 'crownMolding',
+    appliesToType: 'Default',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'crownMolding',
+    appliesToType: 'Default',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'crownMolding',
+    appliesToType: 'Default',
+    proficiency: 'Proficient',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'doorJamb',
+    appliesToType: 'Default',
+    proficiency: 'Beginner',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'doorJamb',
+    appliesToType: 'Default',
+    proficiency: 'Intermediate',
+    productionRate: 20
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'doorJamb',
+    appliesToType: 'Default',
     proficiency: 'Proficient',
     productionRate: 20
   }
 ];
-
-const sections = [
-  {
-    type: 'Wall',
-    subTypes: ['Smooth', 'Orange Peel']
-  },
-  {
-    type: 'Window',
-    subTypes: ['Knock Down']
-  }
-];
-export const filterProductionRates = (productionRate = []) => {
-  const allProductionRateObject = {};
-
-  sections.forEach((section) => {
-    const filteredProductionType = productionRate.filter(
-      ({ appliesTo }) => appliesTo === section.type
-    );
-    allProductionRateObject[section.type] = [];
-
-    // If a section contains sub-sections
-    section?.subTypes?.forEach((subType) => {
-      const filteredBySubtype = filteredProductionType.filter(
-        ({ appliesToType }) => appliesToType === subType
-      );
-      allProductionRateObject[section.type] = [
-        ...allProductionRateObject[section.type],
-        {
-          id: {
-            Beginner:
-              filteredBySubtype.find(({ proficiency }) => proficiency === 'Beginner')?._id ?? 'N/A',
-            Intermediate:
-              filteredBySubtype.find(({ proficiency }) => proficiency === 'Intermediate')?._id ??
-              'N/A',
-            Proficient:
-              filteredBySubtype.find(({ proficiency }) => proficiency === 'Proficient')?._id ??
-              'N/A'
-          },
-          appliesTo:
-            filteredBySubtype.find(({ proficiency }) => proficiency === 'Beginner')?.appliesTo ??
-            'N/A',
-          bidType:
-            filteredBySubtype.find(({ proficiency }) => proficiency === 'Beginner')?.bidType ??
-            'N/A',
-          appliesToType:
-            filteredBySubtype.find(({ proficiency }) => proficiency === 'Beginner')
-              ?.appliesToType ?? 'N/A',
-          beginner:
-            filteredBySubtype.find(({ proficiency }) => proficiency === 'Beginner')
-              ?.productionRate ?? 'N/A',
-          intermediate:
-            filteredBySubtype.find(({ proficiency }) => proficiency === 'Intermediate')
-              ?.productionRate ?? 'N/A',
-          proficient:
-            filteredProductionType.find(({ proficiency }) => proficiency === 'Proficient')
-              ?.productionRate ?? 'N/A'
-        }
-      ];
-    });
-  });
-
-  return allProductionRateObject;
-};

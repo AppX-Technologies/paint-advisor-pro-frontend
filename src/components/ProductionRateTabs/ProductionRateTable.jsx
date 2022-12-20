@@ -12,66 +12,52 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { startCase } from 'lodash';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { reset } from '../../features/productionRate/productionRateSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { filterProductionRateByBid } from '../../helpers/bidFilterHelpers';
-import { companyProductionRate, filterProductionRates } from '../../helpers/contants';
-import { productionRateDataRowFormatter } from '../../helpers/productionRateHelper';
+import { avgCalculator, filterProductionRates } from '../../helpers/productionRateHelper';
 import EditIndividualPainterProductionR from './EditIndividualPainterProductionR';
 
-const rowDataGenerator = (companyData) => {
+const rowDataCalculatorWithAvg = (productionRateList) => {
   const result = [];
-  function avgCalculator(section) {
-    const types = companyData[section];
-    const totalTypes = companyData[section].length;
-    const beginner = types.map((type) => type.beginner).reduce((a, b) => a + b) / totalTypes;
-    const intermediate =
-      types.map((type) => type.intermediate).reduce((a, b) => a + b) / totalTypes;
-    const proficient = types.map((type) => type.proficient).reduce((a, b) => a + b) / totalTypes;
-    return {
-      beginner: beginner.toFixed(1),
-      intermediate: intermediate.toFixed(1),
-      proficient: proficient.toFixed(1)
-    };
-  }
-  Object.keys(companyData).forEach((item) => {
+
+  Object.keys(productionRateList).forEach((item) => {
     result.push({
       section: item,
-      ...avgCalculator(item),
-      summary: companyData[item]
+      ...avgCalculator(item, productionRateList),
+      appliesToTypeOfRelatedSection: productionRateList[item]
     });
   });
   return result;
 };
 
 function Row({ row, onEditClick }) {
-  const [open, setOpen] = React.useState(false);
+  const [viewMore, setViewMore] = React.useState(false);
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }} selected={open}>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell sx={{ maxWidth: '10px' }}>
-          <IconButton size='small' onClick={() => setOpen(!open)}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          <IconButton size='small' onClick={() => setViewMore(!viewMore)}>
+            {viewMore ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>{row.section}</TableCell>
+        <TableCell>{startCase(row.section)}</TableCell>
         <TableCell align='left'>
-          {row.beginner}{' '}
+          {row.beginnerAvg}{' '}
           <span style={{ fontSize: '10px' }}>
             ft<sup>2</sup>/hr
           </span>
         </TableCell>
         <TableCell align='left'>
-          {row.intermediate}{' '}
+          {row.intermediateAvg}{' '}
           <span style={{ fontSize: '10px' }}>
             ft<sup>2</sup>/hr
           </span>
         </TableCell>
         <TableCell align='left'>
-          {row.proficient}{' '}
+          {row.proficientAvg}{' '}
           <span style={{ fontSize: '10px' }}>
             ft<sup>2</sup>/hr
           </span>
@@ -79,22 +65,22 @@ function Row({ row, onEditClick }) {
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingLeft: '30px' }} colSpan={6}>
-          <Collapse in={open} timeout='auto' unmountOnExit>
+          <Collapse in={viewMore} timeout='auto' unmountOnExit>
             <Box sx={{ backgroundColor: '', width: 'auto', margin: '0 0 0 5.5%' }}>
               <Table size='small'>
                 <TableBody>
-                  {row.summary.map((summaryRow) => (
-                    <TableRow key={summaryRow.appliesToType}>
-                      <TableCell align='left' sx={{ width: '21%', fontSize: '12px' }}>
+                  {row.appliesToTypeOfRelatedSection.map((summaryRow) => (
+                    <TableRow key={summaryRow.appliesToType} selected>
+                      <TableCell align='left' sx={{ width: '21.3%', fontSize: '12px' }}>
                         {summaryRow.appliesToType}
                       </TableCell>
-                      <TableCell align='left' sx={{ width: '24.4%', fontSize: '12px' }}>
+                      <TableCell align='left' sx={{ width: '24.6%', fontSize: '12px' }}>
                         {summaryRow.beginner}{' '}
                         <span style={{ fontSize: '9px' }}>
                           ft<sup>2</sup>/hr
                         </span>
                       </TableCell>
-                      <TableCell align='left' sx={{ width: '30.2%', fontSize: '12px' }}>
+                      <TableCell align='left' sx={{ width: '30.4%', fontSize: '12px' }}>
                         {summaryRow.intermediate}{' '}
                         <span style={{ fontSize: '9px' }}>
                           ft<sup>2</sup>/hr
@@ -137,7 +123,8 @@ export default function ProductionRateTable({ filterValue }) {
   const onEditClose = () => {
     setEditState(null);
   };
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (isSuccess) {
       setEditState(null);
       dispatch(
@@ -146,7 +133,6 @@ export default function ProductionRateTable({ filterValue }) {
           variant: 'success'
         })
       );
-
       dispatch(reset());
     }
   }, [isSuccess]);
@@ -154,7 +140,7 @@ export default function ProductionRateTable({ filterValue }) {
   useEffect(() => {
     setFilteredListByBidType(filterProductionRates(productionRateList[0]?.productionRates));
   }, [filterValue, productionRateList]);
-  const rows = rowDataGenerator(filteredListByBidType);
+  const rows = rowDataCalculatorWithAvg(filteredListByBidType);
 
   return (
     <>
@@ -190,7 +176,7 @@ export default function ProductionRateTable({ filterValue }) {
               <TableCell
                 align='left'
                 sx={{ fontSize: '15px', fontWeight: '550', color: '#4d5057' }}>
-                Profficient
+                Proficient
               </TableCell>
             </TableRow>
           </TableHead>
@@ -201,12 +187,14 @@ export default function ProductionRateTable({ filterValue }) {
           </TableBody>
         </Table>
       </TableContainer>
-      <EditIndividualPainterProductionR
-        editState={editState}
-        setEditState={setEditState}
-        onEditClose={onEditClose}
-        bidType={filterValue}
-      />
+      {editState && (
+        <EditIndividualPainterProductionR
+          editState={editState}
+          setEditState={setEditState}
+          onEditClose={onEditClose}
+          bidType={filterValue}
+        />
+      )}
     </>
   );
 }

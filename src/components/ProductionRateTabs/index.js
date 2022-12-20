@@ -4,10 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { materialTabLists } from '../../common/Constants';
 import TabsNavigation from '../../common/TabsNavigation';
-import { authSelector } from '../../features/auth/authSlice';
 import { fetchSingleOrg } from '../../features/org/orgSlice';
 import { fetchProductionRate } from '../../features/productionRate/productionRateSlice';
-import { isCompanyAdmin, isSystemUser } from '../../helpers/roles';
 import ProdutionRateTable from './ProductionRateTable';
 
 const ProductionRateTabs = () => {
@@ -17,18 +15,15 @@ const ProductionRateTabs = () => {
   };
   const dispatch = useDispatch();
   const { org } = useSelector((state) => state.org);
-  const { user } = useSelector(authSelector);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const { companyId } = useParams();
   useEffect(() => {
-    if (isSystemUser(user) || isCompanyAdmin(user)) {
-      dispatch(
-        fetchProductionRate({
-          token: userDetail.token,
-          id: companyId ? org.productionRates : undefined
-        })
-      );
-    }
+    dispatch(
+      fetchProductionRate({
+        token: userDetail.token,
+        id: companyId ? org.productionRates : undefined
+      })
+    );
   }, []);
 
   useEffect(() => {
