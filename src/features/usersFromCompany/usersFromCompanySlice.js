@@ -1,4 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  addOrUpdateItemInArray,
+  deleteItemFromAnArray
+} from '../../helpers/addRemoveUpdateListHelper';
 import { showMessage } from '../snackbar/snackbarSlice';
 import usersFromCompanyService from './usersFromCompanyService';
 
@@ -13,7 +17,8 @@ const initialState = {
   isDeleted: false,
   isUpdating: false,
   isUpdated: false,
-  message: ''
+  message: '',
+  response: null
 };
 
 export const fetchUserMadeByCompany = createAsyncThunk(
@@ -56,8 +61,9 @@ export const deleteUserByCompany = createAsyncThunk(
   'usersFromCompany/deleteUserByCompany',
   async (userData, thunkAPI) => {
     try {
+      console.log(userData, 'userData');
       const response = await usersFromCompanyService.deleteUserByCompany(userData);
-      return response;
+      return { response, email: userData.email };
     } catch (error) {
       const message =
         (error.response && error.response.data && error.response.data.message) ||
@@ -118,6 +124,7 @@ export const usersFromCompanySlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.message = action.payload;
+        state.companyMadeByUsers = addOrUpdateItemInArray(state.companyMadeByUsers, action.payload);
       })
       .addCase(createUsersByCompany.rejected, (state, action) => {
         state.isLoading = false;
@@ -133,6 +140,9 @@ export const usersFromCompanySlice = createSlice({
         state.isDeleting = false;
         state.isDeleted = true;
         state.message = action.payload;
+        state.companyMadeByUsers = [
+          ...state.companyMadeByUsers.filter((user) => user.email !== action.payload.email)
+        ];
       })
       .addCase(deleteUserByCompany.rejected, (state, action) => {
         state.isDeleting = false;
@@ -146,6 +156,7 @@ export const usersFromCompanySlice = createSlice({
         state.isUpdating = false;
         state.isUpdated = true;
         state.message = action.payload;
+        state.companyMadeByUsers = addOrUpdateItemInArray(state.companyMadeByUsers, action.payload);
       })
       .addCase(updateUserFromCompany.rejected, (state, action) => {
         state.isUpdating = false;

@@ -19,7 +19,6 @@ import {
   initialDoorjambsInfo,
   initialNonPaintableStats,
   initialRoomState,
-  initialState,
   initialWindowInfo,
   initialWindowTrimInfo,
   initilWallInfo
@@ -58,7 +57,7 @@ const Pipeline = () => {
   const [allRoom, setAllRoom] = React.useState([]);
   const [roomFormValue, setRoomFormValue] = React.useState(initialRoomState);
   const { user } = useSelector(authSelector);
-  const [selectedValue, setSelectedvalue] = React.useState(initialState);
+  const [clientAdditionStats, setClientAdditionStats] = React.useState(null);
   const [wallStats, setWallStats] = useState(initilWallInfo);
   const [windowStats, setWindowStats] = useState(initialWindowInfo);
   const [doorsStats, setDoorStats] = useState(initialDoorInfo);
@@ -70,7 +69,6 @@ const Pipeline = () => {
   const [doorJambsStats, setDoorJambsStats] = useState(initialDoorjambsInfo);
   const [crownMoldingStats, setCrownMoldingStats] = useState(initialCrownMoldingInfo);
   const [closetStats, setClosetStats] = useState(initialClosetInfo);
-  const [currentClientInfoToEdit, setCurrentClientInfoToEdit] = useState(null);
   const [openFileDeleteModel, setOpenFileDeleteModel] = useState(false);
   const [scheduleTheJob, setScheduleTheJob] = useState(false);
   const [schedueJobDate, setScheduleJobDate] = useState(null);
@@ -242,9 +240,17 @@ const Pipeline = () => {
   const handleSearch = (keyword) => {
     setFilteredClietsList(searchedResult(clientList, keyword));
   };
+
   const handleNewClientFormClose = () => {
-    setOpenNewClientForm(false);
-    setCurrentClientInfoToEdit(null);
+    setClientAdditionStats(null);
+  };
+
+  const handleNewClientFormOpen = () => {
+    setClientAdditionStats({});
+  };
+
+  const handleEditClientFormOpen = (currectClientInfo) => {
+    setClientAdditionStats(cloneDeep(currectClientInfo));
   };
   const onFilterOptionsClose = () => {
     setShowFilter(false);
@@ -285,8 +291,6 @@ const Pipeline = () => {
     );
   }, [selectedStep, filteredClietsList]);
 
-  console.log(currentClientInfo, 'currentClientInfo');
-
   return (
     <>
       {selectedStep === STATUS_NEW_CLIENT && (
@@ -299,10 +303,7 @@ const Pipeline = () => {
             bottom: 10,
             height: '25px'
           }}
-          onClick={() => {
-            setOpenNewClientForm(true);
-            setSelectedvalue(cloneDeep(initialState));
-          }}>
+          onClick={() => handleNewClientFormOpen()}>
           <GroupAddIcon sx={{ mr: 1 }} /> Add new client
         </Button>
       )}
@@ -310,12 +311,9 @@ const Pipeline = () => {
         openNewClientForm={openNewClientForm}
         setOpenNewClientForm={setOpenNewClientForm}
         handleNewClientFormClose={handleNewClientFormClose}
-        selectedValue={selectedValue}
-        setSelectedvalue={setSelectedvalue}
-        initialState={initialState}
-        currentClientInfoToEdit={currentClientInfoToEdit}
-        setCurrentClientInfoToEdit={setCurrentClientInfoToEdit}
-      />{' '}
+        clientAdditionStats={clientAdditionStats}
+        setClientAdditionStats={setClientAdditionStats}
+      />
       <EstimateForm
         open={openEstimate}
         setOpen={setOpenEstimate}
@@ -380,12 +378,13 @@ const Pipeline = () => {
               <Card sx={{ padding: 1, marginTop: 1 }}>
                 <ClientInfo
                   schedueJobDate={schedueJobDate}
+                  handleEditClientFormOpen={handleEditClientFormOpen}
                   setScheduleJobDate={setScheduleJobDate}
                   scheduleTheJob={scheduleTheJob}
                   setScheduleTheJob={setScheduleTheJob}
                   setShowFilesToView={setShowFilesToView}
                   onSelectedStepChange={setSelectedStep}
-                  selectedValue={selectedValue}
+                  clientAdditionStats={clientAdditionStats}
                   selectedStep={selectedStep}
                   open={openEstimate}
                   setOpen={setOpenEstimate}
@@ -393,7 +392,6 @@ const Pipeline = () => {
                   currentClientInfo={currentClientInfo}
                   setCurrentClientInfo={setCurrentClientInfo}
                   onClientFormChange={onClientFormChange}
-                  setCurrentClientInfoToEdit={setCurrentClientInfoToEdit}
                   openFileDeleteModel={openFileDeleteModel}
                   setOpenFileDeleteModel={setOpenFileDeleteModel}
                   setSelectedListItem={setSelectedListItem}

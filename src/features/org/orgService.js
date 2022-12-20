@@ -33,6 +33,7 @@ const fetchSingleOrg = async (userData) => {
 };
 
 const createOrgs = async (userData) => {
+  console.log(userData, 'userData');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -53,6 +54,7 @@ const updateOrg = async (userData) => {
   };
   delete userData.token;
   const response = await axios.put(`${UPDATE_ORG}/${userData.id}`, userData, config);
+  console.log(response, 'response');
   return response.data;
 };
 

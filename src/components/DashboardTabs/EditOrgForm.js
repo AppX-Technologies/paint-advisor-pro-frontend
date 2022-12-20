@@ -12,49 +12,20 @@ import formReducer from './reducers/formReducer';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { updateOrg, fetchOrgs, reset } from '../../features/org/orgSlice';
 
-export default function Edit(props) {
+export default function Edit({
+  companiesRegistrationAndEditStats,
+  setCompaniesRegistrationAndEditStats,
+  onCompanyFormClose
+}) {
   const dispatch = useDispatch();
-  const { openEditForm, setOpenEditForm, editFormData } = props;
-  const initialFormState = {
-    name: editFormData.name ? editFormData.name : '',
-    email: editFormData.email ? editFormData.email : '',
-    address: editFormData.address ? editFormData.address : '',
-    phone: editFormData.phone ? editFormData.phone : '',
-    active: editFormData.active ? editFormData.active : false
-  };
-
-  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
+  const [companiesRegistrationAndEditStatsCopy, setCompaniesRegistrationAndEditStatsCopy] =
+    React.useState(null);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const { isUpdated, isUpdating } = useSelector((state) => state.org);
 
-  useEffect(() => {
-    Object.keys(editFormData).forEach((key) => {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: key,
-        payload: editFormData[key]
-      });
-    });
-  }, [editFormData]);
-
-  const handleTextChange = (e) => {
-    dispatchNew({
-      type: 'HANDLE_FORM_INPUT',
-      field: e.target.name,
-      payload: e.target.name === 'active' ? e.target.checked : e.target.value
-    });
-  };
-
-  const handleClose = () => {
-    setOpenEditForm(false);
-    Object.keys(formState).forEach((key) => {
-      formState[key] = '';
-    });
-  };
-
   const formStateWithToken = {
-    ...formState,
-    id: editFormData._id,
+    ...companiesRegistrationAndEditStats,
+    id: companiesRegistrationAndEditStats?._id,
     token: userDetail.token
   };
   const handleEdit = (e) => {
@@ -73,7 +44,7 @@ export default function Edit(props) {
 
   useEffect(() => {
     if (isUpdated) {
-      setOpenEditForm(false);
+      onCompanyFormClose();
       dispatch(
         showMessage({
           message: 'Organization updated successfully',
@@ -84,9 +55,22 @@ export default function Edit(props) {
       dispatch(reset());
     }
   }, [isUpdated]);
+
+  useEffect(() => {
+    if (companiesRegistrationAndEditStats) {
+      setCompaniesRegistrationAndEditStatsCopy({ ...companiesRegistrationAndEditStats });
+    }
+  }, [companiesRegistrationAndEditStats]);
+
+  console.log(companiesRegistrationAndEditStats, 'companiesRegistrationAndEditStats');
   return (
     <div>
-      <Dialog open={openEditForm} onClose={handleClose}>
+      <Dialog
+        open={
+          companiesRegistrationAndEditStats !== null &&
+          Object.keys(companiesRegistrationAndEditStats).includes('_id')
+        }
+        onClose={onCompanyFormClose}>
         <DialogTitle>
           Edit Organization
           <CircularProgress style={{ display: isUpdating ? 'block' : 'none' }} size={25} />
@@ -101,8 +85,13 @@ export default function Edit(props) {
                 fullWidth
                 id='name'
                 autoFocus
-                value={formState.name}
-                onChange={(e) => handleTextChange(e)}
+                value={companiesRegistrationAndEditStatsCopy?.name}
+                onChange={(e) => {
+                  companiesRegistrationAndEditStatsCopy.name = e.target.value;
+                  setCompaniesRegistrationAndEditStats({
+                    ...companiesRegistrationAndEditStatsCopy
+                  });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -111,24 +100,32 @@ export default function Edit(props) {
                 name='email'
                 required
                 fullWidth
-                placeholder={editFormData.email}
                 id='email'
                 autoFocus
-                value={formState.email}
-                onChange={(e) => handleTextChange(e)}
+                value={companiesRegistrationAndEditStatsCopy?.email}
+                onChange={(e) => {
+                  companiesRegistrationAndEditStatsCopy.email = e.target.value;
+                  setCompaniesRegistrationAndEditStats({
+                    ...companiesRegistrationAndEditStatsCopy
+                  });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
               <label>Address</label>
               <TextField
-                name='address'
+                name=''
                 required
                 fullWidth
-                placeholder={editFormData.address}
                 id='address'
                 autoFocus
-                value={formState.address}
-                onChange={(e) => handleTextChange(e)}
+                value={companiesRegistrationAndEditStatsCopy?.address}
+                onChange={(e) => {
+                  companiesRegistrationAndEditStatsCopy.address = e.target.value;
+                  setCompaniesRegistrationAndEditStats({
+                    ...companiesRegistrationAndEditStatsCopy
+                  });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -137,11 +134,15 @@ export default function Edit(props) {
                 name='phone'
                 required
                 fullWidth
-                placeholder={editFormData.phone}
                 id='phone'
                 autoFocus
-                value={formState.phone}
-                onChange={(e) => handleTextChange(e)}
+                value={companiesRegistrationAndEditStatsCopy?.phone}
+                onChange={(e) => {
+                  companiesRegistrationAndEditStatsCopy.phone = e.target.value;
+                  setCompaniesRegistrationAndEditStats({
+                    ...companiesRegistrationAndEditStatsCopy
+                  });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -149,8 +150,14 @@ export default function Edit(props) {
                 control={
                   <Checkbox
                     name='active'
-                    checked={formState.active}
-                    onChange={(e) => handleTextChange(e)}
+                    checked={companiesRegistrationAndEditStatsCopy?.active ? 'on' : false}
+                    onChange={(e) => {
+                      companiesRegistrationAndEditStatsCopy.active =
+                        !companiesRegistrationAndEditStatsCopy.active;
+                      setCompaniesRegistrationAndEditStats({
+                        ...companiesRegistrationAndEditStatsCopy
+                      });
+                    }}
                   />
                 }
                 label='Is organization active?'
@@ -159,7 +166,7 @@ export default function Edit(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onCompanyFormClose}>Cancel</Button>
           <Button
             disabled={isUpdating}
             type='submit'

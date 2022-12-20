@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { addOrUpdateItemInArray } from '../../helpers/addRemoveUpdateListHelper';
 import { showMessage } from '../snackbar/snackbarSlice';
 import userService from './userService';
 
@@ -13,7 +14,8 @@ const initialState = {
   isDeleted: false,
   isUpdating: false,
   isUpdated: false,
-  message: ''
+  message: '',
+  response: null
 };
 
 // get users
@@ -109,6 +111,8 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.message = action.payload;
+        state.companyMadeByUsers = addOrUpdateItemInArray(state.userList, action.payload);
+
       })
       .addCase(createUsers.rejected, (state, action) => {
         state.isLoading = false;

@@ -26,16 +26,11 @@ import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { createClient, reset, updateClient } from '../bidsSlice';
 
-export default function AddNewClientForm(props) {
-  const {
-    openNewClientForm,
-    handleNewClientFormClose,
-    selectedValue,
-    setSelectedvalue,
-    currentClientInfoToEdit,
-    setCurrentClientInfoToEdit
-  } = props;
-
+export default function AddNewClientForm({
+  handleNewClientFormClose,
+  clientAdditionStats,
+  setClientAdditionStats
+}) {
   const dispatch = useDispatch();
   const { isLoading, isSuccess } = useSelector((state) => state.bids);
   const { user } = useSelector(authSelector);
@@ -44,7 +39,9 @@ export default function AddNewClientForm(props) {
   const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
 
   const handleFormSubmission = () => {
-    const emptyFields = Object.keys(selectedValue).find((item) => selectedValue[item] === '');
+    const emptyFields = Object.keys(clientAdditionStats).find(
+      (item) => clientAdditionStats[item] === ''
+    );
     if (emptyFields) {
       return dispatch(
         showMessage({
@@ -54,14 +51,14 @@ export default function AddNewClientForm(props) {
       );
     }
 
-    if (selectedValue._id) {
-      delete selectedValue.comments;
-      dispatch(updateClient({ ...selectedValue, id: selectedValue._id, token: user.token }));
+    if (clientAdditionStats._id) {
+      delete clientAdditionStats.comments;
+      dispatch(
+        updateClient({ ...clientAdditionStats, id: clientAdditionStats._id, token: user.token })
+      );
     } else {
-      dispatch(createClient({ ...selectedValue, organization: orgId, token: user.token }));
+      dispatch(createClient({ ...clientAdditionStats, organization: orgId, token: user.token }));
     }
-
-    setCurrentClientInfoToEdit(null);
   };
 
   useEffect(() => {
@@ -71,18 +68,12 @@ export default function AddNewClientForm(props) {
     }
   }, [isSuccess]);
 
-  useEffect(() => {
-    if (openNewClientForm && currentClientInfoToEdit) {
-      setSelectedvalue({ ...currentClientInfoToEdit });
-    }
-  }, [openNewClientForm]);
-
   return (
     <div>
-      <Dialog fullScreen open={openNewClientForm} onClose={handleNewClientFormClose}>
+      <Dialog fullScreen open={clientAdditionStats} onClose={handleNewClientFormClose}>
         <Toolbar sx={{ backgroundColor: '#D50000' }}>
           <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
-            {selectedValue._id ? 'Edit' : 'Add New'} Client{' '}
+            {clientAdditionStats?._id ? 'Edit' : 'Add New'} Client{' '}
           </Typography>
 
           <Button
@@ -104,13 +95,13 @@ export default function AddNewClientForm(props) {
             {AddNewClientTextField.filter(
               (clientField) => clientField.name !== 'estimateScheduledDate'
             ).map((item) => {
-              const fieldType = item.name;
+              const fieldType = item?.name;
               return (
-                (item.dataType === 'text' && (
+                (item?.dataType === 'text' && (
                   <Grid item xs={10} md={item.resizeable ? 1.33 : 4} sx={{ marginTop: '-10px' }}>
                     <>
                       <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                        {item.label}
+                        {item?.label}
                       </InputLabel>
 
                       <TextField
@@ -120,21 +111,21 @@ export default function AddNewClientForm(props) {
                             width: item.resizeable ? '130px' : 'auto'
                           }
                         }}
-                        name={item.name}
+                        name={item?.name}
                         fullWidth
                         variant='outlined'
                         id='outlined-basic'
                         autoFocus
-                        value={selectedValue[fieldType]}
+                        value={clientAdditionStats?.[fieldType]}
                         onChange={(event) => {
-                          selectedValue[fieldType] = event.target.value;
-                          setSelectedvalue({ ...selectedValue });
+                          clientAdditionStats[fieldType] = event.target.value;
+                          setClientAdditionStats({ ...clientAdditionStats });
                         }}
                       />
                     </>
                   </Grid>
                 )) ||
-                (item.dataType === 'dropDown' && (
+                (item?.dataType === 'dropDown' && (
                   <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
                     <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                       {item.label}
@@ -145,11 +136,11 @@ export default function AddNewClientForm(props) {
                         sx={{ height: '30px' }}
                         labelId='demo-select-small'
                         id='demo-select-small'
-                        name={item.name}
-                        value={selectedValue[fieldType]}
+                        name={item?.name}
+                        value={clientAdditionStats?.[fieldType]}
                         onChange={(event) => {
-                          selectedValue[fieldType] = event.target.value;
-                          setSelectedvalue({ ...selectedValue });
+                          clientAdditionStats[fieldType] = event.target.value;
+                          setClientAdditionStats({ ...clientAdditionStats });
                         }}>
                         {item.option.map((o) => {
                           return <MenuItem value={o}>{o}</MenuItem>;
@@ -169,17 +160,17 @@ export default function AddNewClientForm(props) {
                           style: { height: '30px' }
                         }}
                         inputFormat='MM/DD/YYYY'
-                        value={selectedValue[fieldType]}
+                        value={clientAdditionStats?.[fieldType]}
                         onChange={(event) => {
-                          selectedValue[fieldType] = event.target.value;
-                          setSelectedvalue({ ...selectedValue });
+                          clientAdditionStats[fieldType] = event.target.value;
+                          setClientAdditionStats({ ...clientAdditionStats });
                         }}
                         renderInput={(params) => <TextField {...params} fullWidth />}
                       />
                     </LocalizationProvider>
                   </Grid>
                 )) ||
-                (item.dataType === 'dateTime' && (
+                (item?.dataType === 'dateTime' && (
                   <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
                     <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                       {item.label}
@@ -189,10 +180,10 @@ export default function AddNewClientForm(props) {
                         InputProps={{
                           style: { height: '30px' }
                         }}
-                        value={selectedValue[fieldType]}
+                        value={clientAdditionStats?.[fieldType]}
                         onChange={(event) => {
-                          selectedValue[fieldType] = event.target.value;
-                          setSelectedvalue({ ...selectedValue });
+                          clientAdditionStats[fieldType] = event.target.value;
+                          setClientAdditionStats({ ...clientAdditionStats });
                         }}
                         renderInput={(params) => <TextField {...params} fullWidth />}
                       />

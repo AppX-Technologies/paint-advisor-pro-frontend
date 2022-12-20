@@ -19,7 +19,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { startCase } from 'lodash';
+import { cloneDeep, startCase } from 'lodash';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createMaterial } from '../../features/materials/materialSlice';
@@ -28,58 +28,27 @@ import {
   FIELDS_WHERE_MATERIALS_ARE_APPLIES,
   POPULAR_UNITS_OF_MEASUREMENT
 } from '../../helpers/contants';
-import formReducer from '../DashboardTabs/reducers/formReducer';
 
-export default function Edit(props) {
+export default function Edit({
+  materialRegistrationAndEditStats,
+  setMaterialRegistrationAndEditStats,
+  onMaterialFormClose
+}) {
   React.useState(false);
   const userDetail = JSON.parse(localStorage.getItem('user'));
-  const { openEditForm, setOpenEditForm, editFormData } = props;
 
-  const initialFormState = {
-    description: editFormData.description ? editFormData.description : '',
-    unit: editFormData.unit ? editFormData.unit : '',
-    unitPrice: editFormData.unitPrice ? editFormData.unitPrice : '',
-    bidType: editFormData.bidType ? editFormData.bidType : '',
-    appliesTo: editFormData?.appliesTo ? [...editFormData.appliesTo] : []
-  };
-
-
-  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
   const { materialList } = useSelector((state) => state.material);
 
   const dispatch = useDispatch();
 
-  React.useEffect(() => {
-    Object.keys(editFormData).forEach((key) => {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: key,
-        payload: editFormData[key]
-      });
-    });
-  }, [editFormData]);
-  const handleTextChange = (e) => {
-    dispatchNew({
-      type: 'HANDLE_FORM_INPUT',
-      field: e.target.name,
-      payload: e.target.value
-    });
-  };
-  const handleClose = () => {
-    setOpenEditForm(false);
-    Object.keys(formState).forEach((key) => {
-      formState[key] = '';
-    });
-  };
-
   const handleEdit = (e) => {
     e.preventDefault();
-    const emptyField = Object.keys(formState).find((state) =>
-      typeof formState[state] === 'string'
-        ? formState[state] === ''
-        : typeof formState[state] === 'number'
-        ? formState[state] === 0
-        : !formState[state].length
+    const emptyField = Object.keys(materialRegistrationAndEditStats).find((state) =>
+      typeof materialRegistrationAndEditStats[state] === 'string'
+        ? materialRegistrationAndEditStats[state] === ''
+        : typeof materialRegistrationAndEditStats[state] === 'number'
+        ? materialRegistrationAndEditStats[state] === 0
+        : !materialRegistrationAndEditStats[state].length
     );
 
     if (emptyField) {
@@ -92,53 +61,52 @@ export default function Edit(props) {
     }
 
     const formStateWithToken = {
-      ...formState,
-      ID: materialList[0]._id,
+      ...materialRegistrationAndEditStats,
+      ID: materialList[0]?._id,
       previousMaterials: materialList[0].materials.filter(
-        (previousMaterials) => previousMaterials._id !== editFormData._id
+        (previousMaterials) => previousMaterials?._id !== materialRegistrationAndEditStats?._id
       ),
       add: true,
       token: userDetail.token
     };
     dispatch(createMaterial(formStateWithToken));
-    setOpenEditForm(false);
+    onMaterialFormClose();
   };
 
   const handleMaterialApplicableSection = (field) => {
-    if (formState.appliesTo.includes(field)) {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: [...formState.appliesTo.filter((item) => item !== field)]
-      });
+    const materialRegistrationAndEditStatsCopy = cloneDeep(materialRegistrationAndEditStats);
+    if (materialRegistrationAndEditStatsCopy.appliesTo.includes(field)) {
+      materialRegistrationAndEditStatsCopy.appliesTo = [
+        ...materialRegistrationAndEditStatsCopy.appliesTo.filter((item) => item !== field)
+      ];
     } else {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: [...formState.appliesTo, field]
-      });
+      materialRegistrationAndEditStatsCopy.appliesTo = [
+        ...materialRegistrationAndEditStatsCopy.appliesTo,
+        field
+      ];
     }
+    setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStatsCopy });
   };
 
   const handleMaterialApplication = () => {
-    if (formState.appliesTo.length === 0) {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((materialSection) => materialSection.label)
-      });
+    if (materialRegistrationAndEditStats.appliesTo.length === 0) {
+      materialRegistrationAndEditStats.appliesTo = FIELDS_WHERE_MATERIALS_ARE_APPLIES.map(
+        (materialSection) => materialSection.label
+      );
     } else {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: []
-      });
+      materialRegistrationAndEditStats.appliesTo = [];
     }
+    setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
   };
 
   return (
     <div>
-      <Dialog open={openEditForm} onClose={handleClose}>
+      <Dialog
+        open={
+          materialRegistrationAndEditStats !== null &&
+          Object.keys(materialRegistrationAndEditStats).includes('_id')
+        }
+        onClose={onMaterialFormClose}>
         <DialogTitle>
           Edit Paint
           <CircularProgress style={{ display: 'none' }} size={25} />
@@ -155,30 +123,38 @@ export default function Edit(props) {
               id='material'
               label='Paint Description'
               autoFocus
-              value={formState.description}
-              onChange={(e) => handleTextChange(e)}
+              value={materialRegistrationAndEditStats?.description}
+              onChange={(e) => {
+                materialRegistrationAndEditStats.description = e.target.value;
+                setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
+              }}
               style={{ width: '100%' }}
             />
           </Grid>
           <Grid container spacing={2} sx={{ marginBottom: '13px' }}>
             <Grid item xs={6} md={3} mt={2}>
-              <Autocomplete
-                size='small'
-                disableCloseOnSelect
-                inputValue={formState.unit}
-                variant='standard'
-                freeSolo
-                onInputChange={(event, newInputValue) => {
-                  dispatchNew({
-                    type: 'HANDLE_FORM_INPUT',
-                    field: 'unit',
-                    payload: newInputValue
-                  });
-                }}
-                id='disable-list-wrap'
-                options={POPULAR_UNITS_OF_MEASUREMENT.map((option) => option)}
-                renderInput={(params) => <TextField {...params} label='Units' variant='standard' />}
-              />
+              {materialRegistrationAndEditStats && (
+                <Autocomplete
+                  size='small'
+                  disableCloseOnSelect
+                  inputValue={materialRegistrationAndEditStats?.unit}
+                  variant='standard'
+                  freeSolo
+                  onInputChange={(event, newInputValue) => {
+                    materialRegistrationAndEditStats.unit = newInputValue;
+                    setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
+                  }}
+                  id='disable-list-wrap'
+                  options={
+                    POPULAR_UNITS_OF_MEASUREMENT.length
+                      ? POPULAR_UNITS_OF_MEASUREMENT.map((option) => option)
+                      : []
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label='Units' variant='standard' />
+                  )}
+                />
+              )}
             </Grid>
 
             <Grid item xs={3} md={3}>
@@ -192,8 +168,15 @@ export default function Edit(props) {
                 id='pricePerUnit'
                 label='Price per Unit'
                 autoFocus
-                value={formState.unitPrice ? formState.unitPrice : ''}
-                onChange={(e) => handleTextChange(e)}
+                value={
+                  materialRegistrationAndEditStats?.unitPrice
+                    ? materialRegistrationAndEditStats?.unitPrice
+                    : ''
+                }
+                onChange={(e) => {
+                  materialRegistrationAndEditStats.unitPrice = e.target.value;
+                  setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
+                }}
                 style={{ width: '100%', marginTop: '13px' }}
               />
             </Grid>
@@ -204,9 +187,16 @@ export default function Edit(props) {
                   labelId='demo-select-small'
                   id='demo-select-small'
                   name='bidType'
-                  value={formState.bidType ? formState.bidType : editFormData.bidType}
+                  value={
+                    materialRegistrationAndEditStats?.bidType
+                      ? materialRegistrationAndEditStats?.bidType
+                      : materialRegistrationAndEditStats?.bidType
+                  }
                   label='Bid Type'
-                  onChange={(e) => handleTextChange(e)}>
+                  onChange={(e) => {
+                    materialRegistrationAndEditStats.bidType = e.target.value;
+                    setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
+                  }}>
                   <MenuItem value='Interior'>Interior</MenuItem>
                   <MenuItem value='Exterior'>Exterior</MenuItem>
                 </Select>
@@ -220,7 +210,7 @@ export default function Edit(props) {
                 <Tooltip
                   placement='top'
                   title={
-                    formState.appliesTo.length === 0
+                    materialRegistrationAndEditStats?.appliesTo.length === 0
                       ? 'Apply To  All Sections'
                       : 'Remove From All Sections'
                   }>
@@ -231,7 +221,8 @@ export default function Edit(props) {
                       height: '16px',
                       ml: 1,
                       cursor: 'pointer',
-                      color: formState.appliesTo.length === 0 ? 'green' : 'gray'
+                      color:
+                        materialRegistrationAndEditStats?.appliesTo.length === 0 ? 'green' : 'gray'
                     }}
                   />
                 </Tooltip>
@@ -241,7 +232,11 @@ export default function Edit(props) {
                   return (
                     <Grid xs={4} md={3}>
                       <Chip
-                        color={formState.appliesTo.includes(field.label) ? 'error' : 'default'}
+                        color={
+                          materialRegistrationAndEditStats?.appliesTo.includes(field.label)
+                            ? 'error'
+                            : 'default'
+                        }
                         label={
                           <Box
                             sx={{
@@ -252,7 +247,7 @@ export default function Edit(props) {
                             <Typography sx={{ fontSize: '14px' }}>
                               {startCase(field.label)}
                             </Typography>
-                            {formState.appliesTo.includes(field.label) && (
+                            {materialRegistrationAndEditStats?.appliesTo.includes(field.label) && (
                               <Tooltip title='Remove From Applies To' placement='top'>
                                 <CancelIcon
                                   sx={{ width: '14px', height: '16px', ml: 0.5 }}
@@ -264,7 +259,7 @@ export default function Edit(props) {
                         }
                         variant='outlined'
                         onClick={() =>
-                          !formState.appliesTo.includes(field.label) &&
+                          !materialRegistrationAndEditStats?.appliesTo.includes(field.label) &&
                           handleMaterialApplicableSection(field.label)
                         }
                         sx={{
@@ -286,7 +281,7 @@ export default function Edit(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onMaterialFormClose}>Cancel</Button>
           <Button type='submit' variant='contained' onClick={(e) => handleEdit(e)}>
             Update
           </Button>

@@ -24,7 +24,7 @@ const UsersFromCompany = () => {
   const { companyMadeByUsers, isDeleting, isLoading, isDeleted } = useSelector(
     (state) => state.usersFromCompany
   );
-  const [open, setOpen] = React.useState(false);
+  const [userRegistrationAndEditStats, setUserRegistrationAndEditStats] = useState(null);
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData, setEditFormData] = React.useState([]);
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
@@ -68,6 +68,10 @@ const UsersFromCompany = () => {
     editFormData
   });
 
+  const onUserFormClose = () => {
+    setUserRegistrationAndEditStats(null);
+  };
+
   return (
     <>
       <Box sx={{ p: '24px' }}>
@@ -75,7 +79,9 @@ const UsersFromCompany = () => {
           <CustomButton
             variant='contained'
             sx={{ mt: 3, mb: 2 }}
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              setUserRegistrationAndEditStats({});
+            }}
             disabled={isLoading}>
             Create
           </CustomButton>
@@ -97,22 +103,26 @@ const UsersFromCompany = () => {
           isLoading={isLoading}
           columns={columns}
           title='Users List'
-          setEditFormData={setEditFormData}
-          setOpenEditForm={setOpenEditForm}
+          setProcessRegistrationAndEditStats={setUserRegistrationAndEditStats}
           setOpenDeleteModal={setOpenDeleteModal}
           onDeleteBtnClick={onDeleteBtnClick}
           deleteByEmail
         />
       </Box>
-      <CreateUserForm open={open} setOpen={setOpen} orgId={orgId} />
-      {openEditForm && (
-        <EditUserForm
-          editFormData={editFormData}
-          openEditForm={openEditForm}
-          setOpenEditForm={setOpenEditForm}
-          orgId={orgId}
-        />
-      )}
+      <CreateUserForm
+        orgId={orgId}
+        userRegistrationAndEditStats={userRegistrationAndEditStats}
+        setUserRegistrationAndEditStats={setUserRegistrationAndEditStats}
+        onUserFormClose={onUserFormClose}
+      />
+
+      <EditUserForm
+        orgId={orgId}
+        userRegistrationAndEditStats={userRegistrationAndEditStats}
+        setUserRegistrationAndEditStats={setUserRegistrationAndEditStats}
+        onUserFormClose={onUserFormClose}
+      />
+
       <DeleteModal
         openDeleteModal={openDeleteModal}
         setOpenDeleteModal={setOpenDeleteModal}
@@ -129,5 +139,3 @@ const UsersFromCompany = () => {
 };
 
 export default UsersFromCompany;
-
-

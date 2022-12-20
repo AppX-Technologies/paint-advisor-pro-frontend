@@ -10,41 +10,21 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { createUsers, fetchUsers, reset } from '../../features/users/userSlice';
-import formReducer from './reducers/formReducer';
+import { ROLE_SYSTEM_ADMIN } from '../../helpers/contants';
 
-const initialFormState = {
-  name: '',
-  email: '',
-  phone: '',
-  role: 'Admin'
-};
-
-export default function CreateUserForm(props) {
+export default function CreateUserForm({
+  onUserFormClose,
+  setUserRegistrationAndEditStats,
+  userRegistrationAndEditStats
+}) {
   const dispatch = useDispatch();
-  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-  const { open, setOpen } = props;
+
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const { isSuccess, isLoading } = useSelector((state) => state.user);
-  const handleTextChange = (e) => {
-    dispatchNew({
-      type: 'HANDLE_FORM_INPUT',
-      field: e.target.name,
-      payload: e.target.value
-    });
-  };
-  const handleClose = () => {
-    setOpen(false);
-    Object.keys(formState).forEach((key) => {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: key,
-        payload: ''
-      });
-    });
-  };
+
   const handleCreate = (e) => {
     e.preventDefault();
-    if (!formState.name) {
+    if (!userRegistrationAndEditStats.name) {
       return dispatch(
         showMessage({
           message: `Name cannot be empty`,
@@ -53,7 +33,8 @@ export default function CreateUserForm(props) {
       );
     }
     const formStateWithToken = {
-      ...formState,
+      ...userRegistrationAndEditStats,
+      role: ROLE_SYSTEM_ADMIN,
       token: userDetail.token
     };
     dispatch(createUsers(formStateWithToken));
@@ -62,7 +43,7 @@ export default function CreateUserForm(props) {
 
   useEffect(() => {
     if (isSuccess) {
-      setOpen(false);
+      onUserFormClose();
       dispatch(
         showMessage({
           message: 'User created successfully',
@@ -72,9 +53,16 @@ export default function CreateUserForm(props) {
       dispatch(reset());
     }
   }, [isSuccess]);
+
+  console.log(userRegistrationAndEditStats, 'userRegistrationAndEditStats');
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog
+        open={
+          userRegistrationAndEditStats !== null &&
+          !Object.keys(userRegistrationAndEditStats).includes('_id')
+        }
+        onClose={onUserFormClose}>
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New User</Typography>
@@ -96,8 +84,11 @@ export default function CreateUserForm(props) {
                 id='name'
                 label='Name'
                 autoFocus
-                value={formState.name}
-                onChange={(e) => handleTextChange(e)}
+                value={userRegistrationAndEditStats?.name}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.name = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -109,8 +100,11 @@ export default function CreateUserForm(props) {
                 id='email'
                 label='Email'
                 autoFocus
-                value={formState.email}
-                onChange={(e) => handleTextChange(e)}
+                value={userRegistrationAndEditStats?.email}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.email = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -121,14 +115,17 @@ export default function CreateUserForm(props) {
                 id='phone'
                 label='Phone Number'
                 autoFocus
-                value={formState.phone}
-                onChange={(e) => handleTextChange(e)}
+                value={userRegistrationAndEditStats?.phone}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.phone = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
               />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onUserFormClose}>Cancel</Button>
           <Button type='submit' variant='contained' onClick={(e) => handleCreate(e)}>
             Create
           </Button>

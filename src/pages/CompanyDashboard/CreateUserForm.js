@@ -20,46 +20,23 @@ import {
 } from '../../features/usersFromCompany/usersFromCompanySlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 
-const initialFormState = {
-  name: '',
-  email: '',
-  phone: '',
-  role: '',
-  proficiency: 'Beginner'
-};
-
-export default function CreateUserForm({ open, setOpen, orgId }) {
+export default function CreateUserForm({
+  orgId,
+  userRegistrationAndEditStats,
+  setUserRegistrationAndEditStats,
+  onUserFormClose
+}) {
   const dispatch = useDispatch();
-  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
   const { isSuccess, isLoading } = useSelector((state) => state.usersFromCompany);
-  const userDetail = JSON.parse(localStorage.getItem('user'));
-
-  const handleTextChange = (e) => {
-    dispatchNew({
-      type: 'HANDLE_INPUT',
-      field: e.target.name,
-      payload: e.target.value
-    });
-  };
-  const handleClose = () => {
-    setOpen(false);
-    Object.keys(formState).forEach((key) => {
-      dispatchNew({
-        type: 'HANDLE_INPUT',
-        field: key,
-        payload: ''
-      });
-    });
-  };
 
   const handleCreate = (e) => {
     e.preventDefault();
     const formStateWithCompanyId = {
-      ...formState,
+      ...userRegistrationAndEditStats,
       organization: orgId,
       token: JSON.parse(localStorage.getItem('user')).token
     };
-    if (formState.role === '') {
+    if (userRegistrationAndEditStats.role === '') {
       dispatch(
         showMessage({
           message: 'Please select a role',
@@ -74,7 +51,7 @@ export default function CreateUserForm({ open, setOpen, orgId }) {
 
   useEffect(() => {
     if (isSuccess) {
-      setOpen(false);
+      onUserFormClose();
       dispatch(showMessage({ message: 'User created successfully', variant: 'success' }));
       dispatch(reset());
     }
@@ -82,7 +59,12 @@ export default function CreateUserForm({ open, setOpen, orgId }) {
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog
+        open={
+          userRegistrationAndEditStats !== null &&
+          !Object.keys(userRegistrationAndEditStats).includes('_id')
+        }
+        onClose={onUserFormClose}>
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New User</Typography>
@@ -104,8 +86,11 @@ export default function CreateUserForm({ open, setOpen, orgId }) {
                 id='name'
                 label='Name'
                 autoFocus
-                value={formState.name}
-                onChange={(e) => handleTextChange(e)}
+                value={userRegistrationAndEditStats?.name}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.name = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -117,8 +102,11 @@ export default function CreateUserForm({ open, setOpen, orgId }) {
                 id='email'
                 label='Email'
                 autoFocus
-                value={formState.email}
-                onChange={(e) => handleTextChange(e)}
+                value={userRegistrationAndEditStats?.email}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.email = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -130,8 +118,11 @@ export default function CreateUserForm({ open, setOpen, orgId }) {
                 id='phone'
                 label='Phone Number'
                 autoFocus
-                value={formState.phone}
-                onChange={(e) => handleTextChange(e)}
+                value={userRegistrationAndEditStats?.phone}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.phone = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
               />
             </Grid>
 
@@ -143,8 +134,11 @@ export default function CreateUserForm({ open, setOpen, orgId }) {
                   name='role'
                   labelId='demo-simple-select-standard-label'
                   id='demo-simple-select-standard'
-                  value={formState.role}
-                  onChange={(e) => handleTextChange(e)}
+                  value={userRegistrationAndEditStats?.role}
+                  onChange={(e) => {
+                    userRegistrationAndEditStats.role = e.target.value;
+                    setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                  }}
                   label='Role'>
                   <MenuItem value='Org Admin'>Org Admin</MenuItem>
                   <MenuItem value='Estimator'>Estimator</MenuItem>
@@ -153,7 +147,7 @@ export default function CreateUserForm({ open, setOpen, orgId }) {
               </FormControl>
             </Grid>
             <Grid xs={6} sx={{ marginTop: '24px' }}>
-              {formState.role === 'Painter' && (
+              {userRegistrationAndEditStats?.role === 'Painter' && (
                 <FormControl variant='standard' sx={{ mt: 2, minWidth: '98%' }}>
                   <InputLabel id='demo-simple-select-standard-label'>Proficiency *</InputLabel>
                   <Select
@@ -161,8 +155,11 @@ export default function CreateUserForm({ open, setOpen, orgId }) {
                     name='proficiency'
                     labelId='demo-simple-select-standard-label'
                     id='demo-simple-select-standard'
-                    value={formState.proficiency}
-                    onChange={(e) => handleTextChange(e)}
+                    value={userRegistrationAndEditStats?.proficiency}
+                    onChange={(e) => {
+                      userRegistrationAndEditStats.proficiency = e.target.value;
+                      setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                    }}
                     label='Role'>
                     <MenuItem value='Beginner'>Beginner</MenuItem>
                     <MenuItem value='Intermediate'>Intermediate</MenuItem>
@@ -174,7 +171,7 @@ export default function CreateUserForm({ open, setOpen, orgId }) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onUserFormClose}>Cancel</Button>
           <Button type='submit' variant='contained' onClick={(e) => handleCreate(e)}>
             Create
           </Button>

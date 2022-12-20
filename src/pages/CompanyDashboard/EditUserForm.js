@@ -1,76 +1,41 @@
-import * as React from 'react';
+import { CircularProgress, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  CircularProgress,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  Slider,
-  Typography
-} from '@mui/material';
+import TextField from '@mui/material/TextField';
+import * as React from 'react';
 import { useEffect } from 'react';
-import formReducer from '../reducers/registerReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
+import { isSystemUser } from '../../helpers/roles';
 import {
-  updateUserFromCompany,
-  fetchUserMadeByCompany,
-  reset
+  reset,
+  updateUserFromCompany
 } from '../../features/usersFromCompany/usersFromCompanySlice';
+import { authSelector } from '../../features/auth/authSlice';
 
 export default function Edit(props) {
   const dispatch = useDispatch();
-  const { openEditForm, setOpenEditForm, editFormData, getId } = props;
-  const initialFormState = {
-    name: editFormData.name ? editFormData.name : '',
-    email: editFormData.email ? editFormData.email : '',
-    phone: editFormData.phone ? editFormData.phone : '',
-    role: editFormData.role ? editFormData.role : '',
-    proficiency: editFormData.proficiency ? editFormData.proficiency : 1
-  };
-  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
+  const { userRegistrationAndEditStats, setUserRegistrationAndEditStats, onUserFormClose } = props;
+  const { companyId } = useParams();
+  const { user } = useSelector(authSelector);
+
+  const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
 
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const { isUpdated, isUpdating } = useSelector((state) => state.usersFromCompany);
 
-  useEffect(() => {
-    Object.keys(editFormData).forEach((key) => {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: key,
-        payload: editFormData[key]
-      });
-    });
-  }, [editFormData]);
-
-  const handleTextChange = (e) => {
-    dispatchNew({
-      type: 'HANDLE_INPUT',
-      field: e.target.name,
-      payload: e.target.value
-    });
-  };
-  const handleClose = () => {
-    setOpenEditForm(false);
-    Object.keys(formState).forEach((key) => {
-      formState[key] = '';
-    });
-  };
-
   const handleEdit = (e) => {
     e.preventDefault();
     const formStateWithToken = {
-      ...formState,
+      ...userRegistrationAndEditStats,
+      orgId,
       token: userDetail.token
     };
-    if (formState.role === '') {
+    if (userRegistrationAndEditStats.role === '') {
       dispatch(
         showMessage({
           message: 'Please select a role',
@@ -85,7 +50,7 @@ export default function Edit(props) {
 
   useEffect(() => {
     if (isUpdated) {
-      setOpenEditForm(false);
+      onUserFormClose();
       dispatch(
         showMessage({
           message: 'User updated successfully',
@@ -99,7 +64,12 @@ export default function Edit(props) {
 
   return (
     <div>
-      <Dialog open={openEditForm} onClose={handleClose}>
+      <Dialog
+        open={
+          userRegistrationAndEditStats !== null &&
+          Object.keys(userRegistrationAndEditStats).includes('_id')
+        }
+        onClose={onUserFormClose}>
         <DialogTitle>
           Edit User
           <CircularProgress style={{ display: isUpdating ? 'block' : 'none' }} size={25} />
@@ -114,9 +84,26 @@ export default function Edit(props) {
                 fullWidth
                 id='name'
                 autoFocus
-                placeholder={editFormData.name}
-                value={formState.name}
-                onChange={(e) => handleTextChange(e)}
+                value={userRegistrationAndEditStats?.name}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.name = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <label>Email *</label>
+              <TextField
+                name='Email'
+                required
+                fullWidth
+                id='Email'
+                autoFocus
+                value={userRegistrationAndEditStats?.email}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.email = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -127,9 +114,11 @@ export default function Edit(props) {
                 fullWidth
                 id='phone'
                 autoFocus
-                placeholder={editFormData.phone}
-                value={formState.phone}
-                onChange={(e) => handleTextChange(e)}
+                value={userRegistrationAndEditStats?.phone}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.phone = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
               />
             </Grid>
 
@@ -141,8 +130,15 @@ export default function Edit(props) {
                   name='role'
                   labelId='demo-simple-select-standard-label'
                   id='demo-simple-select-standard'
-                  value={formState.role ? formState.role : editFormData.role}
-                  onChange={(e) => handleTextChange(e)}
+                  value={
+                    userRegistrationAndEditStats?.role
+                      ? userRegistrationAndEditStats?.role
+                      : userRegistrationAndEditStats?.role
+                  }
+                  onChange={(e) => {
+                    userRegistrationAndEditStats.role = e.target.value;
+                    setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                  }}
                   label='Role'>
                   <MenuItem value='Org Admin'>Org Admin</MenuItem>
                   <MenuItem value='Estimator'>Estimator</MenuItem>
@@ -152,7 +148,7 @@ export default function Edit(props) {
             </Grid>
 
             <Grid xs={6} sx={{ marginTop: '16px' }}>
-              {formState.role === 'Painter' && (
+              {userRegistrationAndEditStats?.role === 'Painter' && (
                 <FormControl variant='standard' sx={{ mt: 2, ml: 2, minWidth: '90%' }}>
                   <InputLabel id='demo-simple-select-standard-label'>Proficiency *</InputLabel>
                   <Select
@@ -160,8 +156,7 @@ export default function Edit(props) {
                     name='proficiency'
                     labelId='demo-simple-select-standard-label'
                     id='demo-simple-select-standard'
-                    value={formState.proficiency}
-                    onChange={(e) => handleTextChange(e)}
+                    value={userRegistrationAndEditStats?.proficiency}
                     label='Role'>
                     <MenuItem value='Beginner'>Beginner</MenuItem>
                     <MenuItem value='Intermediate'>Intermediate</MenuItem>
@@ -173,7 +168,7 @@ export default function Edit(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onUserFormClose}>Cancel</Button>
           <Button
             disabled={isUpdating}
             type='submit'

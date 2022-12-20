@@ -27,6 +27,7 @@ import {
 } from '../helpers/generalHepers';
 
 const ClientInfo = ({
+  handleEditClientFormOpen,
   onSelectedStepChange,
   setShowFilesToView,
   selectedStep,
@@ -139,10 +140,7 @@ const ClientInfo = ({
               <Tooltip
                 title="Edit Client's Info"
                 placement='bottom'
-                onClick={() => {
-                  onClientFormChange(true);
-                  setCurrentClientInfoToEdit({ ...currentClientInfo });
-                }}>
+                onClick={() => handleEditClientFormOpen(currentClientInfo)}>
                 <EditIcon sx={{ cursor: 'pointer', ml: 1, width: '20px', height: '20px' }} />
               </Tooltip>
             </Box>

@@ -15,46 +15,32 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createProcess, reset } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { ALL_PROCESS_STAGES } from '../../helpers/contants';
-import formReducer from '../DashboardTabs/reducers/formReducer';
 
-export default function FormDialog(props) {
+export default function FormDialog({
+  filteredProcesses,
+  processRegistrationAndEditStats,
+  setProcessRegistrationAndEditStats,
+  onProcessFormClose
+}) {
   const { processList, isSuccess } = useSelector((state) => state.process);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const dispatch = useDispatch();
-  const { open, setOpen, bidType, filteredProcesses, stageType } = props;
-
-  let stageCategory;
-  if (stageType === 0) {
-    stageCategory = 'Preparation';
-  } else if (stageType === 1) {
-    stageCategory = 'Painting';
-  } else {
-    stageCategory = 'Cleanup';
-  }
-  const initialFormState = {
-    description: '',
-    stage: stageCategory,
-    bidType
-  };
-
-  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleCreate = (e) => {
     e.preventDefault();
-    if (!formState.description || !formState.bidType || !formState.stage) {
-      return dispatch(
-        showMessage({
-          message: `Description cannot be empty`,
-          severity: 'error'
-        })
-      );
+    if (
+      !processRegistrationAndEditStats.description ||
+      !processRegistrationAndEditStats.bidType ||
+      !processRegistrationAndEditStats.stage
+    ) {
+      return dispatch();
     }
-    const formStateWithToken = {
-      ...formState,
+    showMessage({
+      message: `Description cannot be empty`,
+      severity: 'error'
+    });
+    const processRegistrationAndEditStatsWithToken = {
+      ...processRegistrationAndEditStats,
       ID: processList[0]._id,
       previousProcesses: processList[0].processes,
       add: true,
@@ -63,7 +49,8 @@ export default function FormDialog(props) {
     if (
       filteredProcesses.some((process) => {
         return (
-          process.description.toLowerCase().trim() === formState.description.toLowerCase().trim()
+          process.description.toLowerCase().trim() ===
+          processRegistrationAndEditStats.description.toLowerCase().trim()
         );
       })
     ) {
@@ -75,14 +62,14 @@ export default function FormDialog(props) {
         })
       );
     } else {
-      dispatch(createProcess(formStateWithToken));
+      dispatch(createProcess(processRegistrationAndEditStatsWithToken));
     }
 
-    setOpen(false);
+    onProcessFormClose();
   };
   useEffect(() => {
     if (isSuccess) {
-      setOpen(false);
+      onProcessFormClose();
       dispatch(
         showMessage({
           message: 'Process Updated successfully',
@@ -92,98 +79,94 @@ export default function FormDialog(props) {
       dispatch(reset());
     }
   }, [isSuccess]);
+  console.log(processRegistrationAndEditStats, 'processRegistrationAndEditStats');
 
-  useEffect(() => {
-    ['stage', 'description'].forEach((key, i) => {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: key,
-        payload: key === 'stage' ? stageCategory : ''
-      });
-    });
-  }, [stageType]);
-
-  const handleTextChange = (e) => {
-    dispatchNew({
-      type: 'HANDLE_FORM_INPUT',
-      field: e.target.name,
-      payload: e.target.value
-    });
-  };
   return (
-    <div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          <Stack direction='row' spacing={2}>
-            <Typography variant='h6'>Add New Process</Typography>
-            <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
-          </Stack>
-        </DialogTitle>
-        <DialogContent>
-          <Grid item xs={12} md={12}>
-            <InputLabel id='demo-select-small'>Description</InputLabel>
+    <Dialog
+      open={
+        processRegistrationAndEditStats !== null &&
+        !Object.keys(processRegistrationAndEditStats).includes('_id')
+      }
+      onClose={onProcessFormClose}>
+      <DialogTitle>
+        <Stack direction='row' spacing={2}>
+          <Typography variant='h6'>Add New Process</Typography>
+          <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
+        </Stack>
+      </DialogTitle>
+      <DialogContent>
+        <Grid item xs={12} md={12}>
+          <InputLabel id='demo-select-small'>Description</InputLabel>
 
-            <TextareaAutosize
-              name='description'
-              required
-              fullWidth
-              aria-label='minimum height'
-              minRows={3}
-              variant='standard'
-              id='process'
-              label='Description'
-              autoFocus
-              value={formState.description}
-              onChange={(e) => handleTextChange(e)}
-              style={{ width: '100%' }}
-            />
+          <TextareaAutosize
+            name='description'
+            required
+            fullWidth
+            aria-label='minimum height'
+            minRows={3}
+            variant='standard'
+            id='process'
+            label='Description'
+            autoFocus
+            value={processRegistrationAndEditStats?.description}
+            onChange={(e) => {
+              processRegistrationAndEditStats.description = e.target.value;
+              setProcessRegistrationAndEditStats({ ...processRegistrationAndEditStats });
+            }}
+            style={{ width: '100%' }}
+          />
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={6} md={6}>
+            <FormControl sx={{ m: 0, minWidth: 240, maxHeight: 30, marginTop: 3 }} size='small'>
+              <InputLabel id='demo-select-small'>Stage</InputLabel>
+              <Select
+                labelId='demo-select-small'
+                id='demo-select-small'
+                name='stage'
+                value={processRegistrationAndEditStats?.stage}
+                label='stage'
+                onChange={(e) => {
+                  processRegistrationAndEditStats.stage = e.target.value;
+                  setProcessRegistrationAndEditStats({ ...processRegistrationAndEditStats });
+                }}
+                required>
+                {ALL_PROCESS_STAGES.map((stage) => {
+                  return (
+                    <MenuItem key={stage} value={stage}>
+                      {stage}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
           </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={6} md={6}>
-              <FormControl sx={{ m: 0, minWidth: 240, maxHeight: 30, marginTop: 3 }} size='small'>
-                <InputLabel id='demo-select-small'>Stage</InputLabel>
-                <Select
-                  labelId='demo-select-small'
-                  id='demo-select-small'
-                  name='stage'
-                  value={formState.stage}
-                  label='stage'
-                  onChange={(e) => handleTextChange(e)}
-                  required>
-                  {ALL_PROCESS_STAGES.map((stage) => {
-                    return (
-                      <MenuItem key={stage} value={stage}>
-                        {stage}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={6} md={6}>
-              <FormControl sx={{ m: 0, minWidth: 240, maxHeight: 30, marginTop: 3 }} size='small'>
-                <InputLabel id='demo-select-small'>Bid Type</InputLabel>
-                <Select
-                  labelId='demo-select-small'
-                  id='demo-select-small'
-                  name='bidType'
-                  value={formState.bidType}
-                  label='Bid Type'
-                  onChange={(e) => handleTextChange(e)}>
-                  <MenuItem value='Interior'>Interior</MenuItem>
-                  <MenuItem value='Exterior'>Exterior</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+          <Grid item xs={6} md={6}>
+            <FormControl sx={{ m: 0, minWidth: 240, maxHeight: 30, marginTop: 3 }} size='small'>
+              <InputLabel id='demo-select-small'>Bid Type</InputLabel>
+              <Select
+                labelId='demo-select-small'
+                id='demo-select-small'
+                name='bidType'
+                value={processRegistrationAndEditStats?.bidType}
+                label='Bid Type'
+                onChange={(e) => {
+                  processRegistrationAndEditStats.bidType = e.target.value;
+                  setProcessRegistrationAndEditStats({ ...processRegistrationAndEditStats });
+                }}>
+                <MenuItem value='Interior'>Interior</MenuItem>
+                <MenuItem value='Exterior'>Exterior</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type='submit' variant='contained' onClick={(e) => handleCreate(e)}>
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onProcessFormClose}>Cancel</Button>
+        <Button type='submit' variant='contained' onClick={(e) => handleCreate(e)}>
+          Create
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

@@ -4,6 +4,7 @@ const endpoint = process.env.REACT_APP_API_BASE_URL;
 
 const FETCH_USERS_COMPANY = `${endpoint}/users/list`;
 const DELETE_USER = `${endpoint}/users`;
+const CREATE_USER = `${endpoint}/users`;
 const UPDATE_USER = `${endpoint}/users/update-user-details`;
 
 const fetchUserMadeByCompany = async (userData) => {
@@ -26,7 +27,7 @@ const createUsersByCompany = async (userData) => {
     }
   };
   delete userData.token;
-  const response = await axios.post(endpoint, userData, config);
+  const response = await axios.post(CREATE_USER, userData, config);
   return response.data;
 };
 
@@ -46,6 +47,7 @@ const deleteUserByCompany = async (userData) => {
 };
 
 const updateUserFromCompany = async (userData) => {
+  console.log(userData, 'userData');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -53,7 +55,12 @@ const updateUserFromCompany = async (userData) => {
     }
   };
   delete userData.token;
-  const response = await axios.post(UPDATE_USER, userData, config);
+  delete userData.organization;
+  const response = await axios.post(
+    UPDATE_USER,
+    { ...userData, organization: userData.orgId },
+    config
+  );
   return response.data;
 };
 

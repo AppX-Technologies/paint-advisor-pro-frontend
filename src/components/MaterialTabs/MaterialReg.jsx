@@ -20,7 +20,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { startCase } from 'lodash';
+import { cloneDeep, startCase } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,35 +31,24 @@ import {
   POPULAR_UNITS_OF_MEASUREMENT
 } from '../../helpers/contants';
 
-import formReducer from '../DashboardTabs/reducers/formReducer';
-
-export default function FormDialog(props) {
+export default function FormDialog({
+  materialRegistrationAndEditStats,
+  setMaterialRegistrationAndEditStats,
+  onMaterialFormClose
+}) {
   const { materialList, isSuccess } = useSelector((state) => state.material);
 
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const dispatch = useDispatch();
-  const { open, setOpen, bidType } = props;
-  const initialFormState = {
-    description: '',
-    unit: '',
-    unitPrice: '',
-    bidType,
-    appliesTo: []
-  };
-
-  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleCreate = (e) => {
     e.preventDefault();
-    const emptyField = Object.keys(formState).find((state) =>
-      typeof formState[state] === 'string'
-        ? formState[state] === ''
-        : typeof formState[state] === 'number'
-        ? formState[state] === 0
-        : !formState[state].length
+    const emptyField = Object.keys(materialRegistrationAndEditStats).find((state) =>
+      typeof materialRegistrationAndEditStats[state] === 'string'
+        ? materialRegistrationAndEditStats[state] === ''
+        : typeof materialRegistrationAndEditStats[state] === 'number'
+        ? materialRegistrationAndEditStats[state] === 0
+        : !materialRegistrationAndEditStats[state].length
     );
 
     if (emptyField) {
@@ -72,7 +61,7 @@ export default function FormDialog(props) {
     }
 
     const formStateWithToken = {
-      ...formState,
+      ...materialRegistrationAndEditStats,
       ID: materialList[0]?._id,
       previousMaterials: materialList[0]?.materials,
       add: true,
@@ -81,11 +70,11 @@ export default function FormDialog(props) {
 
     dispatch(createMaterial(formStateWithToken));
 
-    setOpen(false);
+    onMaterialFormClose();
   };
   useEffect(() => {
     if (isSuccess) {
-      setOpen(false);
+      onMaterialFormClose();
       dispatch(
         showMessage({
           message: 'Process Updated successfully',
@@ -96,59 +85,40 @@ export default function FormDialog(props) {
     }
   }, [isSuccess]);
 
-  useEffect(() => {
-    ['description', 'unit', 'unitPrice', 'bidType'].forEach((key, i) => {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: key,
-        payload: key === 'bidType' ? bidType : ''
-      });
-    });
-  }, [bidType]);
-
-  const handleTextChange = (e) => {
-    dispatchNew({
-      type: 'HANDLE_FORM_INPUT',
-      field: e.target.name,
-      payload: e.target.value
-    });
-  };
-
   const handleMaterialApplicableSection = (field) => {
-    if (formState.appliesTo.includes(field)) {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: [...formState.appliesTo.filter((item) => item !== field)]
-      });
+    const materialRegistrationAndEditStatsCopy = cloneDeep(materialRegistrationAndEditStats);
+    if (materialRegistrationAndEditStatsCopy.appliesTo.includes(field)) {
+      materialRegistrationAndEditStatsCopy.appliesTo = [
+        ...materialRegistrationAndEditStatsCopy.appliesTo.filter((item) => item !== field)
+      ];
     } else {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: [...formState.appliesTo, field]
-      });
+      materialRegistrationAndEditStatsCopy.appliesTo = [
+        ...materialRegistrationAndEditStatsCopy.appliesTo,
+        field
+      ];
     }
+    setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStatsCopy });
   };
 
   const handleMaterialApplication = () => {
-    if (formState.appliesTo.length === 0) {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((materialSection) => materialSection.label)
-      });
+    if (materialRegistrationAndEditStats.appliesTo.length === 0) {
+      materialRegistrationAndEditStats.appliesTo = FIELDS_WHERE_MATERIALS_ARE_APPLIES.map(
+        (materialSection) => materialSection.label
+      );
     } else {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: 'appliesTo',
-        payload: []
-      });
+      materialRegistrationAndEditStats.appliesTo = [];
     }
+    setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
   };
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog
+        open={
+          materialRegistrationAndEditStats !== null &&
+          !Object.keys(materialRegistrationAndEditStats).includes('_id')
+        }
+        onClose={onMaterialFormClose}>
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New Paint</Typography>
@@ -167,30 +137,38 @@ export default function FormDialog(props) {
               id='material'
               label='Paint Description'
               autoFocus
-              value={formState.description}
-              onChange={(e) => handleTextChange(e)}
+              value={materialRegistrationAndEditStats?.description}
+              onChange={(e) => {
+                materialRegistrationAndEditStats.description = e.target.value;
+                setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
+              }}
               style={{ width: '100%' }}
             />
           </Grid>
           <Grid container spacing={2}>
             <Grid item xs={6} md={3} mt={2}>
-              <Autocomplete
-                size='small'
-                disableCloseOnSelect
-                inputValue={formState.unit}
-                variant='standard'
-                freeSolo
-                onInputChange={(event, newInputValue) => {
-                  dispatchNew({
-                    type: 'HANDLE_FORM_INPUT',
-                    field: 'unit',
-                    payload: newInputValue
-                  });
-                }}
-                id='disable-list-wrap'
-                options={POPULAR_UNITS_OF_MEASUREMENT.map((option) => option)}
-                renderInput={(params) => <TextField {...params} label='Units' variant='standard' />}
-              />
+              {materialRegistrationAndEditStats && (
+                <Autocomplete
+                  size='small'
+                  disableCloseOnSelect
+                  inputValue={materialRegistrationAndEditStats?.unit}
+                  variant='standard'
+                  freeSolo
+                  onInputChange={(event, newInputValue) => {
+                    materialRegistrationAndEditStats.unit = newInputValue;
+                    setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
+                  }}
+                  id='disable-list-wrap'
+                  options={
+                    POPULAR_UNITS_OF_MEASUREMENT.length
+                      ? POPULAR_UNITS_OF_MEASUREMENT.map((option) => option)
+                      : []
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label='Units' variant='standard' />
+                  )}
+                />
+              )}
             </Grid>
             <Grid item xs={6} md={3}>
               <TextField
@@ -203,8 +181,11 @@ export default function FormDialog(props) {
                 id='unit'
                 label='Unit Price'
                 autoFocus
-                value={formState.unitPrice}
-                onChange={(e) => handleTextChange(e)}
+                value={materialRegistrationAndEditStats?.unitPrice}
+                onChange={(e) => {
+                  materialRegistrationAndEditStats.unitPrice = e.target.value;
+                  setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
+                }}
                 style={{ width: '100%', marginTop: '13px' }}
               />
             </Grid>
@@ -216,9 +197,12 @@ export default function FormDialog(props) {
                   labelId='demo-select-small'
                   id='demo-select-small'
                   name='bidType'
-                  value={formState.bidType}
+                  value={materialRegistrationAndEditStats?.bidType}
                   label='Bid Type'
-                  onChange={(e) => handleTextChange(e)}>
+                  onChange={(e) => {
+                    materialRegistrationAndEditStats.bidType = e.target.value;
+                    setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
+                  }}>
                   <MenuItem value='Interior'>Interior</MenuItem>
                   <MenuItem value='Exterior'>Exterior</MenuItem>
                 </Select>
@@ -233,7 +217,7 @@ export default function FormDialog(props) {
                 <Tooltip
                   placement='top'
                   title={
-                    formState.appliesTo.length === 0
+                    materialRegistrationAndEditStats?.appliesTo.length === 0
                       ? 'Apply To  All Sections'
                       : 'Remove From All Sections'
                   }>
@@ -244,7 +228,8 @@ export default function FormDialog(props) {
                       height: '16px',
                       ml: 1,
                       cursor: 'pointer',
-                      color: formState.appliesTo.length === 0 ? 'green' : 'gray'
+                      color:
+                        materialRegistrationAndEditStats?.appliesTo.length === 0 ? 'green' : 'gray'
                     }}
                   />
                 </Tooltip>
@@ -254,10 +239,18 @@ export default function FormDialog(props) {
                   return (
                     <Grid xs={4} md={3}>
                       <Tooltip
-                        title={!formState.appliesTo.includes(field.label) ? 'Click To Add' : ''}
+                        title={
+                          !materialRegistrationAndEditStats?.appliesTo.includes(field.label)
+                            ? 'Click To Add'
+                            : ''
+                        }
                         placement='top'>
                         <Chip
-                          color={formState.appliesTo.includes(field.label) ? 'error' : 'default'}
+                          color={
+                            materialRegistrationAndEditStats?.appliesTo.includes(field.label)
+                              ? 'error'
+                              : 'default'
+                          }
                           label={
                             <Box
                               sx={{
@@ -268,7 +261,9 @@ export default function FormDialog(props) {
                               <Typography sx={{ fontSize: '14px' }}>
                                 {startCase(field.label)}
                               </Typography>
-                              {formState.appliesTo.includes(field.label) && (
+                              {materialRegistrationAndEditStats?.appliesTo.includes(
+                                field.label
+                              ) && (
                                 <Tooltip title='Remove From Applied To' placement='top'>
                                   <CancelIcon
                                     sx={{ width: '14px', height: '16px', ml: 0.5 }}
@@ -280,7 +275,7 @@ export default function FormDialog(props) {
                           }
                           variant='outlined'
                           onClick={() =>
-                            !formState.appliesTo.includes(field.label) &&
+                            !materialRegistrationAndEditStats?.appliesTo.includes(field.label) &&
                             handleMaterialApplicableSection(field.label)
                           }
                           sx={{
@@ -303,7 +298,7 @@ export default function FormDialog(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onMaterialFormClose}>Cancel</Button>
           <Button type='submit' variant='contained' onClick={(e) => handleCreate(e)}>
             Create
           </Button>

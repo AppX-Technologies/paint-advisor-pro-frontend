@@ -127,7 +127,7 @@ export const initialCeilingInfo = {
   paint: false
 };
 
-export const initialState = {
+export const initialStateForClientAdditon = {
   name: '',
   address: '',
   city: '',

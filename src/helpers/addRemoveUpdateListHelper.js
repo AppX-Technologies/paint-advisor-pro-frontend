@@ -18,3 +18,8 @@ export const updateClientBidInfo = (clientList, clientId, object) => {
   }
   return clientList;
 };
+
+export const deleteItemFromAnArray = (array, email, pk = 'email') => {
+  console.log(array, 'arrayarray');
+  return array.filter((item) => item[pk] !== email);
+};

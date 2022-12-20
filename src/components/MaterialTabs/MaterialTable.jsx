@@ -12,6 +12,7 @@ import Edit from './EditMaterialForm';
 import FormDialog from './MaterialReg';
 
 const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
+  const [materialRegistrationAndEditStats, setMaterialRegistrationAndEditStats] = useState(null);
   const dispatch = useDispatch();
   const { materialList, isDeleting, isLoading, isSuccess } = useSelector((state) => state.material);
   const userDetail = JSON.parse(localStorage.getItem('user'));
@@ -20,13 +21,15 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
   const [editFormData, setEditFormData] = useState([]);
   const [filteredMaterials, setFilteredMaterials] = useState([]);
   const [materialId, setMateriaId] = useState('');
-  const [open, setOpen] = useState(false);
   const onDeleteBtnClick = (e, getId) => {
     e.stopPropagation();
     setMateriaId(getId);
   };
   const columns = materialColumn();
 
+  const onMaterialFormClose = () => {
+    setMaterialRegistrationAndEditStats(null);
+  };
   const resortMaterials = (sortedList, originalMaterialList) => {
     if (!sortedList.length) return originalMaterialList;
 
@@ -51,7 +54,7 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
 
   useEffect(() => {
     if (isSuccess) {
-      setOpen(false);
+      onMaterialFormClose();
       setOpenDeleteModal(false);
       dispatch(
         showMessage({
@@ -68,13 +71,20 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
     setFilteredMaterials(filterMaterialByBid(materialList, filterValue));
   }, [filterValue, materialList]);
 
+  console.log(materialRegistrationAndEditStats, 'materialRegistrationAndEditStats');
+
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <CustomButton
           variant='contained'
           sx={{ mb: 2 }}
-          onClick={() => setOpen(true)}
+          onClick={() =>
+            setMaterialRegistrationAndEditStats({
+              bidType: filterValue,
+              appliesTo: []
+            })
+          }
           disabled={isLoading}>
           Create
         </CustomButton>
@@ -93,23 +103,22 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
             };
           })
         }
+        setProcessRegistrationAndEditStats={setMaterialRegistrationAndEditStats}
         isLoading={isLoading}
         columns={columns}
         dataList={materialDataList}
         setDataList={setMaterialDataList}
         title='Paints List'
-        setEditFormData={setEditFormData}
-        setOpenEditForm={setOpenEditForm}
         setOpenDeleteModal={setOpenDeleteModal}
         onDeleteBtnClick={onDeleteBtnClick}
         onListSort={onListSort}
         draggable={false}
       />
       <FormDialog
-        open={open}
-        setOpen={setOpen}
-        bidType={filterValue}
         filteredMaterials={filteredMaterials}
+        materialRegistrationAndEditStats={materialRegistrationAndEditStats}
+        setMaterialRegistrationAndEditStats={setMaterialRegistrationAndEditStats}
+        onMaterialFormClose={onMaterialFormClose}
       />
       <DeleteModal
         openDeleteModal={openDeleteModal}
@@ -127,11 +136,10 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
       />
 
       <Edit
-        openEditForm={openEditForm}
-        setOpenEditForm={setOpenEditForm}
-        editFormData={editFormData}
-        bidType={filterValue}
         filteredMaterials={filteredMaterials}
+        materialRegistrationAndEditStats={materialRegistrationAndEditStats}
+        setMaterialRegistrationAndEditStats={setMaterialRegistrationAndEditStats}
+        onMaterialFormClose={onMaterialFormClose}
       />
     </>
   );

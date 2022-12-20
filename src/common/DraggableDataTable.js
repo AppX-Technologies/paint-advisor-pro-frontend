@@ -1,21 +1,19 @@
-import React from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import Table from '@mui/material/Table';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import MoreVertIcon from '@mui/icons-material/DragHandleOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
+import { Chip, CircularProgress, Typography } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { Box, Chip, CircularProgress, Divider, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import Button from '../components/Button';
+import React from 'react';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Link } from 'react-router-dom';
-import { startCase } from 'lodash';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -34,16 +32,17 @@ export const DraggableDataTable = ({
   initialDataList,
   columns,
   title,
-  setOpenEditForm,
+
   setOpenDeleteModal,
   onDeleteBtnClick,
-  setEditFormData,
+
   onListSort,
   draggable = false,
   deleteByEmail = false,
   viewCompany = false,
   subHeader = [],
-  deletable = true
+  deletable = true,
+  setProcessRegistrationAndEditStats
 }) => {
   const onDragEnd = (result) => {
     if (!result.destination) {
@@ -89,8 +88,7 @@ export const DraggableDataTable = ({
                         sx={{
                           fontSize: '12px',
                           fontWeight: '550',
-                          height: 20,
-                         
+                          height: 20
                         }}>
                         {field.name}
                       </TableCell>
@@ -178,8 +176,9 @@ export const DraggableDataTable = ({
                                 <EditOutlinedIcon
                                   style={{ cursor: 'pointer' }}
                                   onClick={() => {
-                                    setEditFormData(rowItem);
-                                    setOpenEditForm(true);
+                                    setProcessRegistrationAndEditStats(rowItem);
+                                    // setEditFormData(rowItem);
+                                    // setOpenEditForm(true);
                                   }}
                                 />
                                 {viewCompany && (

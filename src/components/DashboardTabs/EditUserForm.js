@@ -1,59 +1,28 @@
-import * as React from 'react';
+import { CircularProgress, Grid } from '@mui/material';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useDispatch, useSelector } from 'react-redux';
-import { CircularProgress, Grid } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import * as React from 'react';
 import { useEffect } from 'react';
-import formReducer from './reducers/formReducer';
+import { useDispatch, useSelector } from 'react-redux';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { updateUser, fetchUsers, reset } from '../../features/users/userSlice';
+import { fetchUsers, reset, updateUser } from '../../features/users/userSlice';
 
 export default function Edit(props) {
   const dispatch = useDispatch();
-  const { openEditForm, setOpenEditForm, editFormData } = props;
-  const initialFormState = {
-    name: editFormData.name ? editFormData.name : '',
-    email: editFormData.email ? editFormData.email : '',
-    phone: editFormData.phone ? editFormData.phone : '',
-    role: 'Admin'
-  };
-  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
+  const { userRegistrationAndEditStats, setUserRegistrationAndEditStats, onUserFormClose } = props;
 
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const { isUpdated, isUpdating } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    Object.keys(editFormData).forEach((key) => {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: key,
-        payload: key === 'role' ? 'Admin' : editFormData[key]
-      });
-    });
-  }, [editFormData]);
-
-  const handleTextChange = (e) => {
-    dispatchNew({
-      type: 'HANDLE_FORM_INPUT',
-      field: e.target.name,
-      payload: e.target.value
-    });
-  };
-  const handleClose = () => {
-    setOpenEditForm(false);
-    Object.keys(formState).forEach((key) => {
-      formState[key] = '';
-    });
-  };
-
   const handleEdit = (e) => {
     e.preventDefault();
     const formStateWithToken = {
-      ...formState,
+      ...userRegistrationAndEditStats,
+
       token: userDetail.token
     };
     if (!formStateWithToken.name || !formStateWithToken.email) {
@@ -70,7 +39,7 @@ export default function Edit(props) {
 
   useEffect(() => {
     if (isUpdated) {
-      setOpenEditForm(false);
+      onUserFormClose();
       dispatch(
         showMessage({
           message: 'User updated successfully',
@@ -83,7 +52,12 @@ export default function Edit(props) {
   }, [isUpdated]);
   return (
     <div>
-      <Dialog open={openEditForm} onClose={handleClose}>
+      <Dialog
+        open={
+          userRegistrationAndEditStats !== null &&
+          Object.keys(userRegistrationAndEditStats).includes('_id')
+        }
+        onClose={onUserFormClose}>
         <DialogTitle>
           Edit User
           <CircularProgress style={{ display: isUpdating ? 'block' : 'none' }} size={25} />
@@ -96,11 +70,13 @@ export default function Edit(props) {
                 name='name'
                 required
                 fullWidth
-                placeholder={editFormData.name}
                 id='name'
                 autoFocus
-                value={formState.name}
-                onChange={(e) => handleTextChange(e)}
+                value={userRegistrationAndEditStats?.name}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.name = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -109,11 +85,13 @@ export default function Edit(props) {
                 name='email'
                 required
                 fullWidth
-                placeholder={editFormData.email}
                 id='email'
                 autoFocus
-                value={formState.email}
-                onChange={(e) => handleTextChange(e)}
+                value={userRegistrationAndEditStats?.email}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.email = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -122,11 +100,13 @@ export default function Edit(props) {
                 name='phone'
                 required
                 fullWidth
-                placeholder={editFormData.phone}
                 id='phone'
                 autoFocus
-                value={formState.phone}
-                onChange={(e) => handleTextChange(e)}
+                value={userRegistrationAndEditStats?.phone}
+                onChange={(e) => {
+                  userRegistrationAndEditStats.phone = e.target.value;
+                  setUserRegistrationAndEditStats({ ...userRegistrationAndEditStats });
+                }}
                 InputLabelProps={{
                   style: { color: '#988817' }
                 }}
@@ -135,7 +115,7 @@ export default function Edit(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onUserFormClose}>Cancel</Button>
           <Button
             disabled={isUpdating}
             type='submit'
