@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const endpoint = 'https://painting-app-backend.herokuapp.com/organizations';
+const endpoint = 'http://localhost:5001';
 
-const CREATE_ORGS = `${endpoint}/`;
-const FETCH_ORGS = `${endpoint}/search`;
-const UPDATE_ORG = `${endpoint}/`;
-const DELETE_ORG = `${endpoint}/`;
+const CREATE_ORGS = `${endpoint}/organizations`;
+const FETCH_ORGS = `${endpoint}/organizations/search`;
+const UPDATE_ORG = `${endpoint}/organizations`;
+const DELETE_ORG = `${endpoint}/organizations`;
 
 // const {token} = JSON.parse(localStorage.getItem("user"));
 
@@ -33,6 +33,7 @@ const fetchSingleOrg = async (userData) => {
 };
 
 const createOrgs = async (userData) => {
+  console.log(userData, 'userData');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -52,7 +53,8 @@ const updateOrg = async (userData) => {
     }
   };
   delete userData.token;
-  const response = await axios.put(`${UPDATE_ORG}${userData.id}`, userData, config);
+  const response = await axios.put(`${UPDATE_ORG}/${userData.id}`, userData, config);
+  console.log(response, 'response');
   return response.data;
 };
 
@@ -64,7 +66,7 @@ const deleteOrg = async (userData) => {
     }
   };
   delete userData.token;
-  const response = await axios.delete(`${DELETE_ORG}${userData.id}`, config);
+  const response = await axios.delete(`${DELETE_ORG}/${userData.id}`, config);
   return response.data;
 };
 

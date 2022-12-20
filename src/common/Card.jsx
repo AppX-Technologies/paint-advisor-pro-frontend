@@ -4,17 +4,20 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { cloneDeep } from 'lodash';
+import { CURRENT_TOTAL_DESCRIPTION, NONPAINTABLEAREAFIELD } from '../helpers/contants';
 
 const Card = ({
   items,
   title,
-  onCardDelete,
   field,
   totalArea = 0,
   setRoomInfoToEdit,
   onopenAddMoreDetailsChange,
   setOpenDeleteModal,
-  setCurentAddMore
+  setCurentAddMore,
+  setitemToBeDeleted,
+  roomFormValue
 }) => {
   const dimension = useMemo(() => {
     return `${items.length}x${items.height ? items.height : items.width}`;
@@ -23,7 +26,7 @@ const Card = ({
   return (
     <Box
       className='card-box'
-      bgcolor={items.isTotal ? '#f0f0f0' : '#faf2f0'}
+      bgcolor={items.description === CURRENT_TOTAL_DESCRIPTION ? '#faf2ff' : '#faf2f0'}
       p={1}
       sx={{
         height: field === 'nonPaintableAreas' ? '30px' : 'auto',
@@ -37,8 +40,7 @@ const Card = ({
 
         {/* Action */}
         {field !== 'nonPaintableAreas' && (
-          <>
-            <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex' }}>
               {items.paint && (
                 <FormatPaintIcon
                   sx={{
@@ -59,7 +61,7 @@ const Card = ({
                     cursor: 'pointer'
                   }}
                   onClick={() => {
-                    setRoomInfoToEdit({ ...items, _id: null });
+                    setRoomInfoToEdit({ ...cloneDeep(items), edit: false });
                     onopenAddMoreDetailsChange(true);
                     setCurentAddMore(field);
                   }}
@@ -76,7 +78,7 @@ const Card = ({
                   }}
                   size='small'
                   onClick={() => {
-                    setRoomInfoToEdit({ ...items });
+                    setRoomInfoToEdit({ ...cloneDeep(items), edit: true });
                     onopenAddMoreDetailsChange(true);
                     setCurentAddMore(field);
                   }}
@@ -92,30 +94,43 @@ const Card = ({
                   size='small'
                   onClick={() => {
                     setCurentAddMore(field);
-                    onCardDelete(items._id, field);
                     setOpenDeleteModal(true);
+                    setitemToBeDeleted({ title, field, roomFormValue });
                   }}
                 />
               </Tooltip>
             </Box>
-          </>
         )}
       </Box>
       {/* Body-section */}
 
-      {field !== 'nonPaintableAreas' ? (
+      {field !== NONPAINTABLEAREAFIELD ? (
         <>
           {Object.keys(items)
             .filter((x) => x === 'coats')
             .map((item) => {
               return (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>{item}</Typography>
+                  <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Coat</Typography>
 
                   <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
                     {items[item]}
                   </Typography>
                 </Box>
+              );
+            })}
+
+          {Object.keys(items)
+            ?.filter((x) => x === 'wallInfo')
+            ?.map((item) => {
+              return (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Wall</Typography>
+
+                    <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
+                      {items[item]}
+                    </Typography>
+                  </Box>
               );
             })}
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -126,8 +141,7 @@ const Card = ({
           </Box>
         </>
       ) : (
-        <>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Tooltip title={items.description} placement='top'>
               <Typography sx={{ fontSize: '14px', mb: 2, color: '#736f6f', fontWeight: '600' }}>
                 {items.description.length >= 15
@@ -137,7 +151,7 @@ const Card = ({
               </Typography>
             </Tooltip>
             <Typography sx={{ fontSize: '14px', mb: 2, color: '#736f6f', fontWeight: '600' }}>
-              {items.isTotal ? totalArea : items.area}
+              {items.description === CURRENT_TOTAL_DESCRIPTION ? totalArea : items.area}
             </Typography>
             <Box sx={{ display: 'flex' }}>
               {items.paint && (
@@ -151,7 +165,7 @@ const Card = ({
                   size='small'
                 />
               )}
-              {!items.isTotal && (
+              {items.description !== CURRENT_TOTAL_DESCRIPTION && (
                 <>
                   <Tooltip title='Clone' placement='top'>
                     <ContentCopyIcon
@@ -162,7 +176,7 @@ const Card = ({
                         cursor: 'pointer'
                       }}
                       onClick={() => {
-                        setRoomInfoToEdit({ ...items, _id: null });
+                        setRoomInfoToEdit({ ...cloneDeep(items), edit: false });
                         onopenAddMoreDetailsChange(true);
                         setCurentAddMore(field);
                       }}
@@ -179,7 +193,7 @@ const Card = ({
                       }}
                       size='small'
                       onClick={() => {
-                        setRoomInfoToEdit({ ...items });
+                        setRoomInfoToEdit({ ...cloneDeep(items), edit: true });
                         onopenAddMoreDetailsChange(true);
                         setCurentAddMore(field);
                       }}
@@ -195,8 +209,8 @@ const Card = ({
                       size='small'
                       onClick={() => {
                         setCurentAddMore(field);
-                        onCardDelete(items._id, field);
                         setOpenDeleteModal(true);
+                        setitemToBeDeleted({ title: items.description, field, roomFormValue });
                       }}
                     />
                   </Tooltip>
@@ -204,7 +218,6 @@ const Card = ({
               )}
             </Box>
           </Box>
-        </>
       )}
     </Box>
   );

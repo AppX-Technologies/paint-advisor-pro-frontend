@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 // reminder to edit this after api is ready
-const endpoint = process.env.REACT_APP_API_BASE_URL_USERS;
-const REGISTRATION_OTP = `${endpoint}/generate-registration-otp`;
-const FORGOT_PASSWORD_OTP = `${endpoint}/send-password-reset-link`;
-const RESET_PASSWORD = `${endpoint}/reset-password`;
-const REGISTER_URL = `${endpoint}/register`;
-const LOGIN_URL = `${endpoint}/login`;
+const endpoint = process.env.REACT_APP_API_BASE_URL;
+const REGISTRATION_OTP = `${endpoint}/users/generate-registration-otp`;
+const FORGOT_PASSWORD_OTP = `${endpoint}/users/send-password-reset-link`;
+const RESET_PASSWORD = `${endpoint}/users/reset-password`;
+const REGISTER_URL = `${endpoint}/users/register`;
+const LOGIN_URL = `${endpoint}/users/login`;
 
 const generateRegistrationOtp = async (userData) => {
   const response = await axios.post(REGISTRATION_OTP, userData);

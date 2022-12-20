@@ -7,15 +7,13 @@ const SearchListItems = ({ selectedListItem, onSelecetedListItemChange, idx, cli
     <>
       <Box
         mt={idx === 0 ? 1 : 0}
-        onClick={() => onSelecetedListItemChange(client.customerName)}
-        bgcolor={selectedListItem === client.customerName ? '#D50000' : '#F5F5F5'}
-        color={selectedListItem === client.customerName ? 'white' : 'dark'}
+        onClick={() => onSelecetedListItemChange(client._id)}
+        bgcolor={selectedListItem === client._id ? '#D50000' : 'background.paper'}
+        color={selectedListItem === client._id ? 'white' : 'dark'}
         sx={{ cursor: 'pointer' }}>
         <Divider light />
         <ListItem>
-          <Typography sx={{ fontSize: '14px' }}>
-            {convertStringCase(client ? client.customerName : '')}
-          </Typography>
+          <Typography sx={{ fontSize: '14px' }}>{client ? client.name : ''}</Typography>
         </ListItem>
       </Box>
     </>

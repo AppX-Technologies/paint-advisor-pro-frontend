@@ -8,8 +8,11 @@ import CompanyRouteLayout from '../layouts/CompanyRouteLayout';
 import ProtectedRouteLayout from '../layouts/ProtectedRouteLayout';
 import PublicRouteLayout from '../layouts/PublicRouteLayout';
 import Dashboard from '../pages/Dashboard';
+import { Equipments } from '../pages/Equipments';
 import Login from '../pages/Login';
+import Materials from '../pages/Materials';
 import { Processes } from '../pages/Processes';
+import ProductionRate from '../pages/ProductionRate';
 import RegisterPage from '../pages/Register';
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
@@ -34,6 +37,9 @@ const AppRoutes = () => {
           <Route element={<AdminRouteLayout />}>
             <Route path='dashboard' element={<Dashboard />} />
             <Route path='processes' element={<Processes />} />
+            <Route path='production-rates' element={<ProductionRate />} />
+            <Route path='paint' element={<Materials />} />
+            <Route path='equipments' element={<Equipments />} />
           </Route>
           <Route path='company'>
             <Route path=':companyId'>

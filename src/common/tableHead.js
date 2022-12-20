@@ -85,6 +85,7 @@ export const companyUserColumns = () => {
     }
   ];
 };
+
 export const processColumn = () => {
   return [
     {
@@ -96,6 +97,40 @@ export const processColumn = () => {
       name: 'description',
       label: 'Process Description',
       width: '50%'
+    }
+  ];
+};
+export const materialColumn = () => {
+  return [
+    {
+      name: 'description',
+      label: 'Paint Description',
+      width: '20%'
+    },
+    {
+      name: 'unit',
+      label: 'Unit',
+      width: '20%'
+    },
+    {
+      name: 'unitPrice',
+      label: 'Price Per Unit',
+      width: '20%'
+    },
+    {
+      name: 'appliesTo',
+      label: 'Applies To',
+      width: '50%'
+    }
+  ];
+};
+
+export const equipmentColumn = () => {
+  return [
+    {
+      name: 'description',
+      label: 'Equipment Description',
+      width: '40%'
     }
   ];
 };

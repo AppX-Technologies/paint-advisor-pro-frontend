@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
 import { companyColumns } from '../../common/tableHead';
@@ -11,15 +11,15 @@ import EditOrgForm from './EditOrgForm';
 import FormDialog from './OrgRegisterForm';
 
 const Companies = () => {
-  const dispatch = useDispatch();
+  const [companiesRegistrationAndEditStats, setCompaniesRegistrationAndEditStats] = useState(null);
   const { orgList, isDeleting, isLoading, isDeleted } = useSelector((state) => state.org);
-  const [open, setOpen] = React.useState(false);
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData, setEditFormData] = React.useState([]);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [userId, setUserId] = React.useState('');
 
+  const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(fetchOrgs(userDetail.token));
   }, []);
@@ -45,13 +45,19 @@ const Companies = () => {
   };
   const columns = companyColumns();
 
+  const onCompanyFormClose = () => {
+    setCompaniesRegistrationAndEditStats(null);
+  };
+
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <CustomButton
           variant='contained'
           sx={{ mb: 2 }}
-          onClick={() => setOpen(true)}
+          onClick={() =>
+            setCompaniesRegistrationAndEditStats({ name: '', email: '', address: '', phone: '' })
+          }
           disabled={isLoading}>
           Create
         </CustomButton>
@@ -61,6 +67,7 @@ const Companies = () => {
         initialDataList={orgList}
         isLoading={isLoading}
         columns={columns}
+        setProcessRegistrationAndEditStats={setCompaniesRegistrationAndEditStats}
         title='Company List'
         setEditFormData={setEditFormData}
         setOpenEditForm={setOpenEditForm}
@@ -69,11 +76,15 @@ const Companies = () => {
         viewCompany
       />
 
-      <FormDialog open={open} setOpen={setOpen} />
+      <FormDialog
+        companiesRegistrationAndEditStats={companiesRegistrationAndEditStats}
+        setCompaniesRegistrationAndEditStats={setCompaniesRegistrationAndEditStats}
+        onCompanyFormClose={onCompanyFormClose}
+      />
       <EditOrgForm
-        openEditForm={openEditForm}
-        setOpenEditForm={setOpenEditForm}
-        editFormData={editFormData}
+        companiesRegistrationAndEditStats={companiesRegistrationAndEditStats}
+        setCompaniesRegistrationAndEditStats={setCompaniesRegistrationAndEditStats}
+        onCompanyFormClose={onCompanyFormClose}
       />
       <DeleteModal
         openDeleteModal={openDeleteModal}

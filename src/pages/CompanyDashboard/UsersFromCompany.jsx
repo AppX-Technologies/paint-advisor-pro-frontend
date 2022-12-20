@@ -24,7 +24,7 @@ const UsersFromCompany = () => {
   const { companyMadeByUsers, isDeleting, isLoading, isDeleted } = useSelector(
     (state) => state.usersFromCompany
   );
-  const [open, setOpen] = React.useState(false);
+  const [userRegistrationAndEditStats, setUserRegistrationAndEditStats] = useState(null);
   const [openEditForm, setOpenEditForm] = React.useState(false);
   const [editFormData, setEditFormData] = React.useState([]);
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
@@ -41,7 +41,6 @@ const UsersFromCompany = () => {
       );
     }
   }, []);
-
   React.useEffect(() => {
     if (isDeleted) {
       dispatch(
@@ -69,50 +68,61 @@ const UsersFromCompany = () => {
     editFormData
   });
 
+  const onUserFormClose = () => {
+    setUserRegistrationAndEditStats(null);
+  };
+
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <CustomButton
-          variant='contained'
-          sx={{ mt: 3, mb: 2 }}
-          onClick={() => setOpen(true)}
-          disabled={isLoading}>
-          Create
-        </CustomButton>
-      </Box>
+      <Box sx={{ p: '24px' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <CustomButton
+            variant='contained'
+            sx={{ mt: 3, mb: 2 }}
+            onClick={() => {
+              setUserRegistrationAndEditStats({ name: '', email: '', phone: '', role: '' });
+            }}
+            disabled={isLoading}>
+            Create
+          </CustomButton>
+        </Box>
 
-      <DraggableDataTable
-        initialDataList={companyMadeByUsers.map((org) => {
-          return {
-            _id: org._id,
-            name: org.name,
-            email: org.email,
-            phone: org.phone,
-            role: org.role,
-            proficiency: org.proficiency,
-            organization: org.organization ? org.organization.name : '',
-            status: org.active
-          };
-        })}
-        isLoading={isLoading}
-        columns={columns}
-        title='Users List'
-        setEditFormData={setEditFormData}
-        setOpenEditForm={setOpenEditForm}
-        setOpenDeleteModal={setOpenDeleteModal}
-        onDeleteBtnClick={onDeleteBtnClick}
-        deleteByEmail
+        <DraggableDataTable
+          initialDataList={companyMadeByUsers.map((org) => {
+            return {
+              _id: org._id,
+              name: org.name,
+              email: org.email,
+              phone: org.phone,
+              role: org.role,
+              proficiency: org.proficiency,
+              organization: org.organization ? org.organization.name : '',
+              status: org.active
+            };
+          })}
+          isLoading={isLoading}
+          columns={columns}
+          title='Users List'
+          setProcessRegistrationAndEditStats={setUserRegistrationAndEditStats}
+          setOpenDeleteModal={setOpenDeleteModal}
+          onDeleteBtnClick={onDeleteBtnClick}
+          deleteByEmail
+        />
+      </Box>
+      <CreateUserForm
+        orgId={orgId}
+        userRegistrationAndEditStats={userRegistrationAndEditStats}
+        setUserRegistrationAndEditStats={setUserRegistrationAndEditStats}
+        onUserFormClose={onUserFormClose}
       />
 
-      <CreateUserForm open={open} setOpen={setOpen} orgId={orgId} />
-      {openEditForm && (
-        <EditUserForm
-          editFormData={editFormData}
-          openEditForm={openEditForm}
-          setOpenEditForm={setOpenEditForm}
-          orgId={orgId}
-        />
-      )}
+      <EditUserForm
+        orgId={orgId}
+        userRegistrationAndEditStats={userRegistrationAndEditStats}
+        setUserRegistrationAndEditStats={setUserRegistrationAndEditStats}
+        onUserFormClose={onUserFormClose}
+      />
+
       <DeleteModal
         openDeleteModal={openDeleteModal}
         setOpenDeleteModal={setOpenDeleteModal}

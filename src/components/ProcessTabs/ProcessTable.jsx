@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
 import { processColumn } from '../../common/tableHead';
@@ -13,37 +13,34 @@ import FormDialog from './ProcessReg';
 import StageTab from './StageTab';
 
 const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
+  const [processRegistrationAndEditStats, setProcessRegistrationAndEditStats] = useState(null);
   const dispatch = useDispatch();
-  const { processList, isDeleting, isLoading, isDeleted, isSuccess } = useSelector(
-    (state) => state.process
-  );
+  const { processList, isDeleting, isLoading, isSuccess } = useSelector((state) => state.process);
   const [stageValue, setStageValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setStageValue(newValue);
   };
-  const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
-  const [processDataList, setProcessDataList] = useState([]);
-  const [openEditForm, setOpenEditForm] = useState(false);
-  const [editFormData, setEditFormData] = useState([]);
+
   const [filteredProcesses, setFilteredProcesses] = useState([]);
   const [processId, setProcessId] = useState('');
-  const [open, setOpen] = useState(false);
 
   const onDeleteBtnClick = (e, getId) => {
     e.stopPropagation();
     setProcessId(getId);
   };
   const columns = processColumn();
-
   const resortProcesses = (sortedList, originalProcessList) => {
-    if (!sortedList.length) return originalProcessList;
+    if (!sortedList?.length) return originalProcessList;
 
     const currentBidTypeAndStageRemoved = originalProcessList.filter(
       (item) => !sortedList.map((p) => p._id).includes(item._id)
     );
     return [...currentBidTypeAndStageRemoved, ...sortedList];
+  };
+  const onProcessFormClose = () => {
+    setProcessRegistrationAndEditStats(null);
   };
 
   const onListSort = (dataList) => {
@@ -61,7 +58,7 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      setOpen(false);
+      onProcessFormClose();
       setOpenDeleteModal(false);
       dispatch(
         showMessage({
@@ -84,6 +81,22 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
     }
   }, [processList, filterValue, stageValue]);
 
+  let stageCategory;
+  if (stageValue === 0) {
+    stageCategory = 'Preparation';
+  } else if (stageValue === 1) {
+    stageCategory = 'Painting';
+  } else {
+    stageCategory = 'Cleanup';
+  }
+  const initialprocessRegistrationAndEditStats = useMemo(() => {
+    return {
+      stage: stageCategory,
+      bidType: filterValue,
+      description: ''
+    };
+  }, [filterValue, stageCategory]);
+
   return (
     <>
       <Box
@@ -95,7 +108,14 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
         }}>
         <StageTab stage={stageValue} onTabChange={handleChange} />
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <CustomButton variant='contained' onClick={() => setOpen(true)} sx={{ height: '47px' }}>
+          <CustomButton
+            variant='contained'
+            onClick={() => {
+              setProcessRegistrationAndEditStats({
+                ...initialprocessRegistrationAndEditStats
+              });
+            }}
+            sx={{ height: '47px' }}>
             Create
           </CustomButton>
         </Box>
@@ -113,13 +133,10 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
             };
           })
         }
+        setProcessRegistrationAndEditStats={setProcessRegistrationAndEditStats}
         isLoading={isLoading}
         columns={columns}
-        dataList={processDataList}
-        setDataList={setProcessDataList}
         title='Processes List'
-        setEditFormData={setEditFormData}
-        setOpenEditForm={setOpenEditForm}
         setOpenDeleteModal={setOpenDeleteModal}
         onDeleteBtnClick={onDeleteBtnClick}
         onListSort={onListSort}
@@ -127,11 +144,10 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
       />
 
       <FormDialog
-        open={open}
-        setOpen={setOpen}
-        stageType={stageValue}
-        bidType={filterValue}
         filteredProcesses={filteredProcesses}
+        processRegistrationAndEditStats={processRegistrationAndEditStats}
+        setProcessRegistrationAndEditStats={setProcessRegistrationAndEditStats}
+        onProcessFormClose={onProcessFormClose}
       />
       <DeleteModal
         openDeleteModal={openDeleteModal}
@@ -149,11 +165,11 @@ const ProcessTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
         deleteMethod={createProcess}
       />
       <Edit
-        openEditForm={openEditForm}
-        setOpenEditForm={setOpenEditForm}
-        editFormData={editFormData}
         bidType={filterValue}
         filteredProcesses={filteredProcesses}
+        processRegistrationAndEditStats={processRegistrationAndEditStats}
+        onProcessFormClose={onProcessFormClose}
+        setProcessRegistrationAndEditStats={setProcessRegistrationAndEditStats}
       />
     </>
   );

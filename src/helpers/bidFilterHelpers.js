@@ -6,3 +6,30 @@ export const filterProcessByBid = (processList, bidType, stage) => {
     });
   return filteredProcessList;
 };
+
+export const filterMaterialByBid = (list, bidType) => {
+  const filteredList =
+    list[0] &&
+    list[0]?.materials.filter((material) => {
+      return material.bidType === bidType;
+    });
+  return filteredList;
+};
+
+export const filterProductionRateByBid = (bidType, list = []) => {
+  const filteredList =
+    list &&
+    list?.filter((productionRate) => {
+      return productionRate.bidType === bidType;
+    });
+  return filteredList;
+};
+
+export const filterEquipmentByBid = (equipmentlList, bidType) => {
+  const filteredEquipmentList =
+    equipmentlList[0] &&
+    equipmentlList[0]?.equipments.filter((equipment) => {
+      return equipment.bidType === bidType;
+    });
+  return filteredEquipmentList;
+};

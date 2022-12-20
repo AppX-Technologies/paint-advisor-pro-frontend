@@ -3,6 +3,7 @@ import {
   FormControl,
   Grid,
   InputLabel,
+  LinearProgress,
   MenuItem,
   Select,
   Toolbar,
@@ -16,62 +17,91 @@ import TextField from '@mui/material/TextField';
 import { DateTimePicker, DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { AddNewClientTextField } from '../../../common/FormTextField';
+import { isSystemUser } from '../../../helpers/roles';
+import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
-import { createClient } from '../bidsSlice';
-import { findSameTypeOfWall } from './forms/formHelper';
+import { createClient, reset, updateClient } from '../bidsSlice';
 
-export default function AddNewClientForm(props) {
-  const { open, handleClose, selectedValue, setSelectedvalue, initialState } = props;
-
+export default function AddNewClientForm({
+  handleNewClientFormClose,
+  clientAdditionStats,
+  setClientAdditionStats
+}) {
   const dispatch = useDispatch();
+  const { isLoading, isSuccess } = useSelector((state) => state.bids);
+  const { user } = useSelector(authSelector);
+  const { companyId } = useParams();
+
+  const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
 
   const handleFormSubmission = () => {
-    const emptyFields = Object.keys(selectedValue).some((item) => selectedValue[item] === '');
+    const emptyFields = Object.keys(clientAdditionStats).find(
+      (item) => clientAdditionStats[item] === ''
+    );
     if (emptyFields) {
       return dispatch(
         showMessage({
-          message: 'Fields Cannot Be Empty',
+          message: `'${emptyFields.toUpperCase()}' Field Cannot Be Empty`,
           severity: 'error'
         })
       );
     }
 
-    handleClose();
-    dispatch(createClient(selectedValue));
-    setSelectedvalue(initialState);
+    if (clientAdditionStats._id) {
+      delete clientAdditionStats.comments;
+      dispatch(
+        updateClient({ ...clientAdditionStats, id: clientAdditionStats._id, token: user.token })
+      );
+    } else {
+      dispatch(createClient({ ...clientAdditionStats, organization: orgId, token: user.token }));
+    }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      handleNewClientFormClose();
+      dispatch(reset());
+    }
+  }, [isSuccess]);
 
   return (
     <div>
-      <Dialog fullScreen open={open} onClose={handleClose}>
+      <Dialog fullScreen open={clientAdditionStats !== null} onClose={handleNewClientFormClose}>
         <Toolbar sx={{ backgroundColor: '#D50000' }}>
           <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
-            Add New Client
+            {clientAdditionStats?._id ? 'Edit' : 'Add New'} Client{' '}
           </Typography>
+
           <Button
             variant='contained'
             color='info'
+            disabled={isLoading}
             style={{
               height: '30px',
               padding: '3px'
             }}
-            onClick={handleClose}>
+            onClick={handleNewClientFormClose}>
             Close <CloseIcon sx={{ height: '15px' }} />
           </Button>
         </Toolbar>
+        {isLoading && <LinearProgress color='success' />}
 
         <DialogContent>
           <Grid container spacing={2}>
-            {AddNewClientTextField.map((item) => {
-              const fieldType = item.name;
+            {AddNewClientTextField.filter(
+              (clientField) => clientField.name !== 'estimateScheduledDate'
+            ).map((item) => {
+              const fieldType = item?.name;
               return (
-                (item.dataType === 'text' && (
+                (item?.dataType === 'text' && (
                   <Grid item xs={10} md={item.resizeable ? 1.33 : 4} sx={{ marginTop: '-10px' }}>
                     <>
                       <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                        {item.label}
+                        {item?.label}
                       </InputLabel>
 
                       <TextField
@@ -81,21 +111,21 @@ export default function AddNewClientForm(props) {
                             width: item.resizeable ? '130px' : 'auto'
                           }
                         }}
-                        name={item.name}
+                        name={item?.name}
                         fullWidth
                         variant='outlined'
                         id='outlined-basic'
                         autoFocus
-                        value={selectedValue[fieldType]}
+                        value={clientAdditionStats?.[fieldType]}
                         onChange={(event) => {
-                          selectedValue[fieldType] = event.target.value;
-                          setSelectedvalue({ ...selectedValue });
+                          clientAdditionStats[fieldType] = event.target.value;
+                          setClientAdditionStats({ ...clientAdditionStats });
                         }}
                       />
                     </>
                   </Grid>
                 )) ||
-                (item.dataType === 'dropDown' && (
+                (item?.dataType === 'dropDown' && (
                   <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
                     <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                       {item.label}
@@ -106,11 +136,11 @@ export default function AddNewClientForm(props) {
                         sx={{ height: '30px' }}
                         labelId='demo-select-small'
                         id='demo-select-small'
-                        name={item.name}
-                        value={selectedValue[fieldType]}
+                        name={item?.name}
+                        value={clientAdditionStats?.[fieldType]}
                         onChange={(event) => {
-                          selectedValue[fieldType] = event.target.value;
-                          setSelectedvalue({ ...selectedValue });
+                          clientAdditionStats[fieldType] = event.target.value;
+                          setClientAdditionStats({ ...clientAdditionStats });
                         }}>
                         {item.option.map((o) => {
                           return <MenuItem value={o}>{o}</MenuItem>;
@@ -130,17 +160,17 @@ export default function AddNewClientForm(props) {
                           style: { height: '30px' }
                         }}
                         inputFormat='MM/DD/YYYY'
-                        value={selectedValue[fieldType]}
+                        value={clientAdditionStats?.[fieldType]}
                         onChange={(event) => {
-                          selectedValue[fieldType] = event.target.value;
-                          setSelectedvalue({ ...selectedValue });
+                          clientAdditionStats[fieldType] = event.target.value;
+                          setClientAdditionStats({ ...clientAdditionStats });
                         }}
                         renderInput={(params) => <TextField {...params} fullWidth />}
                       />
                     </LocalizationProvider>
                   </Grid>
                 )) ||
-                (item.dataType === 'dateTime' && (
+                (item?.dataType === 'dateTime' && (
                   <Grid item xs={4} md={4} sx={{ marginTop: '-10px' }}>
                     <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
                       {item.label}
@@ -150,10 +180,10 @@ export default function AddNewClientForm(props) {
                         InputProps={{
                           style: { height: '30px' }
                         }}
-                        value={selectedValue[fieldType]}
+                        value={clientAdditionStats?.[fieldType]}
                         onChange={(event) => {
-                          selectedValue[fieldType] = event.target.value;
-                          setSelectedvalue({ ...selectedValue });
+                          clientAdditionStats[fieldType] = event.target.value;
+                          setClientAdditionStats({ ...clientAdditionStats });
                         }}
                         renderInput={(params) => <TextField {...params} fullWidth />}
                       />
@@ -165,8 +195,14 @@ export default function AddNewClientForm(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type='submit' variant='contained' onClick={handleFormSubmission}>
+          <Button onClick={handleNewClientFormClose} disabled={isLoading}>
+            Cancel
+          </Button>
+          <Button
+            type='submit'
+            variant='contained'
+            disabled={isLoading}
+            onClick={handleFormSubmission}>
             Save
           </Button>
         </DialogActions>

@@ -1,29 +1,23 @@
-import React from 'react';
+import { Box } from '@mui/material';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import CustomButton from '../Button';
-import CreateUserForm from './UserRegisterForm';
-import EditUserForm from './EditUserForm';
-import { deleteUser, fetchUsers, reset } from '../../features/users/userSlice';
-import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { userColumn } from '../../common/tableHead';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
+import { userColumn } from '../../common/tableHead';
+import { showMessage } from '../../features/snackbar/snackbarSlice';
+import { deleteUser, fetchUsers, reset } from '../../features/users/userSlice';
+import CustomButton from '../Button';
 import { DeleteModal } from '../delete-model/DeleteModel';
+import EditUserForm from './EditUserForm';
+import CreateUserForm from './UserRegisterForm';
 
 const Users = () => {
-  const dispatch = useDispatch();
+  const [userRegistrationAndEditStats, setUserRegistrationAndEditStats] = useState(null);
   const { userList, isDeleting, isLoading, isDeleted } = useSelector((state) => state.user);
-  const [open, setOpen] = React.useState(false);
-  const [openEditForm, setOpenEditForm] = React.useState(false);
-  const [editFormData, setEditFormData] = React.useState([]);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [emailId, setEmailId] = React.useState('');
+
+  const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(fetchUsers(userDetail.token));
   }, []);
@@ -41,55 +35,27 @@ const Users = () => {
       dispatch(reset());
     }
   }, [isDeleted]);
+  console.log(userList, 'userList');
 
-  // set email on click
   const onDeleteBtnClick = (e, email) => {
     e.stopPropagation();
     setEmailId(email);
   };
   const columns = userColumn();
 
-  //   function DeleteModal() {
-  //     const handleClose = () => {
-  //       setOpenDeleteModal(false);
-  //     };
-  //     const handleDelete = () => {
-  //       dispatch(deleteUser({ email: emailId, token: userDetail.token }));
-  //     };
-
-  //     return (
-  //       <Dialog open={openDeleteModal} onClose={handleClose}>
-  //         <DialogTitle>
-  //           <Stack direction='row' spacing={2}>
-  //             <Typography variant='h6'>Delete user</Typography>
-
-  //             <CircularProgress
-  //               color='primary'
-  //               size={25}
-  //               style={{ display: isDeleting ? 'block' : 'none' }}
-  //             />
-  //           </Stack>
-  //         </DialogTitle>
-  //         <DialogContent>
-  //           <DialogContentText>Are you sure you want to delete this user?</DialogContentText>
-  //         </DialogContent>
-  //         <DialogActions>
-  //           <Button onClick={handleClose}>Cancel</Button>
-  //           <Button onClick={handleDelete} disabled={isDeleting}>
-  //             Delete
-  //           </Button>
-  //         </DialogActions>
-  //       </Dialog>
-  //     );
-  //   }
+  const onUserFormClose = () => {
+    setUserRegistrationAndEditStats(null);
+  };
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <Box
+        className='abcdefgh'
+        sx={{ display: 'flex', justifyContent: 'flex-end', padding: '24px' }}>
         <CustomButton
           variant='contained'
           sx={{ mb: 2 }}
-          onClick={() => setOpen(true)}
+          onClick={() => setUserRegistrationAndEditStats({ name: '', email: '', phone: '' })}
           disabled={isLoading}>
           Create
         </CustomButton>
@@ -104,21 +70,24 @@ const Users = () => {
             phone: userData.phone
           };
         })}
+        setProcessRegistrationAndEditStats={setUserRegistrationAndEditStats}
         isLoading={isLoading}
         columns={columns}
         title='Users List'
-        setEditFormData={setEditFormData}
-        setOpenEditForm={setOpenEditForm}
         setOpenDeleteModal={setOpenDeleteModal}
         onDeleteBtnClick={onDeleteBtnClick}
         deleteByEmail
       />
 
-      <CreateUserForm open={open} setOpen={setOpen} />
+      <CreateUserForm
+        userRegistrationAndEditStats={userRegistrationAndEditStats}
+        setUserRegistrationAndEditStats={setUserRegistrationAndEditStats}
+        onUserFormClose={onUserFormClose}
+      />
       <EditUserForm
-        editFormData={editFormData}
-        openEditForm={openEditForm}
-        setOpenEditForm={setOpenEditForm}
+        userRegistrationAndEditStats={userRegistrationAndEditStats}
+        setUserRegistrationAndEditStats={setUserRegistrationAndEditStats}
+        onUserFormClose={onUserFormClose}
       />
       <DeleteModal
         openDeleteModal={openDeleteModal}

@@ -1,51 +1,48 @@
-import {
-  Checkbox,
-  CircularProgress,
-  FormControlLabel,
-  Grid,
-  Stack,
-  Typography
-} from '@mui/material';
+import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { startCase } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createOrgs, fetchOrgs, reset } from '../../features/org/orgSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import formReducer from './reducers/formReducer';
 
-const initialFormState = {
-  name: '',
-  email: '',
-  address: '',
-  phone: '',
-  active: false
-};
-export default function FormDialog(props) {
+export default function FormDialog({
+  companiesRegistrationAndEditStats,
+  setCompaniesRegistrationAndEditStats,
+  onCompanyFormClose
+}) {
   const dispatch = useDispatch();
-  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
-  const { open, setOpen } = props;
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const { isSuccess, isLoading } = useSelector((state) => state.org);
-  const handleTextChange = (e) => {
-    dispatchNew({
-      type: 'HANDLE_FORM_INPUT',
-      field: e.target.name,
-      payload: e.target.name === 'active' ? e.target.checked : e.target.value
-    });
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+
   const handleCreate = (e) => {
     e.preventDefault();
+    const emptyField = Object.keys(companiesRegistrationAndEditStats)
+      .filter((item) => item !== 'active')
+      .find((state) =>
+        typeof companiesRegistrationAndEditStats[state] === 'string'
+          ? companiesRegistrationAndEditStats[state] === ''
+          : typeof companiesRegistrationAndEditStats[state] === 'number'
+          ? companiesRegistrationAndEditStats[state] === 0
+          : !companiesRegistrationAndEditStats[state]?.length
+      );
+
+    if (emptyField) {
+      return dispatch(
+        showMessage({
+          message: `${startCase(emptyField)} cannot be empty`,
+          severity: 'error'
+        })
+      );
+    }
     const formStateWithToken = {
-      ...formState,
+      ...companiesRegistrationAndEditStats,
       token: userDetail.token
     };
     dispatch(createOrgs(formStateWithToken));
@@ -53,7 +50,8 @@ export default function FormDialog(props) {
 
   useEffect(() => {
     if (isSuccess) {
-      setOpen(false);
+      onCompanyFormClose();
+
       dispatch(
         showMessage({
           message: 'Organization created successfully',
@@ -64,9 +62,17 @@ export default function FormDialog(props) {
       dispatch(reset());
     }
   }, [isSuccess]);
+
+  console.log(companiesRegistrationAndEditStats, 'companiesRegistrationAndEditStats');
+
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog
+        open={
+          companiesRegistrationAndEditStats !== null &&
+          !Object.keys(companiesRegistrationAndEditStats).includes('_id')
+        }
+        onClose={onCompanyFormClose}>
         <DialogTitle>
           <Stack direction='row' spacing={2}>
             <Typography variant='h6'>Add New Organization</Typography>
@@ -89,8 +95,11 @@ export default function FormDialog(props) {
                 id='name'
                 label='Name'
                 autoFocus
-                value={formState.name}
-                onChange={(e) => handleTextChange(e)}
+                value={companiesRegistrationAndEditStats?.name}
+                onChange={(e) => {
+                  companiesRegistrationAndEditStats.name = e.target.value;
+                  setCompaniesRegistrationAndEditStats({ ...companiesRegistrationAndEditStats });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -102,8 +111,11 @@ export default function FormDialog(props) {
                 id='email'
                 label='Email'
                 autoFocus
-                value={formState.email}
-                onChange={(e) => handleTextChange(e)}
+                value={companiesRegistrationAndEditStats?.email}
+                onChange={(e) => {
+                  companiesRegistrationAndEditStats.email = e.target.value;
+                  setCompaniesRegistrationAndEditStats({ ...companiesRegistrationAndEditStats });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -114,8 +126,11 @@ export default function FormDialog(props) {
                 id='address'
                 label='Address'
                 autoFocus
-                value={formState.address}
-                onChange={(e) => handleTextChange(e)}
+                value={companiesRegistrationAndEditStats?.address}
+                onChange={(e) => {
+                  companiesRegistrationAndEditStats.address = e.target.value;
+                  setCompaniesRegistrationAndEditStats({ ...companiesRegistrationAndEditStats });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -126,26 +141,17 @@ export default function FormDialog(props) {
                 id='phone'
                 label='Phone Number'
                 autoFocus
-                value={formState.phone}
-                onChange={(e) => handleTextChange(e)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name='active'
-                    checked={formState.active}
-                    onChange={(e) => handleTextChange(e)}
-                  />
-                }
-                label='Is organization active?'
+                value={companiesRegistrationAndEditStats?.phone}
+                onChange={(e) => {
+                  companiesRegistrationAndEditStats.phone = e.target.value;
+                  setCompaniesRegistrationAndEditStats({ ...companiesRegistrationAndEditStats });
+                }}
               />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onCompanyFormClose}>Cancel</Button>
           <Button type='submit' variant='contained' onClick={(e) => handleCreate(e)}>
             Create
           </Button>

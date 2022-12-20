@@ -17,7 +17,7 @@ body {
 
 ::placeholder {
   color: rgb(0, 0, 0) !important;
-  padding: 5px;
+  padding: '5px 10px';
 }
 
 .card-box {
@@ -25,4 +25,24 @@ body {
   border-radius: 10px;
   margin-right: 10px;
   box-shadow: 5px 5px 6px #dad3d1, -5px -5px 6px #ffffff;
+}
+
+.css-1anqmj6-MuiPopper-root-MuiPickersPopper-root {
+  margin-left: 25px !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 290px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.css-14d6vet-MuiCardContent-root:last-child {
+  padding-bottom: 0px !important;
+}
+.MuiGrid-root .MuiGrid-grid-xs-2 {
+  display: flex !important;
+}
+
+input:autofill {
+  box-shadow: none;
 }

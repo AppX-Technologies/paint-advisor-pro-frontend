@@ -1,7 +1,7 @@
 export const booleanOption = ['Yes', 'No'];
 export const AddNewClientTextField = [
   {
-    name: 'customerName',
+    name: 'name',
     id: 'customer-name',
     label: 'Customer Name',
     dataType: 'text'
@@ -27,14 +27,14 @@ export const AddNewClientTextField = [
     resizeable: true
   },
   {
-    name: 'zipCode',
+    name: 'zip',
     id: 'zip-code',
     label: 'Zip Code',
     resizeable: true,
     dataType: 'text'
   },
   {
-    name: 'contactMethod',
+    name: 'preferredContactMethod',
     id: 'prefered-contact-method',
     label: 'Prefered Contact Method',
     dataType: 'dropDown',
@@ -75,9 +75,10 @@ export const InteriorManByManFormFields = [
     dataType: 'dateTime',
     option: ['Interior', 'Exterior']
   },
+
   {
     label: 'Will the customer be providing paint/materials for this job?',
-    name: 'customerProvidingPaintMaterial',
+    name: 'isMaterialProvidedByCustomer',
     dataType: 'dropDown',
     option: booleanOption,
     moreQuestions: [
@@ -181,7 +182,7 @@ export const RoomInfofields = [
     option: booleanOption
   },
   {
-    label: 'Ceiling',
+    label: 'Ceilings',
     name: 'ceilings',
     dataType: 'dropDown',
     option: booleanOption
@@ -194,7 +195,7 @@ export const RoomInfofields = [
   },
   {
     label: 'Door Jambs',
-    name: 'doorjambss',
+    name: 'doorjambs',
     dataType: 'dropDown',
     option: booleanOption
   },

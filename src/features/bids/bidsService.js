@@ -1,50 +1,194 @@
+import axios from 'axios';
+
+const endpoint = process.env.REACT_APP_API_BASE_URL;
+
+// Client Related Endpoints
+const CREATE_CLIENTS = `${endpoint}/clients`;
+const FETCH_CLIENTS = `${endpoint}/clients/search`;
+const UPDATE_CLIENT = `${endpoint}/clients`;
+
+// Bids Related Endpoints
+const CREATE_BID = `${endpoint}/bids`;
+const UPDATE_BID = `${endpoint}/bids`;
+
 export const fetchAllClientsService = async (userData) => {
-  // const config = {
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     Authorization: `Bearer ${userData.token}`
-  //   }
-  // };
-  // const response = await axios.post(
-  //   FETCH_PROCESS,
-  //   {
-  //     filter: userData.id ? { _id: userData.id } : { global: true }
-  //   },
-  //   config
-  // );
-  return userData;
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+
+  const filterValueObj = {};
+
+  userData.bidFilterValues?.forEach((filter) => {
+    filterValueObj[filter.name] = [...filter.values];
+  });
+
+  const response = await axios.post(
+    FETCH_CLIENTS,
+    {
+      limit: Number(userData.limit),
+      query: userData.query,
+      sort: { [userData.sort]: Number(userData.isAscending) },
+      filter: {
+        status: filterValueObj.status,
+        organization: userData.organization
+      },
+      extraFilters: {
+        'bid.type': filterValueObj.bidTypes
+      }
+    },
+    config
+  );
+  return response;
 };
 
 export const createClientService = async (userData) => {
-  // const config = {
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     Authorization: `Bearer ${userData.token}`
-  //   }
-  // };
-  // const response = await axios.post(
-  //   FETCH_PROCESS,
-  //   {
-  //     filter: userData.id ? { _id: userData.id } : { global: true }
-  //   },
-  //   config
-  // );
-  return userData;
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+  const response = await axios.post(
+    CREATE_CLIENTS,
+    {
+      ...userData,
+      organization: userData.organization,
+      token: userData.token
+    },
+    config
+  );
+  return response;
+};
+
+export const updateClientService = async (userData) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+  const response = await axios.put(
+    `${UPDATE_CLIENT}/${userData.id}`,
+    {
+      ...userData
+    },
+    config
+  );
+  return response;
 };
 
 export const createACommentService = async (userData) => {
-  // const config = {
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     Authorization: `Bearer ${userData.token}`
-  //   }
-  // };
-  // const response = await axios.post(
-  //   FETCH_PROCESS,
-  //   {
-  //     filter: userData.id ? { _id: userData.id } : { global: true }
-  //   },
-  //   config
-  // );
-  return userData;
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+  const response = await axios.put(
+    `${UPDATE_CLIENT}/${userData.id}`,
+    {
+      comments: userData.comment
+    },
+    config
+  );
+  return response;
+};
+
+export const uploadAFileService = async (userData) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+
+  const filteredFileInfo = userData.files.map((file) => {
+    return file.id;
+  });
+  const updatedClientInfo = {
+    files: [...userData.currentClientInfo.files, ...filteredFileInfo]
+  };
+  const response = await axios.put(
+    `${UPDATE_CLIENT}/${userData.currentClientInfo._id}`,
+    {
+      ...updatedClientInfo,
+      token: userData.token
+    },
+    config
+  );
+  return response;
+};
+
+export const deleteFileService = async (userData) => {
+  const response = await axios({
+    method: 'delete',
+    url: `http://localhost:5001/api/files/${userData.id}`,
+    data: {},
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${userData.token}`
+    }
+  });
+  return response;
+};
+
+export const updateClientStatusService = async (userData) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+
+  const response = await axios.put(
+    `${UPDATE_CLIENT}/${userData.id}`,
+    {
+      status: userData.status
+    },
+    config
+  );
+  return response;
+};
+
+// *Bids Related Services
+
+export const createBidServices = async (userData) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+
+  const response = await axios.post(
+    `${CREATE_BID}`,
+    {
+      ...userData.bidFields,
+      organization: userData.organization
+    },
+    config
+  );
+  return { response, clientId: userData.id };
+};
+
+export const updateBidService = async (userData) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+
+  const response = await axios.put(
+    `${UPDATE_BID}/${userData._id}`,
+    {
+      ...userData.bidFields
+    },
+    config
+  );
+
+  return response;
 };

@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const endpoint = 'https://painting-app-backend.herokuapp.com/processes';
-const CREATE_PROCESS = `${endpoint}/`;
-const FETCH_PROCESS = `https://painting-app-backend.herokuapp.com/processes/list`;
-const UPDATE_PROCESS = `${endpoint}/`;
-const DELETE_PROCESS = `${endpoint}/`;
+const endpoint = process.env.REACT_APP_API_BASE_URL;
+const CREATE_PROCESS = `${endpoint}/processes`;
+const FETCH_PROCESS = `${endpoint}/processes/list`;
+const UPDATE_PROCESS = `${endpoint}/processes`;
+const DELETE_PROCESS = `${endpoint}/processes`;
 
 const fetchProcess = async (userData) => {
   const config = {
@@ -20,6 +20,8 @@ const fetchProcess = async (userData) => {
     },
     config
   );
+  console.log(response, 'userData');
+
   return response.data;
 };
 

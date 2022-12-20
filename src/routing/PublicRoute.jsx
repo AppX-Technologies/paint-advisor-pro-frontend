@@ -4,10 +4,11 @@ import { isSystemUser } from '../helpers/roles';
 
 const PublicRoute = () => {
   const { user } = useSelector((state) => state.auth);
+  console.log(user);
 
   if (user) {
     return (
-      <Navigate to={isSystemUser(user) ? '/dashboard' : `/company/${user.organization._id}`} />
+      <Navigate to={isSystemUser(user) ? '/dashboard' : `/company/${user?.organization?._id}`} />
     );
   }
 

@@ -4,6 +4,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Tooltip,
   Typography
 } from '@mui/material';
 import React from 'react';
@@ -32,52 +33,57 @@ const DrawerMenu = ({ menuItems = [], open, onDrawerMenuChange }) => {
       }}>
       <div>
         {menuItems.map(({ icon: Icon, text, relLink }) => (
-          <ListItemButton
-            selected={pathname.includes(relLink)}
-            key={text}
-            onClick={() => {
-              navigate(relLink);
-              onDrawerMenuChange(false);
-            }}>
-            {Icon && (
-              <ListItemIcon>
-                <Icon />
-              </ListItemIcon>
-            )}
-            <ListItemText sx={{ margin: open ? '-10px' : '0px' }} primary={text} />
-          </ListItemButton>
-        ))}
-        <Divider light />
-      </div>
-      <div style={{ display: open ? 'flex' : 'static' }}>
-        {commonRoutes.map(({ icon: Icon, text, relLink }, idx) => (
-          <>
+          <Tooltip title={!open ? text : ''} placement='right'>
             <ListItemButton
               selected={pathname.includes(relLink)}
               key={text}
-              onClick={
-                text === 'Logout'
-                  ? onLogoutClick
-                  : () => {
-                      navigate(relLink);
-                      onDrawerMenuChange(false);
-                    }
-              }>
+              onClick={() => {
+                navigate(relLink);
+                onDrawerMenuChange(false);
+              }}>
               {Icon && (
                 <ListItemIcon>
                   <Icon />
                 </ListItemIcon>
               )}
-              {open && (
-                <ListItemText
-                  primary={
-                    <Typography type='body2' sx={{ fontSize: '15px', marginLeft: '-30px' }}>
-                      {text}
-                    </Typography>
-                  }
-                />
-              )}
+              <ListItemText sx={{ margin: open ? '-10px' : '0px' }} primary={text} />
             </ListItemButton>
+          </Tooltip>
+        ))}
+        <Divider light />
+      </div>
+      <div style={{ display: 'flex' }}>
+        {commonRoutes.map(({ icon: Icon, text, relLink }, idx) => (
+          <>
+            <Tooltip title={!open ? text : ''}>
+              <ListItemButton
+                selected={pathname.includes(relLink)}
+                sx={{ p: 0.5 }}
+                key={text}
+                onClick={
+                  text === 'Logout'
+                    ? onLogoutClick
+                    : () => {
+                        navigate(relLink);
+                        onDrawerMenuChange(false);
+                      }
+                }>
+                {Icon && (
+                  <ListItemIcon>
+                    <Icon />
+                  </ListItemIcon>
+                )}
+                {open && (
+                  <ListItemText
+                    primary={
+                      <Typography type='body2' sx={{ fontSize: '15px', marginLeft: '-30px' }}>
+                        {text}
+                      </Typography>
+                    }
+                  />
+                )}
+              </ListItemButton>
+            </Tooltip>
             {idx === 0 && <Divider orientation='vertical' flexItem />}
           </>
         ))}

@@ -5,77 +5,57 @@ import React, { useState } from 'react';
 import RoomCard from '../../../../../common/RoomCard';
 import Button from '../../../../../components/Button';
 import { initialRoomState } from '../../../common/roomsInitialStats';
+import MaterialsPicker from '../../MaterialsPicker';
 import { DeleteItemModel } from '../DeleteModel';
 import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
 import AddRoomForm from './AddRoomForm';
 
 const InteriorRoomByRoom = ({
-  roomStats,
-  setRoomStats,
-  allRoom,
-  setAllRoom,
+  roomFormValue,
+  setRoomFormValue,
+  initialBidInfo,
+  currentClientInfo,
   openAddMoreDetails,
   setOpenAddMoreDetails,
   onRoomDetailsReset,
-  wallStats,
-  setWallStats,
-  windowStats,
-  setWindowStats,
-  clearWallStats,
-  doorsStats,
-  setDoorStats,
-  nonPaintableAreaStats,
-  setNonPaintableAreaStats,
-  openEditForm,
-  setOpenEditForm,
-  roomRelatedInfo
+  allSectionsInfoOfARoom,
+  setCurrentClientInfo
 }) => {
   const [addRoom, setAddRoom] = useState(false);
-  const [editRoom, setEditRoom] = useState(false);
   const [currentAddMore, setCurentAddMore] = useState('');
   const [selectedRoomInfo, setSelectedRoomInfo] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [itemToBEDeleted, setItemToBeDeleted] = useState({
-    _id: '',
-    field: ''
-  });
-
-  const onCardDelete = (id) => {
-    allRoom.splice(
-      allRoom.findIndex((room) => room._id === id),
-      1
-    );
-    setAllRoom([...allRoom]);
-  };
-  const onCardEdit = () => {
-    setEditRoom(true);
-  };
+  const [itemToBeDeleted, setitemToBeDeleted] = useState(null);
 
   const onSelectedRoomInfoChange = (value) => {
     setSelectedRoomInfo(value);
   };
 
-
   return (
     <Box>
       {/* Main Form Body  */}
-      <Typography mt={2}>Rooms({allRoom.length})</Typography>
-      <Box>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Typography mt={2} mr={1}>
+          Rooms({currentClientInfo?.bid?.rooms.length})
+        </Typography>
         <Tooltip title='Add Room' placement='top'>
           <Button
-            sx={{ marginTop: '10px', height: '30px', minWidth: '40px', p: 0 }}
+            sx={{ mt: 2, height: '30px', minWidth: '40px', p: 0 }}
             variant='contained'
             startIcon={<AddIcon sx={{ ml: 1 }} />}
             color='info'
             onClick={() => {
               setAddRoom(true);
-              setRoomStats(cloneDeep(initialRoomState));
+              setRoomFormValue(cloneDeep(initialRoomState));
             }}
           />
         </Tooltip>
+      </Box>
+      <Box>
         <Grid container spacing={1} mt={2}>
-          {allRoom.length !== 0 &&
-            allRoom.map((room) => {
+          {currentClientInfo &&
+            currentClientInfo?.bid?.rooms.length !== 0 &&
+            currentClientInfo?.bid?.rooms.map((room) => {
               return (
                 <Grid xs={6} md={6} mt={1}>
                   <RoomCard
@@ -85,7 +65,7 @@ const InteriorRoomByRoom = ({
                     items={{
                       roomName: room.roomName,
                       WallDetail:
-                        room.walls.length !== 0 ? findSameTypeOfWall(room.walls) : 'No Walls',
+                        room?.walls?.length !== 0 ? findSameTypeOfWall(room.walls) : 'No Walls',
                       WindowDetail:
                         room.windows.length !== 0 ? findSameTypeOfWall(room.windows) : 'No Windows',
                       PaintableArea: `${
@@ -96,7 +76,6 @@ const InteriorRoomByRoom = ({
                       } sq.feet`
                     }}
                     title={room.roomName}
-                    onCardEdit={onCardEdit}
                     setAddRoom={setAddRoom}
                   />
                 </Grid>
@@ -107,50 +86,47 @@ const InteriorRoomByRoom = ({
 
       {openDeleteModal && (
         <DeleteItemModel
+          onSelectedRoomInfoChange={onSelectedRoomInfoChange}
           openDeleteModal={openDeleteModal}
           setOpenDeleteModal={setOpenDeleteModal}
-          roomRelatedInfo={roomStats[currentAddMore]}
-          id={itemToBEDeleted._id}
-          roomStats={roomStats}
-          setRoomStats={setRoomStats}
+          itemToBeDeleted={itemToBeDeleted}
+          roomFormValue={roomFormValue}
+          setRoomFormValue={setRoomFormValue}
           selectedRoomInfo={selectedRoomInfo}
-          onCardDelete={onCardDelete}
           setSelectedRoomInfo={setSelectedRoomInfo}
+          setCurrentClientInfo={setCurrentClientInfo}
+          currentClientInfo={currentClientInfo}
+          setitemToBeDeleted={setitemToBeDeleted}
         />
       )}
 
       <AddRoomForm
         open={addRoom}
         setOpen={setAddRoom}
-        roomStats={roomStats}
-        setRoomStats={setRoomStats}
-        initialRoomState={initialRoomState}
-        allRoom={allRoom}
-        setAllRoom={setAllRoom}
+        roomFormValue={roomFormValue}
+        setRoomFormValue={setRoomFormValue}
+        currentClientInfo={currentClientInfo}
         openAddMoreDetails={openAddMoreDetails}
-        wallStats={wallStats}
-        setWallStats={setWallStats}
         setOpenAddMoreDetails={setOpenAddMoreDetails}
-        clearWallStats={clearWallStats}
-        windowStats={windowStats}
-        setWindowStats={setWindowStats}
         onRoomDetailsReset={onRoomDetailsReset}
-        doorsStats={doorsStats}
-        setDoorStats={setDoorStats}
-        nonPaintableAreaStats={nonPaintableAreaStats}
-        setNonPaintableAreaStats={setNonPaintableAreaStats}
-        openEditForm={openEditForm}
-        setOpenEditForm={setOpenEditForm}
-        roomRelatedInfo={roomRelatedInfo}
+        allSectionsInfoOfARoom={allSectionsInfoOfARoom}
         selectedRoomInfo={selectedRoomInfo}
         onSelectedRoomInfoChange={onSelectedRoomInfoChange}
         openDeleteModal={openDeleteModal}
         setOpenDeleteModal={setOpenDeleteModal}
         currentAddMore={currentAddMore}
-        itemToBEDeleted={itemToBEDeleted}
-        setItemToBeDeleted={setItemToBeDeleted}
+        itemToBeDeleted={itemToBeDeleted}
+        setitemToBeDeleted={setitemToBeDeleted}
         setCurentAddMore={setCurentAddMore}
+        setCurrentClientInfo={setCurrentClientInfo}
       />
+      {initialBidInfo.isMaterialProvidedByCustomer === 'No' &&
+        currentClientInfo?.bid?.rooms.length !== 0 && (
+          <MaterialsPicker
+            currentClientInfo={currentClientInfo}
+            setCurrentClientInfo={setCurrentClientInfo}
+          />
+        )}
     </Box>
   );
 };

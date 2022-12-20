@@ -9,35 +9,56 @@ import {
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import Button from '../../../../components/Button';
+import { CURRENT_TOTAL_DESCRIPTION } from '../../../../helpers/contants';
 import { showMessage } from '../../../snackbar/snackbarSlice';
 
 export function DeleteItemModel({
-  id,
+  itemToBeDeleted,
   setOpenDeleteModal,
-  setRoomStats,
+  setRoomFormValue,
   openDeleteModal,
-  roomStats,
-  roomRelatedInfo,
-  onCardDelete,
+  roomFormValue,
   selectedRoomInfo,
-  setSelectedRoomInfo
+  onSelectedRoomInfoChange,
+  currentClientInfo,
+  setCurrentClientInfo
 }) {
   const dispatch = useDispatch();
+
   const handleClose = () => {
     setOpenDeleteModal(false);
   };
 
   const handleDelete = () => {
-    if (selectedRoomInfo) {
-      onCardDelete(selectedRoomInfo._id);
-      setSelectedRoomInfo(null);
+    if (!itemToBeDeleted) {
+      setCurrentClientInfo({
+        ...currentClientInfo,
+        bid: {
+          ...currentClientInfo.bid,
+          rooms: [
+            ...currentClientInfo.bid.rooms.filter(
+              (room) => room.roomName !== roomFormValue?.roomName
+            )
+          ]
+        }
+      });
+
+      onSelectedRoomInfoChange(null);
     } else {
-      roomRelatedInfo.splice(
-        roomRelatedInfo.findIndex((x) => x._id === id),
+      roomFormValue[itemToBeDeleted?.field]?.splice(
+        roomFormValue[itemToBeDeleted?.field]?.findIndex((item) =>
+          itemToBeDeleted?.field !== 'nonPaintableAreas'
+            ? item.name === itemToBeDeleted.title
+            : item.description === itemToBeDeleted.title &&
+              item.description !== CURRENT_TOTAL_DESCRIPTION
+        ),
         1
       );
-      setRoomStats({ ...roomStats });
+      if (roomFormValue.edit) {
+        setRoomFormValue({ ...selectedRoomInfo, edit: true });
+      }
     }
+
     setOpenDeleteModal(false);
     dispatch(
       showMessage({
@@ -45,7 +66,6 @@ export function DeleteItemModel({
         severity: 'success'
       })
     );
-    
   };
 
   return (

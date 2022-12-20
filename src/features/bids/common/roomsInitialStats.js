@@ -1,12 +1,12 @@
 export const estimationFormInitialInfo = {
   startDate: '',
   endDate: '',
-  bidType: '',
-  subType: ''
+  type: '',
+  subType: '',
+  isMaterialProvidedByCustomer: ''
 };
 
 export const initialNonPaintableStats = {
-  _id: '',
   description: '',
   area: null
 };
@@ -19,10 +19,10 @@ export const initialRoomState = {
   doors: [],
   baseboardTrims: [],
   windowTrims: [],
-  doorjambs: [],
+  doorJambs: [],
   crownMoldings: [],
   closets: [],
-  nonPaintableAreas: [{ description: 'Current Total', area: null, isTotal: true }]
+  nonPaintableAreas: [{ description: 'Current Total', area: 0 }]
 };
 
 export const initilWallInfo = {
@@ -53,6 +53,7 @@ export const initialWindowInfo = {
   style: '',
   height: null,
   length: null,
+  prepHour: null,
   coats: null,
   wallInfo: '',
   paint: false
@@ -61,18 +62,17 @@ export const initialWindowInfo = {
 export const initialBaseBoardTrimInfo = {
   _id: '',
   name: '',
-  prepHour: '',
+  prepHour: null,
   linearFeet: '',
   height: null,
   length: null,
   coats: null,
-
   prducts: []
 };
 
 export const initialWindowTrimInfo = {
   _id: '',
-  prepHour: '',
+  prepHour: null,
   name: '',
   style: '',
   height: null,
@@ -85,51 +85,55 @@ export const initialWindowTrimInfo = {
 export const initialDoorjambsInfo = {
   _id: '',
   name: '',
-  prepHour: '',
+  prepHour: null,
   linearFeet: '',
   width: null,
   coats: null,
-  prducts: []
+  prducts: [],
+  paint: false
 };
 
 export const initialCrownMoldingInfo = {
   _id: '',
   name: '',
-  prepHour: '',
+  prepHour: null,
   linearFeet: '',
   width: null,
   coats: null,
-  prducts: []
+  prducts: [],
+  paint: false
 };
 
 export const initialClosetInfo = {
   _id: '',
   name: '',
-  prepHour: '',
+  prepHour: null,
   length: '',
   width: null,
   averageHeight: null,
   coats: null,
-  prducts: []
+  prducts: [],
+  paint: false
 };
 
 export const initialCeilingInfo = {
   _id: '',
   name: '',
-  length: '',
-  width: '',
+  length: null,
+  width: null,
   type: '',
-  coats: '',
-  product: []
+  coats: null,
+  product: [],
+  paint: false
 };
 
-export const initialState = {
-  customerName: '',
+export const initialStateForClientAdditon = {
+  name: '',
   address: '',
   city: '',
   state: '',
-  zipCode: '',
-  contactMethod: '',
+  zip: '',
+  preferredContactMethod: '',
   email: '',
   contactNumber: '',
   propertyType: ''

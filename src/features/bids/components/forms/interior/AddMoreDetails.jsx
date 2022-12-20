@@ -17,6 +17,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
+import { startCase } from 'lodash';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { validationInfo } from '../../../../../common/FormTextField';
@@ -34,14 +35,15 @@ const AddMoreDetails = ({
   openAddMoreDetails,
   currentStats,
   setCurrentStats,
-  clearWallStats,
+
   addIn,
   titleField,
-  roomStats,
+  roomFormValue,
   roomInfoToEdit,
   setRoomInfoToEdit,
   fields,
-  currentLabel
+  currentLabel,
+  selectedRoomInfo
 }) => {
   const dispatch = useDispatch();
   const handleCreate = () => {
@@ -56,45 +58,82 @@ const AddMoreDetails = ({
     if (emptyFields.length !== 0) {
       return dispatch(
         showMessage({
-          message: `${emptyFields[0].name.toUpperCase()} cannot be empty`,
+          message: `${startCase(emptyFields[0].name)} cannot be empty`,
           severity: 'error'
         })
       );
     }
 
     if (
-      titleField !== NONPAINTABLEAREAFIELD &&
+      titleField === NONPAINTABLEAREAFIELD &&
       addIn
-        .filter((item) => item._id !== currentStats._id)
-        .some((item) => item.name === currentStats.name)
+        ?.filter((item) =>
+          roomInfoToEdit?.edit ? item?.description !== currentStats?.description : true
+        )
+        .some((item) => item.description === currentStats.description)
     ) {
       return dispatch(
         showMessage({
-          message: `Name '${currentStats.name}' already exists`,
+          message: `Description '${currentStats.description}' already exists`,
           severity: 'error'
         })
       );
     }
 
+    if (!roomInfoToEdit && titleField !== NONPAINTABLEAREAFIELD) {
+      if (addIn?.some((item) => item.name === currentStats.name))
+        return dispatch(
+          showMessage({
+            message: `Name '${currentStats.name}' already exists`,
+            severity: 'error'
+          })
+        );
+    } else {
+      if (
+        titleField !== NONPAINTABLEAREAFIELD &&
+        addIn
+          ?.filter((item) => (roomInfoToEdit.edit ? item.name !== currentStats.name : true))
+          ?.some((item) => item.name === currentStats.name)
+      ) {
+        return dispatch(
+          showMessage({
+            message: `Name '${currentStats.name}' already exists`,
+            severity: 'error'
+          })
+        );
+      }
+    }
+
     if (!roomInfoToEdit) {
-      addIn.push({
-        ...currentStats,
-        _id: new Date().getTime().toString(),
-        isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
+      addIn?.push({
+        ...currentStats
+      });
+      addIn?.forEach((item) => {
+        delete item._id;
       });
     } else {
-      if (!roomInfoToEdit._id) {
-        addIn.push({
-          ...currentStats,
-          _id: new Date().getTime().toString(),
-          isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined
+      if (roomInfoToEdit.edit) {
+        delete currentStats._id;
+        addIn?.splice(
+          addIn.findIndex((item) =>
+            titleField !== NONPAINTABLEAREAFIELD
+              ? item.name === roomInfoToEdit.name
+              : item.description === roomInfoToEdit.description
+          ),
+          1,
+          { ...currentStats }
+        );
+        addIn.forEach((item) => {
+          delete item._id;
         });
       } else {
-        addIn.splice(
-          addIn.findIndex((item) => item._id === roomInfoToEdit._id),
-          1,
-          { ...currentStats, isTotal: titleField === NONPAINTABLEAREAFIELD ? false : undefined }
-        );
+        delete currentStats._id;
+        addIn?.push({
+          ...currentStats
+        });
+        addIn.forEach((item) => {
+          delete item._id;
+        });
       }
     }
     dispatch(
@@ -106,7 +145,6 @@ const AddMoreDetails = ({
 
     setRoomInfoToEdit(null);
     setOpenAddMoreDetails(false);
-    clearWallStats();
   };
 
   const onDialogClose = () => {
@@ -118,14 +156,14 @@ const AddMoreDetails = ({
     if (roomInfoToEdit) {
       setCurrentStats({ ...roomInfoToEdit });
     }
-  }, []);
+  }, [roomInfoToEdit, selectedRoomInfo]);
 
   return (
     <Dialog open={openAddMoreDetails} PaperProps={{ sx: { minWidth: '60%' } }}>
       <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
         <Stack direction='row' spacing={2}>
           <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
-            {roomInfoToEdit ? (!roomInfoToEdit._id ? 'Edit' : 'Clone') : 'Add New'} {currentLabel}
+            {roomInfoToEdit ? (!roomInfoToEdit.edit ? 'Clone' : 'Edit') : 'Add New'} {currentLabel}
           </Typography>
           <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
         </Stack>
@@ -186,12 +224,12 @@ const AddMoreDetails = ({
                   <Grid item xs={6} md={6} mt={1}>
                     <FormControl sx={{ width: '100%' }} size='small'>
                       <InputLabel id='demo-select-small' sx={{ marginTop: '-5px' }}>
-                        {name === 'wallType' ? 'Wall Types' : 'Ceiling Types'}
+                        {name === 'wallType' ? 'Wall Type' : 'Ceiling Type'}
                       </InputLabel>
                       <Select
                         labelId='demo-select-small'
                         id='demo-select-small'
-                        label={name === 'wallType' ? 'Wall Types' : 'Ceiling Types'}
+                        label={name === 'wallType' ? 'Wall Type' : 'Ceiling Type'}
                         value={currentStats[name]}
                         onChange={(event) => {
                           currentStats[name] = event.target.value;
@@ -252,9 +290,9 @@ const AddMoreDetails = ({
                             setCurrentStats({ ...currentStats });
                           }}
                           sx={{ height: '30px' }}>
-                          <MenuItem value='Wall-1'>None</MenuItem>
-                          {roomStats &&
-                            roomStats.walls.map((wall) => {
+                          <MenuItem value='None'>None</MenuItem>
+                          {roomFormValue &&
+                            roomFormValue.walls.map((wall) => {
                               return <MenuItem value={wall.name}>{wall.name}</MenuItem>;
                             })}
                         </Select>
@@ -266,26 +304,29 @@ const AddMoreDetails = ({
             );
           })}
 
-          {titleField !== 'walls' && titleField !== NONPAINTABLEAREAFIELD && (
-            <Grid xs={6} md={6} mt={2}>
-              <FormGroup>
-                <FormControlLabel
-                  sx={{ position: 'relative', ml: 0.8 }}
-                  control={<Checkbox defaultChecked />}
-                  checked={currentStats.paint}
-                  onChange={(event) => {
-                    currentStats.paint = event.target.checked;
-                    setCurrentStats({ ...currentStats });
-                  }}
-                  label={
-                    <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                      PAINT
-                    </InputLabel>
-                  }
-                />
-              </FormGroup>
-            </Grid>
-          )}
+          {titleField !== 'walls' &&
+            titleField !== NONPAINTABLEAREAFIELD &&
+            titleField !== 'baseboardTrims' &&
+            titleField !== 'windowTrims' && (
+              <Grid xs={6} md={6} mt={2}>
+                <FormGroup>
+                  <FormControlLabel
+                    sx={{ position: 'relative', ml: 0.8 }}
+                    control={<Checkbox defaultChecked />}
+                    checked={currentStats.paint}
+                    onChange={(event) => {
+                      currentStats.paint = event.target.checked;
+                      setCurrentStats({ ...currentStats });
+                    }}
+                    label={
+                      <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                        PAINT
+                      </InputLabel>
+                    }
+                  />
+                </FormGroup>
+              </Grid>
+            )}
         </Grid>
       </DialogContent>
       <DialogActions>

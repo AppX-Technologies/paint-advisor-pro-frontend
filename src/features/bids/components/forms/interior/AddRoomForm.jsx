@@ -36,7 +36,26 @@ const expandMoreAndLessStyles = {
   color: '#D50000'
 };
 
-export default function AddRoomForm(props) {
+export default function AddRoomForm({
+  open,
+  setOpen,
+  roomFormValue,
+  currentClientInfo,
+  setRoomFormValue,
+  openAddMoreDetails,
+  setOpenAddMoreDetails,
+  onRoomDetailsReset,
+  allSectionsInfoOfARoom,
+  selectedRoomInfo,
+  onSelectedRoomInfoChange,
+  openDeleteModal,
+  setOpenDeleteModal,
+  currentAddMore,
+  itemToBeDeleted,
+  setitemToBeDeleted,
+  setCurentAddMore,
+  setCurrentClientInfo
+}) {
   const dispatch = useDispatch();
   const [showCards, setShowCards] = useState({
     walls: true,
@@ -46,45 +65,23 @@ export default function AddRoomForm(props) {
     ceilings: true,
     baseboardTrims: true,
     windowTrims: true,
-    doorjambs: true,
+    doorJambs: true,
     crownMoldings: true,
     closets: true
   });
 
-  const {
-    open,
-    setOpen,
-    roomStats,
-    setRoomStats,
-    allRoom,
-    setAllRoom,
-    openAddMoreDetails,
-    setOpenAddMoreDetails,
-    clearWallStats,
-    onRoomDetailsReset,
-    roomRelatedInfo,
-    selectedRoomInfo,
-    onSelectedRoomInfoChange,
-    openDeleteModal,
-    setOpenDeleteModal,
-    currentAddMore,
-    itemToBEDeleted,
-    setItemToBeDeleted,
-    setCurentAddMore
-  } = props;
-
   const [roomInfoToEdit, setRoomInfoToEdit] = useState(null);
-
   const [seeMore, setSeeMore] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
     onRoomDetailsReset();
-    setRoomStats({ ...initialRoomState });
+    setRoomFormValue({ ...initialRoomState });
     onSelectedRoomInfoChange(null);
   };
+
   const handleCreate = () => {
-    if (!roomStats.roomName) {
+    if (!roomFormValue.roomName) {
       return dispatch(
         showMessage({
           message: 'Room Name cannot be empty',
@@ -94,58 +91,74 @@ export default function AddRoomForm(props) {
     }
 
     if (
-      allRoom
-        .filter((room) => room._id !== roomStats._id)
-        .some((room) => room.roomName === roomStats.roomName)
+      currentClientInfo?.bid?.rooms
+        .filter((room) => (roomFormValue.edit ? room.roomName !== roomFormValue.roomName : true))
+        .some((room) => room.roomName === roomFormValue.roomName)
     ) {
       return dispatch(
         showMessage({
-          message: `Room Name '${roomStats.roomName}' Already Exists`,
+          message: `Room Name '${roomFormValue.roomName}' Already Exists`,
           severity: 'error'
         })
       );
     }
-    if (!roomStats._id) {
-      setAllRoom([...allRoom, { ...roomStats, _id: Date.now().toString() }]);
+
+    if (Object.keys(roomFormValue).some((item) => item === 'edit')) {
+      if (roomFormValue.edit) {
+        delete roomFormValue.edit;
+
+        setCurrentClientInfo({
+          ...currentClientInfo,
+          bid: {
+            ...currentClientInfo.bid,
+            rooms: [
+              ...currentClientInfo.bid.rooms.filter(
+                (room) => room.roomName !== selectedRoomInfo.roomName
+              ),
+              { ...roomFormValue }
+            ]
+          }
+        });
+      } else {
+        delete roomFormValue.edit;
+        setCurrentClientInfo({
+          ...currentClientInfo,
+          bid: {
+            ...currentClientInfo?.bid,
+            rooms: [...currentClientInfo.bid.rooms, { ...roomFormValue }]
+          }
+        });
+      }
     } else {
-      allRoom.splice(
-        allRoom.findIndex((room) => room._id === roomStats._id),
-        1,
-        roomStats
-      );
-      setAllRoom([...allRoom]);
+      setCurrentClientInfo({
+        ...currentClientInfo,
+        bid: {
+          ...currentClientInfo?.bid,
+          rooms: [...currentClientInfo.bid.rooms, { ...roomFormValue }]
+        }
+      });
     }
-    dispatch(
-      showMessage({
-        message: `Room Updated Successfully.`,
-        severity: 'success'
-      })
-    );
+
     handleClose();
-    setRoomStats({ ...initialRoomState });
+    setRoomFormValue({ ...initialRoomState });
     onSelectedRoomInfoChange(null);
   };
+
   const onopenAddMoreDetailsChange = (value) => {
     setOpenAddMoreDetails(value);
   };
 
-  const onCardDelete = (id, field) => {
-    setItemToBeDeleted({ ...itemToBEDeleted, _id: id, field });
-  };
-
-  React.useEffect(() => {
-    setItemToBeDeleted({ ...itemToBEDeleted });
-  }, [openDeleteModal]);
-
   const filteredRoomInfo = React.useMemo(() => {
-    return roomRelatedInfo && roomRelatedInfo.find((room) => room.name === currentAddMore);
-  }, [currentAddMore, roomRelatedInfo]);
+    return (
+      allSectionsInfoOfARoom && allSectionsInfoOfARoom.find((room) => room.name === currentAddMore)
+    );
+  }, [currentAddMore, allSectionsInfoOfARoom]);
 
   React.useEffect(() => {
     if (selectedRoomInfo) {
-      setRoomStats({ ...selectedRoomInfo });
+      setRoomFormValue({ ...selectedRoomInfo });
     }
-  }, [open]);
+  }, [open, selectedRoomInfo]);
 
   return (
     <div>
@@ -153,7 +166,7 @@ export default function AddRoomForm(props) {
         <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
           <Stack direction='row' spacing={2}>
             <Typography sx={{ flex: 1, color: 'white', ml: 1 }} variant='h6' component='div'>
-              Add New Room
+              {roomFormValue.edit ? 'Edit' : 'Add New'} Room
             </Typography>
             <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
           </Stack>
@@ -169,11 +182,11 @@ export default function AddRoomForm(props) {
                 <Autocomplete
                   id='free-solo-demo'
                   size='small'
-                  value={roomStats.roomName}
+                  value={roomFormValue.roomName}
                   freeSolo
                   onInputChange={(event, newInputValue) => {
-                    roomStats.roomName = newInputValue;
-                    setRoomStats({ ...roomStats });
+                    roomFormValue.roomName = newInputValue;
+                    setRoomFormValue({ ...roomFormValue });
                   }}
                   sx={{ width: '100%' }}
                   options={ROOM_TYPES.map((option) => option)}
@@ -182,8 +195,8 @@ export default function AddRoomForm(props) {
               </Stack>
             </Grid>
             <Divider />
-            {roomRelatedInfo &&
-              roomRelatedInfo
+            {allSectionsInfoOfARoom &&
+              allSectionsInfoOfARoom
                 .filter((i) => {
                   if (i.name === 'roomName') return false;
                   return seeMore || i.name === 'walls' || i.name === 'nonPaintableAreas';
@@ -220,7 +233,9 @@ export default function AddRoomForm(props) {
                             {item.label}
 
                             {` (${
-                              roomStats[fieldType]?.length ? roomStats[fieldType]?.length : 0
+                              roomFormValue[fieldType]?.length
+                                ? roomFormValue[fieldType]?.length
+                                : 0
                             })`}
                           </InputLabel>
 
@@ -233,7 +248,7 @@ export default function AddRoomForm(props) {
                             }}
                           />
                         </Box>
-                        {roomStats[fieldType]?.length === 0 || !roomStats[fieldType] ? (
+                        {roomFormValue[fieldType]?.length === 0 || !roomFormValue[fieldType] ? (
                           <></>
                         ) : showCards[fieldType] ? (
                           <Tooltip title='Less'>
@@ -264,11 +279,12 @@ export default function AddRoomForm(props) {
                       {showCards[item.name] && (
                         <>
                           <Grid container alignItems='center' justify='center'>
-                            {roomStats[fieldType].length !== 0 &&
-                              roomStats[fieldType].map((roomComponent) => {
+                            {roomFormValue[fieldType]?.length !== 0 &&
+                              roomFormValue[fieldType]?.map((roomComponent) => {
                                 return (
                                   <Grid xs={10} md={3}>
                                     <Card
+                                      itemToBeDeleted={itemToBeDeleted}
                                       setCurentAddMore={setCurentAddMore}
                                       setRoomInfoToEdit={setRoomInfoToEdit}
                                       openDeleteModal={openDeleteModal}
@@ -276,11 +292,19 @@ export default function AddRoomForm(props) {
                                       onopenAddMoreDetailsChange={onopenAddMoreDetailsChange}
                                       items={roomComponent}
                                       title={roomComponent.name}
-                                      onCardDelete={onCardDelete}
+                                      roomFormValue={roomFormValue}
+                                      setitemToBeDeleted={setitemToBeDeleted}
+                                      roomName={selectedRoomInfo?.roomName}
+                                      onSelectedRoomInfoChange={onSelectedRoomInfoChange}
                                       field={item.name}
-                                      totalArea={roomStats[fieldType].reduce((total, currItem) => {
-                                        return total + Number(currItem.area);
-                                      }, 0)}
+                                      currentClientInfo={currentClientInfo}
+                                      selectedRoomInfo={selectedRoomInfo}
+                                      totalArea={roomFormValue[fieldType].reduce(
+                                        (total, currItem) => {
+                                          return total + Number(currItem.area);
+                                        },
+                                        0
+                                      )}
                                     />
                                   </Grid>
                                 );
@@ -332,25 +356,24 @@ export default function AddRoomForm(props) {
             onClick={() => {
               handleCreate();
             }}>
-            Add Room
+            {roomFormValue.edit ? 'Edit' : 'Add New'} Room
           </Button>
         </DialogActions>
 
         {openAddMoreDetails && filteredRoomInfo && (
           <AddMoreDetails
             openAddMoreDetails={openAddMoreDetails}
-            roomStats={roomStats}
-            setRoomStat={setRoomStats}
+            roomFormValue={roomFormValue}
             setOpenAddMoreDetails={setOpenAddMoreDetails}
             titleField={currentAddMore}
             currentStats={filteredRoomInfo.currentStats}
             setCurrentStats={filteredRoomInfo.onCurrentStatsChange}
-            addIn={roomStats[currentAddMore]}
-            clearWallStats={clearWallStats}
+            addIn={roomFormValue[currentAddMore]}
             roomInfoToEdit={roomInfoToEdit && roomInfoToEdit}
             setRoomInfoToEdit={setRoomInfoToEdit}
             initialStats={filteredRoomInfo.initialStats}
             fields={filteredRoomInfo.fields}
+            itemToBeDeleted={itemToBeDeleted}
             currentLabel={
               filteredRoomInfo.label[filteredRoomInfo.label.length - 1] === 's'
                 ? filteredRoomInfo.label.slice(0, filteredRoomInfo.label.length - 1)

@@ -8,78 +8,65 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { startCase } from 'lodash';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProcess } from '../../features/process/processSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { ALL_PROCESS_STAGES } from '../../helpers/contants';
-import formReducer from '../DashboardTabs/reducers/formReducer';
 
-export default function Edit(props) {
+export default function Edit({
+  processRegistrationAndEditStats,
+  onProcessFormClose,
+  setProcessRegistrationAndEditStats
+}) {
   const userDetail = JSON.parse(localStorage.getItem('user'));
-  const { openEditForm, setOpenEditForm, editFormData } = props;
 
-  const initialFormState = {
-    stage: editFormData.stage ? editFormData.stage : '',
-    description: editFormData.description ? editFormData.description : '',
-    bidType: editFormData.bidType ? editFormData.bidType : ''
-  };
-
-  const [formState, dispatchNew] = React.useReducer(formReducer, initialFormState);
   const { processList } = useSelector((state) => state.process);
 
   const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    Object.keys(editFormData).forEach((key) => {
-      dispatchNew({
-        type: 'HANDLE_FORM_INPUT',
-        field: key,
-        payload: editFormData[key]
-      });
-    });
-  }, [editFormData]);
-  const handleTextChange = (e) => {
-    dispatchNew({
-      type: 'HANDLE_FORM_INPUT',
-      field: e.target.name,
-      payload: e.target.value
-    });
-  };
-  const handleClose = () => {
-    setOpenEditForm(false);
-    Object.keys(formState).forEach((key) => {
-      formState[key] = '';
-    });
-  };
-
   const handleEdit = (e) => {
     e.preventDefault();
-    if (!formState.description || !formState.bidType || !formState.stage) {
+    const emptyField = Object.keys(processRegistrationAndEditStats)
+      .filter((item) => item !== '__v')
+      .find((state) =>
+        typeof processRegistrationAndEditStats[state] === 'string'
+          ? processRegistrationAndEditStats[state] === ''
+          : typeof processRegistrationAndEditStats[state] === 'number'
+          ? processRegistrationAndEditStats[state] === 0
+          : !processRegistrationAndEditStats[state]?.length
+      );
+
+    if (emptyField) {
       return dispatch(
         showMessage({
-          message: `Description cannot be empty`,
+          message: `${startCase(emptyField)} cannot be empty`,
           severity: 'error'
         })
       );
     }
     const formStateWithToken = {
-      ...formState,
+      ...processRegistrationAndEditStats,
       ID: processList[0]._id,
       previousProcesses: processList[0].processes.filter(
-        (previousProcess) => previousProcess._id !== editFormData._id
+        (previousProcess) => previousProcess._id !== processRegistrationAndEditStats._id
       ),
 
       add: true,
       token: userDetail.token
     };
     dispatch(createProcess(formStateWithToken));
-    setOpenEditForm(false);
+    onProcessFormClose();
   };
 
   return (
     <div>
-      <Dialog open={openEditForm} onClose={handleClose} PaperProps={{ sx: { width: '40%' } }}>
+      <Dialog
+        open={
+          processRegistrationAndEditStats !== null &&
+          Object.keys(processRegistrationAndEditStats).includes('_id')
+        }
+        onClose={onProcessFormClose}>
         <DialogTitle>
           Edit Process
           <CircularProgress style={{ display: 'none' }} size={25} />
@@ -97,9 +84,12 @@ export default function Edit(props) {
               id='process'
               label='Description'
               autoFocus
-              placeholder={editFormData.description}
-              value={formState.description}
-              onChange={(e) => handleTextChange(e)}
+              placeholder={processRegistrationAndEditStats?.description}
+              value={processRegistrationAndEditStats?.description}
+              onChange={(e) => {
+                processRegistrationAndEditStats.description = e.target.value;
+                setProcessRegistrationAndEditStats({ ...processRegistrationAndEditStats });
+              }}
               style={{ width: '100%' }}
             />
           </Grid>
@@ -111,9 +101,16 @@ export default function Edit(props) {
                   labelId='demo-select-small'
                   id='demo-select-small'
                   name='stage'
-                  value={formState.stage ? formState.stage : editFormData.stage}
+                  value={
+                    processRegistrationAndEditStats?.stage
+                      ? processRegistrationAndEditStats?.stage
+                      : processRegistrationAndEditStats?.stage
+                  }
                   label='stage'
-                  onChange={(e) => handleTextChange(e)}>
+                  onChange={(e) => {
+                    processRegistrationAndEditStats.stage = e.target.value;
+                    setProcessRegistrationAndEditStats({ ...processRegistrationAndEditStats });
+                  }}>
                   {ALL_PROCESS_STAGES.map((stage) => {
                     return (
                       <MenuItem key={stage} value={stage}>
@@ -131,9 +128,16 @@ export default function Edit(props) {
                   labelId='demo-select-small'
                   id='demo-select-small'
                   name='bidType'
-                  value={formState.bidType ? formState.bidType : editFormData.bidType}
+                  value={
+                    processRegistrationAndEditStats?.bidType
+                      ? processRegistrationAndEditStats?.bidType
+                      : processRegistrationAndEditStats?.bidType
+                  }
                   label='Bid Type'
-                  onChange={(e) => handleTextChange(e)}>
+                  onChange={(e) => {
+                    processRegistrationAndEditStats.bidType = e.target.value;
+                    setProcessRegistrationAndEditStats({ ...processRegistrationAndEditStats });
+                  }}>
                   <MenuItem value='Interior'>Interior</MenuItem>
                   <MenuItem value='Exterior'>Exterior</MenuItem>
                 </Select>
@@ -142,7 +146,7 @@ export default function Edit(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onProcessFormClose}>Cancel</Button>
           <Button type='submit' variant='contained' onClick={(e) => handleEdit(e)}>
             Update
           </Button>
