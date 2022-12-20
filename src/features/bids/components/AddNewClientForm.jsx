@@ -70,7 +70,7 @@ export default function AddNewClientForm({
 
   return (
     <div>
-      <Dialog fullScreen open={clientAdditionStats} onClose={handleNewClientFormClose}>
+      <Dialog fullScreen open={clientAdditionStats !== null} onClose={handleNewClientFormClose}>
         <Toolbar sx={{ backgroundColor: '#D50000' }}>
           <Typography sx={{ ml: 2, flex: 1, color: 'white' }} variant='h6' component='div'>
             {clientAdditionStats?._id ? 'Edit' : 'Add New'} Client{' '}

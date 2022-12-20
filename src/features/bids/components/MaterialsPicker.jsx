@@ -108,7 +108,10 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
       section,
       title
     );
-    itemToWhichMaterialIsToBeAssigned.materials = currentlyChoosenMaterial[section];
+    itemToWhichMaterialIsToBeAssigned.materials = findSpecificMaterial(
+      materialList && materialList[0] && materialList[0]?.materials,
+      currentlyChoosenMaterial[section]
+    );
     setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
@@ -123,7 +126,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
       section,
       title
     );
-    itemToWhichMaterialIsToBeAssigned.materials = '';
+    itemToWhichMaterialIsToBeAssigned.materials = {};
     setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
@@ -144,7 +147,10 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfoCopy, section);
     itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
       materialAssignment.forEach((materialToBeAssigned) => {
-        materialToBeAssigned.materials = currentlyChoosenMaterial[section];
+        materialToBeAssigned.materials = findSpecificMaterial(
+          materialList && materialList[0] && materialList[0]?.materials,
+          currentlyChoosenMaterial[section]
+        );
       });
     });
 
@@ -159,7 +165,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfoCopy, section);
     itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
       materialAssignment.forEach((materialToBeAssigned) => {
-        materialToBeAssigned.materials = '';
+        materialToBeAssigned.materials = {};
       });
     });
 
@@ -182,7 +188,10 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     const itemToWhichMaterialIsToBeAssigned = roomInfo(currentClientInfoCopy, room, section);
 
     itemToWhichMaterialIsToBeAssigned.forEach((individualValue) => {
-      individualValue.materials = currentlyChoosenMaterial[section];
+      individualValue.materials = findSpecificMaterial(
+        materialList && materialList[0] && materialList[0]?.materials,
+        currentlyChoosenMaterial[section]
+      );
     });
     // completelyFilledRooms[room] = !completelyFilledRooms[room];
     setCurrentClientInfo({ ...currentClientInfoCopy });
@@ -239,6 +248,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     }
   }, [currentClientInfo]);
 
+  console.log(currentlyChoosenMaterial, currentClientInfo, 'currentlyChoosenMaterial');
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -516,14 +526,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                                 <MaterialsPickerCard
                                                   title={value.name}
                                                   index={idx}
-                                                  materials={
-                                                    findSpecificMaterial(
-                                                      materialList &&
-                                                        materialList[0] &&
-                                                        materialList[0]?.materials,
-                                                      value?.materials && value?.materials
-                                                    )?.description
-                                                  }
+                                                  materials={value?.materials?.description}
                                                   handleMaterialAssignment={
                                                     handleMaterialAssignmentForIndividualItem
                                                   }
