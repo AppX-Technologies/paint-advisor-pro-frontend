@@ -2,10 +2,11 @@ import AddIcon from '@mui/icons-material/Add';
 import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import { cloneDeep } from 'lodash';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import RoomCard from '../../../../../common/RoomCard';
 import Button from '../../../../../components/Button';
 import { initialRoomState } from '../../../common/roomsInitialStats';
-import MaterialsPicker from '../../MaterialsPicker';
+import Picker from '../../Picker';
 import { DeleteItemModel } from '../DeleteModel';
 import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
 import AddRoomForm from './AddRoomForm';
@@ -21,6 +22,9 @@ const InteriorRoomByRoom = ({
   allSectionsInfoOfARoom,
   setCurrentClientInfo
 }) => {
+  const { materialList } = useSelector((state) => state.material);
+  const { companyMadeByUsers } = useSelector((state) => state.usersFromCompany);
+
   const [addRoom, setAddRoom] = useState(false);
   const [currentAddMore, setCurentAddMore] = useState('');
   const [selectedRoomInfo, setSelectedRoomInfo] = useState(null);
@@ -122,10 +126,20 @@ const InteriorRoomByRoom = ({
       />
       {initialBidInfo.isMaterialProvidedByCustomer === 'No' &&
         currentClientInfo?.bid?.rooms.length !== 0 && (
-          <MaterialsPicker
-            currentClientInfo={currentClientInfo}
-            setCurrentClientInfo={setCurrentClientInfo}
-          />
+          <>
+            <Picker
+              pickerTitle='Materials'
+              currentClientInfo={currentClientInfo}
+              setCurrentClientInfo={setCurrentClientInfo}
+              pickerList={materialList}
+            />
+            {/* <Picker
+              pickerTitle='Labour'
+              currentClientInfo={currentClientInfo}
+              setCurrentClientInfo={setCurrentClientInfo}
+              pickerList={companyMadeByUsers}
+            /> */}
+          </>
         )}
     </Box>
   );

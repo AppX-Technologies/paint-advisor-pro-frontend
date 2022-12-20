@@ -18,7 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import MaterialsPickerCard from '../../../common/MaterialsPickerCard';
-import { NONPAINTABLEAREAFIELD } from '../../../helpers/contants';
+import { NONPAINTABLEAREAFIELD, ROLE_PAINTER } from '../../../helpers/contants';
 import { authSelector } from '../../auth/authSlice';
 import { fetchMaterial } from '../../materials/materialSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
@@ -31,15 +31,16 @@ import {
   sectionInfo,
   setMaterialsAccordingToSection
 } from '../helpers/generalHepers';
+import { fetchProductionRate } from '../../productionRate/productionRateSlice';
+import { isCompanyAdmin, isSystemUser } from '../../../helpers/roles';
+import { fetchUserMadeByCompany } from '../../usersFromCompany/usersFromCompanySlice';
 
 const filterOptions = createFilterOptions({
   matchFrom: 'start',
   stringify: (option) => option.description
 });
 
-// TODO Include Labour
-
-const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
+const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerList }) => {
   const [roomRelatedInfo, setRoomRelatedInfo] = useState(null);
   const [currentlyActiveRoomInfo, setCurrentlyActiveRoomInfo] = useState({});
 
@@ -83,14 +84,14 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     doorJambs: false
   });
 
-  const { materialList } = useSelector((state) => state.material);
   const [completelyFilledRooms, setCompletelyFilledRooms] = useState({});
   const [materialListSectionwise, setMaterialListSectionwise] = useState(null);
-  const [showMaterialToPaint, setShowMaterialToPaint] = useState(true);
+  const [showTheSection, setShowTheSection] = useState(true);
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { companyId } = useParams();
   const { org } = useSelector((state) => state.org);
+  const [orgId] = useState(isSystemUser(user) ? companyId : user.organization._id);
 
   // Material Assignment To Individual Item
 
@@ -111,7 +112,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
       title
     );
     itemToWhichMaterialIsToBeAssigned.materials = findSpecificMaterial(
-      materialList && materialList[0] && materialList[0]?.materials,
+      pickerList && pickerList[0] && pickerList[0]?.materials,
       currentlyChoosenMaterial[section]
     );
     setCurrentClientInfo({ ...currentClientInfoCopy });
@@ -150,7 +151,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
       materialAssignment.forEach((materialToBeAssigned) => {
         materialToBeAssigned.materials = findSpecificMaterial(
-          materialList && materialList[0] && materialList[0]?.materials,
+          pickerList && pickerList[0] && pickerList[0]?.materials,
           currentlyChoosenMaterial[section]
         );
       });
@@ -191,7 +192,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
 
     itemToWhichMaterialIsToBeAssigned.forEach((individualValue) => {
       individualValue.materials = findSpecificMaterial(
-        materialList && materialList[0] && materialList[0]?.materials,
+        pickerList && pickerList[0] && pickerList[0]?.materials,
         currentlyChoosenMaterial[section]
       );
     });
@@ -222,8 +223,22 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
   }, []);
 
   useEffect(() => {
-    setMaterialListSectionwise(setMaterialsAccordingToSection(materialList));
-  }, [materialList]);
+    if (isSystemUser(user) || isCompanyAdmin(user)) {
+      dispatch(
+        fetchUserMadeByCompany({
+          token: user.token,
+          orgId,
+          filterValue: { role: ROLE_PAINTER }
+        })
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    setMaterialListSectionwise(setMaterialsAccordingToSection(pickerList));
+  }, [pickerList]);
+
+  console.log(materialListSectionwise, 'materialListSectionwise');
 
   const findMaterialListSectionWise = (value) => {
     return materialListSectionwise?.find((material) => material?.name === value);
@@ -250,28 +265,27 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     }
   }, [currentClientInfo]);
 
-  console.log(currentlyChoosenMaterial, currentClientInfo, 'currentlyChoosenMaterial');
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-        <Typography sx={{ my: 2, fontSize: '17px' }}>Materials</Typography>
-        {showMaterialToPaint ? (
+        <Typography sx={{ my: 2, fontSize: '17px' }}>{pickerTitle}</Typography>
+        {showTheSection ? (
           <Tooltip title='Show Less' placement='top'>
             <ExpandLessIcon
-              onClick={() => setShowMaterialToPaint(false)}
+              onClick={() => setShowTheSection(false)}
               sx={{ cursor: 'pointer', fontSize: '30px' }}
             />
           </Tooltip>
         ) : (
           <Tooltip title='Show More' placement='top'>
             <ExpandMoreIcon
-              onClick={() => setShowMaterialToPaint(true)}
+              onClick={() => setShowTheSection(true)}
               sx={{ cursor: 'pointer', fontSize: '30px' }}
             />
           </Tooltip>
         )}
       </Box>
-      {showMaterialToPaint && (
+      {showTheSection && (
         <>
           {roomRelatedInfo &&
             roomRelatedInfo
@@ -565,4 +579,4 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
   );
 };
 
-export default MaterialsPicker;
+export default Picker;

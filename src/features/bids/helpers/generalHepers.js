@@ -1,5 +1,7 @@
+import { pickersPopperClasses } from '@mui/x-date-pickers/internals';
 import axios from 'axios';
 import { buttonStageInfo } from '../../../common/ButtonStageInfo';
+import { FIELDS_WHERE_MATERIALS_ARE_APPLIES } from '../../../helpers/contants';
 
 export const findCurrentStageButtonInfo = (stageName) => {
   return buttonStageInfo.find((info) => info.name === stageName);
@@ -142,10 +144,10 @@ export const findWheatherTheSectionIsCompletelyFilledOrNot = (roomsList, section
   );
 };
 
-export const setMaterialsAccordingToSection = (materialList) => {
+export const setMaterialsAccordingToSection = (pickerList) => {
   const materialsAccordingToSection = [];
-  if (materialList && materialList[0]) {
-    materialList[0]?.materials.forEach((material) => {
+  if (pickerList && pickerList[0]) {
+    pickerList[0]?.materials.forEach((material) => {
       material?.appliesTo?.forEach((materialApplication) => {
         const foundMaterialSection = materialsAccordingToSection.find(
           (materialSection) => materialSection.name === materialApplication
@@ -173,6 +175,38 @@ export const setMaterialsAccordingToSection = (materialList) => {
       });
     });
     return materialsAccordingToSection;
+  }
+};
+
+export const setLabourAccordingToSection = (pickerList) => {
+  const labourAccordingToSection = [];
+  if (pickerList) {
+    pickerList?.forEach((picker) => {
+      FIELDS_WHERE_MATERIALS_ARE_APPLIES.forEach((materialApplication) => {
+        const foundMaterialSection = labourAccordingToSection.find(
+          (materialSection) => materialSection.name === materialApplication
+        );
+        if (foundMaterialSection) {
+          foundMaterialSection.values.push({
+            name: picker.name,
+            proficiency: picker.proficiency,
+            _id: picker._id
+          });
+        } else {
+          labourAccordingToSection.push({
+            name: materialApplication,
+            values: [
+              {
+                name: picker.name,
+                proficiency: picker.proficiency,
+                _id: picker._id
+              }
+            ]
+          });
+        }
+      });
+    });
+    return labourAccordingToSection;
   }
 };
 

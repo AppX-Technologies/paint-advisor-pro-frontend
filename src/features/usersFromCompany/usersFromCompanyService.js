@@ -15,7 +15,13 @@ const fetchUserMadeByCompany = async (userData) => {
     }
   };
   delete userData.token;
-  const response = await axios.post(FETCH_USERS_COMPANY, {}, config);
+  const response = await axios.post(
+    FETCH_USERS_COMPANY,
+    {
+      filter: { ...(userData.filterValue || null) }
+    },
+    config
+  );
   return response.data;
 };
 
