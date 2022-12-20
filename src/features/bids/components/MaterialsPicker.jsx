@@ -37,6 +37,8 @@ const filterOptions = createFilterOptions({
   stringify: (option) => option.description
 });
 
+// TODO Include Labour
+
 const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
   const [roomRelatedInfo, setRoomRelatedInfo] = useState(null);
   const [currentlyActiveRoomInfo, setCurrentlyActiveRoomInfo] = useState({});
