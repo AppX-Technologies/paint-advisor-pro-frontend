@@ -9,7 +9,8 @@ const MaterialsPickerCard = ({
   handleMaterialDeletion,
   roomName,
   section,
-  setCurrentlyActiveRoomInfo
+  setCurrentlyActiveRoomInfo,
+  pickerTitle
 }) => {
   return (
     <Box
@@ -50,7 +51,9 @@ const MaterialsPickerCard = ({
                     {!materials ? 'Not Assigned' : materials}
                   </Typography>
                   {materials && (
-                    <Tooltip title='Remove Assigned Material' placement='top'>
+                    <Tooltip
+                      title={`Remove Assigned ${pickerTitle.slice(0, pickerTitle.length - 1)}`}
+                      placement='top'>
                       <HighlightOffIcon
                         sx={{ fontSize: '15px', ml: 1 }}
                         onClick={() => {
