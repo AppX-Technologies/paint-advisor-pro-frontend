@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Slider, Typography } from '@mui/material';
+import { CircularProgress, Grid, Slider, TextField, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -8,13 +8,20 @@ import { startCase } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProductionRate } from '../../features/productionRate/productionRateSlice';
+import { proffiencyTableTableFields } from '../../helpers/productionRateHelper';
 
-export default function EditIndividualPainterProductionR({ editState, setEditState, onEditClose }) {
+export default function EditIndividualPainterProductionR({
+  editState,
+  setEditState,
+  onEditClose,
+  bidType
+}) {
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const { productionRateList } = useSelector((state) => state.productionRate);
   const [updatedProductionRateList, setUpdatedProductionRateList] = useState([]);
   const dispatch = useDispatch();
 
+  console.log(editState);
   useEffect(() => {
     if (editState) {
       const ids = Object.keys(editState.id);
@@ -25,7 +32,7 @@ export default function EditIndividualPainterProductionR({ editState, setEditSta
       ];
       ids.forEach((i) => {
         result.push({
-          bidType: editState.bidType,
+          bidType,
           appliesTo: editState.appliesTo,
           appliesToType: editState.appliesToType,
           proficiency: i,
@@ -93,64 +100,29 @@ export default function EditIndividualPainterProductionR({ editState, setEditSta
       </DialogTitle>
       <DialogContent sx={{ marginTop: '-15px' }}>
         <Grid container spacing={3} sx={{ marginTop: '-15px' }}>
-          <Grid item xs={12}>
-            <Typography sx={{ fontSize: '12px', width: '140px' }}>
-              Beginner: {editState?.beginner}
-              {editState?.beginner !== 'N/A' && (
-                <span style={{ fontSize: '10px' }}>
-                  ft<sup>2</sup>/hr
-                </span>
-              )}
-            </Typography>
-
-            <Slider
-              value={editState?.beginner}
-              min={5}
-              step={5}
-              max={500}
-              marks={marks}
-              valueLabelDisplay='auto'
-              onChange={(e) => setEditState({ ...editState, beginner: e.target.value })}
-            />
-          </Grid>{' '}
-          <Grid item xs={12} sx={{ marginTop: '-30px' }}>
-            <Typography sx={{ fontSize: '12px', width: '140px' }}>
-              Intermediate: {editState?.intermediate}{' '}
-              {editState?.intermediate !== 'N/A' && (
-                <span style={{ fontSize: '10px' }}>
-                  ft<sup>2</sup>/hr
-                </span>
-              )}
-            </Typography>
-            <Slider
-              value={editState?.intermediate}
-              min={5}
-              step={5}
-              max={500}
-              marks={marks}
-              valueLabelDisplay='auto'
-              onChange={(e) => setEditState({ ...editState, intermediate: e.target.value })}
-            />
-          </Grid>{' '}
-          <Grid item xs={12} sx={{ marginTop: '-30px' }}>
-            <Typography sx={{ fontSize: '12px', width: '140px' }}>
-              Proficient: {editState?.proficient}{' '}
-              {editState?.proficient !== 'N/A' && (
-                <span style={{ fontSize: '10px' }}>
-                  ft<sup>2</sup>/hr
-                </span>
-              )}
-            </Typography>
-            <Slider
-              value={editState?.proficient}
-              min={5}
-              step={5}
-              max={500}
-              marks={marks}
-              valueLabelDisplay='auto'
-              onChange={(e) => setEditState({ ...editState, proficient: e.target.value })}
-            />
-          </Grid>
+          {proffiencyTableTableFields.map((proff) => {
+            return (
+              <Grid item xs={12}>
+                <Typography sx={{ fontSize: '12px', width: '140px' }}>
+                  {proff.label}: {editState?.[proff.name]}
+                  {editState?.[proff.name] !== 'N/A' && (
+                    <span style={{ fontSize: '10px' }}>
+                      ft<sup>2</sup>/hr
+                    </span>
+                  )}
+                </Typography>
+                <Slider
+                  value={editState?.[proff.name]}
+                  min={5}
+                  step={5}
+                  max={500}
+                  marks={marks}
+                  valueLabelDisplay='auto'
+                  onChange={(e) => setEditState({ ...editState, [proff.name]: e.target.value })}
+                />
+              </Grid>
+            );
+          })}
         </Grid>
       </DialogContent>
       <DialogActions>
