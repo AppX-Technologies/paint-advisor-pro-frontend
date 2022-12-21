@@ -182,29 +182,31 @@ export const setLabourAccordingToSection = (pickerList) => {
   const labourAccordingToSection = [];
   if (pickerList) {
     pickerList?.forEach((picker) => {
-      FIELDS_WHERE_MATERIALS_ARE_APPLIES.forEach((materialApplication) => {
-        const foundMaterialSection = labourAccordingToSection.find(
-          (materialSection) => materialSection.name === materialApplication
-        );
-        if (foundMaterialSection) {
-          foundMaterialSection.values.push({
-            name: picker.name,
-            proficiency: picker.proficiency,
-            _id: picker._id
-          });
-        } else {
-          labourAccordingToSection.push({
-            name: materialApplication,
-            values: [
-              {
-                name: picker.name,
-                proficiency: picker.proficiency,
-                _id: picker._id
-              }
-            ]
-          });
+      FIELDS_WHERE_MATERIALS_ARE_APPLIES.map((item) => item.label).forEach(
+        (materialApplication) => {
+          const foundMaterialSection = labourAccordingToSection.find(
+            (materialSection) => materialSection.name === materialApplication
+          );
+          if (foundMaterialSection) {
+            foundMaterialSection.values.push({
+              name: picker.name,
+              proficiency: picker.proficiency,
+              _id: picker._id
+            });
+          } else {
+            labourAccordingToSection.push({
+              name: materialApplication,
+              values: [
+                {
+                  name: picker.name,
+                  proficiency: picker.proficiency,
+                  _id: picker._id
+                }
+              ]
+            });
+          }
         }
-      });
+      );
     });
     return labourAccordingToSection;
   }

@@ -3,18 +3,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import FormatPaintOutlinedIcon from '@mui/icons-material/FormatPaintOutlined';
-import {
-  Autocomplete,
-  Box,
-  Divider,
-  Grid,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { Box, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import { cloneDeep, startCase } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import MaterialsPickerCard from '../../../common/MaterialsPickerCard';
@@ -28,19 +19,23 @@ import {
   groupedPaintableMaterials,
   individualItem,
   roomInfo,
-  sectionInfo,
-  setMaterialsAccordingToSection
+  sectionInfo
 } from '../helpers/generalHepers';
-import { fetchProductionRate } from '../../productionRate/productionRateSlice';
 import { isCompanyAdmin, isSystemUser } from '../../../helpers/roles';
 import { fetchUserMadeByCompany } from '../../usersFromCompany/usersFromCompanySlice';
+import AutoComplete from '../../../common/AutoComplete';
 
-const filterOptions = createFilterOptions({
-  matchFrom: 'start',
-  stringify: (option) => option.description
-});
-
-const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerList }) => {
+const Picker = ({
+  currentClientInfo,
+  setCurrentClientInfo,
+  pickerTitle,
+  pickerList,
+  informationToRender,
+  filterOption,
+  secondaryValuesToRender,
+  showPrimaryAutocomplete = false,
+  filteredPickerList
+}) => {
   const [roomRelatedInfo, setRoomRelatedInfo] = useState(null);
   const [currentlyActiveRoomInfo, setCurrentlyActiveRoomInfo] = useState({});
 
@@ -85,13 +80,23 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
   });
 
   const [completelyFilledRooms, setCompletelyFilledRooms] = useState({});
-  const [materialListSectionwise, setMaterialListSectionwise] = useState(null);
   const [showTheSection, setShowTheSection] = useState(true);
+  const [selectionToEveryComponent, setSelectionToEveryComponent] = useState('');
+  const [selectionToEveryComponentDescription, setSelectionToEveryComponentDescription] =
+    useState('');
+
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { companyId } = useParams();
   const { org } = useSelector((state) => state.org);
   const [orgId] = useState(isSystemUser(user) ? companyId : user.organization._id);
+
+  const filterOptions = useMemo(() => {
+    return createFilterOptions({
+      matchFrom: 'start',
+      stringify: (option) => option[filterOption]
+    });
+  }, [pickerTitle]);
 
   // Material Assignment To Individual Item
 
@@ -99,7 +104,7 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: 'Please Select A Material',
+          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
           severity: 'info'
         })
       );
@@ -111,8 +116,8 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
       section,
       title
     );
-    itemToWhichMaterialIsToBeAssigned.materials = findSpecificMaterial(
-      pickerList && pickerList[0] && pickerList[0]?.materials,
+    itemToWhichMaterialIsToBeAssigned[pickerTitle.toLowerCase()] = findSpecificMaterial(
+      filteredPickerList,
       currentlyChoosenMaterial[section]
     );
     setCurrentClientInfo({ ...currentClientInfoCopy });
@@ -129,7 +134,7 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
       section,
       title
     );
-    itemToWhichMaterialIsToBeAssigned.materials = {};
+    itemToWhichMaterialIsToBeAssigned[pickerTitle.toLowerCase()] = {};
     setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
@@ -141,7 +146,7 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: 'Please Select A Material',
+          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
           severity: 'info'
         })
       );
@@ -150,8 +155,8 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
     const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfoCopy, section);
     itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
       materialAssignment.forEach((materialToBeAssigned) => {
-        materialToBeAssigned.materials = findSpecificMaterial(
-          pickerList && pickerList[0] && pickerList[0]?.materials,
+        materialToBeAssigned[pickerTitle.toLowerCase()] = findSpecificMaterial(
+          filteredPickerList,
           currentlyChoosenMaterial[section]
         );
       });
@@ -168,7 +173,7 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
     const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfoCopy, section);
     itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
       materialAssignment.forEach((materialToBeAssigned) => {
-        materialToBeAssigned.materials = {};
+        materialToBeAssigned[pickerTitle.toLowerCase()] = {};
       });
     });
 
@@ -183,7 +188,7 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: 'Please Select A Material',
+          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
           severity: 'info'
         })
       );
@@ -191,12 +196,42 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
     const itemToWhichMaterialIsToBeAssigned = roomInfo(currentClientInfoCopy, room, section);
 
     itemToWhichMaterialIsToBeAssigned.forEach((individualValue) => {
-      individualValue.materials = findSpecificMaterial(
-        pickerList && pickerList[0] && pickerList[0]?.materials,
+      individualValue[pickerTitle.toLowerCase()] = findSpecificMaterial(
+        filteredPickerList,
         currentlyChoosenMaterial[section]
       );
     });
     // completelyFilledRooms[room] = !completelyFilledRooms[room];
+    setCurrentClientInfo({ ...currentClientInfoCopy });
+  };
+
+  const findMaterialListSectionWise = (value) => {
+    return informationToRender?.find((picker) => picker?.name === value);
+  };
+
+  const handlePickerAssignmentToAllSections = () => {
+    const currentClientInfoCopy = cloneDeep(currentClientInfo);
+
+    if (!selectionToEveryComponent) {
+      return dispatch(
+        showMessage({
+          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
+          severity: 'info'
+        })
+      );
+    }
+    currentClientInfoCopy?.bid?.rooms.forEach((room) => {
+      Object.keys(room)
+        .filter((sections) => sections !== '__v' && sections !== 'roomName' && sections !== '_id')
+        .forEach((sections) => {
+          room[sections].forEach((section) => {
+            section[pickerTitle.toLowerCase()] = findSpecificMaterial(
+              filteredPickerList,
+              selectionToEveryComponent
+            );
+          });
+        });
+    });
     setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
@@ -210,7 +245,6 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
     });
     setCompletelyFilledRooms({ ...completelyFilledRooms });
   }, [currentClientInfo?.bid?.rooms]);
-
   // Fetch Material According To Organization
 
   useEffect(() => {
@@ -221,7 +255,6 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
       })
     );
   }, []);
-
   useEffect(() => {
     if (isSystemUser(user) || isCompanyAdmin(user)) {
       dispatch(
@@ -233,16 +266,6 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
       );
     }
   }, []);
-
-  useEffect(() => {
-    setMaterialListSectionwise(setMaterialsAccordingToSection(pickerList));
-  }, [pickerList]);
-
-  console.log(materialListSectionwise, 'materialListSectionwise');
-
-  const findMaterialListSectionWise = (value) => {
-    return materialListSectionwise?.find((material) => material?.name === value);
-  };
 
   useEffect(() => {
     if (!currentlyActiveRoomInfo.roomName) {
@@ -263,12 +286,55 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
 
       setCompletelyFilledSection({ ...completelyFilledSection });
     }
-  }, [currentClientInfo]);
+  }, [currentClientInfo?.bids?.rooms]);
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-        <Typography sx={{ my: 2, fontSize: '17px' }}>{pickerTitle}</Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', mt: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography sx={{ my: 2, fontSize: '17px', mr: 2 }}>{pickerTitle}</Typography>
+          {showPrimaryAutocomplete && (
+            <AutoComplete
+              filterOptions={filterOptions}
+              value={selectionToEveryComponentDescription}
+              onChange={(event, newInput) => {
+                setSelectionToEveryComponent(() => newInput?._id);
+                setSelectionToEveryComponentDescription(() => newInput?.[filterOption]);
+              }}
+              options={
+                informationToRender && informationToRender[0]?.values
+                  ? informationToRender[0]?.values?.map((item) => {
+                      return item;
+                    })
+                  : []
+              }
+              filterOption={filterOption}
+              secondaryValuesToRender={secondaryValuesToRender}
+              pickerTitle={pickerTitle}
+            />
+          )}
+          {showPrimaryAutocomplete && (
+            <Tooltip title='Apply To All Sections' placement='top'>
+              <FormatPaintOutlinedIcon
+                sx={{
+                  ml: 1,
+                  cursor: 'pointer',
+                  color: currentClientInfo?.bid?.rooms.every((room) =>
+                    Object.keys(room)
+                      .filter(
+                        (section) =>
+                          section !== 'roomName' && section !== '_id' && section !== '__v'
+                      )
+                      .every((section) => room[section].includes('labour'))
+                  )
+                    ? 'green'
+                    : 'gray'
+                }}
+                onClick={handlePickerAssignmentToAllSections}
+              />
+            </Tooltip>
+          )}
+        </Box>
         {showTheSection ? (
           <Tooltip title='Show Less' placement='top'>
             <ExpandLessIcon
@@ -356,7 +422,7 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
                                 height: '100%'
                               }}>
                               <Typography sx={{ fontSize: '14px' }}>
-                                Materials For {startCase(dropdownValue.name)}
+                                {pickerTitle} For {startCase(dropdownValue.name)}
                               </Typography>
                               <Box
                                 sx={{
@@ -364,21 +430,18 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
                                   justifyContent: 'space-between',
                                   alignItems: 'center'
                                 }}>
-                                <Autocomplete
+                                <AutoComplete
                                   filterOptions={filterOptions}
                                   value={currentlyChoosenMaterialDescription[dropdownValue?.name]}
-                                  size='small'
                                   onChange={(event, newInput) => {
                                     currentlyChoosenMaterial[dropdownValue?.name] = newInput?._id;
                                     setCurrentyChoosenMaterial({ ...currentlyChoosenMaterial });
                                     currentlyChoosenMaterialDescription[dropdownValue?.name] =
-                                      newInput?.description;
+                                      newInput?.[filterOption];
                                     setCurrentyChoosenMaterialDescription({
                                       ...currentlyChoosenMaterialDescription
                                     });
                                   }}
-                                  disablePortal
-                                  id='combo-box-demo'
                                   options={
                                     findMaterialListSectionWise(dropdownValue?.name) &&
                                     findMaterialListSectionWise(dropdownValue?.name)?.values
@@ -389,30 +452,11 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
                                         })
                                       : []
                                   }
-                                  getOptionLabel={(option) => option}
-                                  renderOption={(props, option) => (
-                                    <Box
-                                      {...props}
-                                      sx={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                      }}>
-                                      <Box>
-                                        <Typography>{option?.description}</Typography>
-                                      </Box>
-                                      <Box ml={2}>
-                                        <Typography sx={{ fontSize: '13px', mt: 0.5 }}>
-                                          ({option?.unitPrice}/{option?.unit})
-                                        </Typography>
-                                      </Box>
-                                    </Box>
-                                  )}
-                                  sx={{ mt: 1, width: '100%', mb: 1 }}
-                                  renderInput={(params) => (
-                                    <TextField {...params} label='Materials' />
-                                  )}
+                                  filterOption={filterOption}
+                                  secondaryValuesToRender={secondaryValuesToRender}
+                                  pickerTitle={pickerTitle}
                                 />
+
                                 {/* Select For All */}
                                 <Box>
                                   {/* Section Completely Filled */}
@@ -486,7 +530,7 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
                                           <>
                                             <Tooltip
                                               placement='top'
-                                              title={`Apply Material To All ${dropdownValue.name} Of ${mainItem.name} Room`}>
+                                              title={`Apply ${pickerTitle} To All ${dropdownValue.name} Of ${mainItem.name} Room`}>
                                               <FormatPaintOutlinedIcon
                                                 onClick={() => {
                                                   handleMaterialAssignmentForWholeRoom(
@@ -542,7 +586,11 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
                                                 <MaterialsPickerCard
                                                   title={value.name}
                                                   index={idx}
-                                                  materials={value?.materials?.description}
+                                                  materials={
+                                                    pickerTitle === 'Materials'
+                                                      ? value?.materials?.description
+                                                      : value?.labours?.name
+                                                  }
                                                   handleMaterialAssignment={
                                                     handleMaterialAssignmentForIndividualItem
                                                   }
@@ -554,6 +602,7 @@ const Picker = ({ currentClientInfo, setCurrentClientInfo, pickerTitle, pickerLi
                                                   handleMaterialDeletion={
                                                     handleMaterialDeletionForIndividualItem
                                                   }
+                                                  pickerTitle={pickerTitle}
                                                 />
                                               </Grid>
                                             );

@@ -1,11 +1,15 @@
 import AddIcon from '@mui/icons-material/Add';
 import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import { cloneDeep } from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import RoomCard from '../../../../../common/RoomCard';
 import Button from '../../../../../components/Button';
 import { initialRoomState } from '../../../common/roomsInitialStats';
+import {
+  setLabourAccordingToSection,
+  setMaterialsAccordingToSection
+} from '../../../helpers/generalHepers';
 import Picker from '../../Picker';
 import { DeleteItemModel } from '../DeleteModel';
 import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
@@ -22,18 +26,30 @@ const InteriorRoomByRoom = ({
   allSectionsInfoOfARoom,
   setCurrentClientInfo
 }) => {
-  const { materialList } = useSelector((state) => state.material);
-  const { companyMadeByUsers } = useSelector((state) => state.usersFromCompany);
-
   const [addRoom, setAddRoom] = useState(false);
+  const [materialListSectionwise, setMaterialListSectionwise] = useState(null);
+  const [labourListSectionwise, setLabourListSectionwise] = useState(null);
   const [currentAddMore, setCurentAddMore] = useState('');
   const [selectedRoomInfo, setSelectedRoomInfo] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [itemToBeDeleted, setitemToBeDeleted] = useState(null);
 
+  const { materialList } = useSelector((state) => state.material);
+  const { companyMadeByUsers } = useSelector((state) => state.usersFromCompany);
+
   const onSelectedRoomInfoChange = (value) => {
     setSelectedRoomInfo(value);
   };
+
+  useEffect(() => {
+    setMaterialListSectionwise(setMaterialsAccordingToSection(materialList));
+  }, [materialList]);
+
+  useEffect(() => {
+    setLabourListSectionwise(setLabourAccordingToSection(companyMadeByUsers));
+  }, [companyMadeByUsers]);
+
+  console.log(labourListSectionwise, 'labourListSectionwise');
 
   return (
     <Box>
@@ -132,13 +148,24 @@ const InteriorRoomByRoom = ({
               currentClientInfo={currentClientInfo}
               setCurrentClientInfo={setCurrentClientInfo}
               pickerList={materialList}
+              informationToRender={materialListSectionwise}
+              filterOption='description'
+              secondaryValuesToRender={['unit', 'unitPrice']}
+              filteredPickerList={
+                materialList && materialList[0] && materialList[0]?.materials
+              }
             />
-            {/* <Picker
-              pickerTitle='Labour'
+            <Picker
+              pickerTitle='Labours'
               currentClientInfo={currentClientInfo}
               setCurrentClientInfo={setCurrentClientInfo}
               pickerList={companyMadeByUsers}
-            /> */}
+              informationToRender={labourListSectionwise}
+              filterOption='name'
+              secondaryValuesToRender={['proficiency']}
+              showPrimaryAutocomplete
+              filteredPickerList={companyMadeByUsers}
+            />
           </>
         )}
     </Box>
