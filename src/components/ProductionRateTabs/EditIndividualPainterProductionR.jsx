@@ -21,7 +21,6 @@ export default function EditIndividualPainterProductionR({
   const [updatedProductionRateList, setUpdatedProductionRateList] = useState([]);
   const dispatch = useDispatch();
 
-  console.log(editState);
   useEffect(() => {
     if (editState) {
       const ids = Object.keys(editState.id);
@@ -107,6 +106,7 @@ export default function EditIndividualPainterProductionR({
                   {proff.label}: {editState?.[proff.name]}
                   {editState?.[proff.name] !== 'N/A' && (
                     <span style={{ fontSize: '10px' }}>
+                      {' '}
                       ft<sup>2</sup>/hr
                     </span>
                   )}
