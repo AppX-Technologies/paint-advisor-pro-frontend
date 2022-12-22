@@ -20,7 +20,6 @@ export default function EditIndividualPainterProductionR({
   const { productionRateList } = useSelector((state) => state.productionRate);
   const [updatedProductionRateList, setUpdatedProductionRateList] = useState([]);
   const dispatch = useDispatch();
-
   useEffect(() => {
     if (editState) {
       const ids = Object.keys(editState.id);

@@ -37,8 +37,6 @@ const sections = [
   }
 ];
 
-export const painterProffiency = ['Beginner', 'Intermediate', 'Proficient'];
-
 export const proffiencyTableTableFields = [
   {
     name: 'beginner',
@@ -47,6 +45,10 @@ export const proffiencyTableTableFields = [
   {
     name: 'intermediate',
     label: 'Intermediate'
+  },
+  {
+    name: 'proficient',
+    label: 'Proficient'
   },
   {
     name: 'expert',
@@ -71,8 +73,9 @@ function objMakerOfId(filteredBySubtype) {
 function objMakerOfProficiencyLavel(filteredBySubtype) {
   const array = proffiencyTableTableFields.map((proff) => {
     return {
-      [proff.name]: filteredBySubtype.find(({ proficiency }) => proficiency === proff.label)
-        ?.productionRate || 0
+      [proff.name]:
+        filteredBySubtype.find(({ proficiency }) => proficiency === proff.label)?.productionRate ||
+        0
     };
   });
   let result = {};
@@ -112,36 +115,21 @@ export const filterProductionRates = (productionRate = []) => {
 export function avgCalculator(section, productionRateList = []) {
   const types = productionRateList[section];
   const totalTypes = productionRateList[section].length;
-  const beginner =
-    types
-      .map((type) => type.beginner)
-      .reduce((a, b) => {
-        return b !== undefined && a + b;
-      }, 0) / totalTypes;
-  const intermediate =
-    types
-      .map((type) => type.intermediate)
-      .reduce((a, b) => {
-        return b !== undefined && a + b;
-      }, 0) / totalTypes;
-  const proficient =
-    types
-      .map((type) => type.proficient)
-      .reduce((a, b) => {
-        return b !== undefined && a + b;
-      }, 0) / totalTypes;
+  const array = proffiencyTableTableFields.map((proff) => {
+    return {
+      [proff.name]: (
+        types
+          .map((type) => type[proff.name])
+          .reduce((a, b) => {
+            return b !== undefined && a + b;
+          }, 0) / totalTypes
+      ).toFixed(1)
+    };
+  });
 
-  const expert =
-    types
-      .map((type) => type.expert)
-      .reduce((a, b) => {
-        return b !== undefined && a + b;
-      }, 0) / totalTypes;
-
-  return {
-    beginner: beginner.toFixed(1),
-    intermediate: intermediate.toFixed(1),
-    proficient: proficient.toFixed(1),
-    expert: expert.toFixed(1)
-  };
+  let result = {};
+  array.forEach((x) => {
+    result = { ...result, ...x };
+  });
+  return result;
 }

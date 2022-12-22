@@ -64,8 +64,8 @@ function Row({ row, onEditClick }) {
         {proffiencyTableTableFields.map((proff) => {
           return (
             <TableCell align='left' style={{}}>
-              {(row[proff.name] !== 'NaN' ? row[proff.name] : null) || 'N/A'}
-              {row[proff.name] !== 'NaN' && (
+              {row[proff.name] === 0 ? 'N/A' : row[proff.name]}
+              {row[proff.name] !== 0 && (
                 <span style={{ fontSize: '10px' }}>
                   {' '}
                   ft<sup>2</sup>/hr
