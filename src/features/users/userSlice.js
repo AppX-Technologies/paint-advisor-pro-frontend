@@ -77,20 +77,6 @@ export const deleteUser = createAsyncThunk('auth/deleteUser', async (userData, t
     return thunkAPI.rejectWithValue(message);
   }
 });
-
-export const updatePassword = createAsyncThunk('auth/updatePassword', async (userData, thunkAPI) => {
-  try {
-    const response = await userService.deleteUser(userData);
-    return response;
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-    thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
-    return thunkAPI.rejectWithValue(message);
-  }
-});
 export const userSlice = createSlice({
   name: 'user',
   initialState,
