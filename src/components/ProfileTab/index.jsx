@@ -1,4 +1,4 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Email, LocalPhone, Visibility, VisibilityOff } from '@mui/icons-material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonIcon from '@mui/icons-material/Person';
 import {
@@ -144,7 +144,11 @@ const Profile = () => {
                 </Button>
               </Box>
             ) : (
-              <Button variant='contained' sx={{ p: 0 }} onClick={() => setEditMode(!editMode)}>
+              <Button
+                variant='contained'
+                color='success'
+                sx={{ p: 0 }}
+                onClick={() => setEditMode(!editMode)}>
                 Edit
               </Button>
             )}
@@ -167,7 +171,7 @@ const Profile = () => {
                   <Typography sx={{ fontSize: '13px', fontWeight: '300' }}>Email:</Typography>
                   <Alert
                     sx={{ padding: '2px 10px', mt: 1 }}
-                    icon={<PersonIcon fontSize='inherit' />}
+                    icon={<Email fontSize='inherit' />}
                     severity='warning'>
                     {user?.email}
                   </Alert>
@@ -178,7 +182,7 @@ const Profile = () => {
                   </Typography>
                   <Alert
                     sx={{ padding: '2px 10px', mt: 1 }}
-                    icon={<PersonIcon fontSize='inherit' />}
+                    icon={<LocalPhone fontSize='inherit' />}
                     severity='warning'>
                     {user?.phone}
                   </Alert>
@@ -193,7 +197,7 @@ const Profile = () => {
                   value={userDetail?.name ?? user?.name}
                   label={<Typography sx={{ fontSize: '13px' }}>Name</Typography>}
                   onChange={(e) => setuserDetail({ ...userDetail, name: e.target.value })}
-                  sx={{width:'94%'}}
+                  sx={{ width: '94%' }}
                 />
                 <TextField
                   sx={{ ml: 2 }}
