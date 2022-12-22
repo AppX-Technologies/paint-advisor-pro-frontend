@@ -1,5 +1,5 @@
-import { pickersPopperClasses } from '@mui/x-date-pickers/internals';
 import axios from 'axios';
+import { cloneDeep } from 'lodash';
 import { buttonStageInfo } from '../../../common/ButtonStageInfo';
 import { FIELDS_WHERE_MATERIALS_ARE_APPLIES } from '../../../helpers/contants';
 
@@ -129,10 +129,13 @@ export const groupedPaintableMaterials = (rooms) => {
 };
 
 export const findSpecificMaterial = (companyMaterialList, specificMaterialId) => {
-  return (
-    companyMaterialList &&
-    companyMaterialList.find((companyMaterial) => companyMaterial._id === specificMaterialId)
-  );
+  const companyMaterialListClone = cloneDeep(companyMaterialList);
+  const completeMaterial =
+    companyMaterialListClone &&
+    companyMaterialListClone.find((companyMaterial) => companyMaterial._id === specificMaterialId);
+
+  delete completeMaterial._id;
+  return completeMaterial;
 };
 
 export const findWheatherTheSectionIsCompletelyFilledOrNot = (roomsList, section) => {
@@ -157,7 +160,7 @@ export const setMaterialsAccordingToSection = (pickerList) => {
             description: material.description,
             unit: material.unit,
             unitPrice: material.unitPrice,
-            _id: material._id
+            materialId: material._id
           });
         } else {
           materialsAccordingToSection.push({
@@ -167,7 +170,7 @@ export const setMaterialsAccordingToSection = (pickerList) => {
                 description: material.description,
                 unit: material.unit,
                 unitPrice: material.unitPrice,
-                _id: material._id
+                materialId: material._id
               }
             ]
           });
@@ -191,7 +194,7 @@ export const setLabourAccordingToSection = (pickerList) => {
             foundMaterialSection.values.push({
               name: picker.name,
               proficiency: picker.proficiency,
-              _id: picker._id
+              labourId: picker._id
             });
           } else {
             labourAccordingToSection.push({
@@ -200,7 +203,7 @@ export const setLabourAccordingToSection = (pickerList) => {
                 {
                   name: picker.name,
                   proficiency: picker.proficiency,
-                  _id: picker._id
+                  labourId: picker._id
                 }
               ]
             });
@@ -228,4 +231,41 @@ export const sectionInfo = (currentClientInfo, section) => {
   return currentClientInfo?.bid?.rooms?.map((roomInfoForSection) => {
     return roomInfoForSection[section];
   });
+};
+
+export const checkWheatherEverySectionIsFilled = (rooms) => {
+  const array = [];
+  if (rooms) {
+    rooms.forEach((room) => {
+      Object.keys(room)
+        .filter((sections) => sections !== 'roomName' && sections !== '__v' && sections !== '_id')
+        .forEach((sections) => {
+          room[sections].forEach((section) => {
+            if (!section?.labours || Object.keys(section?.labours).length === 0) {
+              array.push(false);
+            } else {
+              array.push(true);
+            }
+          });
+        });
+    });
+  }
+
+  return !array.includes(false);
+};
+
+export const checkWheatherIndividualSectionIsFilled = (
+  currentClientInfo,
+  currentSection,
+  pickerTitle
+) => {
+  const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfo, currentSection);
+  if (
+    itemToWhichMaterialIsToBeAssigned?.every((roomDetails) =>
+      roomDetails?.every((room) => !Object.keys(room[pickerTitle] ?? {}).length)
+    )
+  ) {
+    return false;
+  }
+  return true;
 };

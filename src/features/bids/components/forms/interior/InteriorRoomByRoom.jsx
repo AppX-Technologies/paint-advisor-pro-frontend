@@ -2,9 +2,15 @@ import AddIcon from '@mui/icons-material/Add';
 import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import RoomCard from '../../../../../common/RoomCard';
 import Button from '../../../../../components/Button';
+import { ROLE_PAINTER } from '../../../../../helpers/contants';
+import { isCompanyAdmin, isSystemUser } from '../../../../../helpers/roles';
+import { authSelector } from '../../../../auth/authSlice';
+import { fetchMaterial } from '../../../../materials/materialSlice';
+import { fetchUserMadeByCompany } from '../../../../usersFromCompany/usersFromCompanySlice';
 import { initialRoomState } from '../../../common/roomsInitialStats';
 import {
   setLabourAccordingToSection,
@@ -34,6 +40,11 @@ const InteriorRoomByRoom = ({
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [itemToBeDeleted, setitemToBeDeleted] = useState(null);
 
+  const { user } = useSelector(authSelector);
+  const { companyId } = useParams();
+  const dispatch = useDispatch();
+  const { org } = useSelector((state) => state.org);
+  const [orgId] = useState(isSystemUser(user) ? companyId : user.organization._id);
   const { materialList } = useSelector((state) => state.material);
   const { companyMadeByUsers } = useSelector((state) => state.usersFromCompany);
 
@@ -49,8 +60,25 @@ const InteriorRoomByRoom = ({
     setLabourListSectionwise(setLabourAccordingToSection(companyMadeByUsers));
   }, [companyMadeByUsers]);
 
-  console.log(labourListSectionwise, 'labourListSectionwise');
-
+  useEffect(() => {
+    dispatch(
+      fetchMaterial({
+        token: user.token,
+        id: companyId ? org.materials : undefined
+      })
+    );
+  }, []);
+  useEffect(() => {
+    if (isSystemUser(user) || isCompanyAdmin(user)) {
+      dispatch(
+        fetchUserMadeByCompany({
+          token: user.token,
+          orgId,
+          filterValue: { role: ROLE_PAINTER }
+        })
+      );
+    }
+  }, []);
   return (
     <Box>
       {/* Main Form Body  */}
@@ -151,9 +179,7 @@ const InteriorRoomByRoom = ({
               informationToRender={materialListSectionwise}
               filterOption='description'
               secondaryValuesToRender={['unit', 'unitPrice']}
-              filteredPickerList={
-                materialList && materialList[0] && materialList[0]?.materials
-              }
+              filteredPickerList={materialList && materialList[0] && materialList[0]?.materials}
             />
             <Picker
               pickerTitle='Labours'

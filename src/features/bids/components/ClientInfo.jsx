@@ -36,8 +36,6 @@ const ClientInfo = ({
   selectedListItem,
   currentClientInfo,
   setCurrentClientInfo,
-  onClientFormChange,
-  setCurrentClientInfoToEdit,
   setScheduleTheJob,
   scheduleTheJob,
   schedueJobDate,
