@@ -2,9 +2,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { CircularProgress, Stack, Typography } from '@mui/material';
-import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,8 +15,19 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { reset } from '../../features/productionRate/productionRateSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import { avgCalculator, filterProductionRates } from '../../helpers/productionRateHelper';
+import {
+  avgCalculator,
+  filterProductionRates,
+  proffiencyTableTableFields
+} from '../../helpers/productionRateHelper';
 import EditIndividualPainterProductionR from './EditIndividualPainterProductionR';
+
+const tableCellStyle = {
+  fontSize: '15px',
+  maxWidth: `${60 / (proffiencyTableTableFields.length + 1)}%`,
+  minWidth: `${60 / proffiencyTableTableFields.length + 1}%`,
+  fontWeight: '550'
+};
 
 const rowDataCalculatorWithAvg = (productionRateList) => {
   const result = [];
@@ -33,77 +42,83 @@ const rowDataCalculatorWithAvg = (productionRateList) => {
   return result;
 };
 
+// Go to ../../helpers/productionRateHelper(proffiencyTableTableFields) to change table fields
 function Row({ row, onEditClick }) {
   const [viewMore, setViewMore] = React.useState(false);
   return (
     <>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell sx={{ maxWidth: '10px' }}>
-          <IconButton size='small' onClick={() => setViewMore(!viewMore)}>
-            {viewMore ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
+        <TableCell
+          sx={{
+            fontSize: '15px',
+            width: '1%',
+            fontWeight: '550'
+          }}>
+          {viewMore ? (
+            <KeyboardArrowUpIcon onClick={() => setViewMore(!viewMore)} />
+          ) : (
+            <KeyboardArrowDownIcon onClick={() => setViewMore(!viewMore)} />
+          )}
         </TableCell>
-        <TableCell>{startCase(row.section)}</TableCell>
-        <TableCell align='left'>
-          {row.beginnerAvg}{' '}
-          <span style={{ fontSize: '10px' }}>
-            ft<sup>2</sup>/hr
-          </span>
-        </TableCell>
-        <TableCell align='left'>
-          {row.intermediateAvg}{' '}
-          <span style={{ fontSize: '10px' }}>
-            ft<sup>2</sup>/hr
-          </span>
-        </TableCell>
-        <TableCell align='left'>
-          {row.proficientAvg}{' '}
-          <span style={{ fontSize: '10px' }}>
-            ft<sup>2</sup>/hr
-          </span>
-        </TableCell>
+        <TableCell style={{}}>{startCase(row.section)}</TableCell>
+        {proffiencyTableTableFields.map((proff) => {
+          return (
+            <TableCell align='left' style={{}}>
+              {row[proff.name] === 0 ? 'N/A' : row[proff.name]}
+              {row[proff.name] !== 0 && (
+                <span style={{ fontSize: '10px' }}>
+                  {' '}
+                  ft<sup>2</sup>/hr
+                </span>
+              )}
+            </TableCell>
+          );
+        })}
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingLeft: '30px' }} colSpan={6}>
+        <TableCell
+          style={{ padding: 0, margin: 0 }}
+          colSpan={proffiencyTableTableFields.length + 2}>
           <Collapse in={viewMore} timeout='auto' unmountOnExit>
-            <Box sx={{ backgroundColor: '', width: 'auto', margin: '0 0 0 5.5%' }}>
-              <Table size='small'>
-                <TableBody>
-                  {row.appliesToTypeOfRelatedSection.map((summaryRow) => (
-                    <TableRow key={summaryRow.appliesToType} selected>
-                      <TableCell align='left' sx={{ width: '21.3%', fontSize: '12px' }}>
-                        {summaryRow.appliesToType}
-                      </TableCell>
-                      <TableCell align='left' sx={{ width: '24.6%', fontSize: '12px' }}>
-                        {summaryRow.beginner}{' '}
-                        <span style={{ fontSize: '9px' }}>
-                          ft<sup>2</sup>/hr
-                        </span>
-                      </TableCell>
-                      <TableCell align='left' sx={{ width: '30.4%', fontSize: '12px' }}>
-                        {summaryRow.intermediate}{' '}
-                        <span style={{ fontSize: '9px' }}>
-                          ft<sup>2</sup>/hr
-                        </span>
-                      </TableCell>
-                      <TableCell align='left' sx={{ fontSize: '12px' }}>
-                        {summaryRow.proficient}{' '}
-                        <span style={{ fontSize: '9px' }}>
-                          ft<sup>2</sup>/hr
-                        </span>
-                      </TableCell>
-                      <TableCell align='center'>
-                        <EditOutlinedIcon
-                          fontSize='15px'
-                          sx={{ cursor: 'pointer' }}
-                          onClick={() => onEditClick({ ...summaryRow, appliesTo: row.section })}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
+            <Table size='small'>
+              <TableBody>
+                {row.appliesToTypeOfRelatedSection.map((summaryRow) => (
+                  <TableRow key={summaryRow.appliesToType} selected>
+                    <TableCell
+                      sx={{
+                        fontSize: '15px',
+                        minWidth: '4%',
+                        maxWidth: '4%',
+                        fontWeight: '550'
+                      }}
+                    />
+                    <TableCell align='left' sx={{ ...tableCellStyle, fontSize: '13px' }}>
+                      {summaryRow.appliesToType}
+                    </TableCell>
+                    {proffiencyTableTableFields.map((proff, index) => {
+                      return (
+                        <TableCell align='left' sx={{ ...tableCellStyle, fontSize: '12px' }}>
+                          {summaryRow[proff.name] === 0 ? 'N/A' : summaryRow[proff.name]}
+                          {summaryRow[proff.name] !== 0 && (
+                            <span style={{ fontSize: '10px' }}>
+                              {' '}
+                              ft<sup>2</sup>/hr
+                            </span>
+                          )}
+                          {index === proffiencyTableTableFields.length - 1 && (
+                            <EditOutlinedIcon
+                              fontSize='15px'
+                              sx={{ cursor: 'pointer', float: 'right' }}
+                              onClick={() => onEditClick({ ...summaryRow, appliesTo: row.section })}
+                            />
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </Collapse>
         </TableCell>
       </TableRow>
@@ -158,26 +173,21 @@ export default function ProductionRateTable({ filterValue }) {
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell />
               <TableCell
-                sx={{ fontSize: '15px', width: '19.5%', fontWeight: '550', color: '#4d5057' }}>
-                Section
-              </TableCell>
-              <TableCell
-                align='left'
-                sx={{ fontSize: '15px', fontWeight: '550', color: '#4d5057' }}>
-                Beginner
-              </TableCell>
-              <TableCell
-                align='left'
-                sx={{ fontSize: '15px', fontWeight: '550', color: '#4d5057' }}>
-                Intermediate
-              </TableCell>
-              <TableCell
-                align='left'
-                sx={{ fontSize: '15px', fontWeight: '550', color: '#4d5057' }}>
-                Proficient
-              </TableCell>
+                sx={{
+                  fontSize: '15px',
+                  width: '1%',
+                  fontWeight: '550'
+                }}
+              />
+              <TableCell sx={tableCellStyle}>Section</TableCell>
+              {proffiencyTableTableFields.map((proff) => {
+                return (
+                  <TableCell align='left' sx={tableCellStyle}>
+                    {proff.label}
+                  </TableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
