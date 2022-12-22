@@ -42,6 +42,8 @@ const rowDataCalculatorWithAvg = (productionRateList) => {
   return result;
 };
 
+
+
 // Go to ../../helpers/productionRateHelper(proffiencyTableTableFields) to change table fields
 function Row({ row, onEditClick }) {
   const [viewMore, setViewMore] = React.useState(false);

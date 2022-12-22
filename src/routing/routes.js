@@ -9,21 +9,28 @@ import { Pipeline as Bids } from '../features/bids';
 import Materials from '../pages/Materials';
 import ProductionRate from '../pages/ProductionRate';
 import { Equipments } from '../pages/Equipments';
+import Profile from '../components/ProfileTab';
 
 export const commonRoutes = [
-  { relLink: '/profile', link: '/profile', icon: AccountCircleIcon, text: 'Profile' },
+  {
+    relLink: '/profile',
+    link: '/profile',
+    icon: AccountCircleIcon,
+    text: 'Profile',
+    element: Profile
+  },
   { icon: Logout, text: 'Logout' }
 ];
 
 export const systemAdminRoutes = [
   { relLink: 'dashboard', icon: Dashboard, text: 'Dashboard' },
   { relLink: 'processes', icon: FormatListBulleted, text: 'Processes' },
-
   {
     relLink: 'production-rates',
     icon: BarChartIcon,
     text: 'Production Rates'
   },
+
   { relLink: 'paint', icon: FormatColorFillIcon, text: 'Paint' },
   { relLink: 'equipments', icon: ConstructionIcon, text: 'Equipments' }
 ].map((l) => ({ ...l, link: `/${l.relLink}` }));
@@ -35,7 +42,6 @@ export const companyRoutes = (id) =>
     { relLink: 'bids', icon: Dashboard, text: 'Bids', element: Bids },
     { relLink: 'processes', icon: FormatListBulleted, text: 'Processes', element: Processes },
     { relLink: 'users', icon: People, text: 'Users', element: UsersFromCompany },
-
     {
       relLink: 'production-rates',
       icon: BarChartIcon,

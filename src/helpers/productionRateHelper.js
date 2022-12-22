@@ -47,10 +47,6 @@ export const proffiencyTableTableFields = [
     label: 'Intermediate'
   },
   {
-    name: 'proficient',
-    label: 'Proficient'
-  },
-  {
     name: 'expert',
     label: 'Expert'
   }
