@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { companyProductionRate } from '../../helpers/contants';
 
 const endpoint = 'http://localhost:5001/production-rates';
 const CREATE_PROCESS = `${endpoint}/`;

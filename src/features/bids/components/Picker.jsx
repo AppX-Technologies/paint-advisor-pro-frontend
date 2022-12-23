@@ -3,22 +3,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import FormatPaintOutlinedIcon from '@mui/icons-material/FormatPaintOutlined';
-import {
-  Autocomplete,
-  Box,
-  Divider,
-  Grid,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { Box, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import { cloneDeep, startCase } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import MaterialsPickerCard from '../../../common/MaterialsPickerCard';
-import { NONPAINTABLEAREAFIELD } from '../../../helpers/contants';
+import { NONPAINTABLEAREAFIELD, ROLE_PAINTER } from '../../../helpers/contants';
 import { authSelector } from '../../auth/authSlice';
 import { fetchMaterial } from '../../materials/materialSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
@@ -28,16 +19,23 @@ import {
   groupedPaintableMaterials,
   individualItem,
   roomInfo,
-  sectionInfo,
-  setMaterialsAccordingToSection
+  sectionInfo
 } from '../helpers/generalHepers';
+import { isCompanyAdmin, isSystemUser } from '../../../helpers/roles';
+import { fetchUserMadeByCompany } from '../../usersFromCompany/usersFromCompanySlice';
+import AutoComplete from '../../../common/AutoComplete';
 
-const filterOptions = createFilterOptions({
-  matchFrom: 'start',
-  stringify: (option) => option.description
-});
-
-const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
+const Picker = ({
+  currentClientInfo,
+  setCurrentClientInfo,
+  pickerTitle,
+  pickerList,
+  informationToRender,
+  filterOption,
+  secondaryValuesToRender,
+  showPrimaryAutocomplete = false,
+  filteredPickerList
+}) => {
   const [roomRelatedInfo, setRoomRelatedInfo] = useState(null);
   const [currentlyActiveRoomInfo, setCurrentlyActiveRoomInfo] = useState({});
 
@@ -81,14 +79,24 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     doorJambs: false
   });
 
-  const { materialList } = useSelector((state) => state.material);
   const [completelyFilledRooms, setCompletelyFilledRooms] = useState({});
-  const [materialListSectionwise, setMaterialListSectionwise] = useState(null);
-  const [showMaterialToPaint, setShowMaterialToPaint] = useState(true);
+  const [showTheSection, setShowTheSection] = useState(true);
+  const [selectionToEveryComponent, setSelectionToEveryComponent] = useState('');
+  const [selectionToEveryComponentDescription, setSelectionToEveryComponentDescription] =
+    useState('');
+
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { companyId } = useParams();
   const { org } = useSelector((state) => state.org);
+  const [orgId] = useState(isSystemUser(user) ? companyId : user.organization._id);
+
+  const filterOptions = useMemo(() => {
+    return createFilterOptions({
+      matchFrom: 'start',
+      stringify: (option) => option[filterOption]
+    });
+  }, [pickerTitle]);
 
   // Material Assignment To Individual Item
 
@@ -96,7 +104,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: 'Please Select A Material',
+          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
           severity: 'info'
         })
       );
@@ -108,8 +116,8 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
       section,
       title
     );
-    itemToWhichMaterialIsToBeAssigned.materials = findSpecificMaterial(
-      materialList && materialList[0] && materialList[0]?.materials,
+    itemToWhichMaterialIsToBeAssigned[pickerTitle.toLowerCase()] = findSpecificMaterial(
+      filteredPickerList,
       currentlyChoosenMaterial[section]
     );
     setCurrentClientInfo({ ...currentClientInfoCopy });
@@ -126,7 +134,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
       section,
       title
     );
-    itemToWhichMaterialIsToBeAssigned.materials = {};
+    itemToWhichMaterialIsToBeAssigned[pickerTitle.toLowerCase()] = {};
     setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
@@ -138,7 +146,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: 'Please Select A Material',
+          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
           severity: 'info'
         })
       );
@@ -147,8 +155,8 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfoCopy, section);
     itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
       materialAssignment.forEach((materialToBeAssigned) => {
-        materialToBeAssigned.materials = findSpecificMaterial(
-          materialList && materialList[0] && materialList[0]?.materials,
+        materialToBeAssigned[pickerTitle.toLowerCase()] = findSpecificMaterial(
+          filteredPickerList,
           currentlyChoosenMaterial[section]
         );
       });
@@ -165,7 +173,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfoCopy, section);
     itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
       materialAssignment.forEach((materialToBeAssigned) => {
-        materialToBeAssigned.materials = {};
+        materialToBeAssigned[pickerTitle.toLowerCase()] = {};
       });
     });
 
@@ -180,7 +188,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: 'Please Select A Material',
+          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
           severity: 'info'
         })
       );
@@ -188,12 +196,42 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     const itemToWhichMaterialIsToBeAssigned = roomInfo(currentClientInfoCopy, room, section);
 
     itemToWhichMaterialIsToBeAssigned.forEach((individualValue) => {
-      individualValue.materials = findSpecificMaterial(
-        materialList && materialList[0] && materialList[0]?.materials,
+      individualValue[pickerTitle.toLowerCase()] = findSpecificMaterial(
+        filteredPickerList,
         currentlyChoosenMaterial[section]
       );
     });
     // completelyFilledRooms[room] = !completelyFilledRooms[room];
+    setCurrentClientInfo({ ...currentClientInfoCopy });
+  };
+
+  const findMaterialListSectionWise = (value) => {
+    return informationToRender?.find((picker) => picker?.name === value);
+  };
+
+  const handlePickerAssignmentToAllSections = () => {
+    const currentClientInfoCopy = cloneDeep(currentClientInfo);
+
+    if (!selectionToEveryComponent) {
+      return dispatch(
+        showMessage({
+          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
+          severity: 'info'
+        })
+      );
+    }
+    currentClientInfoCopy?.bid?.rooms.forEach((room) => {
+      Object.keys(room)
+        .filter((sections) => sections !== '__v' && sections !== 'roomName' && sections !== '_id')
+        .forEach((sections) => {
+          room[sections].forEach((section) => {
+            section[pickerTitle.toLowerCase()] = findSpecificMaterial(
+              filteredPickerList,
+              selectionToEveryComponent
+            );
+          });
+        });
+    });
     setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
@@ -207,7 +245,6 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
     });
     setCompletelyFilledRooms({ ...completelyFilledRooms });
   }, [currentClientInfo?.bid?.rooms]);
-
   // Fetch Material According To Organization
 
   useEffect(() => {
@@ -218,14 +255,17 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
       })
     );
   }, []);
-
   useEffect(() => {
-    setMaterialListSectionwise(setMaterialsAccordingToSection(materialList));
-  }, [materialList]);
-
-  const findMaterialListSectionWise = (value) => {
-    return materialListSectionwise?.find((material) => material?.name === value);
-  };
+    if (isSystemUser(user) || isCompanyAdmin(user)) {
+      dispatch(
+        fetchUserMadeByCompany({
+          token: user.token,
+          orgId,
+          filterValue: { role: ROLE_PAINTER }
+        })
+      );
+    }
+  }, []);
 
   useEffect(() => {
     if (!currentlyActiveRoomInfo.roomName) {
@@ -246,30 +286,72 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
 
       setCompletelyFilledSection({ ...completelyFilledSection });
     }
-  }, [currentClientInfo]);
+  }, [currentClientInfo?.bids?.rooms]);
 
-  console.log(currentlyChoosenMaterial, currentClientInfo, 'currentlyChoosenMaterial');
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-        <Typography sx={{ my: 2, fontSize: '17px' }}>Materials</Typography>
-        {showMaterialToPaint ? (
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', mt: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography sx={{ my: 2, fontSize: '17px', mr: 2 }}>{pickerTitle}</Typography>
+          {showPrimaryAutocomplete && (
+            <AutoComplete
+              filterOptions={filterOptions}
+              value={selectionToEveryComponentDescription}
+              onChange={(event, newInput) => {
+                setSelectionToEveryComponent(() => newInput?._id);
+                setSelectionToEveryComponentDescription(() => newInput?.[filterOption]);
+              }}
+              options={
+                informationToRender && informationToRender[0]?.values
+                  ? informationToRender[0]?.values?.map((item) => {
+                      return item;
+                    })
+                  : []
+              }
+              filterOption={filterOption}
+              secondaryValuesToRender={secondaryValuesToRender}
+              pickerTitle={pickerTitle}
+            />
+          )}
+          {showPrimaryAutocomplete && (
+            <Tooltip title='Apply To All Sections' placement='top'>
+              <FormatPaintOutlinedIcon
+                sx={{
+                  ml: 1,
+                  cursor: 'pointer',
+                  color: currentClientInfo?.bid?.rooms.every((room) =>
+                    Object.keys(room)
+                      .filter(
+                        (section) =>
+                          section !== 'roomName' && section !== '_id' && section !== '__v'
+                      )
+                      .every((section) => room[section].includes('labour'))
+                  )
+                    ? 'green'
+                    : 'gray'
+                }}
+                onClick={handlePickerAssignmentToAllSections}
+              />
+            </Tooltip>
+          )}
+        </Box>
+        {showTheSection ? (
           <Tooltip title='Show Less' placement='top'>
             <ExpandLessIcon
-              onClick={() => setShowMaterialToPaint(false)}
+              onClick={() => setShowTheSection(false)}
               sx={{ cursor: 'pointer', fontSize: '30px' }}
             />
           </Tooltip>
         ) : (
           <Tooltip title='Show More' placement='top'>
             <ExpandMoreIcon
-              onClick={() => setShowMaterialToPaint(true)}
+              onClick={() => setShowTheSection(true)}
               sx={{ cursor: 'pointer', fontSize: '30px' }}
             />
           </Tooltip>
         )}
       </Box>
-      {showMaterialToPaint && (
+      {showTheSection && (
         <>
           {roomRelatedInfo &&
             roomRelatedInfo
@@ -340,7 +422,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                 height: '100%'
                               }}>
                               <Typography sx={{ fontSize: '14px' }}>
-                                Materials For {startCase(dropdownValue.name)}
+                                {pickerTitle} For {startCase(dropdownValue.name)}
                               </Typography>
                               <Box
                                 sx={{
@@ -348,21 +430,18 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                   justifyContent: 'space-between',
                                   alignItems: 'center'
                                 }}>
-                                <Autocomplete
+                                <AutoComplete
                                   filterOptions={filterOptions}
                                   value={currentlyChoosenMaterialDescription[dropdownValue?.name]}
-                                  size='small'
                                   onChange={(event, newInput) => {
                                     currentlyChoosenMaterial[dropdownValue?.name] = newInput?._id;
                                     setCurrentyChoosenMaterial({ ...currentlyChoosenMaterial });
                                     currentlyChoosenMaterialDescription[dropdownValue?.name] =
-                                      newInput?.description;
+                                      newInput?.[filterOption];
                                     setCurrentyChoosenMaterialDescription({
                                       ...currentlyChoosenMaterialDescription
                                     });
                                   }}
-                                  disablePortal
-                                  id='combo-box-demo'
                                   options={
                                     findMaterialListSectionWise(dropdownValue?.name) &&
                                     findMaterialListSectionWise(dropdownValue?.name)?.values
@@ -373,30 +452,11 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                         })
                                       : []
                                   }
-                                  getOptionLabel={(option) => option}
-                                  renderOption={(props, option) => (
-                                    <Box
-                                      {...props}
-                                      sx={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center'
-                                      }}>
-                                      <Box>
-                                        <Typography>{option?.description}</Typography>
-                                      </Box>
-                                      <Box ml={2}>
-                                        <Typography sx={{ fontSize: '13px', mt: 0.5 }}>
-                                          ({option?.unitPrice}/{option?.unit})
-                                        </Typography>
-                                      </Box>
-                                    </Box>
-                                  )}
-                                  sx={{ mt: 1, width: '100%', mb: 1 }}
-                                  renderInput={(params) => (
-                                    <TextField {...params} label='Materials' />
-                                  )}
+                                  filterOption={filterOption}
+                                  secondaryValuesToRender={secondaryValuesToRender}
+                                  pickerTitle={pickerTitle}
                                 />
+
                                 {/* Select For All */}
                                 <Box>
                                   {/* Section Completely Filled */}
@@ -470,7 +530,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                           <>
                                             <Tooltip
                                               placement='top'
-                                              title={`Apply Material To All ${dropdownValue.name} Of ${mainItem.name} Room`}>
+                                              title={`Apply ${pickerTitle} To All ${dropdownValue.name} Of ${mainItem.name} Room`}>
                                               <FormatPaintOutlinedIcon
                                                 onClick={() => {
                                                   handleMaterialAssignmentForWholeRoom(
@@ -526,7 +586,11 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                                 <MaterialsPickerCard
                                                   title={value.name}
                                                   index={idx}
-                                                  materials={value?.materials?.description}
+                                                  materials={
+                                                    pickerTitle === 'Materials'
+                                                      ? value?.materials?.description
+                                                      : value?.labours?.name
+                                                  }
                                                   handleMaterialAssignment={
                                                     handleMaterialAssignmentForIndividualItem
                                                   }
@@ -538,6 +602,7 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
                                                   handleMaterialDeletion={
                                                     handleMaterialDeletionForIndividualItem
                                                   }
+                                                  pickerTitle={pickerTitle}
                                                 />
                                               </Grid>
                                             );
@@ -563,4 +628,4 @@ const MaterialsPicker = ({ currentClientInfo, setCurrentClientInfo }) => {
   );
 };
 
-export default MaterialsPicker;
+export default Picker;

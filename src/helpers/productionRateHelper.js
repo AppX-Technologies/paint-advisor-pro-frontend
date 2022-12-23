@@ -36,6 +36,51 @@ const sections = [
     subTypes: ['Default']
   }
 ];
+
+export const proffiencyTableTableFields = [
+  {
+    name: 'beginner',
+    label: 'Beginner'
+  },
+  {
+    name: 'intermediate',
+    label: 'Intermediate'
+  },
+  {
+    name: 'expert',
+    label: 'Expert'
+  }
+];
+
+function objMakerOfId(filteredBySubtype) {
+  const array = proffiencyTableTableFields.map((proff) => {
+    return {
+      [proff.label]:
+        filteredBySubtype.find(({ proficiency }) => proficiency === proff.label)?._id ?? 'N/A'
+    };
+  });
+  let result = {};
+  array.forEach((x) => {
+    result = { ...result, ...x };
+  });
+  return result;
+}
+
+function objMakerOfProficiencyLavel(filteredBySubtype) {
+  const array = proffiencyTableTableFields.map((proff) => {
+    return {
+      [proff.name]:
+        filteredBySubtype.find(({ proficiency }) => proficiency === proff.label)?.productionRate ||
+        0
+    };
+  });
+  let result = {};
+  array.forEach((x) => {
+    result = { ...result, ...x };
+  });
+  return result;
+}
+
 export const filterProductionRates = (productionRate = []) => {
   const allProductionRateObject = {};
   sections.forEach((section) => {
@@ -51,34 +96,11 @@ export const filterProductionRates = (productionRate = []) => {
       allProductionRateObject[section.type] = [
         ...allProductionRateObject[section.type],
         {
-          id: {
-            Beginner:
-              filteredBySubtype.find(({ proficiency }) => proficiency === 'Beginner')?._id ?? 'N/A',
-            Intermediate:
-              filteredBySubtype.find(({ proficiency }) => proficiency === 'Intermediate')?._id ??
-              'N/A',
-            Proficient:
-              filteredBySubtype.find(({ proficiency }) => proficiency === 'Proficient')?._id ??
-              'N/A'
-          },
-          appliesTo:
-            filteredBySubtype.find(({ proficiency }) => proficiency === 'Beginner')?.appliesTo ??
-            'N/A',
-          bidType:
-            filteredBySubtype.find(({ proficiency }) => proficiency === 'Beginner')?.bidType ??
-            'N/A',
-          appliesToType:
-            filteredBySubtype.find(({ proficiency }) => proficiency === 'Beginner')
-              ?.appliesToType ?? 'N/A',
-          beginner:
-            filteredBySubtype.find(({ proficiency }) => proficiency === 'Beginner')
-              ?.productionRate ?? 'N/A',
-          proficient:
-            filteredBySubtype.find(({ proficiency }) => proficiency === 'Proficient')
-              ?.productionRate ?? 'N/A',
-          intermediate:
-            filteredBySubtype.find(({ proficiency }) => proficiency === 'Intermediate')
-              ?.productionRate ?? 'N/A'
+          id: objMakerOfId(filteredBySubtype),
+          appliesTo: filteredBySubtype[0]?.appliesTo,
+          bidType: filteredBySubtype[0]?.bidType,
+          appliesToType: filteredBySubtype[0]?.appliesToType ?? subType,
+          ...objMakerOfProficiencyLavel(filteredBySubtype)
         }
       ];
     });
@@ -86,30 +108,24 @@ export const filterProductionRates = (productionRate = []) => {
   return allProductionRateObject;
 };
 
-export  function avgCalculator(section, productionRateList=[]) {
+export function avgCalculator(section, productionRateList = []) {
   const types = productionRateList[section];
   const totalTypes = productionRateList[section].length;
-  const beginnerAvg =
-    types
-      .map((type) => type.beginner)
-      .reduce((a, b) => {
-        return b !== 'N/A' && a + b;
-      }, 0) / totalTypes;
-  const intermediateAvg =
-    types
-      .map((type) => type.intermediate)
-      .reduce((a, b) => {
-        return b !== 'N/A' && a + b;
-      }, 0) / totalTypes;
-  const proficientAvg =
-    types
-      .map((type) => type.proficient)
-      .reduce((a, b) => {
-        return b !== 'N/A' && a + b;
-      }, 0) / totalTypes;
-  return {
-    beginnerAvg: beginnerAvg.toFixed(1),
-    intermediateAvg: intermediateAvg.toFixed(1),
-    proficientAvg: proficientAvg.toFixed(1)
-  };
+  const array = proffiencyTableTableFields.map((proff) => {
+    return {
+      [proff.name]: (
+        types
+          .map((type) => type[proff.name])
+          .reduce((a, b) => {
+            return b !== undefined && a + b;
+          }, 0) / totalTypes
+      ).toFixed(1)
+    };
+  });
+
+  let result = {};
+  array.forEach((x) => {
+    result = { ...result, ...x };
+  });
+  return result;
 }

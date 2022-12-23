@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import PageNotFound from '../components/404';
+import Profile from '../components/ProfileTab';
 import { Counter } from '../features/counter/Counter';
 import { COMPANY_ROLES, SYSTEM_ROLES } from '../helpers/contants';
 import AdminRouteLayout from '../layouts/AdminRouteLayout';
@@ -40,6 +41,7 @@ const AppRoutes = () => {
             <Route path='production-rates' element={<ProductionRate />} />
             <Route path='paint' element={<Materials />} />
             <Route path='equipments' element={<Equipments />} />
+            <Route path='profile' element={<Profile />} />
           </Route>
           <Route path='company'>
             <Route path=':companyId'>
@@ -66,7 +68,6 @@ const AppRoutes = () => {
             <Route path='' element={<Navigate to='bids' />} />
           </Route>
         </Route>
-        {/* <Route path='profile' element={<Profile />} /> */}
       </Route>
       <Route path='*' element={<PageNotFound />} />
     </Routes>

@@ -6,6 +6,8 @@ const REGISTRATION_OTP = `${endpoint}/users/generate-registration-otp`;
 const FORGOT_PASSWORD_OTP = `${endpoint}/users/send-password-reset-link`;
 const RESET_PASSWORD = `${endpoint}/users/reset-password`;
 const REGISTER_URL = `${endpoint}/users/register`;
+const UPDATE_USER = `${endpoint}/users/update-user-details`;
+const UPDATE_PASSWORD = `${endpoint}/users/change-password`;
 const LOGIN_URL = `${endpoint}/users/login`;
 
 const generateRegistrationOtp = async (userData) => {
@@ -67,6 +69,42 @@ const getLoggedInUser = () => {
     // no user
   }
 };
+const updateUserDetails = async (userData) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+  delete userData.token;
+  const response = await axios.post(
+    UPDATE_USER,
+    {
+      ...userData
+    },
+    config
+  );
+  return response.data;
+};
+
+const changePassword = async (userData) => {
+  console.log(userData);
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userData.token}`
+    }
+  };
+  delete userData.token;
+  const response = await axios.post(
+    UPDATE_PASSWORD,
+    {
+      ...userData
+    },
+    config
+  );
+  return response.data;
+};
 
 const authService = {
   register,
@@ -75,6 +113,8 @@ const authService = {
   generateRegistrationOtp,
   sendForgotPasswordLink,
   resetPassword,
-  getLoggedInUser
+  getLoggedInUser,
+  updateUserDetails,
+  changePassword
 };
 export default authService;

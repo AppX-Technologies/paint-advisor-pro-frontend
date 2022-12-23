@@ -9,9 +9,12 @@ const initialState = {
   isError: false,
   isLoading: false,
   isSuccess: false,
+  isPasswordChanged: false,
   isSuccessOtp: false,
   isResetSuccess: false,
-  message: ''
+  message: '',
+  isUserDetailChanged: false,
+  isPasswordChanging:false
 };
 
 export const generateRegistrationOtp = createAsyncThunk(
@@ -98,6 +101,39 @@ export const resetPassword = createAsyncThunk('auth/resetPassword', async (user,
   }
 });
 
+export const updateUserDetails = createAsyncThunk(
+  'auth/updateUserDetails',
+  async (userData, thunkAPI) => {
+    try {
+      const response = await authService.updateUserDetails(userData);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  'auth/changePassword',
+  async (userData, thunkAPI) => {
+    try {
+      const response = await authService.changePassword(userData);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -108,6 +144,8 @@ export const authSlice = createSlice({
       state.isSuccess = false;
       state.isSuccessOtp = false;
       state.message = '';
+      state.isPasswordChanged = false;
+      state.isUserDetailChanged = false;
     }
   },
   extraReducers: (builder) => {
@@ -179,6 +217,43 @@ export const authSlice = createSlice({
       })
       .addCase(resetPassword.rejected, (state, action) => {
         state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(updateUserDetails.pending, (state) => {
+        state.isUserDetailChanged = false;
+      })
+      .addCase(updateUserDetails.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isUserDetailChanged = true;
+        localStorage.setItem(
+          'user',
+          JSON.stringify({ ...action.payload, token: state.user.token })
+        );
+        state.user = { ...action.payload, token: state.user.token };
+      })
+      .addCase(updateUserDetails.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.payload;
+        state.isUserDetailChanged = false;
+      })
+
+      .addCase(changePassword.pending, (state) => {
+        state.isPasswordChanged = false;
+        state.isPasswordChanging =true;
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.isPasswordChanged = true;
+        state.isPasswordChanging = false;
+        localStorage.setItem(
+          'user',
+          JSON.stringify({ ...action.payload, token: state.user.token })
+        );
+        state.user = { ...action.payload, token: state.user.token };
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.isPasswordChanged = false;
+        state.isPasswordChanging = false;
         state.isError = true;
         state.message = action.payload;
       });
