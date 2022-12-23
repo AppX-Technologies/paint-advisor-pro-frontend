@@ -217,7 +217,7 @@ export default function EstimateForm({
           </Button>
         </Toolbar>
 
-        {bidsIsLoading && <LinearProgress color='success' sx={{ height: '5px' }} />}
+        {bidsIsLoading && <LinearProgress color='success' sx={{ height: '10px' }} />}
 
         <DialogContent>
           <Grid container spacing={2} mt={2}>
@@ -397,7 +397,11 @@ export default function EstimateForm({
             }}>
             Cancel
           </Button>
-          <Button disabled={bidsIsLoading} type='submit' variant='contained' onClick={handleBidsSubmission}>
+          <Button
+            disabled={bidsIsLoading}
+            type='submit'
+            variant='contained'
+            onClick={handleBidsSubmission}>
             Save
           </Button>
         </DialogActions>
