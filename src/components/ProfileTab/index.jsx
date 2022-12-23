@@ -1,6 +1,8 @@
-import { Email, LocalPhone, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Email, EmailOutlined, LocalPhone, Visibility, VisibilityOff } from '@mui/icons-material';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonIcon from '@mui/icons-material/Person';
+
 import {
   Alert,
   Box,
@@ -18,7 +20,12 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { authSelector, changePassword, updateUserDetails } from '../../features/auth/authSlice';
+import {
+  authSelector,
+  changePassword,
+  updateUserDetails,
+  reset
+} from '../../features/auth/authSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import Button from '../Button';
 
@@ -28,8 +35,16 @@ const passWordFields = [
   { name: 'oldPassword', label: 'Old Password' }
 ];
 
+const profileFields = [
+  { name: 'name', label: 'User Name', icon: <PersonIcon fontSize='inherit' /> },
+  { name: 'email', label: 'Email', icon: <EmailOutlined fontSize='inherit' /> },
+  { name: 'role', label: 'Role', icon: <Diversity3Icon fontSize='inherit' /> },
+  { name: 'phone', label: 'Phone Number', icon: <LocalPhone fontSize='inherit' /> }
+];
+
 const Profile = () => {
-  const { user, isLoading, isPasswordChanged, isUserDetailChanged } = useSelector(authSelector);
+  const { user, isLoading, isPasswordChanged, isUserDetailChanged, isPasswordChanging } =
+    useSelector(authSelector);
   const [editMode, setEditMode] = useState(true);
   const [viewPassword, setViewPassword] = useState({
     newPassword: false,
@@ -94,6 +109,7 @@ const Profile = () => {
           variant: 'success'
         })
       );
+      dispatch(reset());
     }
   }, [isUserDetailChanged]);
 
@@ -157,36 +173,22 @@ const Profile = () => {
           <Divider />
           <Box mt={1}>
             {editMode ? (
-              <Box sx={{ display: 'flex', mt: 3 }}>
-                <Box sx={{ width: '49%' }}>
-                  <Typography sx={{ fontSize: '13px', fontWeight: '300' }}>User name:</Typography>
-                  <Alert
-                    sx={{ padding: '2px 10px', mt: 1 }}
-                    icon={<PersonIcon fontSize='inherit' />}
-                    severity='warning'>
-                    {user?.name}
-                  </Alert>
-                </Box>
-                <Box sx={{ width: '50%', ml: 1 }}>
-                  <Typography sx={{ fontSize: '13px', fontWeight: '300' }}>Email:</Typography>
-                  <Alert
-                    sx={{ padding: '2px 10px', mt: 1 }}
-                    icon={<Email fontSize='inherit' />}
-                    severity='warning'>
-                    {user?.email}
-                  </Alert>
-                </Box>
-                <Box sx={{ width: '50%', ml: 1 }}>
-                  <Typography sx={{ fontSize: '13px', fontWeight: '300' }}>
-                    Phone Number:
-                  </Typography>
-                  <Alert
-                    sx={{ padding: '2px 10px', mt: 1 }}
-                    icon={<LocalPhone fontSize='inherit' />}
-                    severity='warning'>
-                    {user?.phone}
-                  </Alert>
-                </Box>
+              <Box sx={{ display: 'flex', mt: 1 }}>
+                {profileFields.map((field, index) => {
+                  return (
+                    <Box key={field.name} sx={{ width: '49%' }}>
+                      <Typography sx={{ fontSize: '13px', fontWeight: '300', ml: 1 }}>
+                        {field.label}:
+                      </Typography>
+                      <Alert
+                        sx={{ padding: '2px 10px', mt: 1, ml: index !== 0 && 1 }}
+                        icon={field.icon}
+                        severity='primary'>
+                        {user?.[field.name]}
+                      </Alert>
+                    </Box>
+                  );
+                })}
               </Box>
             ) : (
               <Box sx={{ display: 'flex', mt: 3 }}>
@@ -255,6 +257,8 @@ const Profile = () => {
           </Box>
           <Button
             variant='contained'
+            disabled={isPasswordChanging}
+            color='success'
             sx={{ padding: '2px 10px 2px 10px', mt: 3 }}
             onClick={() => handleChangePassword()}>
             Change

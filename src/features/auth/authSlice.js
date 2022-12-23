@@ -13,7 +13,8 @@ const initialState = {
   isSuccessOtp: false,
   isResetSuccess: false,
   message: '',
-  isUserDetailChanged: false
+  isUserDetailChanged: false,
+  isPasswordChanging:false
 };
 
 export const generateRegistrationOtp = createAsyncThunk(
@@ -239,9 +240,11 @@ export const authSlice = createSlice({
 
       .addCase(changePassword.pending, (state) => {
         state.isPasswordChanged = false;
+        state.isPasswordChanging =true;
       })
       .addCase(changePassword.fulfilled, (state, action) => {
         state.isPasswordChanged = true;
+        state.isPasswordChanging = false;
         localStorage.setItem(
           'user',
           JSON.stringify({ ...action.payload, token: state.user.token })
@@ -250,6 +253,7 @@ export const authSlice = createSlice({
       })
       .addCase(changePassword.rejected, (state, action) => {
         state.isPasswordChanged = false;
+        state.isPasswordChanging = false;
         state.isError = true;
         state.message = action.payload;
       });
