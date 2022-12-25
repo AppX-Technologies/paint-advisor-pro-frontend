@@ -61,6 +61,11 @@ export const WALL_TYPES = ['Smooth', 'Orange Peel', 'Knockdown'];
 
 export const CEILING_TYPES = [...WALL_TYPES, 'Popcorn'];
 
+export const EXTRA_INFO_WHILE_CLONING = [
+  { text: 'Clone Materials', field: 'materials' },
+  { text: 'Clone Labours', field: 'labours' }
+];
+
 export const productionTableHeaderFields = [
   {
     type: 'Smooth',
@@ -124,4 +129,3 @@ export const FIELDS_WHERE_MATERIALS_ARE_APPLIES = [
   { label: 'crownMoldings' },
   { label: 'closets' }
 ];
-

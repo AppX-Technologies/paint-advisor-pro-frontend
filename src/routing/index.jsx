@@ -10,7 +10,8 @@ import PublicRouteLayout from '../layouts/PublicRouteLayout';
 import Dashboard from '../pages/Dashboard';
 import { Equipments } from '../pages/Equipments';
 import Login from '../pages/Login';
-import Materials from '../pages/Materials';
+import MaterialsPage from '../pages/MaterialPage';
+import Materials from '../pages/Paint';
 import { Processes } from '../pages/Processes';
 import ProductionRate from '../pages/ProductionRate';
 import RegisterPage from '../pages/Register';
@@ -40,6 +41,7 @@ const AppRoutes = () => {
             <Route path='production-rates' element={<ProductionRate />} />
             <Route path='paint' element={<Materials />} />
             <Route path='equipments' element={<Equipments />} />
+            <Route path='materials' element={<MaterialsPage />} />
           </Route>
           <Route path='company'>
             <Route path=':companyId'>

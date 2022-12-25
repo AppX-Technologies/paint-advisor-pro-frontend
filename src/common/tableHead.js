@@ -100,7 +100,7 @@ export const processColumn = () => {
     }
   ];
 };
-export const materialColumn = () => {
+export const paintColumn = () => {
   return [
     {
       name: 'description',
@@ -121,6 +121,26 @@ export const materialColumn = () => {
       name: 'appliesTo',
       label: 'Applies To',
       width: '50%'
+    }
+  ];
+};
+
+export const materialColumn = () => {
+  return [
+    {
+      name: 'description',
+      label: 'Paint Description',
+      width: '20%'
+    },
+    {
+      name: 'unit',
+      label: 'Unit',
+      width: '20%'
+    },
+    {
+      name: 'unitPrice',
+      label: 'Price Per Unit',
+      width: '20%'
     }
   ];
 };
