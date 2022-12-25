@@ -348,7 +348,6 @@ const AddMoreDetails = ({
                           sx={{ position: 'relative', ml: 0.8 }}
                           control={<Checkbox defaultChecked />}
                           checked={toBeCloned[info.field]}
-                          disabled={!toBeCloned[info.field]}
                           onChange={(event) => {
                             toBeCloned[info.field] = event.target.checked;
                             setToBeCloned({ ...toBeCloned });
