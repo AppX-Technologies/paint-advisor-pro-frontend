@@ -8,6 +8,7 @@ import { addOrUpdateItemInArray } from '../../helpers/addRemoveUpdateListHelper'
 const initialState = {
   productionRateList: [],
   productionRate: [],
+  baseRate: [],
   isLoading: false,
   isError: false,
   isSuccess: false,
@@ -69,7 +70,38 @@ export const createProductionRate = createAsyncThunk(
     }
   }
 );
-
+export const fetchBaseRate = createAsyncThunk(
+  'productionRate/fetchBaseRate',
+  async (userData, thunkAPI) => {
+    try {
+      const response = await productionRateService.fetchBaseRate(userData);
+      return response;
+    } catch (err) {
+      const message =
+        (err.response && err.response.data && err.response.data.message) ||
+        err.message ||
+        err.toString();
+      thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const createBaseRate = createAsyncThunk(
+  'productionRate/createBaseRate',
+  async (userData, thunkAPI) => {
+    try {
+      const response = await productionRateService.createBaseRate(userData);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(showMessage({ message, severity: 'error' }));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const productionRateSlice = createSlice({
   name: 'productionRate',
   initialState,
@@ -106,6 +138,31 @@ export const productionRateSlice = createSlice({
         state.response = addOrUpdateItemInArray(state.productionRateList, action.payload);
       })
       .addCase(createProductionRate.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(fetchBaseRate.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchBaseRate.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.baseRate = action.payload;
+      })
+      .addCase(fetchBaseRate.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(createBaseRate.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createBaseRate.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.baseRate = addOrUpdateItemInArray(state.productionRateList, action.payload);
+      })
+      .addCase(createBaseRate.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

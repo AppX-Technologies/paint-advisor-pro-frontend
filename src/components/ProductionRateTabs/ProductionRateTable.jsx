@@ -20,6 +20,7 @@ import {
   filterProductionRates,
   proffiencyTableTableFields
 } from '../../helpers/productionRateHelper';
+import EditBaseRate from './EditBaseRate';
 import EditIndividualPainterProductionR from './EditIndividualPainterProductionR';
 
 const tableCellStyle = {
@@ -127,10 +128,29 @@ function Row({ row, onEditClick }) {
 }
 
 export default function ProductionRateTable({ filterValue }) {
-  const [editState, setEditState] = React.useState(null);
+  const [editState, setEditState] = useState(null);
+  const [editBaseRate, setEditBaseRate] = useState(null);
   const [filteredListByBidType, setFilteredListByBidType] = useState([]);
   const { productionRateList, isLoading, isSuccess } = useSelector((state) => state.productionRate);
   const dispatch = useDispatch();
+
+  const baseRates = [
+    {
+      bidType: 'Interior',
+      proficiency: 'beginner',
+      baseRate: 123
+    },
+    {
+      bidType: 'Interior',
+      proficiency: 'intermediate',
+      baseRate: 211
+    },
+    {
+      bidType: 'Interior',
+      proficiency: 'expert',
+      baseRate: 323
+    }
+  ];
 
   const onEditClick = (rowData) => {
     setEditState({ ...rowData });
@@ -139,6 +159,19 @@ export default function ProductionRateTable({ filterValue }) {
     setEditState(null);
   };
 
+  const onEditBaseRateClick = () => {
+    let editBaseRateData = {};
+    proffiencyTableTableFields.forEach((proff) => {
+      const foundProff = baseRates.find((i) => i.proficiency === proff.name);
+      if(foundProff){
+        editBaseRateData = { ...editBaseRateData ,[proff.name]:foundProff.baseRate};
+      }
+    });
+    setEditBaseRate({ ...editBaseRateData });
+  };
+  const onBaseRateEditClose = () => {
+    setEditBaseRate(null);
+  };
   useEffect(() => {
     if (isSuccess) {
       setEditState(null);
@@ -175,9 +208,7 @@ export default function ProductionRateTable({ filterValue }) {
             <TableRow>
               <TableCell
                 sx={{
-                  fontSize: '15px',
-                  width: '1%',
-                  fontWeight: '550'
+                  width: '1%'
                 }}
               />
               <TableCell sx={tableCellStyle}>Section</TableCell>
@@ -191,6 +222,32 @@ export default function ProductionRateTable({ filterValue }) {
             </TableRow>
           </TableHead>
           <TableBody>
+            <TableRow sx={{ backgroundColor: '' }}>
+              <TableCell
+                sx={{
+                  width: '1%'
+                }}
+              />
+              <TableCell align='left' sx={{ ...tableCellStyle, fontWeight: '300' }}>
+                Base Rate
+              </TableCell>
+              {proffiencyTableTableFields.map((proff, index) => {
+                return (
+                  <TableCell
+                    align='left'
+                    sx={{ ...tableCellStyle, fontSize: '15px', fontWeight: '300' }}>
+                    {baseRates.find((x) => x.proficiency === proff.name)?.baseRate ?? 0} $/hr
+                    {index === proffiencyTableTableFields.length - 1 && (
+                      <EditOutlinedIcon
+                        fontSize='15px'
+                        sx={{ cursor: 'pointer', float: 'right' }}
+                        onClick={() => onEditBaseRateClick()}
+                      />
+                    )}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
             {rows.map((row) => (
               <Row key={row.name} row={row} onEditClick={onEditClick} />
             ))}
@@ -202,6 +259,14 @@ export default function ProductionRateTable({ filterValue }) {
           editState={editState}
           setEditState={setEditState}
           onEditClose={onEditClose}
+          bidType={filterValue}
+        />
+      )}
+      {editBaseRate && (
+        <EditBaseRate
+          editBaseRate={editBaseRate}
+          setEditBaseRate={setEditBaseRate}
+          onBaseRateEditClose={onBaseRateEditClose}
           bidType={filterValue}
         />
       )}
