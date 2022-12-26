@@ -163,8 +163,8 @@ export default function ProductionRateTable({ filterValue }) {
     let editBaseRateData = {};
     proffiencyTableTableFields.forEach((proff) => {
       const foundProff = baseRates.find((i) => i.proficiency === proff.name);
-      if(foundProff){
-        editBaseRateData = { ...editBaseRateData ,[proff.name]:foundProff.baseRate};
+      if (foundProff) {
+        editBaseRateData = { ...editBaseRateData, [proff.name]: foundProff.baseRate };
       }
     });
     setEditBaseRate({ ...editBaseRateData });
@@ -222,20 +222,31 @@ export default function ProductionRateTable({ filterValue }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow sx={{ backgroundColor: '' }}>
+            {rows.map((row) => (
+              <Row key={row.name} row={row} onEditClick={onEditClick} />
+            ))}
+            <TableRow sx={{ backgroundColor: '#FAE0E0' }}>
               <TableCell
                 sx={{
-                  width: '1%'
+                  width: '1%',
+                  borderTop: '2px dashed gray'
                 }}
               />
-              <TableCell align='left' sx={{ ...tableCellStyle, fontWeight: '300' }}>
+              <TableCell
+                align='left'
+                sx={{ ...tableCellStyle, fontWeight: '500', borderTop: '2px dashed gray' }}>
                 Base Rate
               </TableCell>
               {proffiencyTableTableFields.map((proff, index) => {
                 return (
                   <TableCell
                     align='left'
-                    sx={{ ...tableCellStyle, fontSize: '15px', fontWeight: '300' }}>
+                    sx={{
+                      ...tableCellStyle,
+                      fontSize: '15px',
+                      fontWeight: '500',
+                      borderTop: '2px dashed gray'
+                    }}>
                     {baseRates.find((x) => x.proficiency === proff.name)?.baseRate ?? 0} $/hr
                     {index === proffiencyTableTableFields.length - 1 && (
                       <EditOutlinedIcon
@@ -248,9 +259,6 @@ export default function ProductionRateTable({ filterValue }) {
                 );
               })}
             </TableRow>
-            {rows.map((row) => (
-              <Row key={row.name} row={row} onEditClick={onEditClick} />
-            ))}
           </TableBody>
         </Table>
       </TableContainer>
