@@ -8,6 +8,7 @@ import { fetchSingleOrg } from '../../features/org/orgSlice';
 import { fetchProductionRate } from '../../features/productionRate/productionRateSlice';
 import ProdutionRateTable from './ProductionRateTable';
 
+// TODO include base rate row
 const ProductionRateTabs = () => {
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
