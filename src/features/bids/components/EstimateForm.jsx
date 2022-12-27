@@ -22,6 +22,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { cloneDeep } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
+import WysiwygIcon from '@mui/icons-material/Wysiwyg';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { processesTabLists } from '../../../common/Constants';
@@ -38,7 +39,36 @@ import { reset, updateABid, updateClient } from '../bidsSlice';
 import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
 
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
+import EstimationDetails from './EstimationDetails';
 
+const estimationDetails = {
+  rooms: [
+    {
+      roomName: 'Bed Room',
+      paintableArea: 123,
+      materialCost: 441,
+      labourCost: 121
+    },
+    {
+      roomName: 'Kitchen',
+      paintableArea: 323,
+      materialCost: 156,
+      labourCost: 321
+    },
+    {
+      roomName: 'Meeting Room',
+      paintableArea: 1233,
+      materialCost: 134,
+      labourCost: 541
+    }
+  ],
+  discount: 17,
+  subTotal: 3412,
+  invoiceTotal: 3129,
+  paintableArea: 5421,
+  labourCost: 2341,
+  materialCost: 1521
+};
 export default function EstimateForm({
   open,
   setOpen,
@@ -57,6 +87,7 @@ export default function EstimateForm({
 }) {
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
   const [previousStateOfRooms, setPreviousStateOfRooms] = React.useState(null);
+  const [estimationDetailData, setEstimationDetailData] = React.useState(null);
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { bidsIsLoading, bidsIsSuccess, bidsIsError, bidInfo } = useSelector((state) => state.bids);
@@ -66,6 +97,13 @@ export default function EstimateForm({
   const handleClose = () => {
     setOpen(false);
     setRoomFormValue(initialRoomState);
+  };
+
+  const onEstimationDetailModalOpen = () => {
+    setEstimationDetailData(estimationDetails);
+  };
+  const onEstimationDetailModalClose = () => {
+    setEstimationDetailData(null);
   };
 
   const handleBidsSubmission = () => {
@@ -373,6 +411,10 @@ export default function EstimateForm({
               setCurrentClientInfo={setCurrentClientInfo}
             />
           )}
+          <EstimationDetails
+            estimationDetailData={estimationDetailData}
+            onEstimationDetailModalClose={onEstimationDetailModalClose}
+          />
           {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
             <></>
             // <InteriorManByMan
@@ -388,8 +430,13 @@ export default function EstimateForm({
           )}
         </DialogContent>
         <DialogActions>
+          <Button variant='contained' color='info' onClick={() => onEstimationDetailModalOpen()}>
+            <WysiwygIcon fontSize='20px' sx={{ mr: 1 }} /> View Details
+          </Button>
           <Button
             disabled={bidsIsLoading}
+            color='error'
+            variant='contained'
             onClick={() => {
               handleClose();
               currentClientInfo.bid = { ...previousStateOfRooms };
@@ -400,6 +447,7 @@ export default function EstimateForm({
           <Button
             disabled={bidsIsLoading}
             type='submit'
+            color='success'
             variant='contained'
             onClick={handleBidsSubmission}>
             Save
