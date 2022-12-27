@@ -290,7 +290,7 @@ const Pipeline = () => {
       filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
     );
   }, [selectedStep, filteredClietsList]);
-
+// todo
   return (
     <>
       {selectedStep === STATUS_NEW_CLIENT && (
