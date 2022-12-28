@@ -19,7 +19,7 @@ export default function EditBaseRate({
   const { baseRate } = useSelector((state) => state.productionRate);
   const [updatedBaseRate, setUpdatedBaseRate] = useState([]);
   const dispatch = useDispatch();
-
+  console.log(baseRate, updatedBaseRate, 'asdasdsad');
   const handleEdit = () => {
     const stateWithToken = {
       updatedBaseRate,
@@ -59,9 +59,9 @@ export default function EditBaseRate({
                   type='number'
                   fullWidth
                   label={proff.label}
-                  value={editBaseRate?.[proff.name]}
+                  value={editBaseRate?.[proff.label]}
                   onChange={(e) =>
-                    setEditBaseRate({ ...editBaseRate, [proff.name]: Number(e.target.value) })
+                    setEditBaseRate({ ...editBaseRate, [proff.label]: Number(e.target.value) })
                   }
                 />
               </Grid>

@@ -131,6 +131,8 @@ export default function ProductionRateTable({ filterValue }) {
   const { productionRateList, baseRate, isLoading, isSuccess } = useSelector(
     (state) => state.productionRate
   );
+  console.log(baseRate);
+
   const [editState, setEditState] = useState(null);
   const [editBaseRate, setEditBaseRate] = useState(null);
   const [filteredListByBidType, setFilteredListByBidType] = useState([]);
@@ -145,9 +147,9 @@ export default function ProductionRateTable({ filterValue }) {
   const onEditBaseRateClick = () => {
     let editBaseRateData = {};
     proffiencyTableTableFields.forEach((proff) => {
-      const foundProff = baseRate[0]?.proficiencies?.find((i) => i.proficiency === proff.name);
+      const foundProff = baseRate[0]?.proficiencies?.find((i) => i.proficiency === proff.label);
       if (foundProff) {
-        editBaseRateData = { ...editBaseRateData, [proff.name]: foundProff.baseRate };
+        editBaseRateData = { ...editBaseRateData, [proff.label]: foundProff.baseRate };
       }
     });
     setEditBaseRate({ ...editBaseRateData });
@@ -231,7 +233,7 @@ export default function ProductionRateTable({ filterValue }) {
                       fontWeight: '500',
                       borderTop: '2px dashed gray'
                     }}>
-                    {baseRate[0]?.proficiencies?.find((x) => x.proficiency === proff.name)
+                    {baseRate[0]?.proficiencies?.find((x) => x.proficiency === proff.label)
                       ?.baseRate ?? 0}{' '}
                     $/hr
                     {index === proffiencyTableTableFields.length - 1 && (

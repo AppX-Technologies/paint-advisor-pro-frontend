@@ -21,6 +21,7 @@ const ProductionRateTabs = () => {
   const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const { companyId } = useParams();
+  console.log(org);
   useEffect(() => {
     dispatch(
       fetchProductionRate({
@@ -31,7 +32,7 @@ const ProductionRateTabs = () => {
     dispatch(
       fetchBaseRate({
         token: userDetail.token,
-        id: companyId ? org.productionRates : undefined
+        id: companyId ? org.proficiencies : undefined
       })
     );
   }, []);
