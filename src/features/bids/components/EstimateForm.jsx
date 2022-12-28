@@ -47,19 +47,22 @@ const estimationDetails = {
       roomName: 'Bed Room',
       paintableArea: 123,
       materialCost: 441,
-      labourCost: 121
+      labourCost: 121,
+      invoiceTotal: 829
     },
     {
       roomName: 'Kitchen',
       paintableArea: 323,
       materialCost: 156,
-      labourCost: 321
+      labourCost: 321,
+      invoiceTotal: 726
     },
     {
       roomName: 'Meeting Room',
       paintableArea: 1233,
       materialCost: 134,
-      labourCost: 541
+      labourCost: 541,
+      invoiceTotal: 1029
     }
   ],
   discount: 17,
@@ -429,8 +432,12 @@ export default function EstimateForm({
           )}
         </DialogContent>
         <DialogActions>
-          <Button variant='contained' color='info' onClick={() => onEstimationDetailModalOpen()}>
-            <WysiwygIcon fontSize='20px' sx={{ mr: 1 }} /> View Details
+          <Button
+            variant='contained'
+            color='info'
+            // style={{ textTransform: 'none' }}
+            onClick={onEstimationDetailModalOpen}>
+            $ {estimationDetails.invoiceTotal}
           </Button>
           <Button
             disabled={bidsIsLoading}
