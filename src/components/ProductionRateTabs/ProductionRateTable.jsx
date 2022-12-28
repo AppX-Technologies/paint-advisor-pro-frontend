@@ -128,30 +128,13 @@ function Row({ row, onEditClick }) {
 }
 
 export default function ProductionRateTable({ filterValue }) {
+  const { productionRateList, baseRate, isLoading, isSuccess } = useSelector(
+    (state) => state.productionRate
+  );
   const [editState, setEditState] = useState(null);
   const [editBaseRate, setEditBaseRate] = useState(null);
   const [filteredListByBidType, setFilteredListByBidType] = useState([]);
-  const { productionRateList, isLoading, isSuccess } = useSelector((state) => state.productionRate);
   const dispatch = useDispatch();
-
-  const baseRates = [
-    {
-      bidType: 'Interior',
-      proficiency: 'beginner',
-      baseRate: 123
-    },
-    {
-      bidType: 'Interior',
-      proficiency: 'intermediate',
-      baseRate: 211
-    },
-    {
-      bidType: 'Interior',
-      proficiency: 'expert',
-      baseRate: 323
-    }
-  ];
-
   const onEditClick = (rowData) => {
     setEditState({ ...rowData });
   };
@@ -162,13 +145,14 @@ export default function ProductionRateTable({ filterValue }) {
   const onEditBaseRateClick = () => {
     let editBaseRateData = {};
     proffiencyTableTableFields.forEach((proff) => {
-      const foundProff = baseRates.find((i) => i.proficiency === proff.name);
+      const foundProff = baseRate[0]?.proficiencies?.find((i) => i.proficiency === proff.name);
       if (foundProff) {
         editBaseRateData = { ...editBaseRateData, [proff.name]: foundProff.baseRate };
       }
     });
     setEditBaseRate({ ...editBaseRateData });
   };
+
   const onBaseRateEditClose = () => {
     setEditBaseRate(null);
   };
@@ -247,7 +231,9 @@ export default function ProductionRateTable({ filterValue }) {
                       fontWeight: '500',
                       borderTop: '2px dashed gray'
                     }}>
-                    {baseRates.find((x) => x.proficiency === proff.name)?.baseRate ?? 0} $/hr
+                    {baseRate[0]?.proficiencies?.find((x) => x.proficiency === proff.name)
+                      ?.baseRate ?? 0}{' '}
+                    $/hr
                     {index === proffiencyTableTableFields.length - 1 && (
                       <EditOutlinedIcon
                         fontSize='15px'

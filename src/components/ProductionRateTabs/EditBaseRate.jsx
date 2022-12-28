@@ -27,6 +27,7 @@ export default function EditBaseRate({
       token: userDetail.token
     };
     dispatch(createBaseRate(stateWithToken));
+    setEditBaseRate(null);
   };
   useEffect(() => {
     if (editBaseRate) {

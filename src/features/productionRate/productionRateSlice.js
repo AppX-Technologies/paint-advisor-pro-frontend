@@ -160,7 +160,7 @@ export const productionRateSlice = createSlice({
       .addCase(createBaseRate.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.baseRate = addOrUpdateItemInArray(state.productionRateList, action.payload);
+        state.response = addOrUpdateItemInArray(state.baseRate, action.payload);
       })
       .addCase(createBaseRate.rejected, (state, action) => {
         state.isLoading = false;
