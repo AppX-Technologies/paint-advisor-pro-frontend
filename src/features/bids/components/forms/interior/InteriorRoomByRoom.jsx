@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import RoomCard from '../../../../../common/RoomCard';
 import Button from '../../../../../components/Button';
-import { ROLE_PAINTER } from '../../../../../helpers/contants';
+import { GLOBAL_PICKERLIST, ROLE_PAINTER } from '../../../../../helpers/contants';
 import { isCompanyAdmin, isSystemUser } from '../../../../../helpers/roles';
 import { authSelector } from '../../../../auth/authSlice';
 import { fetchMaterial } from '../../../../materials/materialSlice';
@@ -16,6 +16,7 @@ import {
   setLabourAccordingToSection,
   setMaterialsAccordingToSection
 } from '../../../helpers/generalHepers';
+import GlobalPickers from '../../GlobalPickers';
 import Picker from '../../Picker';
 import { DeleteItemModel } from '../DeleteModel';
 import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
@@ -30,9 +31,14 @@ const InteriorRoomByRoom = ({
   setOpenAddMoreDetails,
   onRoomDetailsReset,
   allSectionsInfoOfARoom,
-  setCurrentClientInfo
+  setCurrentClientInfo,
+  materialListToPick,
+  setMaterialListToPick,
+  equipmentListToPick,
+  setEquipmentListToPick
 }) => {
   const [addRoom, setAddRoom] = useState(false);
+
   const [materialListSectionwise, setMaterialListSectionwise] = useState(null);
   const [labourListSectionwise, setLabourListSectionwise] = useState(null);
   const [currentAddMore, setCurentAddMore] = useState('');
@@ -40,12 +46,18 @@ const InteriorRoomByRoom = ({
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [itemToBeDeleted, setitemToBeDeleted] = useState(null);
 
+  const [globalPickerStatsToView, setGlobalPickerStatsToView] = useState({
+    materials: [],
+    equipments: []
+  });
+
   const { user } = useSelector(authSelector);
   const { companyId } = useParams();
   const dispatch = useDispatch();
   const { org } = useSelector((state) => state.org);
   const [orgId] = useState(isSystemUser(user) ? companyId : user.organization._id);
   const { materialList } = useSelector((state) => state.material);
+  const { equipmentList } = useSelector((state) => state.equipment);
   const { companyMadeByUsers } = useSelector((state) => state.usersFromCompany);
 
   const onSelectedRoomInfoChange = (value) => {
@@ -79,6 +91,11 @@ const InteriorRoomByRoom = ({
       );
     }
   }, []);
+
+  // useEffect(()=>{
+  //   setGlobalPickerStatsToView({})
+  // },[])
+
   return (
     <Box>
       {/* Main Form Body  */}
@@ -172,7 +189,7 @@ const InteriorRoomByRoom = ({
         currentClientInfo?.bid?.rooms.length !== 0 && (
           <>
             <Picker
-              pickerTitle='Materials'
+              pickerTitle='Paints'
               currentClientInfo={currentClientInfo}
               setCurrentClientInfo={setCurrentClientInfo}
               pickerList={materialList}
@@ -192,6 +209,36 @@ const InteriorRoomByRoom = ({
               showPrimaryAutocomplete
               filteredPickerList={companyMadeByUsers}
             />
+            <Grid container sx={{ p: 1, mt: 2 }}>
+              {GLOBAL_PICKERLIST.map((globalPicker) => {
+                return (
+                  <Grid md={6} xs={12} sx={{ p: 1 }}>
+                    <GlobalPickers
+                      globalPickerStatsToView={globalPickerStatsToView}
+                      setGlobalPickerStatsToView={setGlobalPickerStatsToView}
+                      pickerTitle={globalPicker.title}
+                      filterOption={globalPicker.filterOption}
+                      informationToRender={
+                        globalPicker.title === 'Materials'
+                          ? materialList && materialList[0] && materialList[0]?.materials
+                          : equipmentList && equipmentList[0] && equipmentList[0]?.equipments
+                      }
+                      secondaryValuesToRender={globalPicker.secondaryValuesToRender}
+                      listOfItems={
+                        globalPicker.title === 'Materials'
+                          ? materialListToPick
+                          : equipmentListToPick
+                      }
+                      setListOfItems={
+                        globalPicker.title === 'Materials'
+                          ? setMaterialListToPick
+                          : setEquipmentListToPick
+                      }
+                    />
+                  </Grid>
+                );
+              })}
+            </Grid>
           </>
         )}
     </Box>

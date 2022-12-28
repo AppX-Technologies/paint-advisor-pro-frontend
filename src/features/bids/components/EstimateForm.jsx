@@ -24,6 +24,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import uuid from 'react-uuid';
 import { processesTabLists } from '../../../common/Constants';
 import { InteriorManByManFormFields } from '../../../common/FormTextField';
 import {
@@ -36,6 +37,7 @@ import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { reset, updateABid, updateClient } from '../bidsSlice';
 import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
+import EstimationDetails from './forms/interior/EstimationDetails';
 
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
@@ -57,6 +59,9 @@ export default function EstimateForm({
 }) {
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
   const [previousStateOfRooms, setPreviousStateOfRooms] = React.useState(null);
+  const [estimationDetailsMeta, setEstimationDetailsMeta] = React.useState(null);
+  const [materialListToPick, setMaterialListToPick] = React.useState([]);
+  const [equipmentListToPick, setEquipmentListToPick] = React.useState([]);
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { bidsIsLoading, bidsIsSuccess, bidsIsError, bidInfo } = useSelector((state) => state.bids);
@@ -67,6 +72,8 @@ export default function EstimateForm({
     setOpen(false);
     setRoomFormValue(initialRoomState);
   };
+
+  console.log(materialListToPick, 'materialListToPick');
 
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
@@ -83,6 +90,19 @@ export default function EstimateForm({
       return dispatch(
         showMessage({
           message: `Start Date Should Be Less Than End Date.`,
+          severity: 'error'
+        })
+      );
+    }
+
+    if (
+      materialListToPick.some((material) => {
+        return Object.keys(material).length !== 5;
+      })
+    ) {
+      return dispatch(
+        showMessage({
+          message: `Material List Should Be Complete`,
           severity: 'error'
         })
       );
@@ -106,6 +126,7 @@ export default function EstimateForm({
         bidFields: {
           ...initialBidInfo,
           rooms: [...currentClientInfo.bid.rooms],
+          materials: [...materialListToPick],
           isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'Yes'
         },
         organization: orgId
@@ -192,6 +213,20 @@ export default function EstimateForm({
       setPreviousStateOfRooms({ ...currentClientInfo.bid });
     }
   }, [open]);
+
+  const onEstimationDetailsChange = () => {
+    setEstimationDetailsMeta(null);
+  };
+
+  useEffect(() => {
+    const materialInfo = currentClientInfo?.bid?.materials.map((material) => {
+      return { ...material, id: uuid() };
+    });
+
+    setMaterialListToPick(cloneDeep(materialInfo));
+  }, [currentClientInfo?.bid]);
+
+  console.log(currentClientInfo?.bid, 'currentClientInfo?.bid');
 
   return (
     <div>
@@ -371,6 +406,10 @@ export default function EstimateForm({
               initialBidInfo={initialBidInfo}
               currentClientInfo={currentClientInfo}
               setCurrentClientInfo={setCurrentClientInfo}
+              materialListToPick={materialListToPick}
+              equipmentListToPick={equipmentListToPick}
+              setMaterialListToPick={setMaterialListToPick}
+              setEquipmentListToPick={setEquipmentListToPick}
             />
           )}
           {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
@@ -387,24 +426,35 @@ export default function EstimateForm({
             <></>
           )}
         </DialogContent>
-        <DialogActions>
-          <Button
-            disabled={bidsIsLoading}
-            onClick={() => {
-              handleClose();
-              currentClientInfo.bid = { ...previousStateOfRooms };
-              setCurrentClientInfo({ ...currentClientInfo });
-            }}>
-            Cancel
-          </Button>
-          <Button
-            disabled={bidsIsLoading}
-            type='submit'
-            variant='contained'
-            onClick={handleBidsSubmission}>
-            Save
-          </Button>
-        </DialogActions>
+
+        <Box>
+          <DialogActions>
+            <Button
+              disabled={bidsIsLoading}
+              onClick={() => {
+                handleClose();
+                currentClientInfo.bid = { ...previousStateOfRooms };
+                setCurrentClientInfo({ ...currentClientInfo });
+              }}>
+              Cancel
+            </Button>
+            <Button
+              disabled={bidsIsLoading}
+              type='submit'
+              variant='contained'
+              onClick={handleBidsSubmission}>
+              Save
+            </Button>
+          </DialogActions>
+        </Box>
+
+        {estimationDetailsMeta && (
+          <EstimationDetails
+            estimationDetailsMeta={estimationDetailsMeta}
+            setEstimationDetailsMeta={setEstimationDetailsMeta}
+            onEstimationDetailsChange={onEstimationDetailsChange}
+          />
+        )}
       </Dialog>
     </div>
   );

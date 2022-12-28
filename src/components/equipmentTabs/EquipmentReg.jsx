@@ -48,6 +48,7 @@ export default function FormDialog(props) {
       ...equipmentRegistrationAndEditStats,
       ID: equipmentList[0]?._id,
       previousEquipments: equipmentList[0]?.equipments,
+      isRentable: false,
       add: true,
       token: userDetail.token
     };
@@ -68,6 +69,8 @@ export default function FormDialog(props) {
       dispatch(reset());
     }
   }, [isSuccess]);
+
+  console.log(equipmentRegistrationAndEditStats, 'equipmentRegistrationAndEditStats');
 
   return (
     <div>
@@ -121,6 +124,25 @@ export default function FormDialog(props) {
                   <MenuItem value='Exterior'>Exterior</MenuItem>
                 </Select>
               </FormControl>
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <TextField
+                name='unitPrice'
+                required
+                fullWidth
+                aria-label='minimum height'
+                minRows={3}
+                variant='standard'
+                id='unit'
+                label='Unit Price'
+                autoFocus
+                value={equipmentRegistrationAndEditStats?.unitPrice}
+                onChange={(e) => {
+                  equipmentRegistrationAndEditStats.unitPrice = e.target.value;
+                  setEquipmentRegistrationAndEditStats({ ...equipmentRegistrationAndEditStats });
+                }}
+                style={{ width: '100%', marginTop: '13px' }}
+              />
             </Grid>
           </Grid>
         </DialogContent>

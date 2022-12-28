@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { cloneDeep } from 'lodash';
+import uuid from 'react-uuid';
 import { buttonStageInfo } from '../../../common/ButtonStageInfo';
-import { FIELDS_WHERE_MATERIALS_ARE_APPLIES } from '../../../helpers/contants';
+
+import {
+  FIELDS_WHERE_MATERIALS_ARE_APPLIES,
+  NONPAINTABLEAREAFIELD
+} from '../../../helpers/contants';
 
 export const findCurrentStageButtonInfo = (stageName) => {
   return buttonStageInfo.find((info) => info.name === stageName);
@@ -233,15 +238,25 @@ export const sectionInfo = (currentClientInfo, section) => {
   });
 };
 
-export const checkWheatherEverySectionIsFilled = (rooms) => {
+export const checkWheatherEverySectionIsFilled = (rooms, field) => {
   const array = [];
   if (rooms) {
     rooms.forEach((room) => {
       Object.keys(room)
-        .filter((sections) => sections !== 'roomName' && sections !== '__v' && sections !== '_id')
+        .filter(
+          (sections) =>
+            sections !== 'roomName' &&
+            sections !== '__v' &&
+            sections !== '_id' &&
+            sections !== NONPAINTABLEAREAFIELD
+        )
         .forEach((sections) => {
           room[sections].forEach((section) => {
-            if (!section?.labours || Object.keys(section?.labours).length === 0) {
+            if (
+              !section?.[field] ||
+              JSON.stringify(section?.[field]) === '{}' ||
+              !Object.keys(section).includes(field)
+            ) {
               array.push(false);
             } else {
               array.push(true);
@@ -249,6 +264,10 @@ export const checkWheatherEverySectionIsFilled = (rooms) => {
           });
         });
     });
+  }
+
+  if (field === 'materials') {
+    console.log(array, 'arrayarrayarrayarray');
   }
 
   return !array.includes(false);
@@ -269,3 +288,13 @@ export const checkWheatherIndividualSectionIsFilled = (
   }
   return true;
 };
+
+// export const applyUniqueIds = (selectedListItem, clientList) => {
+//   const selectedClient = cloneDeep(clientList.find((client) => client._id === selectedListItem));
+//   if (selectedClient) {
+//     selectedClient?.bid?.materials.forEach((material) => {
+//       material.id = uuid();
+//     });
+//   }
+//   return selectedClient;
+// };

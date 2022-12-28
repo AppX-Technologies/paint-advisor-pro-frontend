@@ -1,17 +1,15 @@
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { createFilterOptions } from '@mui/material/Autocomplete';
 import FormatPaintOutlinedIcon from '@mui/icons-material/FormatPaintOutlined';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Box, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { createFilterOptions } from '@mui/material/Autocomplete';
 import { cloneDeep, startCase } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import AutoComplete from '../../../common/AutoComplete';
 import MaterialsPickerCard from '../../../common/MaterialsPickerCard';
-import { NONPAINTABLEAREAFIELD, ROLE_PAINTER } from '../../../helpers/contants';
-import { authSelector } from '../../auth/authSlice';
-import { fetchMaterial } from '../../materials/materialSlice';
+import { NONPAINTABLEAREAFIELD } from '../../../helpers/contants';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import {
   checkWheatherEverySectionIsFilled,
@@ -22,9 +20,6 @@ import {
   roomInfo,
   sectionInfo
 } from '../helpers/generalHepers';
-import { isCompanyAdmin, isSystemUser } from '../../../helpers/roles';
-import { fetchUserMadeByCompany } from '../../usersFromCompany/usersFromCompanySlice';
-import AutoComplete from '../../../common/AutoComplete';
 
 const Picker = ({
   currentClientInfo,
@@ -38,7 +33,6 @@ const Picker = ({
   filteredPickerList
 }) => {
   const [roomRelatedInfo, setRoomRelatedInfo] = useState(null);
-  const [currentlyActiveRoomInfo, setCurrentlyActiveRoomInfo] = useState({});
 
   const [expandArea, setExpandArea] = useState({
     walls: true,
@@ -202,7 +196,10 @@ const Picker = ({
   const handlePickerAssignmentToAllSections = () => {
     const currentClientInfoCopy = cloneDeep(currentClientInfo);
 
-    if (!selectionToEveryComponent) {
+    if (
+      !selectionToEveryComponent &&
+      !checkWheatherEverySectionIsFilled(currentClientInfo?.bid?.rooms, pickerTitle.toLowerCase())
+    ) {
       return dispatch(
         showMessage({
           message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
@@ -215,7 +212,12 @@ const Picker = ({
         .filter((sections) => sections !== '__v' && sections !== 'roomName' && sections !== '_id')
         .forEach((sections) => {
           room[sections].forEach((section) => {
-            if (checkWheatherEverySectionIsFilled(currentClientInfo?.bid?.rooms)) {
+            if (
+              checkWheatherEverySectionIsFilled(
+                currentClientInfo?.bid?.rooms,
+                pickerTitle.toLowerCase()
+              )
+            ) {
               section[pickerTitle.toLowerCase()] = {};
             } else {
               section[pickerTitle.toLowerCase()] = {
@@ -264,7 +266,10 @@ const Picker = ({
           )}
           {showPrimaryAutocomplete && (
             <>
-              {checkWheatherEverySectionIsFilled(currentClientInfo?.bid?.rooms) ? (
+              {checkWheatherEverySectionIsFilled(
+                currentClientInfo?.bid?.rooms,
+                pickerTitle.toLowerCase()
+              ) ? (
                 <Tooltip title='Remove From Every Section' placement='top'>
                   <HighlightOffIcon
                     sx={{

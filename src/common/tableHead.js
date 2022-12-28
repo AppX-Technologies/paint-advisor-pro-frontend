@@ -129,18 +129,14 @@ export const materialColumn = () => {
   return [
     {
       name: 'description',
-      label: 'Paint Description',
-      width: '20%'
+      label: 'Material Description',
+      width: '40%'
     },
-    {
-      name: 'unit',
-      label: 'Unit',
-      width: '20%'
-    },
+
     {
       name: 'unitPrice',
       label: 'Price Per Unit',
-      width: '20%'
+      width: '40%'
     }
   ];
 };
@@ -150,6 +146,11 @@ export const equipmentColumn = () => {
     {
       name: 'description',
       label: 'Equipment Description',
+      width: '40%'
+    },
+    {
+      name: 'unitPrice',
+      label: 'Unit Price',
       width: '40%'
     }
   ];

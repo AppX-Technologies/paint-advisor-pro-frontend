@@ -8,6 +8,7 @@ import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { filterEquipmentByBid } from '../../helpers/bidFilterHelpers';
 import CustomButton from '../Button';
 import { DeleteModal } from '../delete-model/DeleteModel';
+import Edit from './EditEquipmentForm';
 import FormDialog from './EquipmentReg';
 
 const columns = equipmentColumn();
@@ -46,7 +47,7 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
   }, [isSuccess]);
 
   useEffect(() => {
-    setFilteredEquipment(filterEquipmentByBid(equipmentList, filterValue));
+    setFilteredEquipment(filterEquipmentByBid(equipmentList, filterValue, false));
   }, [filterValue, equipmentList]);
 
   return (
@@ -56,7 +57,11 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
           variant='contained'
           sx={{ mb: 2 }}
           onClick={() =>
-            setEquipmentRegistrationAndEditStats({ bidType: filterValue, description: '' })
+            setEquipmentRegistrationAndEditStats({
+              bidType: filterValue,
+              description: '',
+              unitPrice: null
+            })
           }
           disabled={isLoading}>
           Create
@@ -70,7 +75,7 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
               _id: equipment._id,
               description: equipment.description,
               bidType: equipment.bidType,
-              appliesTo: equipment?.appliesTo
+              unitPrice: equipment?.unitPrice
             };
           })
         }
@@ -105,12 +110,11 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
         deleteMethod={createEquipment}
       />
 
-      {/* <Edit
-        filteredEquipment={filteredEquipment}
+      <Edit
         equipmentRegistrationAndEditStats={equipmentRegistrationAndEditStats}
         setEquipmentRegistrationAndEditStats={setEquipmentRegistrationAndEditStats}
         onEquipmentFormClose={onEquipmentFormClose}
-      /> */}
+      />
     </>
   );
 };

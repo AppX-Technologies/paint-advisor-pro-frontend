@@ -61,6 +61,30 @@ export const WALL_TYPES = ['Smooth', 'Orange Peel', 'Knockdown'];
 
 export const CEILING_TYPES = [...WALL_TYPES, 'Popcorn'];
 
+export const GLOBAL_PICKERLIST = [
+  {
+    title: 'Materials',
+    filterOption: 'description',
+    secondaryValuesToRender: ['unit', 'unitPrice']
+  },
+  {
+    title: 'Equipments',
+    filterOption: 'description',
+    secondaryValuesToRender: ['unit', 'unitPrice']
+  }
+];
+
+export const GLOBAL_PICKER_FIELDS = [
+  {
+    label: 'materials',
+    fields: ['material', 'quantity', 'unitPrice']
+  },
+  {
+    label: 'equipments',
+    fields: ['material', 'quantity', 'unitPrice']
+  }
+];
+
 export const EXTRA_INFO_WHILE_CLONING = [
   { text: 'Clone Materials', field: 'materials' },
   { text: 'Clone Labours', field: 'labours' }

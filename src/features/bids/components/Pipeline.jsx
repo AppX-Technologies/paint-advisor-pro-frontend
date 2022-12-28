@@ -291,6 +291,12 @@ const Pipeline = () => {
     );
   }, [selectedStep, filteredClietsList]);
 
+  // useEffect(() => {
+  //   setCurrentClientInfo({ ...applyUniqueIds(selectedListItem, clientList) });
+  // }, [selectedListItem]);
+
+  // console.log(currentClientInfo, 'currentClientInfo');
+
   return (
     <>
       {selectedStep === STATUS_NEW_CLIENT && (

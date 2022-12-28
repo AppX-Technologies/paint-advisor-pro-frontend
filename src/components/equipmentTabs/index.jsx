@@ -38,14 +38,14 @@ const Materials = () => {
 
   // Fetching Equipments On First Render
 
-  // useEffect(() => {
-  //   dispatch(
-  //     fetchEquipment({
-  //       token: userDetail.token,
-  //       id: companyId ? org.equipments : undefined
-  //     })
-  //   );
-  // }, []);
+  useEffect(() => {
+    dispatch(
+      fetchEquipment({
+        token: userDetail.token,
+        id: companyId ? org.equipments : undefined
+      })
+    );
+  }, []);
 
   return (
     <Box sx={{ width: '100%' }}>

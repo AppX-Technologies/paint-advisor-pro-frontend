@@ -10,6 +10,7 @@ import { Pipeline as Bids } from '../features/bids';
 import Materials from '../pages/Paint';
 import ProductionRate from '../pages/ProductionRate';
 import { Equipments } from '../pages/Equipments';
+import MaterialsPage from '../pages/MaterialPage';
 
 export const commonRoutes = [
   { relLink: '/profile', link: '/profile', icon: AccountCircleIcon, text: 'Profile' },
@@ -37,7 +38,6 @@ export const companyRoutes = (id) =>
     { relLink: 'bids', icon: Dashboard, text: 'Bids', element: Bids },
     { relLink: 'processes', icon: FormatListBulleted, text: 'Processes', element: Processes },
     { relLink: 'users', icon: People, text: 'Users', element: UsersFromCompany },
-
     {
       relLink: 'production-rates',
       icon: BarChartIcon,
@@ -46,5 +46,5 @@ export const companyRoutes = (id) =>
     },
     { relLink: 'paint', icon: FormatColorFillIcon, text: 'Paint', element: Materials },
     { relLink: 'equipments', icon: ConstructionIcon, text: 'Equipments', element: Equipments },
-    { relLink: 'materials', icon: HomeRepairServiceIcon, text: 'Materials' }
+    { relLink: 'materials', icon: HomeRepairServiceIcon, text: 'Materials', element: MaterialsPage }
   ].map((l) => ({ ...l, link: id ? `/${id}/${l.relLink}` : `/${l.relLink}` }));
