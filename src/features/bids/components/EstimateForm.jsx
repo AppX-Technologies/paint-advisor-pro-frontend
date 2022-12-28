@@ -93,7 +93,6 @@ export default function EstimateForm({
   const { bidsIsLoading, bidsIsSuccess, bidsIsError, bidInfo } = useSelector((state) => state.bids);
   const { companyId } = useParams();
   const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
-
   const handleClose = () => {
     setOpen(false);
     setRoomFormValue(initialRoomState);

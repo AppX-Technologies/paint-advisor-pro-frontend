@@ -55,13 +55,13 @@ const totalingFields = [
   }
 ];
 
-function isRoomField(fieldName) {
-  const roomFields = ['paintableArea', 'labourCost', 'materialCost'];
-  return roomFields.includes(fieldName);
-}
+const roomFields = ['paintableArea', 'labourCost', 'materialCost'];
 
 const EstimationDetails = ({ estimationDetailData, onEstimationDetailModalClose }) => {
   const [viewDetails, setViewDetails] = useState(false);
+  function isRoomField(fieldName) {
+    return roomFields.includes(fieldName);
+  }
   return (
     <Backdrop
       sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -109,7 +109,9 @@ const EstimationDetails = ({ estimationDetailData, onEstimationDetailModalClose 
                         }}>
                         {fields.label}
                       </TableCell>
-                      <TableCell align='right' sx={{ fontWeight: '300' }}>
+                      <TableCell
+                        align='right'
+                        sx={{ fontWeight: !isRoomField(fields.name) ? '400' : '300' }}>
                         {fields.name !== 'paintableArea' && fields.name !== 'discount' && '$'}
                         {estimationDetailData?.[fields.name] ?? 0}{' '}
                         {fields.name === 'paintableArea' && 'sq ft'}
@@ -137,7 +139,7 @@ const EstimationDetails = ({ estimationDetailData, onEstimationDetailModalClose 
             estimationDetailData?.rooms?.map((roomInfo) => {
               return (
                 <Box>
-                  <Box sx={{ display: 'flex',ml:2 }}>
+                  <Box sx={{ display: 'flex', ml: 2 }}>
                     <MapsHomeWorkIcon sx={{ color: (theme) => theme.palette.primary.main }} />
                     <Typography
                       sx={{
@@ -153,15 +155,24 @@ const EstimationDetails = ({ estimationDetailData, onEstimationDetailModalClose 
                     <Table size='small' sx={{ minWidth: 'auto' }}>
                       <TableBody>
                         {totalingFields
-                          .filter((x) => isRoomField(x.name))
-                          .map((field) => {
+                          .filter((x) => isRoomField(x.name) || x.name === 'invoiceTotal')
+                          .map((fields) => {
                             return (
                               <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                <TableCell sx={{ fontWeight: '300' }}>{field.label}</TableCell>
-                                <TableCell align='right' sx={{ fontWeight: '300' }}>
-                                  {field.name !== 'paintableArea' && '$'}
-                                  {roomInfo?.[field.name] ?? 0}{' '}
-                                  {field.name === 'paintableArea' && 'sq ft'}
+                                <TableCell
+                                  sx={{
+                                    fontWeight: !isRoomField(fields.name) ? '400' : '300'
+                                  }}>
+                                  {fields.label}
+                                </TableCell>
+                                <TableCell
+                                  align='right'
+                                  sx={{
+                                    fontWeight: !isRoomField(fields.name) ? '400' : '300'
+                                  }}>
+                                  {fields.name !== 'paintableArea' && '$'}
+                                  {roomInfo?.[fields.name] ?? 100}{' '}
+                                  {fields.name === 'paintableArea' && 'sq ft'}
                                 </TableCell>
                               </TableRow>
                             );
