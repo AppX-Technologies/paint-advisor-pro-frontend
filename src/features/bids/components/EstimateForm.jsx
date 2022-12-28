@@ -235,11 +235,11 @@ export default function EstimateForm({
   };
 
   useEffect(() => {
-    const materialInfo = currentClientInfo?.bid?.materials.map((material) => {
+    const materialInfo = currentClientInfo?.bid?.materials?.map((material) => {
       return { ...material, id: uuid() };
     });
 
-    const equipmentInfo = currentClientInfo?.bid?.equipments.map((equipment) => {
+    const equipmentInfo = currentClientInfo?.bid?.equipments?.map((equipment) => {
       return { ...equipment, id: uuid() };
     });
 
