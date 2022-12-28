@@ -62,6 +62,7 @@ export default function EstimateForm({
   const [estimationDetailsMeta, setEstimationDetailsMeta] = React.useState(null);
   const [materialListToPick, setMaterialListToPick] = React.useState([]);
   const [equipmentListToPick, setEquipmentListToPick] = React.useState([]);
+  const [labourDetailedMode, setLabourDetailedMode] = React.useState();
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { bidsIsLoading, bidsIsSuccess, bidsIsError, bidInfo } = useSelector((state) => state.bids);
@@ -73,7 +74,7 @@ export default function EstimateForm({
     setRoomFormValue(initialRoomState);
   };
 
-  console.log(materialListToPick, equipmentListToPick, 'materialListToPick');
+  console.log(labourDetailedMode, 'materialListToPick');
 
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
@@ -138,6 +139,7 @@ export default function EstimateForm({
         _id: currentClientInfo.bid._id,
         bidFields: {
           ...initialBidInfo,
+          isLabourDetailedMode: labourDetailedMode,
           rooms: [...currentClientInfo.bid.rooms],
           materials: [...materialListToPick],
           equipments: [...equipmentListToPick],
@@ -242,7 +244,7 @@ export default function EstimateForm({
     const equipmentInfo = currentClientInfo?.bid?.equipments?.map((equipment) => {
       return { ...equipment, id: uuid() };
     });
-
+    setLabourDetailedMode(currentClientInfo?.bid?.isLabourDetailedMode);
     setMaterialListToPick(cloneDeep(materialInfo));
     setEquipmentListToPick(cloneDeep(equipmentInfo));
   }, [currentClientInfo?.bid]);
@@ -429,6 +431,8 @@ export default function EstimateForm({
               equipmentListToPick={equipmentListToPick}
               setMaterialListToPick={setMaterialListToPick}
               setEquipmentListToPick={setEquipmentListToPick}
+              labourDetailedMode={labourDetailedMode}
+              setLabourDetailedMode={setLabourDetailedMode}
             />
           )}
           {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Man Hour' && (

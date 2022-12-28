@@ -1,5 +1,18 @@
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Grid, Tooltip, Typography } from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import {
+  Box,
+  Chip,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  Switch,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,6 +34,66 @@ import Picker from '../../Picker';
 import { DeleteItemModel } from '../DeleteModel';
 import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
 import AddRoomForm from './AddRoomForm';
+import ChoosePainterModal from '../../ChoosePainterModal';
+
+const painterDetailFields = [
+  {
+    name: 'name',
+    label: 'Name',
+    icon: <DriveFileRenameOutlineIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
+  },
+  {
+    name: 'role',
+    label: 'Role',
+    icon: <AdminPanelSettingsIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
+  },
+  {
+    name: 'email',
+    label: 'Email',
+    icon: <EmailIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
+  },
+  {
+    name: 'proficiency',
+    label: 'Proficiency',
+    icon: <StarBorderIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
+  }
+];
+
+const PainterDetail = ({ painter }) => {
+  return (
+    <Box sx={{ padding: '5px' }}>
+      <Grid
+        container
+        sx={{
+          padding: '5px',
+          border: '1px solid lightgray',
+          borderRadius: '10px'
+        }}>
+        {painterDetailFields.map((field) => {
+          return (
+            <Grid xs={12} md={12} lg={6}>
+              {field.icon}
+              <span style={{ fontSize: '14px' }}>
+                {field.label}:{' '}
+                <span style={{ fontWeight: '300' }}>
+                  {painter?.[field.name]}{' '}
+                  {field.name === 'proficiency' && (
+                    <Chip
+                      color='success'
+                      sx={{ height: '16px', cursor: 'pointer', ml: 2 }}
+                      label='$521'
+                      size='small'
+                    />
+                  )}
+                </span>
+              </span>
+            </Grid>
+          );
+        })}
+      </Grid>
+    </Box>
+  );
+};
 
 const InteriorRoomByRoom = ({
   roomFormValue,
@@ -35,7 +108,9 @@ const InteriorRoomByRoom = ({
   materialListToPick,
   setMaterialListToPick,
   equipmentListToPick,
-  setEquipmentListToPick
+  setEquipmentListToPick,
+  labourDetailedMode,
+  setLabourDetailedMode
 }) => {
   const [addRoom, setAddRoom] = useState(false);
 
@@ -45,7 +120,7 @@ const InteriorRoomByRoom = ({
   const [selectedRoomInfo, setSelectedRoomInfo] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [itemToBeDeleted, setitemToBeDeleted] = useState(null);
-
+  const [choosePainterModalData, setChoosePainterModalData] = useState(null);
   const [globalPickerStatsToView, setGlobalPickerStatsToView] = useState({
     materials: [],
     equipments: []
@@ -59,9 +134,18 @@ const InteriorRoomByRoom = ({
   const { materialList } = useSelector((state) => state.material);
   const { equipmentList } = useSelector((state) => state.equipment);
   const { companyMadeByUsers } = useSelector((state) => state.usersFromCompany);
-
+  const [selectedPainter, setselectedPainter] = useState(null);
   const onSelectedRoomInfoChange = (value) => {
     setSelectedRoomInfo(value);
+  };
+  console.log(choosePainterModalData, 'asdasd');
+
+  const handleOpenPainterChooseModal = () => {
+    setChoosePainterModalData({ painter: companyMadeByUsers });
+  };
+  const handleClosePainterChooseModal = () => {
+    setselectedPainter(choosePainterModalData);
+    setChoosePainterModalData(null);
   };
 
   useEffect(() => {
@@ -194,17 +278,55 @@ const InteriorRoomByRoom = ({
               secondaryValuesToRender={['unit', 'unitPrice']}
               filteredPickerList={materialList && materialList[0] && materialList[0]?.materials}
             />
-            <Picker
-              pickerTitle='Labours'
-              currentClientInfo={currentClientInfo}
-              setCurrentClientInfo={setCurrentClientInfo}
-              pickerList={companyMadeByUsers}
-              informationToRender={labourListSectionwise}
-              filterOption='name'
-              secondaryValuesToRender={['proficiency']}
-              showPrimaryAutocomplete
-              filteredPickerList={companyMadeByUsers}
-            />
+            <Box sx={{ marginTop: '30px' }}>
+              <FormGroup sx={{ float: 'right' }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      size='small'
+                      checked={labourDetailedMode}
+                      onChange={() => setLabourDetailedMode(!labourDetailedMode)}
+                    />
+                  }
+                  label={labourDetailedMode ? 'View Detail Mode' : 'Summarized View'}
+                />
+              </FormGroup>
+              {labourDetailedMode ? (
+                <Box sx={{}}>
+                  <Button
+                    type='submit'
+                    color='info'
+                    variant='contained'
+                    onClick={handleOpenPainterChooseModal}>
+                    Click here to view painter
+                  </Button>
+                  <Box sx={{ marginTop: '20px' }}>
+                    <Typography sx={{ fontSize: '300', ml: 1 }}>Selected Painters:</Typography>
+                    <Grid container>
+                      {selectedPainter?.painter?.map((painter) => {
+                        return (
+                          <Grid xs={12} md={6} lg={6}>
+                            <PainterDetail painter={painter} />
+                          </Grid>
+                        );
+                      })}
+                    </Grid>
+                  </Box>
+                </Box>
+              ) : (
+                <Picker
+                  pickerTitle='Labours'
+                  currentClientInfo={currentClientInfo}
+                  setCurrentClientInfo={setCurrentClientInfo}
+                  pickerList={companyMadeByUsers}
+                  informationToRender={labourListSectionwise}
+                  filterOption='name'
+                  secondaryValuesToRender={['proficiency']}
+                  showPrimaryAutocomplete
+                  filteredPickerList={companyMadeByUsers}
+                />
+              )}
+            </Box>
             <Grid container sx={{ p: 1, mt: 2 }}>
               {GLOBAL_PICKERLIST.map((globalPicker) => {
                 return (
@@ -218,12 +340,12 @@ const InteriorRoomByRoom = ({
                         globalPicker.title === 'Materials'
                           ? equipmentList &&
                             equipmentList[0] &&
-                            equipmentList[0]?.equipments.filter((equipment) => !equipment.isRentable)
+                            equipmentList[0]?.equipments.filter(
+                              (equipment) => !equipment.isRentable
+                            )
                           : equipmentList &&
                             equipmentList[0] &&
-                            equipmentList[0]?.equipments.filter(
-                              (equipment) => equipment.isRentable
-                            )
+                            equipmentList[0]?.equipments.filter((equipment) => equipment.isRentable)
                       }
                       secondaryValuesToRender={globalPicker.secondaryValuesToRender}
                       listOfItems={
@@ -243,6 +365,13 @@ const InteriorRoomByRoom = ({
             </Grid>
           </>
         )}
+      <ChoosePainterModal
+        handleClosePainterChooseModal={handleClosePainterChooseModal}
+        choosePainterModalData={choosePainterModalData}
+        setChoosePainterModalData={setChoosePainterModalData}
+        painterList={companyMadeByUsers}
+        selectedPainter={selectedPainter?.painter}
+      />
     </Box>
   );
 };
