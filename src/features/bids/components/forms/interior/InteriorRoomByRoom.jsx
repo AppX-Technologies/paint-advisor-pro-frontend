@@ -92,10 +92,6 @@ const InteriorRoomByRoom = ({
     }
   }, []);
 
-  // useEffect(()=>{
-  //   setGlobalPickerStatsToView({})
-  // },[])
-
   return (
     <Box>
       {/* Main Form Body  */}
@@ -220,8 +216,14 @@ const InteriorRoomByRoom = ({
                       filterOption={globalPicker.filterOption}
                       informationToRender={
                         globalPicker.title === 'Materials'
-                          ? materialList && materialList[0] && materialList[0]?.materials
-                          : equipmentList && equipmentList[0] && equipmentList[0]?.equipments
+                          ? equipmentList &&
+                            equipmentList[0] &&
+                            equipmentList[0]?.equipments.filter((equipment) => !equipment.isRentable)
+                          : equipmentList &&
+                            equipmentList[0] &&
+                            equipmentList[0]?.equipments.filter(
+                              (equipment) => equipment.isRentable
+                            )
                       }
                       secondaryValuesToRender={globalPicker.secondaryValuesToRender}
                       listOfItems={

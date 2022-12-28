@@ -73,7 +73,7 @@ export default function EstimateForm({
     setRoomFormValue(initialRoomState);
   };
 
-  console.log(materialListToPick, 'materialListToPick');
+  console.log(materialListToPick, equipmentListToPick, 'materialListToPick');
 
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
@@ -95,18 +95,31 @@ export default function EstimateForm({
       );
     }
 
-    if (
-      materialListToPick.some((material) => {
-        return Object.keys(material).length !== 5;
-      })
-    ) {
-      return dispatch(
-        showMessage({
-          message: `Material List Should Be Complete`,
-          severity: 'error'
-        })
-      );
-    }
+    // if (
+    //   materialListToPick.some((material) => {
+    //     return Object.keys(material).length !== 5;
+    //   })
+    // ) {
+    //   return dispatch(
+    //     showMessage({
+    //       message: `Material List Should Be Complete`,
+    //       severity: 'error'
+    //     })
+    //   );
+    // }
+
+    // if (
+    //   equipmentListToPick.some((material) => {
+    //     return Object.keys(material).length !== 5;
+    //   })
+    // ) {
+    //   return dispatch(
+    //     showMessage({
+    //       message: `Equipment List Should Be Complete`,
+    //       severity: 'error'
+    //     })
+    //   );
+    // }
 
     const currentClientInfoCopy = cloneDeep(currentClientInfo);
 
@@ -127,6 +140,7 @@ export default function EstimateForm({
           ...initialBidInfo,
           rooms: [...currentClientInfo.bid.rooms],
           materials: [...materialListToPick],
+          equipments: [...equipmentListToPick],
           isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'Yes'
         },
         organization: orgId
@@ -139,6 +153,8 @@ export default function EstimateForm({
       setInitialBidInfo(cloneDeep(estimationFormInitialInfo));
     }
   }, [open]);
+
+  console.log(currentClientInfo, 'currentClientInfo');
 
   useEffect(() => {
     if (bidsIsSuccess) {
@@ -223,10 +239,13 @@ export default function EstimateForm({
       return { ...material, id: uuid() };
     });
 
-    setMaterialListToPick(cloneDeep(materialInfo));
-  }, [currentClientInfo?.bid]);
+    const equipmentInfo = currentClientInfo?.bid?.equipments.map((equipment) => {
+      return { ...equipment, id: uuid() };
+    });
 
-  console.log(currentClientInfo?.bid, 'currentClientInfo?.bid');
+    setMaterialListToPick(cloneDeep(materialInfo));
+    setEquipmentListToPick(cloneDeep(equipmentInfo));
+  }, [currentClientInfo?.bid]);
 
   return (
     <div>

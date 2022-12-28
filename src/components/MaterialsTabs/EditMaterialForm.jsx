@@ -50,7 +50,7 @@ export default function Edit({
       previousEquipments: equipmentList[0].equipments.filter(
         (previousEquipments) => previousEquipments._id !== equipmentRegistrationAndEditStats._id
       ),
-      isRentable: true,
+      isRentable: false,
       add: true,
       token: userDetail.token
     };

@@ -48,7 +48,7 @@ export default function FormDialog(props) {
       ...equipmentRegistrationAndEditStats,
       ID: equipmentList[0]?._id,
       previousEquipments: equipmentList[0]?.equipments,
-      isRentable: false,
+      isRentable: true,
       add: true,
       token: userDetail.token
     };

@@ -155,27 +155,27 @@ export const findWheatherTheSectionIsCompletelyFilledOrNot = (roomsList, section
 export const setMaterialsAccordingToSection = (pickerList) => {
   const materialsAccordingToSection = [];
   if (pickerList && pickerList[0]) {
-    pickerList[0]?.materials.forEach((material) => {
-      material?.appliesTo?.forEach((materialApplication) => {
+    pickerList[0]?.materials.forEach((paint) => {
+      paint?.appliesTo?.forEach((materialApplication) => {
         const foundMaterialSection = materialsAccordingToSection.find(
           (materialSection) => materialSection.name === materialApplication
         );
         if (foundMaterialSection) {
           foundMaterialSection.values.push({
-            description: material.description,
-            unit: material.unit,
-            unitPrice: material.unitPrice,
-            materialId: material._id
+            description: paint.description,
+            unit: paint.unit,
+            unitPrice: paint.unitPrice,
+            paintId: paint._id
           });
         } else {
           materialsAccordingToSection.push({
             name: materialApplication,
             values: [
               {
-                description: material.description,
-                unit: material.unit,
-                unitPrice: material.unitPrice,
-                materialId: material._id
+                description: paint.description,
+                unit: paint.unit,
+                unitPrice: paint.unitPrice,
+                paintId: paint._id
               }
             ]
           });
@@ -288,13 +288,3 @@ export const checkWheatherIndividualSectionIsFilled = (
   }
   return true;
 };
-
-// export const applyUniqueIds = (selectedListItem, clientList) => {
-//   const selectedClient = cloneDeep(clientList.find((client) => client._id === selectedListItem));
-//   if (selectedClient) {
-//     selectedClient?.bid?.materials.forEach((material) => {
-//       material.id = uuid();
-//     });
-//   }
-//   return selectedClient;
-// };

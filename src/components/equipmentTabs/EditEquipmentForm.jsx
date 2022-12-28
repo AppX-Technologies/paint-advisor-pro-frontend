@@ -51,7 +51,7 @@ export default function Edit({
         (previousEquipments) => previousEquipments._id !== equipmentRegistrationAndEditStats._id
       ),
       add: true,
-      isRentable: false,
+      isRentable: true,
       token: userDetail.token
     };
     dispatch(createEquipment(formStateWithToken));

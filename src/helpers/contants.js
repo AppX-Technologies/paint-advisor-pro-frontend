@@ -81,7 +81,7 @@ export const GLOBAL_PICKER_FIELDS = [
   },
   {
     label: 'equipments',
-    fields: ['material', 'quantity', 'unitPrice']
+    fields: ['equipment', 'quantity', 'unitPrice']
   }
 ];
 

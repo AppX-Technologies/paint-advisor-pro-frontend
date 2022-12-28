@@ -49,7 +49,7 @@ export default function FormDialog(props) {
       ID: equipmentList[0]?._id,
       previousEquipments: equipmentList[0]?.equipments,
       add: true,
-      isRentable: true,
+      isRentable: false,
       token: userDetail.token
     };
 

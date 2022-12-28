@@ -47,7 +47,7 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
   }, [isSuccess]);
 
   useEffect(() => {
-    setFilteredEquipment(filterEquipmentByBid(equipmentList, filterValue, false));
+    setFilteredEquipment(filterEquipmentByBid(equipmentList, filterValue, true));
   }, [filterValue, equipmentList]);
 
   return (

@@ -25,7 +25,7 @@ const Picker = ({
   currentClientInfo,
   setCurrentClientInfo,
   pickerTitle,
-  pickerList,
+
   informationToRender,
   filterOption,
   secondaryValuesToRender,
@@ -53,6 +53,7 @@ const Picker = ({
     closets: '',
     doorJambs: ''
   });
+  console.log(currentlyChoosenMaterial, 'currentlyChoosenMaterial');
 
   const [currentlyChoosenMaterialDescription, setCurrentyChoosenMaterialDescription] = useState({
     walls: '',
@@ -394,6 +395,7 @@ const Picker = ({
                                   filterOptions={filterOptions}
                                   value={currentlyChoosenMaterialDescription[dropdownValue?.name]}
                                   onChange={(event, newInput) => {
+                                    console.log(newInput, 'newInput');
                                     currentlyChoosenMaterial[dropdownValue?.name] =
                                       newInput?.[
                                         `${
@@ -514,8 +516,8 @@ const Picker = ({
                                                   title={value.name}
                                                   index={idx}
                                                   materials={
-                                                    pickerTitle === 'Materials'
-                                                      ? value?.materials?.description
+                                                    pickerTitle === 'Paints'
+                                                      ? value?.paints?.description
                                                       : value?.labours?.name
                                                   }
                                                   handleMaterialAssignment={

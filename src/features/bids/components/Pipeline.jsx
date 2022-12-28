@@ -3,11 +3,14 @@ import { Box, Button, Card, Divider, Grid } from '@mui/material';
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { bidStageFilter } from '../../../common/bidStageFilters';
 import { booleanOption } from '../../../common/FormTextField';
 import { STATUS_NEW_CLIENT } from '../../../helpers/contants';
+import { isSystemUser } from '../../../helpers/roles';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { authSelector } from '../../auth/authSlice';
+import { fetchEquipment } from '../../equipments/equipmentSlice';
 import { fetchAllClients } from '../bidsSlice';
 import {
   estimationFormInitialInfo,
@@ -78,6 +81,7 @@ const Pipeline = () => {
   const [selectOption, setSelectOption] = useState('All');
   const [sortOption, setSortOption] = useState('createdAt');
   const [comment, setComment] = useState('');
+  const { companyId } = useParams();
 
   const { org } = useSelector((state) => state.org);
 
@@ -290,12 +294,16 @@ const Pipeline = () => {
       filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
     );
   }, [selectedStep, filteredClietsList]);
+  
 
-  // useEffect(() => {
-  //   setCurrentClientInfo({ ...applyUniqueIds(selectedListItem, clientList) });
-  // }, [selectedListItem]);
-
-  // console.log(currentClientInfo, 'currentClientInfo');
+  useEffect(() => {
+    dispatch(
+      fetchEquipment({
+        token: user.token,
+        id: companyId ? org.equipments : undefined
+      })
+    );
+  }, []);
 
   return (
     <>

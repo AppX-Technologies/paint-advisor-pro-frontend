@@ -79,7 +79,7 @@ const GlobalPickers = ({
                   {columns.map((column) => {
                     return (
                       <TableCell align='center' sx={{ padding: 0 }}>
-                        {column === 'material' ? (
+                        {column === 'material' || column === 'equipment' ? (
                           <AutoComplete
                             filterOptions={filterOptions}
                             value={
