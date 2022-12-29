@@ -14,7 +14,8 @@ import {
   TableRow,
   TextField,
   Tooltip,
-  Typography
+  Typography,
+  tableCellClasses
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { startCase } from 'lodash';
@@ -50,12 +51,37 @@ const GlobalPickers = ({
   const { bidsIsLoading } = useSelector((state) => state.bids);
 
   const handleRowAddition = () => {
-    setListOfItems([...listOfItems, { id: uuid() }]);
+    setListOfItems([
+      ...listOfItems,
+      {
+        id: uuid(),
+        description: informationToRender.filter(
+          (info) =>
+            !listOfItems
+              .map((item) => item[pickerTitle.slice(0, pickerTitle.length - 1).toLowerCase()])
+              .includes(info._id)
+        )[0]?.description,
+        [pickerTitle?.slice(0, pickerTitle.length - 1)?.toLowerCase()]: informationToRender.filter(
+          (info) =>
+            !listOfItems
+              .map((item) => item[pickerTitle.slice(0, pickerTitle.length - 1).toLowerCase()])
+              .includes(info._id)
+        )[0]?._id,
+        unitPrice: informationToRender.filter(
+          (info) =>
+            !listOfItems
+              .map((item) => item[pickerTitle.slice(0, pickerTitle.length - 1).toLowerCase()])
+              .includes(info._id)
+        )[0]?.unitPrice,
+        quantity: 1
+      }
+    ]);
   };
 
   const handleDeletion = (id) => {
     setListOfItems([...listOfItems.filter((item) => item.id !== id)]);
   };
+  console.log(informationToRender, 'informationToRender');
 
   return (
     <>
@@ -86,9 +112,16 @@ const GlobalPickers = ({
       {expandGlobalPickers[pickerTitle.toLowerCase()] && (
         <>
           <TableContainer component={Paper} sx={{ display: !bidsIsLoading ? 'auto' : 'none' }}>
-            <Table size='small' aria-label='a dense table'>
+            <Table
+              size='small'
+              aria-label='a dense table'
+              sx={{
+                [`& .${tableCellClasses.root}`]: {
+                  borderBottom: 'none'
+                }
+              }}>
               <TableHead>
-                <TableRow>
+                <TableRow sx={{ borderBottom: '1px solid lightgray' }}>
                   {columns &&
                     columns.map((column) => {
                       return <TableCell align='center'>{startCase(column)}</TableCell>;
@@ -107,7 +140,7 @@ const GlobalPickers = ({
                     <TableRow key={row.id}>
                       {columns.map((column) => {
                         return (
-                          <TableCell align='center' sx={{ padding: 0 }}>
+                          <TableCell align='center' sx={{ padding: 0, borderBottom: 'none' }}>
                             {column === 'material' || column === 'equipment' ? (
                               <AutoComplete
                                 varient='standard'
@@ -181,11 +214,13 @@ const GlobalPickers = ({
                               />
                             ) : (
                               <TextField
+                                sx={{ height: '100%', ml: 1 }}
                                 type='number'
                                 variant='standard'
                                 InputProps={{
                                   inputProps: {
-                                    min: 1
+                                    min: 1,
+                                    style: { textAlign: 'center' }
                                   }
                                 }}
                                 // InputProps={{
@@ -211,7 +246,8 @@ const GlobalPickers = ({
                             sx={{
                               color: (theme) => theme.deleteicon.color.main,
                               fontSize: '15px',
-                              cursor: 'pointer'
+                              cursor: 'pointer',
+                              mt: 1
                             }}
                             onClick={() => handleDeletion(row.id)}
                           />
