@@ -182,6 +182,12 @@ export default function FormDialog({
                 id='unit'
                 label='Unit Price'
                 autoFocus
+                type='number'
+                InputProps={{
+                  inputProps: {
+                    min: 1
+                  }
+                }}
                 value={materialRegistrationAndEditStats?.unitPrice}
                 onChange={(e) => {
                   materialRegistrationAndEditStats.unitPrice = e.target.value;

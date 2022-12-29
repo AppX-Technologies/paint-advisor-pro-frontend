@@ -58,8 +58,6 @@ export default function Edit({
     onEquipmentFormClose(false);
   };
 
-  console.log(equipmentRegistrationAndEditStats, 'equipmentRegistrationAndEditStats');
-
   return (
     <div>
       <Dialog
@@ -122,6 +120,12 @@ export default function Edit({
                 id='unit'
                 label='Unit Price'
                 autoFocus
+                type='number'
+                InputProps={{
+                  inputProps: {
+                    min: 1
+                  }
+                }}
                 value={equipmentRegistrationAndEditStats?.unitPrice}
                 onChange={(e) => {
                   equipmentRegistrationAndEditStats.unitPrice = e.target.value;

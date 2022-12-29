@@ -135,6 +135,12 @@ export default function FormDialog(props) {
                 variant='standard'
                 id='unit'
                 label='Unit Price'
+                type='number'
+                InputProps={{
+                  inputProps: {
+                    min: 1
+                  }
+                }}
                 autoFocus
                 value={equipmentRegistrationAndEditStats?.unitPrice}
                 onChange={(e) => {

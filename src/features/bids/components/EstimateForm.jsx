@@ -95,31 +95,37 @@ export default function EstimateForm({
       );
     }
 
-    // if (
-    //   materialListToPick.some((material) => {
-    //     return Object.keys(material).length !== 5;
-    //   })
-    // ) {
-    //   return dispatch(
-    //     showMessage({
-    //       message: `Material List Should Be Complete`,
-    //       severity: 'error'
-    //     })
-    //   );
-    // }
+    if (
+      materialListToPick.some((material) => {
+        return (
+          Object.keys(material).some((item) => !material[item]) ||
+          Object.keys(material).length !== 5
+        );
+      })
+    ) {
+      return dispatch(
+        showMessage({
+          message: `Material List Should Be Complete`,
+          severity: 'error'
+        })
+      );
+    }
 
-    // if (
-    //   equipmentListToPick.some((material) => {
-    //     return Object.keys(material).length !== 5;
-    //   })
-    // ) {
-    //   return dispatch(
-    //     showMessage({
-    //       message: `Equipment List Should Be Complete`,
-    //       severity: 'error'
-    //     })
-    //   );
-    // }
+    if (
+      equipmentListToPick.some((equipment) => {
+        return (
+          Object.keys(equipment).some((item) => !equipment[item]) ||
+          Object.keys(equipment).length !== 5
+        );
+      })
+    ) {
+      return dispatch(
+        showMessage({
+          message: `Equipment List Should Be Complete`,
+          severity: 'error'
+        })
+      );
+    }
 
     const currentClientInfoCopy = cloneDeep(currentClientInfo);
 
@@ -154,7 +160,7 @@ export default function EstimateForm({
     }
   }, [open]);
 
-  console.log(currentClientInfo, 'currentClientInfo');
+  console.log(materialListToPick, 'currentClientInfo');
 
   useEffect(() => {
     if (bidsIsSuccess) {

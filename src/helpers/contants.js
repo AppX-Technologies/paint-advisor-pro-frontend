@@ -65,12 +65,12 @@ export const GLOBAL_PICKERLIST = [
   {
     title: 'Materials',
     filterOption: 'description',
-    secondaryValuesToRender: ['unit', 'unitPrice']
+    secondaryValuesToRender: ['unitPrice']
   },
   {
     title: 'Equipments',
     filterOption: 'description',
-    secondaryValuesToRender: ['unit', 'unitPrice']
+    secondaryValuesToRender: ['unitPrice']
   }
 ];
 

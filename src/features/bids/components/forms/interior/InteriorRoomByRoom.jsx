@@ -45,7 +45,10 @@ const InteriorRoomByRoom = ({
   const [selectedRoomInfo, setSelectedRoomInfo] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [itemToBeDeleted, setitemToBeDeleted] = useState(null);
-
+  const [expandGlobalPickers, setExpandGlobalPickers] = useState({
+    materials: true,
+    equipments: true
+  });
   const [globalPickerStatsToView, setGlobalPickerStatsToView] = useState({
     materials: [],
     equipments: []
@@ -210,20 +213,23 @@ const InteriorRoomByRoom = ({
                 return (
                   <Grid md={6} xs={12} sx={{ p: 1 }}>
                     <GlobalPickers
+                      currentClientInfo={currentClientInfo}
                       globalPickerStatsToView={globalPickerStatsToView}
                       setGlobalPickerStatsToView={setGlobalPickerStatsToView}
                       pickerTitle={globalPicker.title}
                       filterOption={globalPicker.filterOption}
+                      expandGlobalPickers={expandGlobalPickers}
+                      setExpandGlobalPickers={setExpandGlobalPickers}
                       informationToRender={
                         globalPicker.title === 'Materials'
                           ? equipmentList &&
                             equipmentList[0] &&
-                            equipmentList[0]?.equipments.filter((equipment) => !equipment.isRentable)
+                            equipmentList[0]?.equipments.filter(
+                              (equipment) => !equipment.isRentable
+                            )
                           : equipmentList &&
                             equipmentList[0] &&
-                            equipmentList[0]?.equipments.filter(
-                              (equipment) => equipment.isRentable
-                            )
+                            equipmentList[0]?.equipments.filter((equipment) => equipment.isRentable)
                       }
                       secondaryValuesToRender={globalPicker.secondaryValuesToRender}
                       listOfItems={

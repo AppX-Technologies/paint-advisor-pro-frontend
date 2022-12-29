@@ -8,7 +8,10 @@ const AutoComplete = ({
   options,
   filterOption,
   secondaryValuesToRender,
-  pickerTitle
+  varient,
+  pickerTitle,
+  defaultValue,
+  showSelectedValue
 }) => {
   return (
     <>
@@ -16,6 +19,7 @@ const AutoComplete = ({
         filterOptions={filterOptions}
         value={value}
         size='small'
+        defaultValue={defaultValue || null}
         onChange={onChange}
         disablePortal
         id='combo-box-demo'
@@ -24,7 +28,6 @@ const AutoComplete = ({
         renderOption={(props, option) => (
           <Box {...props}>
             <Typography sx={{ fontSize: '14px' }}>{option?.[filterOption]}</Typography>
-
             <Box ml={2} sx={{ float: 'right' }}>
               <Typography sx={{ fontSize: '12px', mt: 0.5 }}>
                 {secondaryValuesToRender.length === 2 ? (
@@ -39,7 +42,14 @@ const AutoComplete = ({
           </Box>
         )}
         sx={{ mt: 1, width: '200px', mb: 1 }}
-        renderInput={(params) => <TextField {...params} label={pickerTitle} />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant={varient ?? 'outlined'}
+            label={pickerTitle ?? ''}
+            sx={{ borderRadius: 0, ml: 1 }}
+          />
+        )}
       />
     </>
   );

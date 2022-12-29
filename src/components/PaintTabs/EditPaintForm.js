@@ -170,6 +170,12 @@ export default function Edit({
                 id='pricePerUnit'
                 label='Price per Unit'
                 autoFocus
+                type='number'
+                InputProps={{
+                  inputProps: {
+                    min: 1
+                  }
+                }}
                 value={
                   materialRegistrationAndEditStats?.unitPrice
                     ? materialRegistrationAndEditStats?.unitPrice
