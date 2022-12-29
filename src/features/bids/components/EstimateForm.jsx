@@ -70,15 +70,15 @@ export default function EstimateForm({
   const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
   const [choosePainterModalData, setChoosePainterModalData] = React.useState(null);
   const [selectedPainter, setselectedPainter] = React.useState({
-    painter: currentClientInfo?.bids?.labours ?? []
+    painter: currentClientInfo?.bid?.labours ?? []
   });
-  const [labours, setLabours] = React.useState(null);
-
   const handleClose = () => {
     setOpen(false);
     setRoomFormValue(initialRoomState);
   };
-
+  useEffect(() => {
+    setselectedPainter({ painter: currentClientInfo?.bid?.labours ?? [] });
+  }, [open]);
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
     if (emptyField) {
@@ -146,7 +146,7 @@ export default function EstimateForm({
           rooms: [...currentClientInfo.bid.rooms],
           materials: [...materialListToPick],
           equipments: [...equipmentListToPick],
-          labours: [...labours],
+          labours: selectedPainter?.painter,
           isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'Yes'
         },
         organization: orgId
@@ -159,16 +159,6 @@ export default function EstimateForm({
       setInitialBidInfo(cloneDeep(estimationFormInitialInfo));
     }
   }, [open]);
-
-  React.useEffect(() => {
-    if (selectedPainter) {
-      setLabours(
-        selectedPainter?.painter?.map((x) => {
-          return { name: x.name, labourId: x._id, proficiency: x.proficiency };
-        })
-      );
-    }
-  }, [selectedPainter]);
 
   useEffect(() => {
     if (bidsIsSuccess) {

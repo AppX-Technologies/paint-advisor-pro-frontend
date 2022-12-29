@@ -43,11 +43,7 @@ const painterDetailFields = [
     label: 'Name',
     icon: <DriveFileRenameOutlineIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
   },
-  {
-    name: 'role',
-    label: 'Role',
-    icon: <AdminPanelSettingsIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
-  },
+
   {
     name: 'email',
     label: 'Email',
@@ -294,7 +290,7 @@ const InteriorRoomByRoom = ({
                       onChange={() => setLabourDetailedMode(!labourDetailedMode)}
                     />
                   }
-                  label={labourDetailedMode ? 'View Detail Mode' : 'Summarized View'}
+                  label='Summarized Mode'
                 />
               </FormGroup>
               {labourDetailedMode ? (

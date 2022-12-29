@@ -16,8 +16,8 @@ const painterDetailFields = [
     icon: <DriveFileRenameOutlineIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
   },
   {
-    name: 'role',
-    label: 'Role',
+    name: 'baseRate',
+    label: 'Base Rate',
     icon: <AdminPanelSettingsIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
   },
   {
@@ -75,21 +75,30 @@ export default function ChoosePainterModal({
   setChoosePainterModalData,
   handleClosePainterChooseModal,
   painterList,
-  handleSelectPainter,
-  selectedPainter
+  handleSelectPainter
 }) {
   const addOrRemovePainter = (painter) => {
-    const id = painter._id;
-    const isPainterChoosed = choosePainterModalData?.painter.find((x) => x._id === id);
+    const labourId = painter._id;
+    const isPainterChoosed = choosePainterModalData?.painter?.find((x) => x.labourId === labourId);
+
     if (isPainterChoosed) {
       setChoosePainterModalData({
-        painter: choosePainterModalData?.painter.filter((x) => x._id !== id)
+        painter: choosePainterModalData?.painter?.filter((x) => x.labourId !== labourId)
       });
     } else {
-      setChoosePainterModalData({ painter: [...choosePainterModalData.painter, painter] });
+      setChoosePainterModalData({
+        painter: [
+          ...choosePainterModalData.painter,
+          {
+            labourId,
+            email: painter.email,
+            name: painter.name,
+            proficiency: painter.proficiency
+          }
+        ]
+      });
     }
   };
-
   return (
     <Dialog open={choosePainterModalData !== null} onClose={handleClosePainterChooseModal}>
       <Toolbar sx={{ backgroundColor: '#D50000', p: 0 }}>
@@ -105,7 +114,9 @@ export default function ChoosePainterModal({
                 <PainterDetail
                   painter={painter}
                   addOrRemovePainter={addOrRemovePainter}
-                  selected={choosePainterModalData?.painter.find((x) => x._id === painter._id)}
+                  selected={choosePainterModalData?.painter?.find(
+                    (x) => x.labourId === painter._id
+                  )}
                 />
               </Grid>
             );
