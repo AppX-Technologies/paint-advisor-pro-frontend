@@ -68,13 +68,16 @@ export default function EstimateForm({
   const { bidsIsLoading, bidsIsSuccess, bidsIsError, bidInfo } = useSelector((state) => state.bids);
   const { companyId } = useParams();
   const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
+  const [choosePainterModalData, setChoosePainterModalData] = React.useState(null);
+  const [selectedPainter, setselectedPainter] = React.useState({
+    painter: currentClientInfo?.bids?.labours ?? []
+  });
+  const [labours, setLabours] = React.useState(null);
 
   const handleClose = () => {
     setOpen(false);
     setRoomFormValue(initialRoomState);
   };
-
-  console.log(labourDetailedMode, 'materialListToPick');
 
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
@@ -143,6 +146,7 @@ export default function EstimateForm({
           rooms: [...currentClientInfo.bid.rooms],
           materials: [...materialListToPick],
           equipments: [...equipmentListToPick],
+          labours: [...labours],
           isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'Yes'
         },
         organization: orgId
@@ -156,7 +160,15 @@ export default function EstimateForm({
     }
   }, [open]);
 
-  console.log(currentClientInfo, 'currentClientInfo');
+  React.useEffect(() => {
+    if (selectedPainter) {
+      setLabours(
+        selectedPainter?.painter?.map((x) => {
+          return { name: x.name, labourId: x._id, proficiency: x.proficiency };
+        })
+      );
+    }
+  }, [selectedPainter]);
 
   useEffect(() => {
     if (bidsIsSuccess) {
@@ -248,6 +260,8 @@ export default function EstimateForm({
     setMaterialListToPick(cloneDeep(materialInfo));
     setEquipmentListToPick(cloneDeep(equipmentInfo));
   }, [currentClientInfo?.bid]);
+
+  console.log(currentClientInfo, 'selectedPainter');
 
   return (
     <div>
@@ -433,6 +447,10 @@ export default function EstimateForm({
               setEquipmentListToPick={setEquipmentListToPick}
               labourDetailedMode={labourDetailedMode}
               setLabourDetailedMode={setLabourDetailedMode}
+              choosePainterModalData={choosePainterModalData}
+              setChoosePainterModalData={setChoosePainterModalData}
+              selectedPainter={selectedPainter}
+              setselectedPainter={setselectedPainter}
             />
           )}
           {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Man Hour' && (

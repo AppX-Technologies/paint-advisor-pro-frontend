@@ -32,9 +32,9 @@ const painterDetailFields = [
   }
 ];
 
-const PainterDetail = ({ painter, handleSelectPainter, selected }) => {
+const PainterDetail = ({ painter, addOrRemovePainter, selected }) => {
   return (
-    <Box sx={{ padding: '5px' }} onClick={() => handleSelectPainter(painter)}>
+    <Box sx={{ padding: '5px' }} onClick={() => addOrRemovePainter(painter)}>
       <Grid
         container
         sx={{
@@ -42,7 +42,7 @@ const PainterDetail = ({ painter, handleSelectPainter, selected }) => {
           border: '1px solid lightgray',
           borderRadius: '10px',
           cursor: 'pointer',
-          backgroundColor: selected ? '#facfe0' : ''
+          backgroundColor: selected ? '#e6e6e6' : ''
         }}>
         {painterDetailFields.map((field) => {
           return (
@@ -75,9 +75,10 @@ export default function ChoosePainterModal({
   setChoosePainterModalData,
   handleClosePainterChooseModal,
   painterList,
+  handleSelectPainter,
   selectedPainter
 }) {
-  const handleSelectPainter = (painter) => {
+  const addOrRemovePainter = (painter) => {
     const id = painter._id;
     const isPainterChoosed = choosePainterModalData?.painter.find((x) => x._id === id);
     if (isPainterChoosed) {
@@ -91,7 +92,7 @@ export default function ChoosePainterModal({
 
   return (
     <Dialog open={choosePainterModalData !== null} onClose={handleClosePainterChooseModal}>
-      <Toolbar sx={{ backgroundColor: '#D50000' }}>
+      <Toolbar sx={{ backgroundColor: '#D50000', p: 0 }}>
         <Typography sx={{ p: 0, flex: 1, color: 'white' }} variant='h6' component='div'>
           Select Painter
         </Typography>
@@ -103,7 +104,7 @@ export default function ChoosePainterModal({
               <Grid xs={12} md={12} lg={12}>
                 <PainterDetail
                   painter={painter}
-                  handleSelectPainter={handleSelectPainter}
+                  addOrRemovePainter={addOrRemovePainter}
                   selected={choosePainterModalData?.painter.find((x) => x._id === painter._id)}
                 />
               </Grid>
@@ -113,7 +114,7 @@ export default function ChoosePainterModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClosePainterChooseModal}>Cancel</Button>
-        <Button type='submit' variant='contained'>
+        <Button type='submit' variant='contained' onClick={handleSelectPainter}>
           Select
         </Button>
       </DialogActions>

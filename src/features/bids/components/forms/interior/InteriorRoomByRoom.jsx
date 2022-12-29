@@ -3,6 +3,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Box,
   Chip,
@@ -110,7 +111,11 @@ const InteriorRoomByRoom = ({
   equipmentListToPick,
   setEquipmentListToPick,
   labourDetailedMode,
-  setLabourDetailedMode
+  setLabourDetailedMode,
+  choosePainterModalData,
+  setChoosePainterModalData,
+  selectedPainter,
+  setselectedPainter
 }) => {
   const [addRoom, setAddRoom] = useState(false);
 
@@ -120,7 +125,6 @@ const InteriorRoomByRoom = ({
   const [selectedRoomInfo, setSelectedRoomInfo] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [itemToBeDeleted, setitemToBeDeleted] = useState(null);
-  const [choosePainterModalData, setChoosePainterModalData] = useState(null);
   const [globalPickerStatsToView, setGlobalPickerStatsToView] = useState({
     materials: [],
     equipments: []
@@ -134,16 +138,18 @@ const InteriorRoomByRoom = ({
   const { materialList } = useSelector((state) => state.material);
   const { equipmentList } = useSelector((state) => state.equipment);
   const { companyMadeByUsers } = useSelector((state) => state.usersFromCompany);
-  const [selectedPainter, setselectedPainter] = useState(null);
+
   const onSelectedRoomInfoChange = (value) => {
     setSelectedRoomInfo(value);
   };
-  console.log(choosePainterModalData, 'asdasd');
 
   const handleOpenPainterChooseModal = () => {
-    setChoosePainterModalData({ painter: companyMadeByUsers });
+    setChoosePainterModalData(selectedPainter);
   };
   const handleClosePainterChooseModal = () => {
+    setChoosePainterModalData(null);
+  };
+  const handleSelectPainter = () => {
     setselectedPainter(choosePainterModalData);
     setChoosePainterModalData(null);
   };
@@ -371,6 +377,7 @@ const InteriorRoomByRoom = ({
         setChoosePainterModalData={setChoosePainterModalData}
         painterList={companyMadeByUsers}
         selectedPainter={selectedPainter?.painter}
+        handleSelectPainter={handleSelectPainter}
       />
     </Box>
   );
