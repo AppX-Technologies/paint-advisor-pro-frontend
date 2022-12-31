@@ -1,19 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
-import EmailIcon from '@mui/icons-material/Email';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import CloseIcon from '@mui/icons-material/Close';
-import {
-  Box,
-  Chip,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  Switch,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { Box, FormControlLabel, FormGroup, Grid, Switch, Tooltip, Typography } from '@mui/material';
+import ReadMoreIcon from '@mui/icons-material/ReadMore';
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,67 +17,13 @@ import {
   setLabourAccordingToSection,
   setMaterialsAccordingToSection
 } from '../../../helpers/generalHepers';
+import ChoosePainterModal from '../../ChoosePainterModal';
 import GlobalPickers from '../../GlobalPickers';
+import { PainterDetail } from '../../PainterCard';
 import Picker from '../../Picker';
 import { DeleteItemModel } from '../DeleteModel';
 import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
 import AddRoomForm from './AddRoomForm';
-import ChoosePainterModal from '../../ChoosePainterModal';
-
-const painterDetailFields = [
-  {
-    name: 'name',
-    label: 'Name',
-    icon: <DriveFileRenameOutlineIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
-  },
-
-  {
-    name: 'email',
-    label: 'Email',
-    icon: <EmailIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
-  },
-  {
-    name: 'proficiency',
-    label: 'Proficiency',
-    icon: <StarBorderIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
-  }
-];
-
-const PainterDetail = ({ painter }) => {
-  return (
-    <Box sx={{ padding: '5px' }}>
-      <Grid
-        container
-        sx={{
-          padding: '5px',
-          border: '1px solid lightgray',
-          borderRadius: '10px'
-        }}>
-        {painterDetailFields.map((field) => {
-          return (
-            <Grid xs={12} md={12} lg={6}>
-              {field.icon}
-              <span style={{ fontSize: '14px' }}>
-                {field.label}:{' '}
-                <span style={{ fontWeight: '300' }}>
-                  {painter?.[field.name]}{' '}
-                  {field.name === 'proficiency' && (
-                    <Chip
-                      color='success'
-                      sx={{ height: '16px', cursor: 'pointer', ml: 2 }}
-                      label='$521'
-                      size='small'
-                    />
-                  )}
-                </span>
-              </span>
-            </Grid>
-          );
-        })}
-      </Grid>
-    </Box>
-  );
-};
 
 const InteriorRoomByRoom = ({
   roomFormValue,
@@ -149,7 +82,33 @@ const InteriorRoomByRoom = ({
     setselectedPainter(choosePainterModalData);
     setChoosePainterModalData(null);
   };
-
+  const addOrRemovePainter = (painter) => {
+    const labourId = painter._id ? painter._id : painter.labourId;
+    let isPainterChoosed;
+    if (choosePainterModalData === null) {
+      const remainingPainter = selectedPainter?.painter?.filter((x) => x.labourId !== labourId);
+      setselectedPainter({ painter: remainingPainter });
+    } else {
+      isPainterChoosed = choosePainterModalData?.painter?.find((x) => x.labourId === labourId);
+      if (isPainterChoosed) {
+        setChoosePainterModalData({
+          painter: choosePainterModalData?.painter?.filter((x) => x.labourId !== labourId)
+        });
+      } else {
+        setChoosePainterModalData({
+          painter: [
+            ...choosePainterModalData.painter,
+            {
+              labourId,
+              email: painter.email,
+              name: painter.name,
+              proficiency: painter.proficiency
+            }
+          ]
+        });
+      }
+    }
+  };
   useEffect(() => {
     setMaterialListSectionwise(setMaterialsAccordingToSection(materialList));
   }, [materialList]);
@@ -281,7 +240,7 @@ const InteriorRoomByRoom = ({
               filteredPickerList={materialList && materialList[0] && materialList[0]?.materials}
             />
             <Box sx={{ marginTop: '30px' }}>
-              <FormGroup sx={{ float: 'right' }}>
+              <FormGroup sx={{ ml: 1 }}>
                 <FormControlLabel
                   control={
                     <Switch
@@ -290,30 +249,36 @@ const InteriorRoomByRoom = ({
                       onChange={() => setLabourDetailedMode(!labourDetailedMode)}
                     />
                   }
-                  label='Summarized Mode'
+                  label={<Typography sx={{ fontSize: '14px' }}> Summarized Mode</Typography>}
                 />
               </FormGroup>
               {labourDetailedMode ? (
-                <Box sx={{}}>
-                  <Button
-                    type='submit'
-                    color='info'
-                    variant='contained'
-                    onClick={handleOpenPainterChooseModal}>
-                    Click here to view painter
-                  </Button>
-                  <Box sx={{ marginTop: '20px' }}>
+                <Box>
+                  <Box sx={{ marginTop: '10px' }}>
                     <Typography sx={{ fontSize: '300', ml: 1 }}>Selected Painters:</Typography>
                     <Grid container>
                       {selectedPainter?.painter?.map((painter) => {
                         return (
                           <Grid xs={12} md={6} lg={6}>
-                            <PainterDetail painter={painter} />
+                            <PainterDetail
+                              painter={painter}
+                              addOrRemovePainter={addOrRemovePainter}
+                              deletable
+                            />
                           </Grid>
                         );
                       })}
                     </Grid>
                   </Box>
+                  <Button
+                    sx={{ mt: 1 }}
+                    size='small'
+                    onClick={handleOpenPainterChooseModal}
+                    variant='outlined'
+                    endIcon={<AddIcon sx={{ mb: 0.2, fontWeight: '500' }} />}
+                    color='error'>
+                    Add Painter
+                  </Button>
                 </Box>
               ) : (
                 <Picker
@@ -374,6 +339,7 @@ const InteriorRoomByRoom = ({
         painterList={companyMadeByUsers}
         selectedPainter={selectedPainter?.painter}
         handleSelectPainter={handleSelectPainter}
+        addOrRemovePainter={addOrRemovePainter}
       />
     </Box>
   );

@@ -1,104 +1,18 @@
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import EmailIcon from '@mui/icons-material/Email';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { Box, Chip, Grid, Toolbar, Typography } from '@mui/material';
+import { Grid, Toolbar, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import React from 'react';
-
-const painterDetailFields = [
-  {
-    name: 'name',
-    label: 'Name',
-    icon: <DriveFileRenameOutlineIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
-  },
-  {
-    name: 'baseRate',
-    label: 'Base Rate',
-    icon: <AdminPanelSettingsIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
-  },
-  {
-    name: 'email',
-    label: 'Email',
-    icon: <EmailIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
-  },
-  {
-    name: 'proficiency',
-    label: 'Proficiency',
-    icon: <StarBorderIcon fontSize='16px' sx={{ marginBottom: '-5px', mr: 1 }} />
-  }
-];
-
-const PainterDetail = ({ painter, addOrRemovePainter, selected }) => {
-  return (
-    <Box sx={{ padding: '5px' }} onClick={() => addOrRemovePainter(painter)}>
-      <Grid
-        container
-        sx={{
-          padding: '5px',
-          border: '1px solid lightgray',
-          borderRadius: '10px',
-          cursor: 'pointer',
-          backgroundColor: selected ? '#e6e6e6' : ''
-        }}>
-        {painterDetailFields.map((field) => {
-          return (
-            <Grid xs={12} md={12} lg={6}>
-              {field.icon}
-              <span style={{ fontSize: '14px' }}>
-                {field.label}:{' '}
-                <span style={{ fontWeight: '300', fontSize: '12px' }}>
-                  {painter?.[field.name]}{' '}
-                  {field.name === 'proficiency' && (
-                    <Chip
-                      color='success'
-                      sx={{ height: '16px', cursor: 'pointer', ml: 2 }}
-                      label='$521'
-                      size='small'
-                    />
-                  )}
-                </span>
-              </span>
-            </Grid>
-          );
-        })}
-      </Grid>
-    </Box>
-  );
-};
+import { PainterDetail } from './PainterCard';
 
 export default function ChoosePainterModal({
   choosePainterModalData,
-  setChoosePainterModalData,
   handleClosePainterChooseModal,
   painterList,
-  handleSelectPainter
+  handleSelectPainter,
+  addOrRemovePainter
 }) {
-  const addOrRemovePainter = (painter) => {
-    const labourId = painter._id;
-    const isPainterChoosed = choosePainterModalData?.painter?.find((x) => x.labourId === labourId);
-
-    if (isPainterChoosed) {
-      setChoosePainterModalData({
-        painter: choosePainterModalData?.painter?.filter((x) => x.labourId !== labourId)
-      });
-    } else {
-      setChoosePainterModalData({
-        painter: [
-          ...choosePainterModalData.painter,
-          {
-            labourId,
-            email: painter.email,
-            name: painter.name,
-            proficiency: painter.proficiency
-          }
-        ]
-      });
-    }
-  };
   return (
     <Dialog open={choosePainterModalData !== null} onClose={handleClosePainterChooseModal}>
       <Toolbar sx={{ backgroundColor: '#D50000', p: 0 }}>
@@ -117,6 +31,7 @@ export default function ChoosePainterModal({
                   selected={choosePainterModalData?.painter?.find(
                     (x) => x.labourId === painter._id
                   )}
+                  selectable
                 />
               </Grid>
             );

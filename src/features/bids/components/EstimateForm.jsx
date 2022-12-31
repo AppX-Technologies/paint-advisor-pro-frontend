@@ -246,12 +246,13 @@ export default function EstimateForm({
     const equipmentInfo = currentClientInfo?.bid?.equipments?.map((equipment) => {
       return { ...equipment, id: uuid() };
     });
-    setLabourDetailedMode(currentClientInfo?.bid?.isLabourDetailedMode);
     setMaterialListToPick(cloneDeep(materialInfo));
     setEquipmentListToPick(cloneDeep(equipmentInfo));
   }, [currentClientInfo?.bid]);
 
-  console.log(currentClientInfo, 'selectedPainter');
+  React.useMemo(() => {
+    setLabourDetailedMode(currentClientInfo?.bid?.isLabourDetailedMode);
+  }, []);
 
   return (
     <div>
