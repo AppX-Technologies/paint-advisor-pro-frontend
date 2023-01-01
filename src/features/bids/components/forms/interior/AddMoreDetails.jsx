@@ -47,7 +47,7 @@ const AddMoreDetails = ({
 }) => {
   const dispatch = useDispatch();
   const [toBeCloned, setToBeCloned] = useState({
-    materials: true,
+    paints: true,
     labours: true
   });
   const handleCreate = () => {

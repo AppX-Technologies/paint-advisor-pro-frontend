@@ -81,7 +81,6 @@ const GlobalPickers = ({
   const handleDeletion = (id) => {
     setListOfItems([...listOfItems.filter((item) => item.id !== id)]);
   };
-  console.log(informationToRender, 'informationToRender');
 
   return (
     <>

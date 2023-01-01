@@ -86,7 +86,7 @@ export const GLOBAL_PICKER_FIELDS = [
 ];
 
 export const EXTRA_INFO_WHILE_CLONING = [
-  { text: 'Clone Materials', field: 'materials' },
+  { text: 'Clone Paint', field: 'paints' },
   { text: 'Clone Labours', field: 'labours' }
 ];
 

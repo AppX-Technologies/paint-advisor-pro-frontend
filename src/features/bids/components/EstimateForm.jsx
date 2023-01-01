@@ -160,7 +160,6 @@ export default function EstimateForm({
     }
   }, [open]);
 
-  console.log(materialListToPick, 'currentClientInfo');
 
   useEffect(() => {
     if (bidsIsSuccess) {
