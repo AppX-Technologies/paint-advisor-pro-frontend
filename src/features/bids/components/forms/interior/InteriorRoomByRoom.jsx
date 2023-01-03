@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Grid, Tooltip, Typography } from '@mui/material';
+import { Box, FormControlLabel, FormGroup, Grid, Switch, Tooltip, Typography } from '@mui/material';
+import ReadMoreIcon from '@mui/icons-material/ReadMore';
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +17,9 @@ import {
   setLabourAccordingToSection,
   setMaterialsAccordingToSection
 } from '../../../helpers/generalHepers';
+import ChoosePainterModal from '../../ChoosePainterModal';
 import GlobalPickers from '../../GlobalPickers';
+import { PainterDetail } from '../../PainterCard';
 import Picker from '../../Picker';
 import { DeleteItemModel } from '../DeleteModel';
 import { findPaintableAndNonPaintableArea, findSameTypeOfWall } from '../formHelper';
@@ -35,10 +38,16 @@ const InteriorRoomByRoom = ({
   materialListToPick,
   setMaterialListToPick,
   equipmentListToPick,
-  setEquipmentListToPick
+  setEquipmentListToPick,
+  labourDetailedMode,
+  setLabourDetailedMode,
+  choosePainterModalData,
+  setChoosePainterModalData,
+  selectedPainter,
+  setselectedPainter
 }) => {
   const [addRoom, setAddRoom] = useState(false);
-
+  console.log(currentClientInfo, 'currentClientInfocurrentClientInfo');
   const [materialListSectionwise, setMaterialListSectionwise] = useState(null);
   const [labourListSectionwise, setLabourListSectionwise] = useState(null);
   const [currentAddMore, setCurentAddMore] = useState('');
@@ -67,6 +76,44 @@ const InteriorRoomByRoom = ({
     setSelectedRoomInfo(value);
   };
 
+  const handleOpenPainterChooseModal = () => {
+    setChoosePainterModalData(selectedPainter);
+  };
+  const handleClosePainterChooseModal = () => {
+    setChoosePainterModalData(null);
+  };
+  const handleSelectPainter = () => {
+    setselectedPainter(choosePainterModalData);
+    setChoosePainterModalData(null);
+  };
+
+  const addOrRemovePainter = (painter) => {
+    const labourId = painter._id ? painter._id : painter.labourId;
+    let isPainterChoosed;
+    if (choosePainterModalData === null) {
+      const remainingPainter = selectedPainter?.painter?.filter((x) => x.labourId !== labourId);
+      setselectedPainter({ painter: remainingPainter });
+    } else {
+      isPainterChoosed = choosePainterModalData?.painter?.find((x) => x.labourId === labourId);
+      if (isPainterChoosed) {
+        setChoosePainterModalData({
+          painter: choosePainterModalData?.painter?.filter((x) => x.labourId !== labourId)
+        });
+      } else {
+        setChoosePainterModalData({
+          painter: [
+            ...choosePainterModalData.painter,
+            {
+              labourId,
+              email: painter.email,
+              name: painter.name,
+              proficiency: painter.proficiency
+            }
+          ]
+        });
+      }
+    }
+  };
   useEffect(() => {
     setMaterialListSectionwise(setMaterialsAccordingToSection(materialList));
   }, [materialList]);
@@ -197,17 +244,61 @@ const InteriorRoomByRoom = ({
               secondaryValuesToRender={['unit', 'unitPrice']}
               filteredPickerList={materialList && materialList[0] && materialList[0]?.materials}
             />
-            <Picker
-              pickerTitle='Labours'
-              currentClientInfo={currentClientInfo}
-              setCurrentClientInfo={setCurrentClientInfo}
-              pickerList={companyMadeByUsers}
-              informationToRender={labourListSectionwise}
-              filterOption='name'
-              secondaryValuesToRender={['proficiency']}
-              showPrimaryAutocomplete
-              filteredPickerList={companyMadeByUsers}
-            />
+            <Box sx={{ marginTop: '30px' }}>
+              <FormGroup sx={{ ml: 1 }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      size='small'
+                      checked={labourDetailedMode}
+                      onChange={() => setLabourDetailedMode(!labourDetailedMode)}
+                    />
+                  }
+                  label={<Typography sx={{ fontSize: '14px' }}> Summarized Mode</Typography>}
+                />
+              </FormGroup>
+              {labourDetailedMode ? (
+                <Box>
+                  <Box sx={{ marginTop: '10px' }}>
+                    <Typography sx={{ fontSize: '300', ml: 1 }}>Selected Painters:</Typography>
+                    <Grid container>
+                      {selectedPainter?.painter?.map((painter) => {
+                        return (
+                          <Grid xs={12} md={6} lg={6}>
+                            <PainterDetail
+                              painter={painter}
+                              addOrRemovePainter={addOrRemovePainter}
+                              deletable
+                            />
+                          </Grid>
+                        );
+                      })}
+                    </Grid>
+                  </Box>
+                  <Button
+                    sx={{ mt: 1 }}
+                    size='small'
+                    onClick={handleOpenPainterChooseModal}
+                    variant='outlined'
+                    endIcon={<AddIcon sx={{ mb: 0.2, fontWeight: '500' }} />}
+                    color='error'>
+                    Add Painter
+                  </Button>
+                </Box>
+              ) : (
+                <Picker
+                  pickerTitle='Labours'
+                  currentClientInfo={currentClientInfo}
+                  setCurrentClientInfo={setCurrentClientInfo}
+                  pickerList={companyMadeByUsers}
+                  informationToRender={labourListSectionwise}
+                  filterOption='name'
+                  secondaryValuesToRender={['proficiency']}
+                  showPrimaryAutocomplete
+                  filteredPickerList={companyMadeByUsers}
+                />
+              )}
+            </Box>
             <Grid container sx={{ p: 1, mt: 2 }}>
               {GLOBAL_PICKERLIST.map((globalPicker) => {
                 return (
@@ -249,6 +340,15 @@ const InteriorRoomByRoom = ({
             </Grid>
           </>
         )}
+      <ChoosePainterModal
+        handleClosePainterChooseModal={handleClosePainterChooseModal}
+        choosePainterModalData={choosePainterModalData}
+        setChoosePainterModalData={setChoosePainterModalData}
+        painterList={companyMadeByUsers}
+        selectedPainter={selectedPainter?.painter}
+        handleSelectPainter={handleSelectPainter}
+        addOrRemovePainter={addOrRemovePainter}
+      />
     </Box>
   );
 };

@@ -38,7 +38,6 @@ import { showMessage } from '../../snackbar/snackbarSlice';
 import { reset, updateABid, updateClient } from '../bidsSlice';
 import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
 import EstimationDetails from './forms/interior/EstimationDetails';
-
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
 export default function EstimateForm({
@@ -62,19 +61,23 @@ export default function EstimateForm({
   const [estimationDetailsMeta, setEstimationDetailsMeta] = React.useState(null);
   const [materialListToPick, setMaterialListToPick] = React.useState([]);
   const [equipmentListToPick, setEquipmentListToPick] = React.useState([]);
+  const [labourDetailedMode, setLabourDetailedMode] = React.useState();
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { bidsIsLoading, bidsIsSuccess, bidsIsError, bidInfo } = useSelector((state) => state.bids);
   const { companyId } = useParams();
   const [orgId] = React.useState(isSystemUser(user) ? companyId : user.organization._id);
-
+  const [choosePainterModalData, setChoosePainterModalData] = React.useState(null);
+  const [selectedPainter, setselectedPainter] = React.useState({
+    painter: currentClientInfo?.bid?.labours ?? []
+  });
   const handleClose = () => {
     setOpen(false);
     setRoomFormValue(initialRoomState);
   };
-
-  console.log(materialListToPick, equipmentListToPick, 'materialListToPick');
-
+  useEffect(() => {
+    setselectedPainter({ painter: currentClientInfo?.bid?.labours ?? [] });
+  }, [open]);
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
     if (emptyField) {
@@ -144,9 +147,11 @@ export default function EstimateForm({
         _id: currentClientInfo.bid._id,
         bidFields: {
           ...initialBidInfo,
+          isLabourDetailedMode: labourDetailedMode,
           rooms: [...currentClientInfo.bid.rooms],
           materials: [...materialListToPick],
           equipments: [...equipmentListToPick],
+          labours: selectedPainter?.painter,
           isMaterialProvidedByCustomer: initialBidInfo.isMaterialProvidedByCustomer === 'Yes'
         },
         organization: orgId
@@ -159,7 +164,6 @@ export default function EstimateForm({
       setInitialBidInfo(cloneDeep(estimationFormInitialInfo));
     }
   }, [open]);
-
 
   useEffect(() => {
     if (bidsIsSuccess) {
@@ -247,10 +251,13 @@ export default function EstimateForm({
     const equipmentInfo = currentClientInfo?.bid?.equipments?.map((equipment) => {
       return { ...equipment, id: uuid() };
     });
-
     setMaterialListToPick(cloneDeep(materialInfo));
     setEquipmentListToPick(cloneDeep(equipmentInfo));
   }, [currentClientInfo?.bid]);
+
+  React.useMemo(() => {
+    setLabourDetailedMode(currentClientInfo?.bid?.isLabourDetailedMode);
+  }, []);
 
   return (
     <div>
@@ -434,6 +441,12 @@ export default function EstimateForm({
               equipmentListToPick={equipmentListToPick}
               setMaterialListToPick={setMaterialListToPick}
               setEquipmentListToPick={setEquipmentListToPick}
+              labourDetailedMode={labourDetailedMode}
+              setLabourDetailedMode={setLabourDetailedMode}
+              choosePainterModalData={choosePainterModalData}
+              setChoosePainterModalData={setChoosePainterModalData}
+              selectedPainter={selectedPainter}
+              setselectedPainter={setselectedPainter}
             />
           )}
           {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
