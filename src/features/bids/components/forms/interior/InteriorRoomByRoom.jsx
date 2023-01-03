@@ -47,7 +47,7 @@ const InteriorRoomByRoom = ({
   setselectedPainter
 }) => {
   const [addRoom, setAddRoom] = useState(false);
-
+  console.log(currentClientInfo, 'currentClientInfocurrentClientInfo');
   const [materialListSectionwise, setMaterialListSectionwise] = useState(null);
   const [labourListSectionwise, setLabourListSectionwise] = useState(null);
   const [currentAddMore, setCurentAddMore] = useState('');
@@ -82,6 +82,7 @@ const InteriorRoomByRoom = ({
     setselectedPainter(choosePainterModalData);
     setChoosePainterModalData(null);
   };
+
   const addOrRemovePainter = (painter) => {
     const labourId = painter._id ? painter._id : painter.labourId;
     let isPainterChoosed;

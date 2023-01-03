@@ -5,29 +5,29 @@ import PaidIcon from '@mui/icons-material/Paid';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Box, Grid } from '@mui/material';
 
-const iconStyle = { marginBottom: '-3px', mr: 1 };
+const iconStyle = { marginBottom: '-3px', mr: 1, fontSize: '16px' };
 
 const painterDetailFields = [
   {
     name: 'name',
     label: 'Name',
-    icon: <DriveFileRenameOutlineIcon fontSize='16px' sx={iconStyle} />
+    icon: <DriveFileRenameOutlineIcon sx={iconStyle} />
   },
 
   {
     name: 'baseRate',
     label: 'Base Rate',
-    icon: <PaidIcon fontSize='16px' sx={iconStyle} />
+    icon: <PaidIcon sx={iconStyle} />
   },
   {
     name: 'email',
     label: 'Email',
-    icon: <EmailIcon fontSize='16px' sx={iconStyle} />
+    icon: <EmailIcon sx={iconStyle} />
   },
   {
     name: 'proficiency',
     label: 'Proficiency',
-    icon: <StarBorderIcon fontSize='16px' sx={iconStyle} />
+    icon: <StarBorderIcon sx={iconStyle} />
   }
 ];
 
