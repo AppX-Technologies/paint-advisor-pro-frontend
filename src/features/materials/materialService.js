@@ -60,7 +60,9 @@ const createMaterial = async (userData) => {
               unit: userData.unit,
               unitPrice: userData.unitPrice,
               bidType: userData.bidType,
-              appliesTo: userData.appliesTo
+              appliesTo: userData.appliesTo,
+              arearCoveredPerUnitForRemainingCoats: userData.arearCoveredPerUnitForRemainingCoats,
+              areaCoveredPerUnitForFirstCoat: userData.areaCoveredPerUnitForFirstCoat
             }
           ]
         : userData.previousMaterials.filter(

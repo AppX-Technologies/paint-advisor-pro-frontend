@@ -80,7 +80,9 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
               bidType: filterValue,
               appliesTo: [],
               unit: '',
-              unitPrice: ''
+              unitPrice: '',
+              areaCoveredPerUnitForFirstCoat: '',
+              arearCoveredPerUnitForRemainingCoats: ''
             })
           }
           disabled={isLoading}>
@@ -97,7 +99,9 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
               unit: material.unit,
               unitPrice: material.unitPrice,
               bidType: material.bidType,
-              appliesTo: material?.appliesTo
+              appliesTo: material?.appliesTo,
+              areaCoveredPerUnitForFirstCoat: material?.areaCoveredPerUnitForFirstCoat,
+              arearCoveredPerUnitForRemainingCoats: material?.arearCoveredPerUnitForRemainingCoats
             };
           })
         }

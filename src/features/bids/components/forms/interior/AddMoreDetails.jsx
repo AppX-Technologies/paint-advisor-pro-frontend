@@ -167,8 +167,6 @@ const AddMoreDetails = ({
     }
   }, [roomInfoToEdit, selectedRoomInfo]);
 
-  console.log(currentStats, 'addInaddIn');
-
   return (
     <Dialog open={openAddMoreDetails} PaperProps={{ sx: { minWidth: '60%' } }}>
       <DialogTitle sx={{ backgroundColor: '#D50000', p: 0.5 }}>
@@ -267,7 +265,7 @@ const AddMoreDetails = ({
                         <TextField
                           InputProps={{
                             style: { height: '30px' },
-                            inputProps: { min: 0 }
+                            inputProps: { min: 0, max: name === 'coats' ? 3 :Infinity}
                           }}
                           name='name'
                           fullWidth

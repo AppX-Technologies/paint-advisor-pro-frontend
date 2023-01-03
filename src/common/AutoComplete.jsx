@@ -10,8 +10,7 @@ const AutoComplete = ({
   secondaryValuesToRender,
   varient,
   pickerTitle,
-  defaultValue,
-  showSelectedValue
+  defaultValue
 }) => {
   return (
     <>

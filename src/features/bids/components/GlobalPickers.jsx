@@ -25,6 +25,7 @@ import uuid from 'react-uuid';
 import AutoComplete from '../../../common/AutoComplete';
 import { GLOBAL_PICKER_FIELDS } from '../../../helpers/contants';
 
+
 const GlobalPickers = ({
   pickerTitle,
   filterOption,
@@ -58,19 +59,26 @@ const GlobalPickers = ({
         description: informationToRender.filter(
           (info) =>
             !listOfItems
-              .map((item) => item[pickerTitle.slice(0, pickerTitle.length - 1).toLowerCase()])
+              .map(
+                (item) => item[`${pickerTitle.slice(0, pickerTitle.length - 1).toLowerCase()}Id`]
+              )
               .includes(info._id)
         )[0]?.description,
-        [pickerTitle?.slice(0, pickerTitle.length - 1)?.toLowerCase()]: informationToRender.filter(
-          (info) =>
-            !listOfItems
-              .map((item) => item[pickerTitle.slice(0, pickerTitle.length - 1).toLowerCase()])
-              .includes(info._id)
-        )[0]?._id,
+        [`${pickerTitle?.slice(0, pickerTitle.length - 1)?.toLowerCase()}Id`]:
+          informationToRender.filter(
+            (info) =>
+              !listOfItems
+                .map(
+                  (item) => item[`${pickerTitle.slice(0, pickerTitle.length - 1).toLowerCase()}Id`]
+                )
+                .includes(info._id)
+          )[0]?._id,
         unitPrice: informationToRender.filter(
           (info) =>
             !listOfItems
-              .map((item) => item[pickerTitle.slice(0, pickerTitle.length - 1).toLowerCase()])
+              .map(
+                (item) => item[`${pickerTitle.slice(0, pickerTitle.length - 1).toLowerCase()}Id`]
+              )
               .includes(info._id)
         )[0]?.unitPrice,
         quantity: 1
@@ -167,7 +175,7 @@ const GlobalPickers = ({
                                     informationToRender.find(
                                       (info) => info._id === newInput._id
                                     )?.description;
-                                  listOfItems.find((item) => item.id === row.id)[column] =
+                                  listOfItems.find((item) => item.id === row.id)[`${column}Id`] =
                                     newInput._id;
                                   setListOfItems([...listOfItems]);
                                   if (
@@ -196,9 +204,9 @@ const GlobalPickers = ({
                                               .map(
                                                 (item) =>
                                                   item?.[
-                                                    pickerTitle
+                                                    `${pickerTitle
                                                       .toLowerCase()
-                                                      .slice(0, pickerTitle.length - 1)
+                                                      .slice(0, pickerTitle.length - 1)}Id`
                                                   ]
                                               )
                                               .includes(info._id)
@@ -270,6 +278,7 @@ const GlobalPickers = ({
             </Box>
             <Button
               size='small'
+              disabled={informationToRender.length === listOfItems.length}
               onClick={handleRowAddition}
               variant='outlined'
               endIcon={<AddIcon sx={{ mb: 0.2, fontWeight: '500' }} />}

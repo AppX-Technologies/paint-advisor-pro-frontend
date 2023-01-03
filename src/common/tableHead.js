@@ -110,17 +110,27 @@ export const paintColumn = () => {
     {
       name: 'unit',
       label: 'Unit',
-      width: '20%'
+      width: '10%'
     },
     {
       name: 'unitPrice',
       label: 'Price Per Unit',
-      width: '20%'
+      width: '10%'
     },
     {
       name: 'appliesTo',
       label: 'Applies To',
-      width: '50%'
+      width: '30%'
+    },
+    {
+      name: 'areaCoveredPerUnitForFirstCoat',
+      label: 'First Coat (Area)',
+      width: '15%'
+    },
+    {
+      name: 'arearCoveredPerUnitForRemainingCoats',
+      label: 'Remaining Coats (Area)',
+      width: '15%'
     }
   ];
 };

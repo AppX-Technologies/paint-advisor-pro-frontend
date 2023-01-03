@@ -24,5 +24,6 @@ export const store = configureStore({
     material: materialReducer,
     productionRate: productionRateReducer,
     equipment: equipmentReducer
-  }
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
 });

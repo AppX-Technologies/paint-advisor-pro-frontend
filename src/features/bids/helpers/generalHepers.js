@@ -165,7 +165,9 @@ export const setMaterialsAccordingToSection = (pickerList) => {
             description: paint.description,
             unit: paint.unit,
             unitPrice: paint.unitPrice,
-            paintId: paint._id
+            paintId: paint._id,
+            areaCoveredPerUnitForFirstCoat: paint.areaCoveredPerUnitForFirstCoat,
+            arearCoveredPerUnitForRemainingCoats: paint.arearCoveredPerUnitForRemainingCoats
           });
         } else {
           materialsAccordingToSection.push({
@@ -175,7 +177,9 @@ export const setMaterialsAccordingToSection = (pickerList) => {
                 description: paint.description,
                 unit: paint.unit,
                 unitPrice: paint.unitPrice,
-                paintId: paint._id
+                paintId: paint._id,
+                areaCoveredPerUnitForFirstCoat: paint.areaCoveredPerUnitForFirstCoat,
+                arearCoveredPerUnitForRemainingCoats: paint.arearCoveredPerUnitForRemainingCoats
               }
             ]
           });

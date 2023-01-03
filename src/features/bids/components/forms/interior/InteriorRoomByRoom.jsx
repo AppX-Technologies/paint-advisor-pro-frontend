@@ -211,7 +211,7 @@ const InteriorRoomByRoom = ({
             <Grid container sx={{ p: 1, mt: 2 }}>
               {GLOBAL_PICKERLIST.map((globalPicker) => {
                 return (
-                  <Grid md={6} xs={12} sx={{ p: 1 }}>
+                  <Grid md={6} xs={12} sx={{ p: 1 }} key={globalPicker.title}>
                     <GlobalPickers
                       currentClientInfo={currentClientInfo}
                       globalPickerStatsToView={globalPickerStatsToView}
