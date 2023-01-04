@@ -20,6 +20,7 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import React, { useState } from 'react';
+import { calculateEstimate } from '../helpers/paintEngine';
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction='left' ref={ref} {...props} />;
@@ -56,7 +57,7 @@ const totalingFields = [
 ];
 
 const roomFields = ['paintableArea', 'labourCost', 'materialCost'];
-
+console.log(calculateEstimate(), 'calculateEstimate');
 const EstimationDetails = ({ estimationDetailData, onEstimationDetailModalClose }) => {
   const [viewDetails, setViewDetails] = useState(false);
   function isRoomField(fieldName) {
