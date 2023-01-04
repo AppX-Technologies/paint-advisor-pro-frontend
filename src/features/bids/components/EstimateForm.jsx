@@ -255,9 +255,9 @@ export default function EstimateForm({
     setEquipmentListToPick(cloneDeep(equipmentInfo));
   }, [currentClientInfo?.bid]);
 
-  React.useMemo(() => {
+  useEffect(() => {
     setLabourDetailedMode(currentClientInfo?.bid?.isLabourDetailedMode);
-  }, []);
+  }, [currentClientInfo?.bid]);
 
   return (
     <div>

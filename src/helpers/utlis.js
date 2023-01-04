@@ -1,3 +1,5 @@
+import { ROLE_ORG_ADMIN, ROLE_SYSTEM_ADMIN } from './contants';
+
 export const validateEmail = (email) => {
   return String(email)
     .toLowerCase()
@@ -25,4 +27,8 @@ export const humanFileSize = (bytes, si = false, dp = 1) => {
   } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
 
   return `${bytes.toFixed(dp)} + ' ' + ${units[u]}`;
+};
+
+export const isUserAAdmin = (user) => {
+  return user.role === ROLE_SYSTEM_ADMIN || user.role === ROLE_ORG_ADMIN;
 };

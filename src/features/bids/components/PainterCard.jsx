@@ -3,7 +3,7 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import EmailIcon from '@mui/icons-material/Email';
 import PaidIcon from '@mui/icons-material/Paid';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, Tooltip } from '@mui/material';
 
 const iconStyle = { marginBottom: '-3px', mr: 1, fontSize: '16px' };
 
@@ -39,22 +39,25 @@ export const PainterDetail = ({
   deletable = false
 }) => {
   return (
-    <Box sx={{ padding: '5px' }} onClick={() => selectable && addOrRemovePainter(painter)}>
+    <Box sx={{ padding: '7px' }} onClick={() => selectable && addOrRemovePainter(painter)}>
       {deletable && (
-        <ClearIcon
-          sx={{
-            float: 'right',
-            marginRight: '2px',
-            marginBottom: '-18px',
-            color: 'red',
-            fontSize: '18px',
-            cursor: 'pointer'
-          }}
-          onClick={() => addOrRemovePainter(painter)}
-        />
+        <Tooltip title='Remove' placement='top'>
+          <ClearIcon
+            sx={{
+              float: 'right',
+              marginRight: '5px',
+              marginBottom: '-22px',
+              color: 'red',
+              fontSize: '20px',
+              cursor: 'pointer'
+            }}
+            onClick={() => addOrRemovePainter(painter)}
+          />
+        </Tooltip>
       )}
       <Grid
         container
+        spacing={2}
         sx={{
           padding: '5px',
           border: '1px solid lightgray',
@@ -64,7 +67,7 @@ export const PainterDetail = ({
         }}>
         {painterDetailFields.map((field) => {
           return (
-            <Grid xs={12} md={12} lg={6}>
+            <Grid xs={12} md={12} lg={5.8}>
               {field.icon}
               <span style={{ fontSize: '14px' }}>
                 {field.label}:{' '}

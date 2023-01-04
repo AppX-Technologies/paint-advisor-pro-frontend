@@ -10,7 +10,8 @@ const AutoComplete = ({
   secondaryValuesToRender,
   varient,
   pickerTitle,
-  defaultValue
+  defaultValue,
+  secondaryTitle
 }) => {
   return (
     <>
@@ -45,7 +46,7 @@ const AutoComplete = ({
           <TextField
             {...params}
             variant={varient ?? 'outlined'}
-            label={pickerTitle ?? ''}
+            label={secondaryTitle ?? pickerTitle ?? ''}
             sx={{ borderRadius: 0, ml: 1 }}
           />
         )}

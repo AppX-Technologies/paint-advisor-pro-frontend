@@ -20,7 +20,10 @@ export default function ChoosePainterModal({
           Select Painter
         </Typography>
       </Toolbar>
-      <DialogContent>
+      <DialogContent sx={{ minWidth: !painterList.length && '40vw' }}>
+        {!painterList.length && (
+          <Typography sx={{ textAlign: 'center' }}>No Painter Available</Typography>
+        )}
         <Grid container>
           {painterList?.map((painter) => {
             return (

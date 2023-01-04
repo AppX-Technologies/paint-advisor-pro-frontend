@@ -15,11 +15,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import ConfirmationModel from '../../../common/ConfirmationModel';
 import { AddNewClientTextField } from '../../../common/FormTextField';
 import ScheduleTheJob from '../../../common/ScheduleTheJob';
-import { BIDS_STAGES, STATUS_CANCELLED, STATUS_NEW_CLIENT } from '../../../helpers/contants';
+import {
+  BIDS_STAGES,
+  NONPAINTABLEAREAFIELD,
+  STATUS_CANCELLED,
+  STATUS_CONTRACT_SENT,
+  STATUS_ESTIMATE_IN_PROGRESS,
+  STATUS_IN_REVIEW,
+  STATUS_NEW_CLIENT
+} from '../../../helpers/contants';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
+import { isUserAAdmin } from '../../../helpers/utlis';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
-import { reset, updateClientStatus } from '../bidsSlice';
+import { reset, updateClient, updateClientStatus } from '../bidsSlice';
 import {
   filterClientsBySelectedStep,
   findCurrentClient,
@@ -50,6 +59,111 @@ const ClientInfo = ({
   const { user } = useSelector(authSelector);
 
   const dispatch = useDispatch();
+
+  const handleInReviewStage = () => {
+    // Validation For Rooms Length
+
+    if (!currentClientInfo?.bid?.rooms.length) {
+      return dispatch(
+        showMessage({
+          message: `Please Add Atleast One Room`,
+          severity: 'info'
+        })
+      );
+    }
+
+    // Validation For Sections Available
+
+    if (
+      currentClientInfo?.bid?.rooms?.some((room) =>
+        Object.keys(room)
+          .filter(
+            (info) =>
+              info !== NONPAINTABLEAREAFIELD &&
+              info !== 'roomName' &&
+              info !== '_id' &&
+              info !== '__v'
+          )
+          .every((section) => !room[section].length)
+      )
+    ) {
+      return dispatch(
+        showMessage({
+          message: `Please Add Atleast One Section To Each Room`,
+          severity: 'info'
+        })
+      );
+    }
+
+    // Validation For Paints Allocated To Each Individual Section
+
+    if (
+      !currentClientInfo?.bid?.isMaterialProvidedByCustomer &&
+      currentClientInfo?.bid?.rooms.some((room) =>
+        Object.keys(room)
+          .filter(
+            (info) =>
+              info !== NONPAINTABLEAREAFIELD &&
+              info !== 'roomName' &&
+              info !== '_id' &&
+              info !== '__v'
+          )
+          .some((section) =>
+            room[section].length
+              ? room[section]?.some(
+                  (individualSection) =>
+                    !Object.keys(individualSection).includes('paints') ||
+                    !Object.keys(individualSection?.paints)?.length ||
+                    (currentClientInfo?.bid?.isLabourDetailedMode &&
+                      !Object.keys(individualSection).includes('labours')) ||
+                    !Object.keys(individualSection?.labours?.length || 0)
+                )
+              : false
+          )
+      )
+    ) {
+      return dispatch(
+        showMessage({
+          message: `Paints and Labours Should Be Added To Each Section`,
+          severity: 'info'
+        })
+      );
+    }
+
+    // Update Client Status
+
+    dispatch(
+      updateClient({
+        status: STATUS_IN_REVIEW,
+        token: user.token,
+        id: currentClientInfo._id
+      })
+    );
+    onSelectedStepChange(STATUS_IN_REVIEW);
+  };
+
+  const handleContractAcceptance = () => {
+    dispatch(
+      updateClient({
+        status: STATUS_CONTRACT_SENT,
+        token: user.token,
+        id: currentClientInfo._id
+      })
+    );
+    onSelectedStepChange(STATUS_CONTRACT_SENT);
+  };
+
+  const handleContractRejectance = () => {
+    dispatch(
+      updateClient({
+        status: STATUS_ESTIMATE_IN_PROGRESS,
+        token: user.token,
+        id: currentClientInfo._id
+      })
+    );
+    onSelectedStepChange(STATUS_ESTIMATE_IN_PROGRESS);
+  };
+
   useEffect(() => {
     setCurrentClientInfo(findCurrentClient(clientList, selectedListItem));
   }, [selectedListItem, clientList, selectedStep]);
@@ -97,6 +211,8 @@ const ClientInfo = ({
       setScheduleJobDate(null);
     }
   }, [currentClientInfo]);
+
+  console.log(currentClientInfo?.bid?.isLabourDetailedMode, 'currentClientInfo');
 
   return (
     <Box>
@@ -204,7 +320,17 @@ const ClientInfo = ({
                                 horizontal: 'left'
                               }}>
                               <Button
-                                sx={{ margin: '0 2px', minWidth: '10px', padding: 0.6 }}
+                                sx={{
+                                  display:
+                                    (info.text === 'Accept Contract' ||
+                                      info.text === 'Reject Contract') &&
+                                    !isUserAAdmin(user)
+                                      ? 'none'
+                                      : '',
+                                  margin: '0 2px',
+                                  minWidth: '10px',
+                                  padding: 0.6
+                                }}
                                 variant='outlined'
                                 endIcon={<>{info.icon}</>}
                                 color={info.color}
@@ -223,6 +349,10 @@ const ClientInfo = ({
                                   ) {
                                     setScheduleTheJob(true);
                                   }
+
+                                  if (info.text === 'Send For Review') handleInReviewStage();
+                                  if (info.text === 'Accept Contract') handleContractAcceptance();
+                                  if (info.text === 'Reject Contract') handleContractRejectance();
                                 }}>
                                 {selectedStep === STATUS_NEW_CLIENT &&
                                   info.text === 'Update Scheduled Job' &&

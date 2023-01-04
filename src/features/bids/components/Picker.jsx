@@ -25,7 +25,7 @@ const Picker = ({
   currentClientInfo,
   setCurrentClientInfo,
   pickerTitle,
-
+  secondaryTitle,
   informationToRender,
   filterOption,
   secondaryValuesToRender,
@@ -85,7 +85,10 @@ const Picker = ({
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
+          message: `Please Select A ${(secondaryTitle || pickerTitle).slice(
+            0,
+            (secondaryTitle || pickerTitle).length - 1
+          )}`,
           severity: 'info'
         })
       );
@@ -129,7 +132,10 @@ const Picker = ({
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
+          message: `Please Select A ${(secondaryTitle || pickerTitle).slice(
+            0,
+            (secondaryTitle || pickerTitle).length - 1
+          )}`,
           severity: 'info'
         })
       );
@@ -172,7 +178,10 @@ const Picker = ({
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
+          message: `Please Select A ${(secondaryTitle || pickerTitle).slice(
+            0,
+            (secondaryTitle || pickerTitle).length - 1
+          )}`,
           severity: 'info'
         })
       );
@@ -203,7 +212,10 @@ const Picker = ({
     ) {
       return dispatch(
         showMessage({
-          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
+          message: `Please Select A ${(secondaryTitle || pickerTitle).slice(
+            0,
+            (secondaryTitle || pickerTitle).length - 1
+          )}`,
           severity: 'info'
         })
       );
@@ -237,11 +249,15 @@ const Picker = ({
     setRoomRelatedInfo(cloneDeep([...groupedPaintableMaterials(currentClientInfo?.bid?.rooms)]));
   }, [currentClientInfo?.bid?.rooms]);
 
+  console.log(currentClientInfo?.bid, 'currentClientInfo?.bid');
+
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', mt: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography sx={{ my: 2, fontSize: '17px', mr: 2 }}>{pickerTitle}</Typography>
+          <Typography sx={{ my: 2, fontSize: '17px', mr: 2 }}>
+            {secondaryTitle ?? pickerTitle}
+          </Typography>
           {showPrimaryAutocomplete && (
             <AutoComplete
               filterOptions={filterOptions}
@@ -263,6 +279,7 @@ const Picker = ({
               filterOption={filterOption}
               secondaryValuesToRender={secondaryValuesToRender}
               pickerTitle={pickerTitle}
+              secondaryTitle={secondaryTitle}
             />
           )}
           {showPrimaryAutocomplete && (
@@ -423,6 +440,7 @@ const Picker = ({
                                   filterOption={filterOption}
                                   secondaryValuesToRender={secondaryValuesToRender}
                                   pickerTitle={pickerTitle}
+                                  secondaryTitle={secondaryTitle}
                                 />
 
                                 {/* Select For All */}

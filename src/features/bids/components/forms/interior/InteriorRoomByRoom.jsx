@@ -47,7 +47,6 @@ const InteriorRoomByRoom = ({
   setselectedPainter
 }) => {
   const [addRoom, setAddRoom] = useState(false);
-  console.log(currentClientInfo, 'currentClientInfocurrentClientInfo');
   const [materialListSectionwise, setMaterialListSectionwise] = useState(null);
   const [labourListSectionwise, setLabourListSectionwise] = useState(null);
   const [currentAddMore, setCurentAddMore] = useState('');
@@ -141,6 +140,8 @@ const InteriorRoomByRoom = ({
       );
     }
   }, []);
+
+  console.log(selectedPainter, 'selectedPainter');
 
   return (
     <Box>
@@ -245,22 +246,22 @@ const InteriorRoomByRoom = ({
               filteredPickerList={materialList && materialList[0] && materialList[0]?.materials}
             />
             <Box sx={{ marginTop: '30px' }}>
-              <FormGroup sx={{ ml: 1 }}>
+              <FormGroup sx={{ ml: 1, float: 'right' }}>
                 <FormControlLabel
                   control={
                     <Switch
                       size='small'
-                      checked={labourDetailedMode}
+                      checked={!labourDetailedMode}
                       onChange={() => setLabourDetailedMode(!labourDetailedMode)}
                     />
                   }
                   label={<Typography sx={{ fontSize: '14px' }}> Summarized Mode</Typography>}
                 />
               </FormGroup>
-              {labourDetailedMode ? (
+              {!labourDetailedMode ? (
                 <Box>
                   <Box sx={{ marginTop: '10px' }}>
-                    <Typography sx={{ fontSize: '300', ml: 1 }}>Selected Painters:</Typography>
+                    <Typography sx={{ my: 2, fontSize: '17px', mr: 2 }}>Painters</Typography>
                     <Grid container>
                       {selectedPainter?.painter?.map((painter) => {
                         return (
@@ -288,6 +289,7 @@ const InteriorRoomByRoom = ({
               ) : (
                 <Picker
                   pickerTitle='Labours'
+                  secondaryTitle='Painters'
                   currentClientInfo={currentClientInfo}
                   setCurrentClientInfo={setCurrentClientInfo}
                   pickerList={companyMadeByUsers}
@@ -344,7 +346,10 @@ const InteriorRoomByRoom = ({
         handleClosePainterChooseModal={handleClosePainterChooseModal}
         choosePainterModalData={choosePainterModalData}
         setChoosePainterModalData={setChoosePainterModalData}
-        painterList={companyMadeByUsers}
+        painterList={companyMadeByUsers.filter(
+          (companyUser) =>
+            !selectedPainter?.painter.map((painter) => painter?.labourId).includes(companyUser._id)
+        )}
         selectedPainter={selectedPainter?.painter}
         handleSelectPainter={handleSelectPainter}
         addOrRemovePainter={addOrRemovePainter}
