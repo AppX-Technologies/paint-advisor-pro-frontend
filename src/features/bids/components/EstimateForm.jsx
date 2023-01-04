@@ -40,38 +40,9 @@ import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInit
 
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 import EstimationDetails from './EstimationDetails';
+import { baseR, calculateEstimate, estimateO, pRate } from '../helpers/paintEngine';
 
-const estimationDetails = {
-  rooms: [
-    {
-      roomName: 'Bed Room',
-      paintableArea: 123,
-      materialCost: 441,
-      labourCost: 121,
-      invoiceTotal: 829
-    },
-    {
-      roomName: 'Kitchen',
-      paintableArea: 323,
-      materialCost: 156,
-      labourCost: 321,
-      invoiceTotal: 726
-    },
-    {
-      roomName: 'Meeting Room',
-      paintableArea: 1233,
-      materialCost: 134,
-      labourCost: 541,
-      invoiceTotal: 1029
-    }
-  ],
-  discount: 17,
-  subTotal: 3412,
-  invoiceTotal: 3129,
-  paintableArea: 5421,
-  labourCost: 2341,
-  materialCost: 1521
-};
+const estimationDetails = calculateEstimate(estimateO, pRate, baseR);
 export default function EstimateForm({
   open,
   setOpen,
@@ -437,7 +408,7 @@ export default function EstimateForm({
             color='info'
             // style={{ textTransform: 'none' }}
             onClick={onEstimationDetailModalOpen}>
-            $ {estimationDetails.invoiceTotal}
+            $ {estimationDetails.subtotal}
           </Button>
           <Button
             disabled={bidsIsLoading}

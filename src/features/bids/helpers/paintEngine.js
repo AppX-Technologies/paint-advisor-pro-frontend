@@ -118,15 +118,17 @@ export const calculateEstimate = (estimateObject, productionRates, baseRates) =>
         : 0;
       const resultRoomObj = {
         roomName: roomObj.roomName,
-        paintableArea: paintableAreaOfRoom,
+        totalPaintableArea: paintableAreaOfRoom,
         paintCost: totalPaintCosts
       };
-      if (labourCost) resultRoomObj.labourCost = labourCost;
+      if (labourCost) resultRoomObj.labourCost += labourCost;
+      if (resultRoomObj) result.rooms = [...result.rooms, resultRoomObj];
       result.paintCost += totalPaintCosts;
       result.labourCost += labourCost;
       result.totalPaintableArea += paintableAreaOfRoom;
     }
   }
+
   if (!estimateObject.isLabourDetailedMode) {
     let hourlyRatesOfAallLabours = estimateObject.labours.map((labour) => {
       let rate = labour.hourlyRate;
@@ -241,8 +243,8 @@ export const estimateO = {
             description: 'Nice Description',
             unitPrice: 100,
             paintId: '63a022b3d091143dbde4f848',
-            areaCoveredPerUnitForFirstCoat: '3',
-            arearCoveredPerUnitForRemainingCoats: '4'
+            areaCoveredPerUnitForFirstCoat: '1',
+            arearCoveredPerUnitForRemainingCoats: '3'
           },
           labours: {
             name: 'Lori Nelson',
@@ -274,6 +276,48 @@ export const estimateO = {
         }
       ],
       _id: '63ac3ccd2171c9bc4acfc337'
+    },
+    {
+      roomName: 'Kitchen Room',
+      walls: [
+        {
+          paints: {
+            description: 'Nice Description',
+            unitPrice: 304,
+            paintId: '63a022b3d091143dbde4f848',
+            areaCoveredPerUnitForFirstCoat: '5',
+            arearCoveredPerUnitForRemainingCoats: '8'
+          },
+          labours: {
+            name: 'Lori Nelson',
+            proficiency: 'Beginner',
+            labourId: '63ac3e3d2171c9bc4acfc3d3'
+          },
+          name: 'North',
+          height: 5,
+          length: 8,
+          coats: 1,
+          prepHour: 3,
+          wallType: 'Smooth',
+          _id: '63ac3ccd2171c9bc4acfc338'
+        }
+      ],
+      ceilings: [],
+      windows: [],
+      doors: [],
+      baseboardTrims: [],
+      windowTrims: [],
+      doorJambs: [],
+      crownMoldings: [],
+      closets: [],
+      nonPaintableAreas: [
+        {
+          description: 'Current Total',
+          area: 0,
+          _id: '63ac3ccd2171c9bc4acfc339'
+        }
+      ],
+      _id: '63ac3ccd2171c9bc4acfc337'
     }
   ],
   __v: 0,
@@ -284,3 +328,123 @@ export const estimateO = {
   type: 'Interior',
   isLabourDetailedMode: true
 };
+
+export const baseR = [
+  {
+    bidType: 'Interior',
+    proficiency: 'Beginner',
+    baseRate: 123,
+    _id: '63ac13d3e6e671c54be3814e'
+  },
+  {
+    bidType: 'Interior',
+    proficiency: 'Intermediate',
+    baseRate: 19999,
+    _id: '63ac13d3e6e671c54be3814f'
+  },
+  {
+    bidType: 'Interior',
+    proficiency: 'Expert',
+    baseRate: 39,
+    _id: '63ac13d3e6e671c54be38150'
+  }
+];
+
+export const pRate = [
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Smooth',
+    proficiency: 'Beginner',
+    productionRate: 110,
+    _id: '63aff6bd62adae7c2798a888'
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Smooth',
+    proficiency: 'Intermediate',
+    productionRate: 395,
+    _id: '63aff6bd62adae7c2798a889'
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Smooth',
+    proficiency: 'Expert',
+    productionRate: 465,
+    _id: '63aff6bd62adae7c2798a88a'
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Single Hung',
+    proficiency: 'Beginner',
+    productionRate: 160,
+    _id: '63b528785b1141145ff9b125'
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Single Hung',
+    proficiency: 'Intermediate',
+    productionRate: 345,
+    _id: '63b528785b1141145ff9b126'
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Window',
+    appliesToType: 'Single Hung',
+    proficiency: 'Expert',
+    productionRate: 445,
+    _id: '63b528785b1141145ff9b127'
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Orange Peel',
+    proficiency: 'Beginner',
+    productionRate: 190,
+    _id: '63b529175b1141145ff9b13e'
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Orange Peel',
+    proficiency: 'Intermediate',
+    productionRate: 375,
+    _id: '63b529175b1141145ff9b13f'
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Orange Peel',
+    proficiency: 'Expert',
+    productionRate: 425,
+    _id: '63b529175b1141145ff9b140'
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Knock Down',
+    proficiency: 'Beginner',
+    productionRate: 305,
+    _id: '63b5291c5b1141145ff9b160'
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Knock Down',
+    proficiency: 'Intermediate',
+    productionRate: 305,
+    _id: '63b5291c5b1141145ff9b161'
+  },
+  {
+    bidType: 'Interior',
+    appliesTo: 'Wall',
+    appliesToType: 'Knock Down',
+    proficiency: 'Expert',
+    productionRate: 430,
+    _id: '63b5291c5b1141145ff9b162'
+  }
+];

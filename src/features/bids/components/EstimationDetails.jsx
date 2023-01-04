@@ -20,7 +20,7 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import React, { useState } from 'react';
-import { calculateEstimate } from '../helpers/paintEngine';
+import { baseR, calculateEstimate, estimateO, pRate } from '../helpers/paintEngine';
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction='left' ref={ref} {...props} />;
@@ -30,36 +30,37 @@ const tableHead = ['Description', 'Detail and Costing'];
 
 const totalingFields = [
   {
-    name: 'paintableArea',
+    name: 'totalPaintableArea',
     label: 'Total Paintable Area'
   },
   {
     name: 'labourCost',
-    label: 'Labour Cost'
+    label: 'Painter Cost'
+  },
+  {
+    name: 'paintCost',
+    label: 'Paint Cost'
   },
   {
     name: 'materialCost',
     label: 'Material Cost'
   },
   {
-    name: 'subTotal',
+    name: 'equipmentCost',
+    label: 'Equipment Cost'
+  },
+  {
+    name: 'subtotal',
     label: 'Sub Total'
-  },
-
-  {
-    name: 'discount',
-    label: 'Discount'
-  },
-  {
-    name: 'invoiceTotal',
-    label: 'Invoice Total'
   }
 ];
 
-const roomFields = ['paintableArea', 'labourCost', 'materialCost'];
-console.log(calculateEstimate(), 'calculateEstimate');
+console.log(calculateEstimate(estimateO, pRate, baseR), 'calculateEstimate');
+const roomFields = ['totalPaintableArea', 'paintCost'];
+
 const EstimationDetails = ({ estimationDetailData, onEstimationDetailModalClose }) => {
   const [viewDetails, setViewDetails] = useState(false);
+
   function isRoomField(fieldName) {
     return roomFields.includes(fieldName);
   }
@@ -106,16 +107,16 @@ const EstimationDetails = ({ estimationDetailData, onEstimationDetailModalClose 
                     <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                       <TableCell
                         sx={{
-                          fontWeight: !isRoomField(fields.name) ? '400' : '300'
+                          fontWeight: fields.name === 'subtotal' ? '400' : '300'
                         }}>
                         {fields.label}
                       </TableCell>
                       <TableCell
                         align='right'
-                        sx={{ fontWeight: !isRoomField(fields.name) ? '400' : '300' }}>
-                        {fields.name !== 'paintableArea' && fields.name !== 'discount' && '$'}
+                        sx={{ fontWeight: fields.name === 'subtotal' ? '400' : '300' }}>
+                        {fields.name !== 'totalPaintableArea' && fields.name !== 'discount' && '$'}
                         {estimationDetailData?.[fields.name] ?? 0}{' '}
-                        {fields.name === 'paintableArea' && 'sq ft'}
+                        {fields.name === 'totalPaintableArea' && 'sq ft'}
                         {fields.name === 'discount' && '%'}
                       </TableCell>
                     </TableRow>
@@ -156,24 +157,15 @@ const EstimationDetails = ({ estimationDetailData, onEstimationDetailModalClose 
                     <Table size='small' sx={{ minWidth: 'auto' }}>
                       <TableBody>
                         {totalingFields
-                          .filter((x) => isRoomField(x.name) || x.name === 'invoiceTotal')
+                          .filter((x) => isRoomField(x.name))
                           .map((fields) => {
                             return (
                               <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                <TableCell
-                                  sx={{
-                                    fontWeight: !isRoomField(fields.name) ? '400' : '300'
-                                  }}>
-                                  {fields.label}
-                                </TableCell>
-                                <TableCell
-                                  align='right'
-                                  sx={{
-                                    fontWeight: !isRoomField(fields.name) ? '400' : '300'
-                                  }}>
-                                  {fields.name !== 'paintableArea' && '$'}
+                                <TableCell>{fields.label}</TableCell>
+                                <TableCell align='right'>
+                                  {fields.name !== 'totalPaintableArea' && '$'}
                                   {roomInfo?.[fields.name] ?? 100}{' '}
-                                  {fields.name === 'paintableArea' && 'sq ft'}
+                                  {fields.name === 'totalPaintableArea' && 'sq ft'}
                                 </TableCell>
                               </TableRow>
                             );
