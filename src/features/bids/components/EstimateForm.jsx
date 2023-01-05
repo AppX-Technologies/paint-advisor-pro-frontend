@@ -404,11 +404,12 @@ export default function EstimateForm({
         </DialogContent>
         <DialogActions>
           <Button
+            sx={{ position: 'fixed',left:'1%' }}
             variant='contained'
             color='info'
             // style={{ textTransform: 'none' }}
             onClick={onEstimationDetailModalOpen}>
-            $ {estimationDetails.subtotal}
+           Total: $ {estimationDetails.subtotal}
           </Button>
           <Button
             disabled={bidsIsLoading}
