@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Slider, TextField, Typography } from '@mui/material';
+import { CircularProgress, Grid, Slider, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -25,7 +25,7 @@ export default function EditIndividualPainterProductionR({
       const ids = Object.keys(editState.id);
       const result = [
         ...productionRateList[0].productionRates.filter(
-          (x) => !ids.map((i) => editState.id[i]).includes(x._id)
+          (rate) => !ids.map((i) => editState.id[i]).includes(rate._id)
         )
       ];
       ids.forEach((i) => {
@@ -63,7 +63,6 @@ export default function EditIndividualPainterProductionR({
         </Typography>
       )
     },
-
     {
       value: 250,
       label: (
@@ -75,7 +74,6 @@ export default function EditIndividualPainterProductionR({
         </Typography>
       )
     },
-
     {
       value: 500,
       label: (

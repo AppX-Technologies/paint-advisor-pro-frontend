@@ -3,8 +3,8 @@ import axios from 'axios';
 const endpoint = 'http://localhost:5001/production-rates';
 const CREATE_PRODUCTION_RATE = `${endpoint}/`;
 const FETCH_PRODUCTION_RATE = `http://localhost:5001/production-rates/list`;
-const CREATE_BASE_RATE = `http://localhost:5001/base-rates/`;
-const FETCH_BASE_RATE = `http://localhost:5001/base-rates/list`;
+const CREATE_BASE_RATE = `http://localhost:5001/proficiencies/`;
+const FETCH_BASE_RATE = `http://localhost:5001/proficiencies/list`;
 
 const fetchSingleProductionRate = async (userData) => {
   const config = {
@@ -73,7 +73,6 @@ const fetchBaseRate = async (userData) => {
 };
 
 const createBaseRate = async (userData) => {
-  console.log(userData, 'userData');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -84,7 +83,7 @@ const createBaseRate = async (userData) => {
   const response = await axios.put(
     `${CREATE_BASE_RATE}/${userData.baseRateId}`,
     {
-      productionRates: [...userData.updatedBaseRate]
+      proficiencies: [...userData.updatedBaseRate]
     },
     config
   );
