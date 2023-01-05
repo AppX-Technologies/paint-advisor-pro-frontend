@@ -269,6 +269,7 @@ const Pipeline = () => {
   const handleEditClientFormOpen = (currectClientInfo) => {
     setClientAdditionStats(cloneDeep(currectClientInfo));
   };
+
   const onFilterOptionsClose = () => {
     setShowFilter(false);
   };
@@ -307,6 +308,7 @@ const Pipeline = () => {
       filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
     );
   }, [selectedStep, filteredClietsList]);
+  // todo
 
   useEffect(() => {
     dispatch(
@@ -333,6 +335,7 @@ const Pipeline = () => {
           <GroupAddIcon sx={{ mr: 1 }} /> Add new client
         </Button>
       )}
+
       <AddNewClientForm
         openNewClientForm={openNewClientForm}
         setOpenNewClientForm={setOpenNewClientForm}
@@ -365,6 +368,7 @@ const Pipeline = () => {
         onBidFilterValueChange={setBidFilterValues}
         handlePrimaryFilter={handlePrimaryFilter}
       />
+
       <ViewFiles
         showFilesToView={showFilesToView}
         setShowFilesToView={setShowFilesToView}

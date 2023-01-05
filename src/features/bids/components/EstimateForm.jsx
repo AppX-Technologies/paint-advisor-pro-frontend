@@ -37,9 +37,11 @@ import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { reset, updateABid, updateClient } from '../bidsSlice';
 import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
-import EstimationDetails from './forms/interior/EstimationDetails';
+import { baseR, calculateEstimate, estimateO, pRate } from '../helpers/paintEngine';
+import EstimationDetails from './EstimationDetails';
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
+const estimationDetails = calculateEstimate(estimateO, pRate, baseR);
 export default function EstimateForm({
   open,
   setOpen,
@@ -58,10 +60,10 @@ export default function EstimateForm({
 }) {
   const [openAddMoreDetails, setOpenAddMoreDetails] = React.useState(false);
   const [previousStateOfRooms, setPreviousStateOfRooms] = React.useState(null);
-  const [estimationDetailsMeta, setEstimationDetailsMeta] = React.useState(null);
   const [materialListToPick, setMaterialListToPick] = React.useState([]);
   const [equipmentListToPick, setEquipmentListToPick] = React.useState([]);
   const [labourDetailedMode, setLabourDetailedMode] = React.useState();
+  const [estimationDetailData, setEstimationDetailData] = React.useState(null);
   const dispatch = useDispatch();
   const { user } = useSelector(authSelector);
   const { bidsIsLoading, bidsIsSuccess, bidsIsError, bidInfo } = useSelector((state) => state.bids);
@@ -78,6 +80,14 @@ export default function EstimateForm({
   useEffect(() => {
     setselectedPainter({ painter: currentClientInfo?.bid?.labours ?? [] });
   }, [open]);
+
+  const onEstimationDetailModalOpen = () => {
+    setEstimationDetailData(estimationDetails);
+  };
+  const onEstimationDetailModalClose = () => {
+    setEstimationDetailData(null);
+  };
+
   const handleBidsSubmission = () => {
     const emptyField = Object.keys(initialBidInfo).find((field) => initialBidInfo[field] === '');
     if (emptyField) {
@@ -238,10 +248,6 @@ export default function EstimateForm({
       setPreviousStateOfRooms({ ...currentClientInfo.bid });
     }
   }, [open]);
-
-  const onEstimationDetailsChange = () => {
-    setEstimationDetailsMeta(null);
-  };
 
   useEffect(() => {
     const materialInfo = currentClientInfo?.bid?.materials?.map((material) => {
@@ -449,6 +455,10 @@ export default function EstimateForm({
               setselectedPainter={setselectedPainter}
             />
           )}
+          <EstimationDetails
+            estimationDetailData={estimationDetailData}
+            onEstimationDetailModalClose={onEstimationDetailModalClose}
+          />
           {initialBidInfo.type === 'Interior' && initialBidInfo.subType === 'Man Hour' && (
             <></>
             // <InteriorManByMan
@@ -463,35 +473,35 @@ export default function EstimateForm({
             <></>
           )}
         </DialogContent>
-
-        <Box>
-          <DialogActions>
-            <Button
-              disabled={bidsIsLoading}
-              onClick={() => {
-                handleClose();
-                currentClientInfo.bid = { ...previousStateOfRooms };
-                setCurrentClientInfo({ ...currentClientInfo });
-              }}>
-              Cancel
-            </Button>
-            <Button
-              disabled={bidsIsLoading}
-              type='submit'
-              variant='contained'
-              onClick={handleBidsSubmission}>
-              Save
-            </Button>
-          </DialogActions>
-        </Box>
-
-        {estimationDetailsMeta && (
-          <EstimationDetails
-            estimationDetailsMeta={estimationDetailsMeta}
-            setEstimationDetailsMeta={setEstimationDetailsMeta}
-            onEstimationDetailsChange={onEstimationDetailsChange}
-          />
-        )}
+        <DialogActions>
+          <Button
+            sx={{ position: 'fixed', left: '1%' }}
+            variant='contained'
+            color='info'
+            // style={{ textTransform: 'none' }}
+            onClick={onEstimationDetailModalOpen}>
+            Total: $ {estimationDetails.subtotal}
+          </Button>
+          <Button
+            disabled={bidsIsLoading}
+            color='error'
+            variant='contained'
+            onClick={() => {
+              handleClose();
+              currentClientInfo.bid = { ...previousStateOfRooms };
+              setCurrentClientInfo({ ...currentClientInfo });
+            }}>
+            Cancel
+          </Button>
+          <Button
+            disabled={bidsIsLoading}
+            type='submit'
+            color='success'
+            variant='contained'
+            onClick={handleBidsSubmission}>
+            Save
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );
