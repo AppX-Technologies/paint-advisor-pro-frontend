@@ -4,8 +4,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import PreviewIcon from '@mui/icons-material/Preview';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import SendIcon from '@mui/icons-material/Send';
 import {
   STATUS_ESTIMATE_IN_PROGRESS,
   STATUS_IN_REVIEW,
@@ -66,7 +66,7 @@ export const buttonStageInfo = [
       {
         text: 'Send For Review',
         color: 'info',
-        icon: <PreviewIcon sx={{ width: '15px', height: '15px', marginRight: '7px' }} />
+        icon: <SendIcon sx={{ width: '15px', height: '15px', marginRight: '7px' }} />
       }
     ]
   },
@@ -95,7 +95,7 @@ export const buttonStageInfo = [
         icon: <CheckIcon sx={{ width: '15px', height: '15px', marginRight: '7px' }} />
       },
       {
-        text: 'Reject Contract',
+        text: 'Send For Re-Estimation',
         color: 'error',
         icon: <ClearIcon sx={{ width: '15px', height: '15px', marginRight: '7px' }} />
       }

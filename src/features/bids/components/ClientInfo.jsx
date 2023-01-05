@@ -10,7 +10,7 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ConfirmationModel from '../../../common/ConfirmationModel';
 import { AddNewClientTextField } from '../../../common/FormTextField';
@@ -29,6 +29,7 @@ import { isUserAAdmin } from '../../../helpers/utlis';
 import { authSelector } from '../../auth/authSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { reset, updateClient, updateClientStatus } from '../bidsSlice';
+import BidsConfirmationModal from '../common/BidsConfirmationModal';
 import {
   filterClientsBySelectedStep,
   findCurrentClient,
@@ -54,13 +55,17 @@ const ClientInfo = ({
   setSelectedListItem,
   filteredClietsList
 }) => {
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(null);
   const { clientList, isSuccess, isLoading, jobSuccessFullyCanceled, isJobCanceledLoading } =
     useSelector((state) => state.bids);
   const { user } = useSelector(authSelector);
 
   const dispatch = useDispatch();
+  const onConfirmationModalClose = () => {
+    setIsConfirmationModalOpen(null);
+  };
 
-  const handleInReviewStage = () => {
+  const handleReviewOfBids = () => {
     // Validation For Rooms Length
 
     if (!currentClientInfo?.bid?.rooms.length) {
@@ -140,7 +145,20 @@ const ClientInfo = ({
       })
     );
     onSelectedStepChange(STATUS_IN_REVIEW);
+    onConfirmationModalClose();
   };
+
+  // Info For Confirmation Modal
+
+  const handleInReviewStage = () => {
+    setIsConfirmationModalOpen({
+      title: 'Send For Review',
+      description: 'Are You Sure To Send This To Review ?',
+      actionToPerform: handleReviewOfBids
+    });
+  };
+
+  // Contract Acceptance Method
 
   const handleContractAcceptance = () => {
     dispatch(
@@ -151,9 +169,13 @@ const ClientInfo = ({
       })
     );
     onSelectedStepChange(STATUS_CONTRACT_SENT);
+
+    onConfirmationModalClose();
   };
 
-  const handleContractRejectance = () => {
+  // Contract Rejection Method
+
+  const handleContractRejection = () => {
     dispatch(
       updateClient({
         status: STATUS_ESTIMATE_IN_PROGRESS,
@@ -162,6 +184,27 @@ const ClientInfo = ({
       })
     );
     onSelectedStepChange(STATUS_ESTIMATE_IN_PROGRESS);
+    onConfirmationModalClose();
+  };
+
+  // Contract Accptance Modal
+
+  const handleConfirmatioModalForContractAcceptance = () => {
+    setIsConfirmationModalOpen({
+      title: 'Accept This Contract',
+      description: 'Are You Sure To Accept This Contract ?',
+      actionToPerform: handleContractAcceptance
+    });
+  };
+
+  // Contract Rejection Modal
+
+  const handleConfirmationModalForContractRejection = () => {
+    setIsConfirmationModalOpen({
+      title: 'Send To Re-Estimation',
+      description: 'Are You Sure To Send This To Re-Estimation ?',
+      actionToPerform: handleContractRejection
+    });
   };
 
   useEffect(() => {
@@ -212,8 +255,6 @@ const ClientInfo = ({
     }
   }, [currentClientInfo]);
 
-  console.log(currentClientInfo?.bid?.isLabourDetailedMode, 'currentClientInfo');
-
   return (
     <Box>
       {scheduleTheJob && (
@@ -245,6 +286,10 @@ const ClientInfo = ({
           title='Cancel The Job'
         />
       )}
+      <BidsConfirmationModal
+        modalIsOpen={isConfirmationModalOpen}
+        handleModalClose={onConfirmationModalClose}
+      />
       {selectedListItem && currentClientInfo ? (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }} p={1}>
@@ -351,8 +396,10 @@ const ClientInfo = ({
                                   }
 
                                   if (info.text === 'Send For Review') handleInReviewStage();
-                                  if (info.text === 'Accept Contract') handleContractAcceptance();
-                                  if (info.text === 'Reject Contract') handleContractRejectance();
+                                  if (info.text === 'Accept Contract')
+                                    handleConfirmatioModalForContractAcceptance();
+                                  if (info.text === 'Send For Re-Estimation')
+                                    handleConfirmationModalForContractRejection();
                                 }}>
                                 {selectedStep === STATUS_NEW_CLIENT &&
                                   info.text === 'Update Scheduled Job' &&
