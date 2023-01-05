@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom';
 import { bidStageFilter } from '../../../common/bidStageFilters';
 import { booleanOption } from '../../../common/FormTextField';
 import { STATUS_NEW_CLIENT } from '../../../helpers/contants';
-import { isSystemUser } from '../../../helpers/roles';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { authSelector } from '../../auth/authSlice';
 import { fetchEquipment } from '../../equipments/equipmentSlice';

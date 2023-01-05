@@ -34,6 +34,7 @@ import {
 } from '../../../helpers/contants';
 import { isSystemUser } from '../../../helpers/roles';
 import { authSelector } from '../../auth/authSlice';
+import { fetchBaseRate, fetchProductionRate } from '../../productionRate/productionRateSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { reset, updateABid, updateClient } from '../bidsSlice';
 import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
@@ -41,7 +42,6 @@ import { baseR, calculateEstimate, estimateO, pRate } from '../helpers/paintEngi
 import EstimationDetails from './EstimationDetails';
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
-const estimationDetails = calculateEstimate(estimateO, pRate, baseR);
 export default function EstimateForm({
   open,
   setOpen,
@@ -64,7 +64,14 @@ export default function EstimateForm({
   const [equipmentListToPick, setEquipmentListToPick] = React.useState([]);
   const [labourDetailedMode, setLabourDetailedMode] = React.useState();
   const [estimationDetailData, setEstimationDetailData] = React.useState(null);
+
   const dispatch = useDispatch();
+  const { productionRateList, baseRate, isLoading, isSuccess } = useSelector(
+    (state) => state.productionRate
+  );
+
+  console.log(productionRateList, baseRate, 'baseRate');
+  const { org } = useSelector((state) => state.org);
   const { user } = useSelector(authSelector);
   const { bidsIsLoading, bidsIsSuccess, bidsIsError, bidInfo } = useSelector((state) => state.bids);
   const { companyId } = useParams();
@@ -73,13 +80,18 @@ export default function EstimateForm({
   const [selectedPainter, setselectedPainter] = React.useState({
     painter: currentClientInfo?.bid?.labours ?? []
   });
+  const estimationDetails = React.useMemo(() => {
+    return calculateEstimate(
+      currentClientInfo?.bid,
+      productionRateList && productionRateList[0]?.productionRates,
+      baseRate && baseRate[0]?.proficiencies
+    );
+  }, [currentClientInfo?.bid, productionRateList, baseRate]);
+
   const handleClose = () => {
     setOpen(false);
     setRoomFormValue(initialRoomState);
   };
-  useEffect(() => {
-    setselectedPainter({ painter: currentClientInfo?.bid?.labours ?? [] });
-  }, [open]);
 
   const onEstimationDetailModalOpen = () => {
     setEstimationDetailData(estimationDetails);
@@ -174,6 +186,9 @@ export default function EstimateForm({
       setInitialBidInfo(cloneDeep(estimationFormInitialInfo));
     }
   }, [open]);
+  useEffect(() => {
+    setselectedPainter({ painter: currentClientInfo?.bid?.labours ?? [] });
+  }, [open]);
 
   useEffect(() => {
     if (bidsIsSuccess) {
@@ -222,6 +237,21 @@ export default function EstimateForm({
   }, [bidInfo]);
 
   useEffect(() => {
+    dispatch(
+      fetchProductionRate({
+        token: user.token,
+        id: companyId ? org.productionRates : undefined
+      })
+    );
+    dispatch(
+      fetchBaseRate({
+        token: user.token,
+        id: companyId ? org.proficiencies : undefined
+      })
+    );
+  }, []);
+
+  useEffect(() => {
     if (open) {
       if (selectedStep !== STATUS_NEW_CLIENT) {
         setInitialBidInfo(
@@ -263,7 +293,7 @@ export default function EstimateForm({
 
   useEffect(() => {
     setLabourDetailedMode(currentClientInfo?.bid?.isLabourDetailedMode);
-  }, [currentClientInfo?.bid]);
+  }, [currentClientInfo?.bid?.isLabourDetailedMode]);
 
   return (
     <div>

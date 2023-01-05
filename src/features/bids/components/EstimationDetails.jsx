@@ -1,4 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import {
   AppBar,
@@ -17,10 +19,7 @@ import {
   Toolbar,
   Typography
 } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import React, { useEffect, useState } from 'react';
-import { baseR, calculateEstimate, estimateO, pRate } from '../helpers/paintEngine';
+import React, { useState } from 'react';
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction='left' ref={ref} {...props} />;
@@ -55,7 +54,6 @@ const totalingFields = [
   }
 ];
 
-console.log(calculateEstimate(estimateO, pRate, baseR), 'calculateEstimate');
 const roomFields = ['totalPaintableArea', 'paintCost'];
 
 const EstimationDetails = ({ estimationDetailData, onEstimationDetailModalClose }) => {
