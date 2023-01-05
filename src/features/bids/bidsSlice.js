@@ -280,6 +280,7 @@ export const bidsSlice = createSlice({
       })
       .addCase(updateClient.pending, (state) => {
         state.isLoading = true;
+        state.bidsIsLoading = true;
       })
       .addCase(updateClient.fulfilled, (state, { payload }) => {
         state.isLoading = false;
@@ -288,11 +289,13 @@ export const bidsSlice = createSlice({
       })
       .addCase(updateClient.rejected, (state, action) => {
         state.isLoading = false;
+        state.bidsIsLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
       .addCase(createClient.pending, (state) => {
         state.isLoading = true;
+        state.bidsIsLoading = false;
       })
       .addCase(createClient.fulfilled, (state, { payload }) => {
         state.isLoading = false;

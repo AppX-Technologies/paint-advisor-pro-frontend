@@ -56,8 +56,16 @@ const ClientInfo = ({
   filteredClietsList
 }) => {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(null);
-  const { clientList, isSuccess, isLoading, jobSuccessFullyCanceled, isJobCanceledLoading } =
-    useSelector((state) => state.bids);
+  const {
+    clientList,
+    isSuccess,
+    isLoading,
+
+    jobSuccessFullyCanceled,
+    isJobCanceledLoading
+  } = useSelector((state) => state.bids);
+
+  console.log(isLoading, 'isLoadingisLoadingisLoading');
   const { user } = useSelector(authSelector);
 
   const dispatch = useDispatch();
@@ -145,7 +153,6 @@ const ClientInfo = ({
       })
     );
     onSelectedStepChange(STATUS_IN_REVIEW);
-    onConfirmationModalClose();
   };
 
   // Info For Confirmation Modal
@@ -169,8 +176,6 @@ const ClientInfo = ({
       })
     );
     onSelectedStepChange(STATUS_CONTRACT_SENT);
-
-    onConfirmationModalClose();
   };
 
   // Contract Rejection Method
@@ -184,7 +189,6 @@ const ClientInfo = ({
       })
     );
     onSelectedStepChange(STATUS_ESTIMATE_IN_PROGRESS);
-    onConfirmationModalClose();
   };
 
   // Contract Accptance Modal
@@ -219,7 +223,7 @@ const ClientInfo = ({
           severity: 'success'
         })
       );
-
+      onConfirmationModalClose();
       dispatch(reset());
     }
   }, [isSuccess]);
@@ -289,6 +293,7 @@ const ClientInfo = ({
       <BidsConfirmationModal
         modalIsOpen={isConfirmationModalOpen}
         handleModalClose={onConfirmationModalClose}
+        isLoading={isLoading}
       />
       {selectedListItem && currentClientInfo ? (
         <>

@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { baseR, calculateEstimate, estimateO, pRate } from '../helpers/paintEngine';
 
 const Transition = React.forwardRef((props, ref) => {

@@ -1,5 +1,6 @@
 import {
   Box,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,7 +12,7 @@ import {
 import React from 'react';
 import Button from '../../../components/Button';
 
-const BidsConfirmationModal = ({ modalIsOpen, handleModalClose }) => {
+const BidsConfirmationModal = ({ modalIsOpen, handleModalClose, isLoading }) => {
   return (
     <Dialog open={modalIsOpen !== null}>
       <DialogTitle>
@@ -24,7 +25,7 @@ const BidsConfirmationModal = ({ modalIsOpen, handleModalClose }) => {
               alignItems: 'center'
             }}>
             <Typography variant='h6'>{modalIsOpen?.title}</Typography>
-            {/* {isLoading && <CircularProgress size={20} />} */}
+            {isLoading && <CircularProgress size={20} />}
           </Box>
         </Stack>
       </DialogTitle>
@@ -33,9 +34,7 @@ const BidsConfirmationModal = ({ modalIsOpen, handleModalClose }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={() => handleModalClose()}>Cancel</Button>
-        <Button
-          //   disabled={isLoading}
-          onClick={() => modalIsOpen?.actionToPerform()}>
+        <Button disabled={isLoading} onClick={() => modalIsOpen?.actionToPerform()}>
           Sure
         </Button>
       </DialogActions>
