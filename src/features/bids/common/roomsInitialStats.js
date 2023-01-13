@@ -6,10 +6,10 @@ export const estimationFormInitialInfo = {
   isMaterialProvidedByCustomer: ''
 };
 
-export const initialNonPaintableStats = {
-  description: '',
-  area: null
-};
+// export const initialNonPaintableStats = {
+//   description: '',
+//   area: null
+// };
 
 export const initialRoomState = {
   roomName: '',
@@ -32,7 +32,8 @@ export const initilWallInfo = {
   height: null,
   length: null,
   wallType: '',
-  coats: null
+  coats: null,
+  nonPaintableArea: 0
 };
 
 export const initialDoorInfo = {

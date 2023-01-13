@@ -20,7 +20,7 @@ const Card = ({
   roomFormValue
 }) => {
   const dimension = useMemo(() => {
-    return `${items.length}x${items.height ? items.height : items.width}`;
+    return `${items.length ?? items.linearFeet}x${items.height ?? items.width}`;
   }, [items]);
 
   return (
@@ -41,65 +41,65 @@ const Card = ({
         {/* Action */}
         {field !== 'nonPaintableAreas' && (
           <Box sx={{ display: 'flex' }}>
-              {items.paint && (
-                <FormatPaintIcon
-                  sx={{
-                    color: 'green',
-                    fontSize: '18px',
-                    mr: 0.5,
-                    cursor: 'pointer'
-                  }}
-                  size='small'
-                />
-              )}
-              <Tooltip title='Clone' placement='top'>
-                <ContentCopyIcon
-                  sx={{
-                    color: '#458c2b',
-                    fontSize: '18px',
-                    mr: 0.5,
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => {
-                    setRoomInfoToEdit({ ...cloneDeep(items), edit: false });
-                    onopenAddMoreDetailsChange(true);
-                    setCurentAddMore(field);
-                  }}
-                  size='small'
-                />
-              </Tooltip>
-              <Tooltip title='Edit' placement='top'>
-                <EditIcon
-                  sx={{
-                    color: (theme) => theme.editicon.color.main,
-                    fontSize: '18px',
-                    mr: 0.5,
-                    cursor: 'pointer'
-                  }}
-                  size='small'
-                  onClick={() => {
-                    setRoomInfoToEdit({ ...cloneDeep(items), edit: true });
-                    onopenAddMoreDetailsChange(true);
-                    setCurentAddMore(field);
-                  }}
-                />
-              </Tooltip>
-              <Tooltip title='Delete' placement='top'>
-                <DeleteIcon
-                  sx={{
-                    color: (theme) => theme.deleteicon.color.main,
-                    fontSize: '18px',
-                    cursor: 'pointer'
-                  }}
-                  size='small'
-                  onClick={() => {
-                    setCurentAddMore(field);
-                    setOpenDeleteModal(true);
-                    setitemToBeDeleted({ title, field, roomFormValue });
-                  }}
-                />
-              </Tooltip>
-            </Box>
+            {items.paint && (
+              <FormatPaintIcon
+                sx={{
+                  color: 'green',
+                  fontSize: '18px',
+                  mr: 0.5,
+                  cursor: 'pointer'
+                }}
+                size='small'
+              />
+            )}
+            <Tooltip title='Clone' placement='top'>
+              <ContentCopyIcon
+                sx={{
+                  color: '#458c2b',
+                  fontSize: '18px',
+                  mr: 0.5,
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  setRoomInfoToEdit({ ...cloneDeep(items), edit: false });
+                  onopenAddMoreDetailsChange(true);
+                  setCurentAddMore(field);
+                }}
+                size='small'
+              />
+            </Tooltip>
+            <Tooltip title='Edit' placement='top'>
+              <EditIcon
+                sx={{
+                  color: (theme) => theme.editicon.color.main,
+                  fontSize: '18px',
+                  mr: 0.5,
+                  cursor: 'pointer'
+                }}
+                size='small'
+                onClick={() => {
+                  setRoomInfoToEdit({ ...cloneDeep(items), edit: true });
+                  onopenAddMoreDetailsChange(true);
+                  setCurentAddMore(field);
+                }}
+              />
+            </Tooltip>
+            <Tooltip title='Delete' placement='top'>
+              <DeleteIcon
+                sx={{
+                  color: (theme) => theme.deleteicon.color.main,
+                  fontSize: '18px',
+                  cursor: 'pointer'
+                }}
+                size='small'
+                onClick={() => {
+                  setCurentAddMore(field);
+                  setOpenDeleteModal(true);
+                  setitemToBeDeleted({ title, field, roomFormValue });
+                }}
+              />
+            </Tooltip>
+          </Box>
         )}
       </Box>
       {/* Body-section */}
@@ -125,12 +125,12 @@ const Card = ({
             ?.map((item) => {
               return (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Wall</Typography>
+                  <Typography sx={{ fontSize: '15px', fontWeight: '700' }}>Wall</Typography>
 
-                    <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
-                      {items[item]}
-                    </Typography>
-                  </Box>
+                  <Typography sx={{ fontSize: '13px', color: '#736f6f', fontWeight: '600' }}>
+                    {items[item]}
+                  </Typography>
+                </Box>
               );
             })}
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -142,82 +142,82 @@ const Card = ({
         </>
       ) : (
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Tooltip title={items.description} placement='top'>
-              <Typography sx={{ fontSize: '14px', mb: 2, color: '#736f6f', fontWeight: '600' }}>
-                {items.description.length >= 15
-                  ? `${items.description.slice(0, 15)}...`
-                  : items.description}{' '}
-                :
-              </Typography>
-            </Tooltip>
+          <Tooltip title={items.description} placement='top'>
             <Typography sx={{ fontSize: '14px', mb: 2, color: '#736f6f', fontWeight: '600' }}>
-              {items.description === CURRENT_TOTAL_DESCRIPTION ? totalArea : items.area}
+              {items.description.length >= 15
+                ? `${items.description.slice(0, 15)}...`
+                : items.description}{' '}
+              :
             </Typography>
-            <Box sx={{ display: 'flex' }}>
-              {items.paint && (
-                <FormatPaintIcon
-                  sx={{
-                    color: 'green',
-                    fontSize: '18px',
-                    mr: 0.5,
-                    cursor: 'pointer'
-                  }}
-                  size='small'
-                />
-              )}
-              {items.description !== CURRENT_TOTAL_DESCRIPTION && (
-                <>
-                  <Tooltip title='Clone' placement='top'>
-                    <ContentCopyIcon
-                      sx={{
-                        color: '#458c2b',
-                        fontSize: '18px',
-                        mr: 0.5,
-                        cursor: 'pointer'
-                      }}
-                      onClick={() => {
-                        setRoomInfoToEdit({ ...cloneDeep(items), edit: false });
-                        onopenAddMoreDetailsChange(true);
-                        setCurentAddMore(field);
-                      }}
-                      size='small'
-                    />
-                  </Tooltip>
-                  <Tooltip title='Edit' placement='top'>
-                    <EditIcon
-                      sx={{
-                        color: (theme) => theme.editicon.color.main,
-                        fontSize: '18px',
-                        mr: 0.5,
-                        cursor: 'pointer'
-                      }}
-                      size='small'
-                      onClick={() => {
-                        setRoomInfoToEdit({ ...cloneDeep(items), edit: true });
-                        onopenAddMoreDetailsChange(true);
-                        setCurentAddMore(field);
-                      }}
-                    />
-                  </Tooltip>
-                  <Tooltip title='Delete' placement='top'>
-                    <DeleteIcon
-                      sx={{
-                        color: (theme) => theme.deleteicon.color.main,
-                        fontSize: '18px',
-                        cursor: 'pointer'
-                      }}
-                      size='small'
-                      onClick={() => {
-                        setCurentAddMore(field);
-                        setOpenDeleteModal(true);
-                        setitemToBeDeleted({ title: items.description, field, roomFormValue });
-                      }}
-                    />
-                  </Tooltip>
-                </>
-              )}
-            </Box>
+          </Tooltip>
+          <Typography sx={{ fontSize: '14px', mb: 2, color: '#736f6f', fontWeight: '600' }}>
+            {items.description === CURRENT_TOTAL_DESCRIPTION ? totalArea : items.area}
+          </Typography>
+          <Box sx={{ display: 'flex' }}>
+            {items.paint && (
+              <FormatPaintIcon
+                sx={{
+                  color: 'green',
+                  fontSize: '18px',
+                  mr: 0.5,
+                  cursor: 'pointer'
+                }}
+                size='small'
+              />
+            )}
+            {items.description !== CURRENT_TOTAL_DESCRIPTION && (
+              <>
+                <Tooltip title='Clone' placement='top'>
+                  <ContentCopyIcon
+                    sx={{
+                      color: '#458c2b',
+                      fontSize: '18px',
+                      mr: 0.5,
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => {
+                      setRoomInfoToEdit({ ...cloneDeep(items), edit: false });
+                      onopenAddMoreDetailsChange(true);
+                      setCurentAddMore(field);
+                    }}
+                    size='small'
+                  />
+                </Tooltip>
+                <Tooltip title='Edit' placement='top'>
+                  <EditIcon
+                    sx={{
+                      color: (theme) => theme.editicon.color.main,
+                      fontSize: '18px',
+                      mr: 0.5,
+                      cursor: 'pointer'
+                    }}
+                    size='small'
+                    onClick={() => {
+                      setRoomInfoToEdit({ ...cloneDeep(items), edit: true });
+                      onopenAddMoreDetailsChange(true);
+                      setCurentAddMore(field);
+                    }}
+                  />
+                </Tooltip>
+                <Tooltip title='Delete' placement='top'>
+                  <DeleteIcon
+                    sx={{
+                      color: (theme) => theme.deleteicon.color.main,
+                      fontSize: '18px',
+                      cursor: 'pointer'
+                    }}
+                    size='small'
+                    onClick={() => {
+                      setCurentAddMore(field);
+                      setOpenDeleteModal(true);
+                      setitemToBeDeleted({ title: items.description, field, roomFormValue });
+                    }}
+                  />
+                </Tooltip>
+              </>
+            )}
           </Box>
+        </Box>
       )}
     </Box>
   );

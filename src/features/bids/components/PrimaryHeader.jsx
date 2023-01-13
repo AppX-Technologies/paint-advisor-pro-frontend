@@ -85,7 +85,17 @@ const PrimaryHeader = ({
                 endAdornment: (
                   <InputAdornment>
                     <IconButton>
-                      <SearchIcon onClick={() => primaryHeaderSearch && handlePrimaryFilter()} />
+                      <SearchIcon
+                        sx={{
+                          color: !primaryHeaderSearch && 'lightgray',
+                          cursor: primaryHeaderSearch ? 'pointer' : 'default',
+                          '&:hover': {
+                            backgroundColor: 'transparent',
+                            outline: 'none'
+                          }
+                        }}
+                        onClick={() => primaryHeaderSearch && handlePrimaryFilter()}
+                      />
                     </IconButton>
                   </InputAdornment>
                 )
