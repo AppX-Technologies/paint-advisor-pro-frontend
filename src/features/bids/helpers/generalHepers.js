@@ -1,9 +1,6 @@
-import { pickersPopperClasses } from '@mui/x-date-pickers/internals';
 import axios from 'axios';
 import { cloneDeep } from 'lodash';
-import uuid from 'react-uuid';
 import { buttonStageInfo } from '../../../common/ButtonStageInfo';
-import { FIELDS_WHERE_MATERIALS_ARE_APPLIES } from '../../../helpers/contants';
 
 import {
   FIELDS_WHERE_MATERIALS_ARE_APPLIES,

@@ -71,9 +71,6 @@ const InteriorRoomByRoom = ({
   const { equipmentList } = useSelector((state) => state.equipment);
   const { companyMadeByUsers } = useSelector((state) => state.usersFromCompany);
 
-  const { materialList } = useSelector((state) => state.material);
-  const { companyMadeByUsers } = useSelector((state) => state.usersFromCompany);
-
   const onSelectedRoomInfoChange = (value) => {
     setSelectedRoomInfo(value);
   };

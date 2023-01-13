@@ -18,7 +18,7 @@ export const commonRoutes = [
     link: '/profile',
     icon: AccountCircleIcon,
     text: 'Profile',
-    element: Profile
+    element: 'Profile'
   },
   { icon: Logout, text: 'Logout' }
 ];

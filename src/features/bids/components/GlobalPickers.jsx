@@ -25,7 +25,6 @@ import uuid from 'react-uuid';
 import AutoComplete from '../../../common/AutoComplete';
 import { GLOBAL_PICKER_FIELDS } from '../../../helpers/contants';
 
-
 const GlobalPickers = ({
   pickerTitle,
   filterOption,
