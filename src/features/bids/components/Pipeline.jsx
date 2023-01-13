@@ -19,7 +19,7 @@ import {
   initialCrownMoldingInfo,
   initialDoorInfo,
   initialDoorjambsInfo,
-  initialNonPaintableStats,
+  // initialNonPaintableStats,
   initialRoomState,
   initialWindowInfo,
   initialWindowTrimInfo,
@@ -63,7 +63,7 @@ const Pipeline = () => {
   const [wallStats, setWallStats] = useState(initilWallInfo);
   const [windowStats, setWindowStats] = useState(initialWindowInfo);
   const [doorsStats, setDoorStats] = useState(initialDoorInfo);
-  const [nonPaintableAreaStats, setNonPaintableAreaStats] = useState(initialNonPaintableStats);
+  // const [nonPaintableAreaStats, setNonPaintableAreaStats] = useState(initialNonPaintableStats);
   const [ceilingStats, setCeilingStats] = useState(initialCeilingInfo);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [baseboardTrimStats, setBaseboardTrimStats] = useState(initialBaseBoardTrimInfo);
@@ -103,7 +103,8 @@ const Pipeline = () => {
           { name: 'height', label: 'Height' },
           { name: 'length', label: 'Length' },
           { name: 'wallType', label: 'Wall Type' },
-          { name: 'coats', label: 'Coats' }
+          { name: 'coats', label: 'Coats' },
+          { name: 'nonPaintableArea', label: 'Non-Paintable Area' }
         ]
       },
       {
@@ -226,22 +227,22 @@ const Pipeline = () => {
           { name: 'avgerageHeight', label: 'AverageHeight' },
           { name: 'coats', label: 'Coats' }
         ]
-      },
-      {
-        label: 'Non-Paintable Area',
-        name: 'nonPaintableAreas',
-        option: booleanOption,
-        currentStats: nonPaintableAreaStats,
-        onCurrentStatsChange: setNonPaintableAreaStats,
-        initialStats: initialNonPaintableStats,
-        fields: [
-          { name: 'description', label: 'Description' },
-          { name: 'area', label: 'Area' }
-        ]
       }
+      // {
+      //   label: 'Non-Paintable Area',
+      //   name: 'nonPaintableAreas',
+      //   option: booleanOption,
+      //   currentStats: nonPaintableAreaStats,
+      //   onCurrentStatsChange: setNonPaintableAreaStats,
+      //   initialStats: initialNonPaintableStats,
+      //   fields: [
+      //     { name: 'description', label: 'Description' },
+      //     { name: 'area', label: 'Area' }
+      //   ]
+      // }
     ];
   }, [
-    nonPaintableAreaStats,
+    // nonPaintableAreaStats,
     closetStats,
     crownMoldingStats,
     doorJambsStats,
@@ -307,7 +308,6 @@ const Pipeline = () => {
       filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
     );
   }, [selectedStep, filteredClietsList]);
-  // todo
 
   useEffect(() => {
     dispatch(

@@ -33,7 +33,9 @@ const BidsConfirmationModal = ({ modalIsOpen, handleModalClose, isLoading }) => 
         <DialogContentText>{modalIsOpen?.description}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => handleModalClose()}>Cancel</Button>
+        <Button disabled={isLoading} onClick={() => handleModalClose()}>
+          Cancel
+        </Button>
         <Button disabled={isLoading} onClick={() => modalIsOpen?.actionToPerform()}>
           Sure
         </Button>

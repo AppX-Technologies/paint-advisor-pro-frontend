@@ -3,6 +3,8 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-restricted-syntax */
 
+const nonPaintableSectionsOfRoom = ['baseboardTrims', 'windowTrims'];
+
 const findMatchingObject = (arrayOfObjects, objectToSearch) => {
   return arrayOfObjects.find((item) => {
     return Object.keys(objectToSearch).every((key) => {
@@ -14,25 +16,33 @@ const findMatchingObject = (arrayOfObjects, objectToSearch) => {
 const totalPaintableArea = (roomObj) => {
   let rawArea = roomObj.walls
     ? roomObj.walls.reduce((acc, wall) => {
-        let areaOfCurrentWall = Number(wall.length) * Number(wall.height);
+        let areaOfCurrentWall =
+          Number(wall.length) * Number(wall.height) - Number(wall?.nonPaintableArea ?? 0);
         return acc + Number.isNaN(areaOfCurrentWall) ? 0 : areaOfCurrentWall;
       }, 0)
     : 0;
+
   let totalNonPaintableAreaDueToOtherSections = 0;
   // Need to implement this in the future;
-  let totalCustomNonPaintableArea = roomObj.nonPaintableAreas
-    ? roomObj.nonPaintableAreas.reduce((acc, npArea) => {
-        let currentNpArea = Number(npArea.area);
-        return acc + Number.isNaN(currentNpArea) ? 0 : currentNpArea;
-      }, 0)
-    : 0;
-  return rawArea - totalNonPaintableAreaDueToOtherSections - totalCustomNonPaintableArea;
+
+  nonPaintableSectionsOfRoom.forEach((nonPaintableSection) => {
+    let nonPaintableAreasOfIndividualSection = roomObj?.[nonPaintableSection]
+      ? roomObj?.[nonPaintableSection]?.reduce((acc, trim) => {
+          let areaOfTrim = Number(trim?.length) * Number(trim?.height);
+          return acc + Number.isNaN(areaOfTrim) ? 0 : areaOfTrim;
+        }, 0)
+      : 0;
+    totalNonPaintableAreaDueToOtherSections += nonPaintableAreasOfIndividualSection;
+  });
+
+  return rawArea - totalNonPaintableAreaDueToOtherSections;
 };
 
 const totalPaintCost = (roomObj) => {
   return roomObj.walls
     ? roomObj.walls.reduce((acc, wall) => {
-        let areaOfCurrentWall = Number(wall.length) * Number(wall.height);
+        let areaOfCurrentWall =
+          Number(wall.length) * Number(wall.height) - Number(wall?.nonPaintableArea ?? 0);
         let paintsOnThisWall = wall.paints;
         let totalUnitsOfPaintRequired = 0;
         let wallCoats = wall.coats || 1;
@@ -57,7 +67,8 @@ const totalPaintCost = (roomObj) => {
 const totalLabourCost = (roomObj, productionRates, baseRates) => {
   return roomObj.walls
     ? roomObj.walls.reduce((acc, wall) => {
-        let areaOfCurrentWall = Number(wall.length) * Number(wall.height);
+        let areaOfCurrentWall =
+          Number(wall.length) * Number(wall.height) - Number(wall?.nonPaintableArea ?? 0);
         let laboursOnThisWall = roomObj.labours;
         if (!laboursOnThisWall) return acc;
         let hourlyRateOfThisLabor = laboursOnThisWall.hourlyRate;

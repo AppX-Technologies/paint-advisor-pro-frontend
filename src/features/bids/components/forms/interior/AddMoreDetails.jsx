@@ -69,6 +69,19 @@ const AddMoreDetails = ({
     }
 
     if (
+      titleField === 'walls' &&
+      Number(currentStats?.height) * Number(currentStats?.height) <
+        Number(currentStats?.nonPaintableArea)
+    ) {
+      return dispatch(
+        showMessage({
+          message: `Non Paintable Area Should Be Less Than or Equal To Total Wall Area`,
+          severity: 'error'
+        })
+      );
+    }
+
+    if (
       titleField === NONPAINTABLEAREAFIELD &&
       addIn
         ?.filter((item) =>
@@ -265,7 +278,7 @@ const AddMoreDetails = ({
                         <TextField
                           InputProps={{
                             style: { height: '30px' },
-                            inputProps: { min: 0, max: name === 'coats' ? 3 :Infinity}
+                            inputProps: { min: 0, max: name === 'coats' ? 3 : Infinity }
                           }}
                           name='name'
                           fullWidth

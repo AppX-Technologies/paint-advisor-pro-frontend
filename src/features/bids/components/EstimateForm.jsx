@@ -38,7 +38,7 @@ import { fetchBaseRate, fetchProductionRate } from '../../productionRate/product
 import { showMessage } from '../../snackbar/snackbarSlice';
 import { reset, updateABid, updateClient } from '../bidsSlice';
 import { estimationFormInitialInfo, initialRoomState } from '../common/roomsInitialStats';
-import { baseR, calculateEstimate, estimateO, pRate } from '../helpers/paintEngine';
+import { calculateEstimate } from '../helpers/paintEngine';
 import EstimationDetails from './EstimationDetails';
 import InteriorRoomByRoom from './forms/interior/InteriorRoomByRoom';
 
@@ -66,11 +66,8 @@ export default function EstimateForm({
   const [estimationDetailData, setEstimationDetailData] = React.useState(null);
 
   const dispatch = useDispatch();
-  const { productionRateList, baseRate, isLoading, isSuccess } = useSelector(
-    (state) => state.productionRate
-  );
+  const { productionRateList, baseRate } = useSelector((state) => state.productionRate);
 
-  console.log(productionRateList, baseRate, 'baseRate');
   const { org } = useSelector((state) => state.org);
   const { user } = useSelector(authSelector);
   const { bidsIsLoading, bidsIsSuccess, bidsIsError, bidInfo } = useSelector((state) => state.bids);
@@ -155,7 +152,7 @@ export default function EstimateForm({
     const currentClientInfoCopy = cloneDeep(currentClientInfo);
 
     currentClientInfoCopy?.bid?.rooms.forEach((room) => {
-      room[NONPAINTABLEAREAFIELD].forEach((item) => {
+      room[NONPAINTABLEAREAFIELD]?.forEach((item) => {
         delete item[0];
         item.area = Number(item.area);
       });

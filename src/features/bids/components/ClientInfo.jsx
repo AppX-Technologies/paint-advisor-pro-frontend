@@ -17,7 +17,6 @@ import { AddNewClientTextField } from '../../../common/FormTextField';
 import ScheduleTheJob from '../../../common/ScheduleTheJob';
 import {
   BIDS_STAGES,
-  NONPAINTABLEAREAFIELD,
   STATUS_CANCELLED,
   STATUS_CONTRACT_SENT,
   STATUS_ESTIMATE_IN_PROGRESS,
@@ -56,16 +55,9 @@ const ClientInfo = ({
   filteredClietsList
 }) => {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(null);
-  const {
-    clientList,
-    isSuccess,
-    isLoading,
+  const { clientList, isSuccess, isLoading, jobSuccessFullyCanceled, isJobCanceledLoading } =
+    useSelector((state) => state.bids);
 
-    jobSuccessFullyCanceled,
-    isJobCanceledLoading
-  } = useSelector((state) => state.bids);
-
-  console.log(isLoading, 'isLoadingisLoadingisLoading');
   const { user } = useSelector(authSelector);
 
   const dispatch = useDispatch();
@@ -90,13 +82,7 @@ const ClientInfo = ({
     if (
       currentClientInfo?.bid?.rooms?.some((room) =>
         Object.keys(room)
-          .filter(
-            (info) =>
-              info !== NONPAINTABLEAREAFIELD &&
-              info !== 'roomName' &&
-              info !== '_id' &&
-              info !== '__v'
-          )
+          .filter((info) => info !== 'roomName' && info !== '_id' && info !== '__v')
           .every((section) => !room[section].length)
       )
     ) {
@@ -116,10 +102,11 @@ const ClientInfo = ({
         Object.keys(room)
           .filter(
             (info) =>
-              info !== NONPAINTABLEAREAFIELD &&
               info !== 'roomName' &&
               info !== '_id' &&
-              info !== '__v'
+              info !== '__v' &&
+              info !== 'baseboardTrims' &&
+              info !== 'windowTrims'
           )
           .some((section) =>
             room[section].length
@@ -129,7 +116,7 @@ const ClientInfo = ({
                     !Object.keys(individualSection?.paints)?.length ||
                     (currentClientInfo?.bid?.isLabourDetailedMode &&
                       !Object.keys(individualSection).includes('labours')) ||
-                    !Object.keys(individualSection?.labours?.length || 0)
+                    !Object.keys(individualSection?.labours)?.length
                 )
               : false
           )
@@ -137,7 +124,7 @@ const ClientInfo = ({
     ) {
       return dispatch(
         showMessage({
-          message: `Paints and Labours Should Be Added To Each Section`,
+          message: `Paints and Painters Should Be Added To Each Section`,
           severity: 'info'
         })
       );
@@ -245,7 +232,7 @@ const ClientInfo = ({
       setSelectedListItem(
         filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[
           indexOfCurrentClient + 1
-        ]._id
+        ]?._id
       );
       dispatch(reset());
     }
