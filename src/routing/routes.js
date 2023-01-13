@@ -2,14 +2,15 @@ import { Dashboard, FormatListBulleted, Logout, People } from '@mui/icons-materi
 import BarChartIcon from '@mui/icons-material/BarChart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
+import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import UsersFromCompany from '../pages/CompanyDashboard/UsersFromCompany';
 import { Processes } from '../pages/Processes';
 import { Pipeline as Bids } from '../features/bids';
-import Materials from '../pages/Materials';
+import Materials from '../pages/Paint';
 import ProductionRate from '../pages/ProductionRate';
 import { Equipments } from '../pages/Equipments';
-import Profile from '../components/ProfileTab';
+import MaterialsPage from '../pages/MaterialPage';
 
 export const commonRoutes = [
   {
@@ -32,7 +33,8 @@ export const systemAdminRoutes = [
   },
 
   { relLink: 'paint', icon: FormatColorFillIcon, text: 'Paint' },
-  { relLink: 'equipments', icon: ConstructionIcon, text: 'Equipments' }
+  { relLink: 'equipments', icon: ConstructionIcon, text: 'Equipments' },
+  { relLink: 'materials', icon: HomeRepairServiceIcon, text: 'Materials' }
 ].map((l) => ({ ...l, link: `/${l.relLink}` }));
 
 // to-do materials
@@ -49,5 +51,6 @@ export const companyRoutes = (id) =>
       element: ProductionRate
     },
     { relLink: 'paint', icon: FormatColorFillIcon, text: 'Paint', element: Materials },
-    { relLink: 'equipments', icon: ConstructionIcon, text: 'Equipments', element: Equipments }
+    { relLink: 'equipments', icon: ConstructionIcon, text: 'Equipments', element: Equipments },
+    { relLink: 'materials', icon: HomeRepairServiceIcon, text: 'Materials', element: MaterialsPage }
   ].map((l) => ({ ...l, link: id ? `/${id}/${l.relLink}` : `/${l.relLink}` }));

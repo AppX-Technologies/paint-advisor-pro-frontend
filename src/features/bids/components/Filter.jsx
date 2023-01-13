@@ -1,3 +1,4 @@
+import CloseIcon from '@mui/icons-material/Close';
 import {
   AppBar,
   Backdrop,
@@ -15,9 +16,10 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
+import { useSelector } from 'react-redux';
 import { bidStageFilter } from '../../../common/bidStageFilters';
 import Button from '../../../components/Button';
+import { authSelector } from '../../auth/authSlice';
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction='left' ref={ref} {...props} />;

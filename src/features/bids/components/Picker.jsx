@@ -1,35 +1,31 @@
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { createFilterOptions } from '@mui/material/Autocomplete';
 import FormatPaintOutlinedIcon from '@mui/icons-material/FormatPaintOutlined';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Box, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { createFilterOptions } from '@mui/material/Autocomplete';
 import { cloneDeep, startCase } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import AutoComplete from '../../../common/AutoComplete';
 import MaterialsPickerCard from '../../../common/MaterialsPickerCard';
-import { NONPAINTABLEAREAFIELD, ROLE_PAINTER } from '../../../helpers/contants';
-import { authSelector } from '../../auth/authSlice';
-import { fetchMaterial } from '../../materials/materialSlice';
+import { NONPAINTABLEAREAFIELD } from '../../../helpers/contants';
 import { showMessage } from '../../snackbar/snackbarSlice';
 import {
+  checkWheatherEverySectionIsFilled,
+  checkWheatherIndividualSectionIsFilled,
   findSpecificMaterial,
-  findWheatherTheSectionIsCompletelyFilledOrNot,
   groupedPaintableMaterials,
   individualItem,
   roomInfo,
   sectionInfo
 } from '../helpers/generalHepers';
-import { isCompanyAdmin, isSystemUser } from '../../../helpers/roles';
-import { fetchUserMadeByCompany } from '../../usersFromCompany/usersFromCompanySlice';
-import AutoComplete from '../../../common/AutoComplete';
 
 const Picker = ({
   currentClientInfo,
   setCurrentClientInfo,
   pickerTitle,
-  pickerList,
+  secondaryTitle,
   informationToRender,
   filterOption,
   secondaryValuesToRender,
@@ -37,7 +33,6 @@ const Picker = ({
   filteredPickerList
 }) => {
   const [roomRelatedInfo, setRoomRelatedInfo] = useState(null);
-  const [currentlyActiveRoomInfo, setCurrentlyActiveRoomInfo] = useState({});
 
   const [expandArea, setExpandArea] = useState({
     walls: true,
@@ -58,6 +53,7 @@ const Picker = ({
     closets: '',
     doorJambs: ''
   });
+  console.log(currentlyChoosenMaterial, 'currentlyChoosenMaterial');
 
   const [currentlyChoosenMaterialDescription, setCurrentyChoosenMaterialDescription] = useState({
     walls: '',
@@ -69,27 +65,12 @@ const Picker = ({
     doorJambs: ''
   });
 
-  const [completelyFilledSection, setCompletelyFilledSection] = useState({
-    walls: false,
-    doors: false,
-    windows: false,
-    ceilings: false,
-    crownMoldings: false,
-    closets: false,
-    doorJambs: false
-  });
-
-  const [completelyFilledRooms, setCompletelyFilledRooms] = useState({});
   const [showTheSection, setShowTheSection] = useState(true);
   const [selectionToEveryComponent, setSelectionToEveryComponent] = useState('');
   const [selectionToEveryComponentDescription, setSelectionToEveryComponentDescription] =
     useState('');
 
   const dispatch = useDispatch();
-  const { user } = useSelector(authSelector);
-  const { companyId } = useParams();
-  const { org } = useSelector((state) => state.org);
-  const [orgId] = useState(isSystemUser(user) ? companyId : user.organization._id);
 
   const filterOptions = useMemo(() => {
     return createFilterOptions({
@@ -104,7 +85,10 @@ const Picker = ({
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
+          message: `Please Select A ${(secondaryTitle || pickerTitle).slice(
+            0,
+            (secondaryTitle || pickerTitle).length - 1
+          )}`,
           severity: 'info'
         })
       );
@@ -116,10 +100,12 @@ const Picker = ({
       section,
       title
     );
-    itemToWhichMaterialIsToBeAssigned[pickerTitle.toLowerCase()] = findSpecificMaterial(
-      filteredPickerList,
-      currentlyChoosenMaterial[section]
-    );
+
+    itemToWhichMaterialIsToBeAssigned[pickerTitle.toLowerCase()] = {
+      ...findSpecificMaterial(filteredPickerList, currentlyChoosenMaterial[section]),
+      [`${pickerTitle.toLowerCase().slice(0, pickerTitle.length - 1)}Id`]:
+        currentlyChoosenMaterial[section]
+    };
     setCurrentClientInfo({ ...currentClientInfoCopy });
   };
 
@@ -146,7 +132,10 @@ const Picker = ({
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
+          message: `Please Select A ${(secondaryTitle || pickerTitle).slice(
+            0,
+            (secondaryTitle || pickerTitle).length - 1
+          )}`,
           severity: 'info'
         })
       );
@@ -155,10 +144,11 @@ const Picker = ({
     const itemToWhichMaterialIsToBeAssigned = sectionInfo(currentClientInfoCopy, section);
     itemToWhichMaterialIsToBeAssigned.forEach((materialAssignment) => {
       materialAssignment.forEach((materialToBeAssigned) => {
-        materialToBeAssigned[pickerTitle.toLowerCase()] = findSpecificMaterial(
-          filteredPickerList,
-          currentlyChoosenMaterial[section]
-        );
+        materialToBeAssigned[pickerTitle.toLowerCase()] = {
+          ...findSpecificMaterial(filteredPickerList, currentlyChoosenMaterial[section]),
+          [`${pickerTitle.toLowerCase().slice(0, pickerTitle.length - 1)}Id`]:
+            currentlyChoosenMaterial[section]
+        };
       });
     });
 
@@ -188,7 +178,10 @@ const Picker = ({
     if (!currentlyChoosenMaterial[section]) {
       return dispatch(
         showMessage({
-          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
+          message: `Please Select A ${(secondaryTitle || pickerTitle).slice(
+            0,
+            (secondaryTitle || pickerTitle).length - 1
+          )}`,
           severity: 'info'
         })
       );
@@ -196,10 +189,11 @@ const Picker = ({
     const itemToWhichMaterialIsToBeAssigned = roomInfo(currentClientInfoCopy, room, section);
 
     itemToWhichMaterialIsToBeAssigned.forEach((individualValue) => {
-      individualValue[pickerTitle.toLowerCase()] = findSpecificMaterial(
-        filteredPickerList,
-        currentlyChoosenMaterial[section]
-      );
+      individualValue[pickerTitle.toLowerCase()] = {
+        ...findSpecificMaterial(filteredPickerList, currentlyChoosenMaterial[section]),
+        [`${pickerTitle.toLowerCase().slice(0, pickerTitle.length - 1)}Id`]:
+          currentlyChoosenMaterial[section]
+      };
     });
     // completelyFilledRooms[room] = !completelyFilledRooms[room];
     setCurrentClientInfo({ ...currentClientInfoCopy });
@@ -212,10 +206,16 @@ const Picker = ({
   const handlePickerAssignmentToAllSections = () => {
     const currentClientInfoCopy = cloneDeep(currentClientInfo);
 
-    if (!selectionToEveryComponent) {
+    if (
+      !selectionToEveryComponent &&
+      !checkWheatherEverySectionIsFilled(currentClientInfo?.bid?.rooms, pickerTitle.toLowerCase())
+    ) {
       return dispatch(
         showMessage({
-          message: `Please Select A ${pickerTitle.slice(0, pickerTitle.length - 1)}`,
+          message: `Please Select A ${(secondaryTitle || pickerTitle).slice(
+            0,
+            (secondaryTitle || pickerTitle).length - 1
+          )}`,
           severity: 'info'
         })
       );
@@ -225,10 +225,20 @@ const Picker = ({
         .filter((sections) => sections !== '__v' && sections !== 'roomName' && sections !== '_id')
         .forEach((sections) => {
           room[sections].forEach((section) => {
-            section[pickerTitle.toLowerCase()] = findSpecificMaterial(
-              filteredPickerList,
-              selectionToEveryComponent
-            );
+            if (
+              checkWheatherEverySectionIsFilled(
+                currentClientInfo?.bid?.rooms,
+                pickerTitle.toLowerCase()
+              )
+            ) {
+              section[pickerTitle.toLowerCase()] = {};
+            } else {
+              section[pickerTitle.toLowerCase()] = {
+                ...findSpecificMaterial(filteredPickerList, selectionToEveryComponent),
+                [`${pickerTitle.toLowerCase().slice(0, pickerTitle.length - 1)}Id`]:
+                  selectionToEveryComponent
+              };
+            }
           });
         });
     });
@@ -239,66 +249,24 @@ const Picker = ({
     setRoomRelatedInfo(cloneDeep([...groupedPaintableMaterials(currentClientInfo?.bid?.rooms)]));
   }, [currentClientInfo?.bid?.rooms]);
 
-  useEffect(() => {
-    currentClientInfo?.bid?.rooms.forEach((room) => {
-      completelyFilledRooms[room.roomName] = false;
-    });
-    setCompletelyFilledRooms({ ...completelyFilledRooms });
-  }, [currentClientInfo?.bid?.rooms]);
-  // Fetch Material According To Organization
-
-  useEffect(() => {
-    dispatch(
-      fetchMaterial({
-        token: user.token,
-        id: companyId ? org.materials : undefined
-      })
-    );
-  }, []);
-  useEffect(() => {
-    if (isSystemUser(user) || isCompanyAdmin(user)) {
-      dispatch(
-        fetchUserMadeByCompany({
-          token: user.token,
-          orgId,
-          filterValue: { role: ROLE_PAINTER }
-        })
-      );
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!currentlyActiveRoomInfo.roomName) {
-      const itemToWhichMaterialIsToBeAssigned = sectionInfo(
-        currentClientInfo,
-        currentlyActiveRoomInfo.section
-      );
-
-      if (
-        itemToWhichMaterialIsToBeAssigned?.every((roomDetails) =>
-          roomDetails?.every((room) => room.materials !== '')
-        )
-      ) {
-        completelyFilledSection[currentlyActiveRoomInfo.section] = true;
-      } else {
-        completelyFilledSection[currentlyActiveRoomInfo.section] = false;
-      }
-
-      setCompletelyFilledSection({ ...completelyFilledSection });
-    }
-  }, [currentClientInfo?.bids?.rooms]);
+  console.log(currentClientInfo?.bid, 'currentClientInfo?.bid');
 
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', mt: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography sx={{ my: 2, fontSize: '17px', mr: 2 }}>{pickerTitle}</Typography>
+          <Typography sx={{ my: 2, fontSize: '17px', mr: 2 }}>
+            {secondaryTitle ?? pickerTitle}
+          </Typography>
           {showPrimaryAutocomplete && (
             <AutoComplete
               filterOptions={filterOptions}
               value={selectionToEveryComponentDescription}
               onChange={(event, newInput) => {
-                setSelectionToEveryComponent(() => newInput?._id);
+                setSelectionToEveryComponent(
+                  () =>
+                    newInput?.[`${pickerTitle.toLowerCase().slice(0, pickerTitle.length - 1)}Id`]
+                );
                 setSelectionToEveryComponentDescription(() => newInput?.[filterOption]);
               }}
               options={
@@ -311,28 +279,38 @@ const Picker = ({
               filterOption={filterOption}
               secondaryValuesToRender={secondaryValuesToRender}
               pickerTitle={pickerTitle}
+              secondaryTitle={secondaryTitle}
             />
           )}
           {showPrimaryAutocomplete && (
-            <Tooltip title='Apply To All Sections' placement='top'>
-              <FormatPaintOutlinedIcon
-                sx={{
-                  ml: 1,
-                  cursor: 'pointer',
-                  color: currentClientInfo?.bid?.rooms.every((room) =>
-                    Object.keys(room)
-                      .filter(
-                        (section) =>
-                          section !== 'roomName' && section !== '_id' && section !== '__v'
-                      )
-                      .every((section) => room[section].includes('labour'))
-                  )
-                    ? 'green'
-                    : 'gray'
-                }}
-                onClick={handlePickerAssignmentToAllSections}
-              />
-            </Tooltip>
+            <>
+              {checkWheatherEverySectionIsFilled(
+                currentClientInfo?.bid?.rooms,
+                pickerTitle.toLowerCase()
+              ) ? (
+                <Tooltip title='Remove From Every Section' placement='top'>
+                  <HighlightOffIcon
+                    sx={{
+                      ml: 1,
+                      cursor: 'pointer',
+                      color: (theme) => theme.deleteicon.color.main
+                    }}
+                    onClick={handlePickerAssignmentToAllSections}
+                  />
+                </Tooltip>
+              ) : (
+                <Tooltip title='Apply To Every Sections' placement='top'>
+                  <FormatPaintOutlinedIcon
+                    sx={{
+                      ml: 1,
+                      cursor: 'pointer',
+                      color: 'gray'
+                    }}
+                    onClick={handlePickerAssignmentToAllSections}
+                  />
+                </Tooltip>
+              )}
+            </>
           )}
         </Box>
         {showTheSection ? (
@@ -434,7 +412,14 @@ const Picker = ({
                                   filterOptions={filterOptions}
                                   value={currentlyChoosenMaterialDescription[dropdownValue?.name]}
                                   onChange={(event, newInput) => {
-                                    currentlyChoosenMaterial[dropdownValue?.name] = newInput?._id;
+                                    console.log(newInput, 'newInput');
+                                    currentlyChoosenMaterial[dropdownValue?.name] =
+                                      newInput?.[
+                                        `${
+                                          pickerTitle &&
+                                          pickerTitle.slice(0, pickerTitle.length - 1).toLowerCase()
+                                        }Id`
+                                      ];
                                     setCurrentyChoosenMaterial({ ...currentlyChoosenMaterial });
                                     currentlyChoosenMaterialDescription[dropdownValue?.name] =
                                       newInput?.[filterOption];
@@ -455,15 +440,16 @@ const Picker = ({
                                   filterOption={filterOption}
                                   secondaryValuesToRender={secondaryValuesToRender}
                                   pickerTitle={pickerTitle}
+                                  secondaryTitle={secondaryTitle}
                                 />
 
                                 {/* Select For All */}
                                 <Box>
                                   {/* Section Completely Filled */}
-                                  {!completelyFilledSection[dropdownValue.name] ||
-                                  !findWheatherTheSectionIsCompletelyFilledOrNot(
-                                    currentClientInfo?.bid?.rooms,
-                                    dropdownValue.name
+                                  {!checkWheatherIndividualSectionIsFilled(
+                                    currentClientInfo,
+                                    dropdownValue.name,
+                                    pickerTitle.toLowerCase()
                                   ) ? (
                                     <>
                                       <Tooltip title={`Apply To All ${dropdownValue.name}`}>
@@ -472,18 +458,12 @@ const Picker = ({
                                             handleMaterialAssignmentForWholeSection(
                                               dropdownValue.name
                                             );
-                                            setCurrentlyActiveRoomInfo({
-                                              roomName: '',
-                                              section: dropdownValue.name
-                                            });
                                           }}
                                           sx={{
                                             mt: 1,
                                             ml: 1,
                                             cursor: 'pointer',
-                                            color: completelyFilledSection[dropdownValue.name]
-                                              ? 'green'
-                                              : 'gray'
+                                            color: 'gray'
                                           }}
                                         />
                                       </Tooltip>
@@ -526,57 +506,24 @@ const Picker = ({
                                           {mainItem.name}
                                         </Typography>
 
-                                        {!completelyFilledRooms[mainItem.name] ? (
-                                          <>
-                                            <Tooltip
-                                              placement='top'
-                                              title={`Apply ${pickerTitle} To All ${dropdownValue.name} Of ${mainItem.name} Room`}>
-                                              <FormatPaintOutlinedIcon
-                                                onClick={() => {
-                                                  handleMaterialAssignmentForWholeRoom(
-                                                    mainItem.name,
-                                                    dropdownValue.name
-                                                  );
-                                                  setCurrentlyActiveRoomInfo({
-                                                    roomName: mainItem.name,
-                                                    section: dropdownValue.name
-                                                  });
-                                                }}
-                                                sx={{
-                                                  fontSize: '14px',
-                                                  ml: 1,
-                                                  cursor: 'pointer',
-                                                  color: 'gray'
-                                                }}
-                                              />
-                                            </Tooltip>
-                                          </>
-                                        ) : (
-                                          <>
-                                            <Tooltip
-                                              title={`Remove From All ${mainItem.name} Room`}
-                                              placement='top'>
-                                              <HighlightOffIcon
-                                                sx={{
-                                                  fontSize: '14px',
-                                                  cursor: 'pointer',
-                                                  ml: 1,
-                                                  color: (theme) => theme.deleteicon.color.main
-                                                }}
-                                                onClick={() => {
-                                                  handleMaterialAssignmentForWholeRoom(
-                                                    mainItem.name,
-                                                    dropdownValue.name
-                                                  );
-                                                  setCurrentlyActiveRoomInfo({
-                                                    roomName: mainItem.name,
-                                                    section: dropdownValue.name
-                                                  });
-                                                }}
-                                              />
-                                            </Tooltip>
-                                          </>
-                                        )}
+                                        <Tooltip
+                                          placement='top'
+                                          title={`Apply ${pickerTitle} To All ${dropdownValue.name} Of ${mainItem.name} Room`}>
+                                          <FormatPaintOutlinedIcon
+                                            onClick={() => {
+                                              handleMaterialAssignmentForWholeRoom(
+                                                mainItem.name,
+                                                dropdownValue.name
+                                              );
+                                            }}
+                                            sx={{
+                                              fontSize: '14px',
+                                              ml: 1,
+                                              cursor: 'pointer',
+                                              color: 'gray'
+                                            }}
+                                          />
+                                        </Tooltip>
                                       </Box>
                                       <Grid container sx={{ mb: 1 }}>
                                         {mainItem?.values?.length !== 0 &&
@@ -587,17 +534,14 @@ const Picker = ({
                                                   title={value.name}
                                                   index={idx}
                                                   materials={
-                                                    pickerTitle === 'Materials'
-                                                      ? value?.materials?.description
+                                                    pickerTitle === 'Paints'
+                                                      ? value?.paints?.description
                                                       : value?.labours?.name
                                                   }
                                                   handleMaterialAssignment={
                                                     handleMaterialAssignmentForIndividualItem
                                                   }
                                                   roomName={mainItem.name}
-                                                  setCurrentlyActiveRoomInfo={
-                                                    setCurrentlyActiveRoomInfo
-                                                  }
                                                   section={dropdownValue.name}
                                                   handleMaterialDeletion={
                                                     handleMaterialDeletionForIndividualItem

@@ -48,8 +48,8 @@ export default function FormDialog(props) {
       ...equipmentRegistrationAndEditStats,
       ID: equipmentList[0]?._id,
       previousEquipments: equipmentList[0]?.equipments,
-      isRentable: true,
       add: true,
+      isRentable: false,
       token: userDetail.token
     };
 
@@ -69,8 +69,6 @@ export default function FormDialog(props) {
       dispatch(reset());
     }
   }, [isSuccess]);
-
-  console.log(equipmentRegistrationAndEditStats, 'equipmentRegistrationAndEditStats');
 
   return (
     <div>
@@ -96,7 +94,7 @@ export default function FormDialog(props) {
               minRows={3}
               variant='standard'
               id='equipment'
-              label='Equipment Description'
+              label='Material Description'
               autoFocus
               value={equipmentRegistrationAndEditStats?.description}
               onChange={(e) => {
@@ -135,13 +133,13 @@ export default function FormDialog(props) {
                 variant='standard'
                 id='unit'
                 label='Unit Price'
+                autoFocus
                 type='number'
                 InputProps={{
                   inputProps: {
                     min: 1
                   }
                 }}
-                autoFocus
                 value={equipmentRegistrationAndEditStats?.unitPrice}
                 onChange={(e) => {
                   equipmentRegistrationAndEditStats.unitPrice = e.target.value;

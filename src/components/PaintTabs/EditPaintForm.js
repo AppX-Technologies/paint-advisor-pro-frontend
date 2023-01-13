@@ -170,6 +170,12 @@ export default function Edit({
                 id='pricePerUnit'
                 label='Price per Unit'
                 autoFocus
+                type='number'
+                InputProps={{
+                  inputProps: {
+                    min: 1
+                  }
+                }}
                 value={
                   materialRegistrationAndEditStats?.unitPrice
                     ? materialRegistrationAndEditStats?.unitPrice
@@ -182,6 +188,7 @@ export default function Edit({
                 style={{ width: '100%', marginTop: '13px' }}
               />
             </Grid>
+
             <Grid item xs={6} md={6}>
               <FormControl sx={{ m: 0, minWidth: 235, maxHeight: 30, marginTop: 3 }} size='small'>
                 <InputLabel id='demo-select-small'>Bid Type</InputLabel>
@@ -204,6 +211,63 @@ export default function Edit({
                 </Select>
               </FormControl>
             </Grid>
+            {/* Area Covered Per Coats */}
+
+            <Grid container spacing={2} ml={2} mt={1} mb={1}>
+              <Grid xs={6}>
+                <TextField
+                  name='unitPrice'
+                  required
+                  fullWidth
+                  aria-label='minimum height'
+                  minRows={3}
+                  variant='standard'
+                  id='unit'
+                  label='Area Covered For FIrst Coat'
+                  autoFocus
+                  type='text'
+                  InputProps={{
+                    inputProps: {
+                      min: 1
+                    }
+                  }}
+                  value={materialRegistrationAndEditStats?.areaCoveredPerUnitForFirstCoat}
+                  onChange={(e) => {
+                    materialRegistrationAndEditStats.areaCoveredPerUnitForFirstCoat =
+                      e.target.value;
+                    setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
+                  }}
+                  style={{ width: '95%', marginTop: '13px' }}
+                />
+              </Grid>
+              <Grid xs={6}>
+                <TextField
+                  name='unitPrice'
+                  required
+                  fullWidth
+                  aria-label='minimum height'
+                  minRows={3}
+                  variant='standard'
+                  id='unit'
+                  label='Area Covered For Remaining Coats'
+                  autoFocus
+                  type='text'
+                  InputProps={{
+                    inputProps: {
+                      min: 1
+                    }
+                  }}
+                  value={materialRegistrationAndEditStats?.arearCoveredPerUnitForRemainingCoats}
+                  onChange={(e) => {
+                    materialRegistrationAndEditStats.arearCoveredPerUnitForRemainingCoats =
+                      e.target.value;
+                    setMaterialRegistrationAndEditStats({ ...materialRegistrationAndEditStats });
+                  }}
+                  style={{ width: '95%', marginTop: '13px' }}
+                />
+              </Grid>
+            </Grid>
+
             <Grid item xs={12} md={12}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography sx={{ color: 'gray', fontWeight: 390, mb: 1 }}>

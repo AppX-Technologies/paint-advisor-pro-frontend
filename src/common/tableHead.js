@@ -100,7 +100,7 @@ export const processColumn = () => {
     }
   ];
 };
-export const materialColumn = () => {
+export const paintColumn = () => {
   return [
     {
       name: 'description',
@@ -110,17 +110,43 @@ export const materialColumn = () => {
     {
       name: 'unit',
       label: 'Unit',
-      width: '20%'
+      width: '10%'
     },
     {
       name: 'unitPrice',
       label: 'Price Per Unit',
-      width: '20%'
+      width: '10%'
     },
     {
       name: 'appliesTo',
       label: 'Applies To',
-      width: '50%'
+      width: '30%'
+    },
+    {
+      name: 'areaCoveredPerUnitForFirstCoat',
+      label: 'First Coat (Area)',
+      width: '15%'
+    },
+    {
+      name: 'arearCoveredPerUnitForRemainingCoats',
+      label: 'Remaining Coats (Area)',
+      width: '15%'
+    }
+  ];
+};
+
+export const materialColumn = () => {
+  return [
+    {
+      name: 'description',
+      label: 'Material Description',
+      width: '40%'
+    },
+
+    {
+      name: 'unitPrice',
+      label: 'Price Per Unit',
+      width: '40%'
     }
   ];
 };
@@ -130,6 +156,11 @@ export const equipmentColumn = () => {
     {
       name: 'description',
       label: 'Equipment Description',
+      width: '40%'
+    },
+    {
+      name: 'unitPrice',
+      label: 'Unit Price',
       width: '40%'
     }
   ];

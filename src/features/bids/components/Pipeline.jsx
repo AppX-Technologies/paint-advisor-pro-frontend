@@ -1,13 +1,15 @@
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { Box, Button, Card, Divider, Grid } from '@mui/material';
 import { cloneDeep } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { bidStageFilter } from '../../../common/bidStageFilters';
 import { booleanOption } from '../../../common/FormTextField';
 import { STATUS_NEW_CLIENT } from '../../../helpers/contants';
 import { convertStringCase } from '../../../helpers/stringCaseConverter';
 import { authSelector } from '../../auth/authSlice';
+import { fetchEquipment } from '../../equipments/equipmentSlice';
 import { fetchAllClients } from '../bidsSlice';
 import {
   estimationFormInitialInfo,
@@ -78,164 +80,178 @@ const Pipeline = () => {
   const [selectOption, setSelectOption] = useState('All');
   const [sortOption, setSortOption] = useState('createdAt');
   const [comment, setComment] = useState('');
+  const { companyId } = useParams();
 
   const { org } = useSelector((state) => state.org);
 
-  const allSectionsInfoOfARoom = [
-    {
-      label: 'Room Name',
-      name: 'roomName',
-      dataType: 'text'
-    },
-    {
-      label: 'Walls',
-      name: 'walls',
-      option: booleanOption,
-      currentStats: wallStats,
-      onCurrentStatsChange: setWallStats,
-      initialStats: initilWallInfo,
-      fields: [
-        { name: 'prepHour', label: 'Prep Hour' },
-        { name: 'height', label: 'Height' },
-        { name: 'length', label: 'Length' },
-        { name: 'wallType', label: 'Wall Type' },
-        { name: 'coats', label: 'Coats' }
-      ]
-    },
-    {
-      label: 'Windows ',
-      name: 'windows',
-      option: booleanOption,
-      currentStats: windowStats,
-      onCurrentStatsChange: setWindowStats,
-      initialStats: initialWindowInfo,
-      fields: [
-        { name: 'prepHour', label: 'Prep Hour' },
-        { name: 'style', label: 'Style' },
-        { name: 'height', label: 'Height' },
-        { name: 'length', label: 'Length' },
-        { name: 'coats', label: 'Coats' },
-        { name: 'wallInfo', label: 'Wall Info' }
-      ]
-    },
-    {
-      label: 'Doors',
-      name: 'doors',
-      option: booleanOption,
-      currentStats: doorsStats,
-      onCurrentStatsChange: setDoorStats,
-      initialStats: initialDoorInfo,
-      fields: [
-        { name: 'prepHour', label: 'Prep Hour' },
-        { name: 'style', label: 'Style' },
-        { name: 'height', label: 'Height' },
-        { name: 'length', label: 'Length' },
-        { name: 'coats', label: 'Coats' },
-        { name: 'quantity', label: 'Quantity' },
-        { name: 'wallInfo', label: 'Wall Info' }
-      ]
-    },
-    {
-      label: 'Ceilings',
-      name: 'ceilings',
-      option: booleanOption,
-      currentStats: ceilingStats,
-      onCurrentStatsChange: setCeilingStats,
-      initialStats: initialCeilingInfo,
-      fields: [
-        { name: 'type', label: 'Type' },
-        { name: 'width', label: 'Width' },
-        { name: 'length', label: 'Length' },
-        { name: 'coats', label: 'Coats' }
-      ]
-    },
-    {
-      label: 'Baseboard Trim',
-      name: 'baseboardTrims',
-      option: booleanOption,
-      currentStats: baseboardTrimStats,
-      onCurrentStatsChange: setBaseboardTrimStats,
-      initialStats: initialBaseBoardTrimInfo,
-      fields: [
-        { name: 'prepHour', label: 'Prep Hour' },
-        { name: 'linearFeet', label: 'Linear Feet' },
-        { name: 'length', label: 'Length' },
-        { name: 'height', label: 'Height' },
-        { name: 'coats', label: 'Coats' }
-      ]
-    },
-    {
-      label: 'Window Trim',
-      name: 'windowTrims',
-      option: booleanOption,
-      currentStats: windowTrimStats,
-      onCurrentStatsChange: setWindowTrimStats,
-      initialStats: initialWindowTrimInfo,
-      fields: [
-        { name: 'prepHour', label: 'Prep Hour' },
-        { name: 'quantity', label: 'Quantity' },
-        { name: 'length', label: 'Length' },
-        { name: 'height', label: 'Height' },
-        { name: 'coats', label: 'Coats' },
-        { name: 'style', label: 'Style' }
-      ]
-    },
-    {
-      label: 'Door Jambs',
-      name: 'doorJambs',
-      option: booleanOption,
-      currentStats: doorJambsStats,
-      onCurrentStatsChange: setDoorJambsStats,
-      initialStats: initialDoorjambsInfo,
-      fields: [
-        { name: 'prepHour', label: 'Prep Hour' },
-        { name: 'linearFeet', label: 'Linear Feet' },
-        { name: 'width', label: 'Width' },
-        { name: 'coats', label: 'Coats' }
-      ]
-    },
-    {
-      label: 'Crown Molding',
-      name: 'crownMoldings',
-      option: booleanOption,
-      currentStats: crownMoldingStats,
-      onCurrentStatsChange: setCrownMoldingStats,
-      initialStats: initialCrownMoldingInfo,
-      fields: [
-        { name: 'prepHour', label: 'Prep Hour' },
-        { name: 'linearFeet', label: 'Linear Feet' },
-        { name: 'width', label: 'Width' },
-        { name: 'coats', label: 'Coats' }
-      ]
-    },
-    {
-      label: 'Closet',
-      name: 'closets',
-      option: booleanOption,
-      currentStats: closetStats,
-      onCurrentStatsChange: setClosetStats,
-      initialStats: initialClosetInfo,
-      fields: [
-        { name: 'prepHour', label: 'Prep Hour' },
-        { name: 'length', label: 'Length' },
-        { name: 'width', label: 'Width' },
-        { name: 'avgerageHeight', label: 'AverageHeight' },
-        { name: 'coats', label: 'Coats' }
-      ]
-    },
-    {
-      label: 'Non-Paintable Area',
-      name: 'nonPaintableAreas',
-      option: booleanOption,
-      currentStats: nonPaintableAreaStats,
-      onCurrentStatsChange: setNonPaintableAreaStats,
-      initialStats: initialNonPaintableStats,
-      fields: [
-        { name: 'description', label: 'Description' },
-        { name: 'area', label: 'Area' }
-      ]
-    }
-  ];
+  const allSectionsInfoOfARoom = useMemo(() => {
+    return [
+      {
+        label: 'Room Name',
+        name: 'roomName',
+        dataType: 'text'
+      },
+      {
+        label: 'Walls',
+        name: 'walls',
+        option: booleanOption,
+        currentStats: wallStats,
+        onCurrentStatsChange: setWallStats,
+        initialStats: initilWallInfo,
+        fields: [
+          { name: 'prepHour', label: 'Prep Hour' },
+          { name: 'height', label: 'Height' },
+          { name: 'length', label: 'Length' },
+          { name: 'wallType', label: 'Wall Type' },
+          { name: 'coats', label: 'Coats' }
+        ]
+      },
+      {
+        label: 'Windows ',
+        name: 'windows',
+        option: booleanOption,
+        currentStats: windowStats,
+        onCurrentStatsChange: setWindowStats,
+        initialStats: initialWindowInfo,
+        fields: [
+          { name: 'prepHour', label: 'Prep Hour' },
+          { name: 'style', label: 'Style' },
+          { name: 'height', label: 'Height' },
+          { name: 'length', label: 'Length' },
+          { name: 'coats', label: 'Coats' },
+          { name: 'wallInfo', label: 'Wall Info' }
+        ]
+      },
+      {
+        label: 'Doors',
+        name: 'doors',
+        option: booleanOption,
+        currentStats: doorsStats,
+        onCurrentStatsChange: setDoorStats,
+        initialStats: initialDoorInfo,
+        fields: [
+          { name: 'prepHour', label: 'Prep Hour' },
+          { name: 'style', label: 'Style' },
+          { name: 'height', label: 'Height' },
+          { name: 'length', label: 'Length' },
+          { name: 'coats', label: 'Coats' },
+          { name: 'quantity', label: 'Quantity' },
+          { name: 'wallInfo', label: 'Wall Info' }
+        ]
+      },
+      {
+        label: 'Ceilings',
+        name: 'ceilings',
+        option: booleanOption,
+        currentStats: ceilingStats,
+        onCurrentStatsChange: setCeilingStats,
+        initialStats: initialCeilingInfo,
+        fields: [
+          { name: 'type', label: 'Type' },
+          { name: 'width', label: 'Width' },
+          { name: 'length', label: 'Length' },
+          { name: 'coats', label: 'Coats' }
+        ]
+      },
+      {
+        label: 'Baseboard Trim',
+        name: 'baseboardTrims',
+        option: booleanOption,
+        currentStats: baseboardTrimStats,
+        onCurrentStatsChange: setBaseboardTrimStats,
+        initialStats: initialBaseBoardTrimInfo,
+        fields: [
+          { name: 'prepHour', label: 'Prep Hour' },
+          { name: 'linearFeet', label: 'Linear Feet' },
+          { name: 'length', label: 'Length' },
+          { name: 'height', label: 'Height' },
+          { name: 'coats', label: 'Coats' }
+        ]
+      },
+      {
+        label: 'Window Trim',
+        name: 'windowTrims',
+        option: booleanOption,
+        currentStats: windowTrimStats,
+        onCurrentStatsChange: setWindowTrimStats,
+        initialStats: initialWindowTrimInfo,
+        fields: [
+          { name: 'prepHour', label: 'Prep Hour' },
+          { name: 'quantity', label: 'Quantity' },
+          { name: 'length', label: 'Length' },
+          { name: 'height', label: 'Height' },
+          { name: 'coats', label: 'Coats' },
+          { name: 'style', label: 'Style' }
+        ]
+      },
+      {
+        label: 'Door Jambs',
+        name: 'doorJambs',
+        option: booleanOption,
+        currentStats: doorJambsStats,
+        onCurrentStatsChange: setDoorJambsStats,
+        initialStats: initialDoorjambsInfo,
+        fields: [
+          { name: 'prepHour', label: 'Prep Hour' },
+          { name: 'linearFeet', label: 'Linear Feet' },
+          { name: 'width', label: 'Width' },
+          { name: 'coats', label: 'Coats' }
+        ]
+      },
+      {
+        label: 'Crown Molding',
+        name: 'crownMoldings',
+        option: booleanOption,
+        currentStats: crownMoldingStats,
+        onCurrentStatsChange: setCrownMoldingStats,
+        initialStats: initialCrownMoldingInfo,
+        fields: [
+          { name: 'prepHour', label: 'Prep Hour' },
+          { name: 'linearFeet', label: 'Linear Feet' },
+          { name: 'width', label: 'Width' },
+          { name: 'coats', label: 'Coats' }
+        ]
+      },
+      {
+        label: 'Closet',
+        name: 'closets',
+        option: booleanOption,
+        currentStats: closetStats,
+        onCurrentStatsChange: setClosetStats,
+        initialStats: initialClosetInfo,
+        fields: [
+          { name: 'prepHour', label: 'Prep Hour' },
+          { name: 'length', label: 'Length' },
+          { name: 'width', label: 'Width' },
+          { name: 'avgerageHeight', label: 'AverageHeight' },
+          { name: 'coats', label: 'Coats' }
+        ]
+      },
+      {
+        label: 'Non-Paintable Area',
+        name: 'nonPaintableAreas',
+        option: booleanOption,
+        currentStats: nonPaintableAreaStats,
+        onCurrentStatsChange: setNonPaintableAreaStats,
+        initialStats: initialNonPaintableStats,
+        fields: [
+          { name: 'description', label: 'Description' },
+          { name: 'area', label: 'Area' }
+        ]
+      }
+    ];
+  }, [
+    nonPaintableAreaStats,
+    closetStats,
+    crownMoldingStats,
+    doorJambsStats,
+    windowTrimStats,
+    baseboardTrimStats,
+    ceilingStats,
+    doorsStats,
+    windowStats,
+    wallStats
+  ]);
 
   const handleSearch = (keyword) => {
     setFilteredClietsList(searchedResult(clientList, keyword));
@@ -252,6 +268,7 @@ const Pipeline = () => {
   const handleEditClientFormOpen = (currectClientInfo) => {
     setClientAdditionStats(cloneDeep(currectClientInfo));
   };
+
   const onFilterOptionsClose = () => {
     setShowFilter(false);
   };
@@ -290,6 +307,16 @@ const Pipeline = () => {
       filterClientsBySelectedStep(filteredClietsList, convertStringCase(selectedStep))[0]?._id
     );
   }, [selectedStep, filteredClietsList]);
+  // todo
+
+  useEffect(() => {
+    dispatch(
+      fetchEquipment({
+        token: user.token,
+        id: companyId ? org.equipments : undefined
+      })
+    );
+  }, []);
 
   return (
     <>
@@ -307,6 +334,7 @@ const Pipeline = () => {
           <GroupAddIcon sx={{ mr: 1 }} /> Add new client
         </Button>
       )}
+
       <AddNewClientForm
         openNewClientForm={openNewClientForm}
         setOpenNewClientForm={setOpenNewClientForm}
@@ -339,6 +367,7 @@ const Pipeline = () => {
         onBidFilterValueChange={setBidFilterValues}
         handlePrimaryFilter={handlePrimaryFilter}
       />
+
       <ViewFiles
         showFilesToView={showFilesToView}
         setShowFilesToView={setShowFilesToView}

@@ -1,3 +1,4 @@
+import { Numbers } from '@mui/icons-material';
 import axios from 'axios';
 
 const endpoint = process.env.REACT_APP_API_BASE_URL;
@@ -8,7 +9,6 @@ const UPDATE_EQUIPMENT = `${endpoint}/equipments`;
 const DELETE_EQUIPMENT = `${endpoint}/equipments`;
 
 const fetchEquipment = async (userData) => {
-  console.log(userData, 'userData');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -38,12 +38,11 @@ const fetchSingleEquipment = async (userData) => {
     }
   };
   delete userData.token;
-  const response = await axios.post(FETCH_EQUIPMENT, userData, config);
+  const response = await axios.post(FETCH_EQUIPMENT, { ...userData, isRentable: false }, config);
   return response.data[0];
 };
 
 const createEquipment = async (userData) => {
-  console.log(userData, 'userData');
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -59,7 +58,9 @@ const createEquipment = async (userData) => {
             ...(userData.previousEquipments ? userData.previousEquipments : []),
             {
               description: userData.description,
-              bidType: userData.bidType
+              bidType: userData.bidType,
+              unitPrice: Number(userData.unitPrice),
+              isRentable: userData.isRentable
             }
           ]
         : userData.previousEquipments.filter(

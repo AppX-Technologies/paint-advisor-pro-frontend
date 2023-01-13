@@ -32,7 +32,7 @@ export const STATUS_ESTIMATE_IN_PROGRESS = 'Estimate In Progress';
 export const STATUS_IN_REVIEW = 'In Review';
 export const STATUS_CONTRACT_PENDING = 'Contract Pending';
 export const STATUS_CONTRACT_SENT = 'Contract Sent';
-export const STATUS_CONTRACT_REJECTED = 'Contract rejected';
+export const STATUS_CONTRACT_REJECTED = 'Contract Rejected';
 export const STATUS_JOB_SCHEDULED = 'Job Scheduled';
 export const STATUS_JOB_IN_PROGRESS = 'Job In Progress';
 export const STATUS_INVOICING = 'Invoicing';
@@ -60,6 +60,35 @@ export const WALL_OPTIONS = ['North', 'South', 'East', 'West'];
 export const WALL_TYPES = ['Smooth', 'Orange Peel', 'Knockdown'];
 
 export const CEILING_TYPES = [...WALL_TYPES, 'Popcorn'];
+
+export const GLOBAL_PICKERLIST = [
+  {
+    title: 'Materials',
+    filterOption: 'description',
+    secondaryValuesToRender: ['unitPrice']
+  },
+  {
+    title: 'Equipments',
+    filterOption: 'description',
+    secondaryValuesToRender: ['unitPrice']
+  }
+];
+
+export const GLOBAL_PICKER_FIELDS = [
+  {
+    label: 'materials',
+    fields: ['material', 'quantity', 'unitPrice']
+  },
+  {
+    label: 'equipments',
+    fields: ['equipment', 'quantity', 'unitPrice']
+  }
+];
+
+export const EXTRA_INFO_WHILE_CLONING = [
+  { text: 'Clone Paint', field: 'paints' },
+  { text: 'Clone Labours', field: 'labours' }
+];
 
 export const productionTableHeaderFields = [
   {
@@ -124,4 +153,3 @@ export const FIELDS_WHERE_MATERIALS_ARE_APPLIES = [
   { label: 'crownMoldings' },
   { label: 'closets' }
 ];
-

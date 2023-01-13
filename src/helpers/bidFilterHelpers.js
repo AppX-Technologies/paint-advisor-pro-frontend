@@ -25,11 +25,17 @@ export const filterProductionRateByBid = (bidType, list = []) => {
   return filteredList;
 };
 
-export const filterEquipmentByBid = (equipmentlList, bidType) => {
+export const filterEquipmentByBid = (equipmentlList, bidType, rentableValue) => {
   const filteredEquipmentList =
     equipmentlList[0] &&
     equipmentlList[0]?.equipments.filter((equipment) => {
-      return equipment.bidType === bidType;
+      return equipment.bidType === bidType && equipment.isRentable === rentableValue;
     });
   return filteredEquipmentList;
+};
+
+export const filterEquipmentByRentableProperty = (equipmentlList, rentableValue) => {
+  if (equipmentlList) {
+    return equipmentlList.filter((equipment) => equipment.isRentable === rentableValue);
+  }
 };

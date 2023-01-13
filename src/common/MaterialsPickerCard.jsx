@@ -9,7 +9,6 @@ const MaterialsPickerCard = ({
   handleMaterialDeletion,
   roomName,
   section,
-  setCurrentlyActiveRoomInfo,
   pickerTitle
 }) => {
   return (
@@ -40,7 +39,6 @@ const MaterialsPickerCard = ({
                 if (!materials) {
                   handleMaterialAssignment(roomName, section, title);
                 }
-                setCurrentlyActiveRoomInfo({ roomName, section });
               }}
               color={materials ? 'error' : 'default'}
               sx={{ height: '16px', cursor: 'pointer' }}
@@ -58,7 +56,6 @@ const MaterialsPickerCard = ({
                         sx={{ fontSize: '15px', ml: 1 }}
                         onClick={() => {
                           handleMaterialDeletion(roomName, section, title);
-                          setCurrentlyActiveRoomInfo({ roomName, section });
                         }}
                       />
                     </Tooltip>

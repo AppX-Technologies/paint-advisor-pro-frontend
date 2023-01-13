@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Stack, TextField, Typography } from '@mui/material';
+import { CircularProgress, Grid, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,29 +10,29 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { startCase } from 'lodash';
 import * as React from 'react';
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createEquipment, reset } from '../../features/equipments/equipmentSlice';
+import { createEquipment } from '../../features/equipments/equipmentSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 
-export default function FormDialog(props) {
-  const { equipmentList, isSuccess } = useSelector((state) => state.equipment);
+export default function Edit({
+  equipmentRegistrationAndEditStats,
+  setEquipmentRegistrationAndEditStats,
+  onEquipmentFormClose
+}) {
   const userDetail = JSON.parse(localStorage.getItem('user'));
-  const dispatch = useDispatch();
-  const {
-    equipmentRegistrationAndEditStats,
-    setEquipmentRegistrationAndEditStats,
-    onEquipmentFormClose
-  } = props;
 
-  const handleCreate = (e) => {
+  const { equipmentList } = useSelector((state) => state.equipment);
+
+  const dispatch = useDispatch();
+
+  const handleEdit = (e) => {
     e.preventDefault();
     const emptyField = Object.keys(equipmentRegistrationAndEditStats).find((state) =>
       typeof equipmentRegistrationAndEditStats[state] === 'string'
         ? equipmentRegistrationAndEditStats[state] === ''
         : typeof equipmentRegistrationAndEditStats[state] === 'number'
         ? equipmentRegistrationAndEditStats[state] === 0
-        : !equipmentRegistrationAndEditStats[state]?.length
+        : !equipmentRegistrationAndEditStats[state].length
     );
 
     if (emptyField) {
@@ -46,48 +46,32 @@ export default function FormDialog(props) {
 
     const formStateWithToken = {
       ...equipmentRegistrationAndEditStats,
-      ID: equipmentList[0]?._id,
-      previousEquipments: equipmentList[0]?.equipments,
-      isRentable: true,
+      ID: equipmentList[0]._id,
+      previousEquipments: equipmentList[0].equipments.filter(
+        (previousEquipments) => previousEquipments._id !== equipmentRegistrationAndEditStats._id
+      ),
+      isRentable: false,
       add: true,
       token: userDetail.token
     };
-
     dispatch(createEquipment(formStateWithToken));
-
-    onEquipmentFormClose();
+    onEquipmentFormClose(false);
   };
-  useEffect(() => {
-    if (isSuccess) {
-      onEquipmentFormClose();
-      dispatch(
-        showMessage({
-          message: 'Equipment Updated successfully',
-          variant: 'success'
-        })
-      );
-      dispatch(reset());
-    }
-  }, [isSuccess]);
-
-  console.log(equipmentRegistrationAndEditStats, 'equipmentRegistrationAndEditStats');
 
   return (
     <div>
       <Dialog
         open={
           equipmentRegistrationAndEditStats !== null &&
-          !Object.keys(equipmentRegistrationAndEditStats).includes('_id')
+          Object.keys(equipmentRegistrationAndEditStats).includes('_id')
         }
         onClose={onEquipmentFormClose}>
         <DialogTitle>
-          <Stack direction='row' spacing={2}>
-            <Typography variant='h6'>Add New Equipment</Typography>
-            <CircularProgress color='primary' size={25} style={{ display: 'none' }} />
-          </Stack>
+          Edit Material
+          <CircularProgress style={{ display: 'none' }} size={25} />
         </DialogTitle>
         <DialogContent>
-          <Grid item xs={12} md={12}>
+          <Grid item xs={12}>
             <TextField
               name='description'
               required
@@ -96,7 +80,7 @@ export default function FormDialog(props) {
               minRows={3}
               variant='standard'
               id='equipment'
-              label='Equipment Description'
+              label='Material Description'
               autoFocus
               value={equipmentRegistrationAndEditStats?.description}
               onChange={(e) => {
@@ -106,7 +90,7 @@ export default function FormDialog(props) {
               style={{ width: '100%' }}
             />
           </Grid>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{ marginBottom: '13px' }}>
             <Grid item xs={12} md={12}>
               <FormControl sx={{ m: 0, width: '100%', maxHeight: 30, marginTop: 3 }} size='small'>
                 <InputLabel id='demo-select-small'>Bid Type</InputLabel>
@@ -135,13 +119,13 @@ export default function FormDialog(props) {
                 variant='standard'
                 id='unit'
                 label='Unit Price'
+                autoFocus
                 type='number'
                 InputProps={{
                   inputProps: {
                     min: 1
                   }
                 }}
-                autoFocus
                 value={equipmentRegistrationAndEditStats?.unitPrice}
                 onChange={(e) => {
                   equipmentRegistrationAndEditStats.unitPrice = e.target.value;
@@ -154,8 +138,8 @@ export default function FormDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={onEquipmentFormClose}>Cancel</Button>
-          <Button type='submit' variant='contained' onClick={(e) => handleCreate(e)}>
-            Create
+          <Button type='submit' variant='contained' onClick={(e) => handleEdit(e)}>
+            Update
           </Button>
         </DialogActions>
       </Dialog>

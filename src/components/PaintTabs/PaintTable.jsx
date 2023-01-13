@@ -2,14 +2,14 @@ import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
-import { materialColumn } from '../../common/tableHead';
+import { paintColumn } from '../../common/tableHead';
 import { createMaterial, reset } from '../../features/materials/materialSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { filterMaterialByBid } from '../../helpers/bidFilterHelpers';
 import CustomButton from '../Button';
 import { DeleteModal } from '../delete-model/DeleteModel';
-import Edit from './EditMaterialForm';
-import FormDialog from './MaterialReg';
+import Edit from './EditPaintForm';
+import FormDialog from './PaintReg';
 
 const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   const [materialRegistrationAndEditStats, setMaterialRegistrationAndEditStats] = useState(null);
@@ -23,7 +23,7 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
     e.stopPropagation();
     setMateriaId(getId);
   };
-  const columns = materialColumn();
+  const columns = paintColumn();
 
   const onMaterialFormClose = () => {
     setMaterialRegistrationAndEditStats(null);
@@ -80,7 +80,9 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
               bidType: filterValue,
               appliesTo: [],
               unit: '',
-              unitPrice: ''
+              unitPrice: '',
+              areaCoveredPerUnitForFirstCoat: '',
+              arearCoveredPerUnitForRemainingCoats: ''
             })
           }
           disabled={isLoading}>
@@ -97,7 +99,9 @@ const MaterialTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => 
               unit: material.unit,
               unitPrice: material.unitPrice,
               bidType: material.bidType,
-              appliesTo: material?.appliesTo
+              appliesTo: material?.appliesTo,
+              areaCoveredPerUnitForFirstCoat: material?.areaCoveredPerUnitForFirstCoat,
+              arearCoveredPerUnitForRemainingCoats: material?.arearCoveredPerUnitForRemainingCoats
             };
           })
         }

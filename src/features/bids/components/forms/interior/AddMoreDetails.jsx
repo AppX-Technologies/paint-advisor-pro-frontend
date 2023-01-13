@@ -18,12 +18,13 @@ import {
   Typography
 } from '@mui/material';
 import { startCase } from 'lodash';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { validationInfo } from '../../../../../common/FormTextField';
 import Button from '../../../../../components/Button';
 import {
   CEILING_TYPES,
+  EXTRA_INFO_WHILE_CLONING,
   NONPAINTABLEAREAFIELD,
   WALL_OPTIONS,
   WALL_TYPES
@@ -35,7 +36,6 @@ const AddMoreDetails = ({
   openAddMoreDetails,
   currentStats,
   setCurrentStats,
-
   addIn,
   titleField,
   roomFormValue,
@@ -46,6 +46,10 @@ const AddMoreDetails = ({
   selectedRoomInfo
 }) => {
   const dispatch = useDispatch();
+  const [toBeCloned, setToBeCloned] = useState({
+    paints: true,
+    labours: true
+  });
   const handleCreate = () => {
     // For empty fields
     let allFields;
@@ -128,6 +132,11 @@ const AddMoreDetails = ({
         });
       } else {
         delete currentStats._id;
+        Object.keys(toBeCloned).forEach((item) => {
+          if (!toBeCloned[item]) {
+            currentStats[item] = {};
+          }
+        });
         addIn?.push({
           ...currentStats
         });
@@ -256,7 +265,7 @@ const AddMoreDetails = ({
                         <TextField
                           InputProps={{
                             style: { height: '30px' },
-                            inputProps: { min: 0 }
+                            inputProps: { min: 0, max: name === 'coats' ? 3 :Infinity}
                           }}
                           name='name'
                           fullWidth
@@ -303,30 +312,57 @@ const AddMoreDetails = ({
               </>
             );
           })}
-
-          {titleField !== 'walls' &&
-            titleField !== NONPAINTABLEAREAFIELD &&
-            titleField !== 'baseboardTrims' &&
-            titleField !== 'windowTrims' && (
-              <Grid xs={6} md={6} mt={2}>
-                <FormGroup>
-                  <FormControlLabel
-                    sx={{ position: 'relative', ml: 0.8 }}
-                    control={<Checkbox defaultChecked />}
-                    checked={currentStats.paint}
-                    onChange={(event) => {
-                      currentStats.paint = event.target.checked;
-                      setCurrentStats({ ...currentStats });
-                    }}
-                    label={
-                      <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
-                        PAINT
-                      </InputLabel>
-                    }
-                  />
-                </FormGroup>
-              </Grid>
-            )}
+          <Grid container>
+            {titleField !== 'walls' &&
+              titleField !== NONPAINTABLEAREAFIELD &&
+              titleField !== 'baseboardTrims' &&
+              titleField !== 'windowTrims' && (
+                <Grid xs={4} md={4} mt={2}>
+                  <FormGroup>
+                    <FormControlLabel
+                      sx={{ position: 'relative', ml: 0.8 }}
+                      control={<Checkbox defaultChecked />}
+                      checked={currentStats.paint}
+                      onChange={(event) => {
+                        currentStats.paint = event.target.checked;
+                        setCurrentStats({ ...currentStats });
+                      }}
+                      label={
+                        <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                          Paint
+                        </InputLabel>
+                      }
+                    />
+                  </FormGroup>
+                </Grid>
+              )}
+            {EXTRA_INFO_WHILE_CLONING.map((info) => {
+              return (
+                <>
+                  {roomInfoToEdit && !roomInfoToEdit.edit && currentStats[info.field] && (
+                    <Grid xs={4} mt={2}>
+                      <FormGroup>
+                        <FormControlLabel
+                          sx={{ position: 'relative', ml: 0.8 }}
+                          control={<Checkbox defaultChecked />}
+                          checked={toBeCloned[info.field]}
+                          onChange={(event) => {
+                            toBeCloned[info.field] = event.target.checked;
+                            setToBeCloned({ ...toBeCloned });
+                          }}
+                          label={
+                            <InputLabel id='demo-select-small' sx={{ fontSize: '14px' }}>
+                              {info.text}
+                            </InputLabel>
+                          }
+                        />
+                      </FormGroup>
+                    </Grid>
+                  )}
+                </>
+              );
+            })}
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>

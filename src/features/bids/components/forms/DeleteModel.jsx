@@ -7,10 +7,12 @@ import {
   Stack,
   Typography
 } from '@mui/material';
+import { cloneDeep } from 'lodash';
 import { useDispatch } from 'react-redux';
 import Button from '../../../../components/Button';
 import { CURRENT_TOTAL_DESCRIPTION } from '../../../../helpers/contants';
 import { showMessage } from '../../../snackbar/snackbarSlice';
+import { initialRoomState } from '../../common/roomsInitialStats';
 
 export function DeleteItemModel({
   itemToBeDeleted,
@@ -44,6 +46,7 @@ export function DeleteItemModel({
       });
 
       onSelectedRoomInfoChange(null);
+      setRoomFormValue(cloneDeep(initialRoomState));
     } else {
       roomFormValue[itemToBeDeleted?.field]?.splice(
         roomFormValue[itemToBeDeleted?.field]?.findIndex((item) =>

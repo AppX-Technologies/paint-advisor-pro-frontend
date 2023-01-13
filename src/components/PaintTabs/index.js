@@ -2,26 +2,25 @@ import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { equipmentTabLists } from '../../common/Constants';
+import { materialTabLists } from '../../common/Constants';
 import TabsNavigation from '../../common/TabsNavigation';
-import { fetchEquipment, reset } from '../../features/equipments/equipmentSlice';
+import { fetchMaterial } from '../../features/materials/materialSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
-import EquipmentTable from './EquipmentTable';
+import { reset } from '../../features/usersFromCompany/usersFromCompanySlice';
+import MaterialTable from './PaintTable';
 
-const Materials = () => {
+const Paints = () => {
   const [value, setValue] = React.useState(0);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   const { org } = useSelector((state) => state.org);
   const userDetail = JSON.parse(localStorage.getItem('user'));
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const { isDeleted } = useSelector((state) => state.equipment);
+  const { isDeleted } = useSelector((state) => state.material);
   const { companyId } = useParams();
 
   const dispatch = useDispatch();
-
   useEffect(() => {
     if (isDeleted) {
       dispatch(
@@ -36,13 +35,11 @@ const Materials = () => {
     }
   }, [isDeleted]);
 
-  // Fetching Equipments On First Render
-
   useEffect(() => {
     dispatch(
-      fetchEquipment({
+      fetchMaterial({
         token: userDetail.token,
-        id: companyId ? org.equipments : undefined
+        id: companyId ? org.materials : undefined
       })
     );
   }, []);
@@ -50,19 +47,19 @@ const Materials = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <TabsNavigation value={value} handleTabChange={handleChange} tabList={equipmentTabLists} />
+        <TabsNavigation value={value} handleTabChange={handleChange} tabList={materialTabLists} />
       </Box>
       <div role='tabpanel' id={`simple-tabpanel-${0}`} aria-labelledby={`simple-tab-${0}`}>
         <Box sx={{ p: 3 }}>
           <Typography>
             {value === 0 ? (
-              <EquipmentTable
+              <MaterialTable
                 filterValue='Interior'
                 openDeleteModal={openDeleteModal}
                 setOpenDeleteModal={setOpenDeleteModal}
               />
             ) : (
-              <EquipmentTable
+              <MaterialTable
                 filterValue='Exterior'
                 openDeleteModal={openDeleteModal}
                 setOpenDeleteModal={setOpenDeleteModal}
@@ -75,4 +72,4 @@ const Materials = () => {
   );
 };
 
-export default Materials;
+export default Paints;

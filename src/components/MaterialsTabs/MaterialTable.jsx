@@ -2,16 +2,16 @@ import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DraggableDataTable } from '../../common/DraggableDataTable';
-import { equipmentColumn } from '../../common/tableHead';
+import { materialColumn } from '../../common/tableHead';
 import { createEquipment, reset } from '../../features/equipments/equipmentSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 import { filterEquipmentByBid } from '../../helpers/bidFilterHelpers';
 import CustomButton from '../Button';
 import { DeleteModal } from '../delete-model/DeleteModel';
-import Edit from './EditEquipmentForm';
-import FormDialog from './EquipmentReg';
+import Edit from './EditMaterialForm';
+import FormDialog from './MaterialReg';
 
-const columns = equipmentColumn();
+const columns = materialColumn();
 
 const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) => {
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
   }, [isSuccess]);
 
   useEffect(() => {
-    setFilteredEquipment(filterEquipmentByBid(equipmentList, filterValue, true));
+    setFilteredEquipment(filterEquipmentByBid(equipmentList, filterValue, false));
   }, [filterValue, equipmentList]);
 
   return (
@@ -84,7 +84,7 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
         columns={columns}
         dataList={equipmentDataList}
         setDataList={setEquipmentDataList}
-        title='Equipment List'
+        title='Material List'
         setOpenDeleteModal={setOpenDeleteModal}
         onDeleteBtnClick={onDeleteBtnClick}
         draggable={false}
