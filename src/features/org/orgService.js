@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const endpoint = 'http://localhost:5001';
+const endpoint = process.env.REACT_APP_API_BASE_URL;
 
 const CREATE_ORGS = `${endpoint}/organizations`;
 const FETCH_ORGS = `${endpoint}/organizations/search`;

@@ -1,6 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
 import { Box, FormControlLabel, FormGroup, Grid, Switch, Tooltip, Typography } from '@mui/material';
-import ReadMoreIcon from '@mui/icons-material/ReadMore';
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

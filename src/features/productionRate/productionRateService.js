@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-const endpoint = 'http://localhost:5001/production-rates';
-const CREATE_PRODUCTION_RATE = `${endpoint}/`;
-const FETCH_PRODUCTION_RATE = `http://localhost:5001/production-rates/list`;
-const CREATE_BASE_RATE = `http://localhost:5001/proficiencies/`;
-const FETCH_BASE_RATE = `http://localhost:5001/proficiencies/list`;
+const endpoint = process.env.REACT_APP_API_BASE_URL;
+
+const CREATE_PRODUCTION_RATE = `${endpoint}/production-rates`;
+const FETCH_PRODUCTION_RATE = `${endpoint}/production-rates/list`;
+const CREATE_BASE_RATE = `${endpoint}/proficiencies`;
+const FETCH_BASE_RATE = `${endpoint}/proficiencies/list`;
 
 const fetchSingleProductionRate = async (userData) => {
   const config = {
