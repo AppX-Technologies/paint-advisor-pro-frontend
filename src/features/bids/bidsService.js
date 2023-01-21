@@ -11,6 +11,8 @@ const UPDATE_CLIENT = `${endpoint}/clients`;
 const CREATE_BID = `${endpoint}/bids`;
 const UPDATE_BID = `${endpoint}/bids`;
 
+const FILES_API = `${endpoint}/files`;
+
 export const fetchAllClientsService = async (userData) => {
   const config = {
     headers: {
@@ -125,7 +127,7 @@ export const uploadAFileService = async (userData) => {
 export const deleteFileService = async (userData) => {
   const response = await axios({
     method: 'delete',
-    url: `http://localhost:5001/api/files/${userData.id}`,
+    url: `${FILES_API}/${userData.id}`,
     data: {},
     headers: {
       'Content-Type': 'multipart/form-data',
