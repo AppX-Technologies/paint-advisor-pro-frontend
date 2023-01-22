@@ -62,7 +62,7 @@ export default function FormDialog(props) {
       onEquipmentFormClose();
       dispatch(
         showMessage({
-          message: 'Equipment Updated successfully',
+          message: 'Material Updated successfully',
           variant: 'success'
         })
       );

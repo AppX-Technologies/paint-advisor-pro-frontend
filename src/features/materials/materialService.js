@@ -2,10 +2,10 @@ import axios from 'axios';
 
 const endpoint = process.env.REACT_APP_API_BASE_URL;
 
-const CREATE_MATERIAL = `${endpoint}/materials`;
-const FETCH_MATERIAL = `${endpoint}/materials/list`;
-const UPDATE_MATERIAL = `${endpoint}/materials`;
-const DELETE_MATERIAL = `${endpoint}/materials`;
+const CREATE_MATERIAL = `${endpoint}/paints`;
+const FETCH_MATERIAL = `${endpoint}/paints/list`;
+const UPDATE_MATERIAL = `${endpoint}/paints`;
+const DELETE_MATERIAL = `${endpoint}/paints`;
 
 const fetchMaterial = async (userData) => {
   const config = {

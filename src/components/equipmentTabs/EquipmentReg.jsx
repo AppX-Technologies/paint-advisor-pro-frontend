@@ -12,6 +12,7 @@ import { startCase } from 'lodash';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { createEquipment, reset } from '../../features/equipments/equipmentSlice';
 import { showMessage } from '../../features/snackbar/snackbarSlice';
 
@@ -69,8 +70,6 @@ export default function FormDialog(props) {
       dispatch(reset());
     }
   }, [isSuccess]);
-
-  console.log(equipmentRegistrationAndEditStats, 'equipmentRegistrationAndEditStats');
 
   return (
     <div>

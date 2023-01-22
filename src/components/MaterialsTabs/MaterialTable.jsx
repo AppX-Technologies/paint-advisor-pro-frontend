@@ -37,7 +37,7 @@ const EquipmentTable = ({ filterValue, setOpenDeleteModal, openDeleteModal }) =>
       setOpenDeleteModal(false);
       dispatch(
         showMessage({
-          message: 'Equipment list updated successfully',
+          message: 'Material list updated successfully',
           variant: 'success'
         })
       );

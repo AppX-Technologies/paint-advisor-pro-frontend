@@ -26,7 +26,7 @@ const Materials = () => {
     if (isDeleted) {
       dispatch(
         showMessage({
-          message: 'Equipment Deleted successfully',
+          message: 'Material Deleted successfully',
           variant: 'success',
           severity: 'info'
         })
