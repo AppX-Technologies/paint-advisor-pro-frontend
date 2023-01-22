@@ -7,6 +7,9 @@ import {
   NONPAINTABLEAREAFIELD
 } from '../../../helpers/contants';
 
+const endpoint = process.env.REACT_APP_API_BASE_URL;
+const FILES_API = `${endpoint}/files`;
+
 export const findCurrentStageButtonInfo = (stageName) => {
   return buttonStageInfo.find((info) => info.name === stageName);
 };
@@ -29,7 +32,7 @@ export const filterClientsBySelectedStep = (clients, selectedStep) => {
 
 export const readFile = async ({ fileName, mimeType, token }) => {
   try {
-    const response = await axios.get(`http://localhost:5001/api/files/stream/${fileName}`, {
+    const response = await axios.get(`${FILES_API}/stream/${fileName}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`

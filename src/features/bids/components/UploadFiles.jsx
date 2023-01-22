@@ -12,6 +12,10 @@ import Button from '../../../components/Button';
 import { deleteAFIle, reset, uploadAFile } from '../bidsSlice';
 import { showMessage } from '../../snackbar/snackbarSlice';
 
+const endpoint = process.env.REACT_APP_API_BASE_URL;
+
+const FILES_API = `${endpoint}/files`;
+
 const UploadFiles = ({
   uploadedFiles,
   onUploadedFilesChange,
@@ -60,7 +64,7 @@ const UploadFiles = ({
     formData.append('file', fileToBeUploaded.file);
     const { error, data } = await axios({
       method: 'post',
-      url: 'http://localhost:5001/api/files',
+      url: FILES_API,
       data: formData,
       headers: {
         'Content-Type': 'multipart/form-data',
